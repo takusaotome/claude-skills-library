@@ -80,6 +80,7 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 | project-plan-creator | 1.0 | Project Planning | project_charter_guide.md, project_plan_template.md (with 5 Mermaid diagrams) |
 | bug-ticket-creator | 1.0 | Bug Reporting, QA | defect_classification_guide.md, severity_priority_guide.md, reproduction_steps_guide.md, bug_ticket_template_ja.md, bug_ticket_template_en.md |
 | itil4-consultant | 1.0 | IT Service Management, ITIL 4 | 34 Practices knowledge base (4 comprehensive guides), Maturity assessment framework, 5 consulting workflows, Department-specific scenarios |
+| salesforce-expert | 1.0 | Salesforce Development, Operations Management | sharing_settings_guide.md, approval_process_guide.md, custom_development_patterns.md, architecture_best_practices.md, Bug analysis workflow, Enterprise patterns |
 | mermaid-to-pdf | - | Documentation | markdown_to_pdf.py, mermaid_to_image.py |
 | uat-testcase-generator | - | QA Testing | generate_uat_testcases.py, Excel generation |
 | salesforce-cli-expert | - | Salesforce | CLI reference guide |

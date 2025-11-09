@@ -1023,6 +1023,72 @@ Expert ITIL 4 consultant providing context-aware recommendations for IT service 
 - **Best practices** from comprehensive knowledge base
 - **Bilingual**: Japanese and English support
 
+---
+
+### ☁️ Salesforce Expert
+
+**File:** `salesforce-expert.zip`
+
+Expert guidance for Salesforce system development and operations management.
+
+**When to use:**
+- Configuring sharing settings, approval processes, validation rules
+- Diagnosing access denied issues, approval process errors, missing relationships
+- Designing system architecture, data models, object relationships
+- Implementing Apex triggers, batch jobs, Lightning Web Components, REST APIs
+- Resolving OWD settings, sharing rules, role hierarchy issues
+- Addressing governor limit issues, slow queries, large data volume challenges
+
+**Core Capabilities:**
+- ✅ Sharing settings & access control troubleshooting
+- ✅ Approval process configuration & debugging
+- ✅ Custom development best practices (Apex, LWC)
+- ✅ Architecture design & data modeling
+- ✅ Governor limit optimization
+- ✅ Integration patterns (REST API, Platform Events)
+
+**Reference Guides:**
+- `sharing_settings_guide.md` - OWD, sharing rules, role hierarchy, manual sharing patterns
+- `approval_process_guide.md` - Single/multi-step approvals, submission methods, testing
+- `custom_development_patterns.md` - Trigger handlers, batch apex, LWC, testing patterns
+- `architecture_best_practices.md` - Data modeling, LDV design, integration, security
+
+**Bug Analysis Workflow:**
+1. **Gather Context** - Record type, user role, error message, reproduction steps
+2. **Categorize Issue** - Access/permissions, data integrity, process automation, integration, UI/UX
+3. **Diagnose Root Cause** - Systematic troubleshooting with debug queries
+4. **Propose Solutions** - Quick fix, proper solution, long-term improvement
+5. **Document Fix** - Root cause analysis, testing steps, deployment considerations
+
+**Development Patterns:**
+- Trigger Handler pattern with recursion prevention
+- Service Layer pattern for reusable business logic
+- Batch Apex (standard, iterable, stateful)
+- Queueable Apex with chaining
+- Lightning Web Components (wire, imperative, pub/sub)
+- REST API design (inbound/outbound)
+
+**Common Scenarios:**
+- "User cannot access related Contact after Opportunity reassignment" → OWD/Sharing analysis
+- "No applicable approval process found" → Entry criteria and active process validation
+- "Contact shows 0 Opportunities despite linkage" → Relationship type analysis
+- "Design REST API for external system integration" → REST resource pattern with proper HTTP methods
+- "Optimize trigger for 200 records" → Bulkification and governor limit patterns
+
+**Best Practices:**
+- Security: Always use `with sharing`, check CRUD/FLS, principle of least privilege
+- Performance: Bulkify code for 200 records, avoid SOQL in loops, batch DML operations
+- Maintainability: Trigger → Handler → Service pattern, single responsibility
+- Testing: Test Data Factory, bulk testing, mock callouts, 85%+ coverage
+
+**Key Features:**
+- **Systematic Troubleshooting** - Step-by-step diagnosis workflows
+- **Enterprise Patterns** - Scalable, maintainable code patterns
+- **Complete Code Examples** - Real-world Apex triggers, handlers, services, LWC
+- **Architecture Guidance** - Data modeling, integration, security, testing
+- **Bilingual**: Japanese and English support
+
+---
 
 ## Installation
 
@@ -1120,6 +1186,7 @@ Contributions are welcome! To contribute a new skill:
 | project-plan-creator | 1.0 | Project Planning, PMBOK Artifacts | 7 Workflows, Project Charter, WBS, Gantt Charts, RACI Matrix, 5 Mermaid Diagrams, Japanese/English |
 | bug-ticket-creator | 1.0 | Bug Reporting, QA Testing | 6 Interactive Workflows, Defect Classification, Severity/Priority Assessment, CLEAR Principles, Markdown Output, Japanese/English |
 | itil4-consultant | 1.0 | IT Service Management, ITIL 4 Implementation | 34 Practices, Maturity Assessment, 5 Workflows, Department-Specific Consulting, DevOps Integration, Roadmap Creation |
+| salesforce-expert | 1.0 | Salesforce Development, Operations Management | Sharing Settings, Approval Processes, Apex/LWC Development, Architecture Design, Bug Analysis, Governor Limit Optimization |
 
 ## License
 
@@ -1945,6 +2012,28 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### salesforce-expert v1.0 (2025-11-09)
+- Initial release
+- Comprehensive Salesforce development and operations management guidance
+- 4 core capabilities: Sharing Settings & Access Control, Approval Process Configuration, Custom Development Best Practices, Architecture Design & Data Modeling
+- 4 reference guides (90KB total documentation):
+  - `sharing_settings_guide.md` - OWD, sharing rules, role hierarchy, manual sharing, teams, troubleshooting
+  - `approval_process_guide.md` - Approval patterns, submission methods, actions, testing, monitoring
+  - `custom_development_patterns.md` - Trigger handlers, batch apex, queueable, LWC, testing, bulkification
+  - `architecture_best_practices.md` - Data modeling, LDV design, governor limits, integration, security
+- Bug analysis workflow: 5-step systematic approach (gather context, categorize, diagnose, propose solutions, document)
+- Development patterns: Trigger Handler, Service Layer, Batch Apex, Queueable, LWC (wire/imperative/pub-sub), REST API
+- Common scenarios covered:
+  - Access denied issues (OWD, sharing rules, role hierarchy troubleshooting)
+  - Approval process errors (entry criteria, active process validation, approver assignment)
+  - Object relationship issues (Master-Detail vs Lookup, junction objects, Contact Roles)
+  - Integration design (REST API inbound/outbound, Platform Events)
+  - Governor limit optimization (SOQL, DML, heap size, CPU time)
+- Enterprise patterns: Recursion prevention, service layer, test data factory, mock callouts
+- Best practices: Security (with sharing, CRUD/FLS), Performance (bulkification), Maintainability (separation of concerns), Testing (85%+ coverage)
+- Complete code examples: Real-world Apex triggers, handlers, services, batch jobs, LWC components, REST APIs
+- Bilingual support: Japanese and English
 
 ### project-plan-creator v1.0 (2025-11-07)
 - Initial release
