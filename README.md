@@ -1090,6 +1090,80 @@ Expert guidance for Salesforce system development and operations management.
 
 ---
 
+### 🤖 AI Adoption Consultant
+
+**File:** `zip-packages/ai-adoption-consultant.zip`
+
+Expert AI/LLM adoption consultant with comprehensive use case knowledge across industries, departments, and scenarios.
+
+**When to use:**
+- Proposing AI/LLM adoption strategies for specific industries (Finance, Healthcare, Retail, Manufacturing, Education)
+- Recommending AI solutions for department-specific needs (Sales, HR, Support, Finance, R&D)
+- Creating AI implementation plans for different scenarios (Startup, Enterprise, Remote Work, CX, DX)
+- Selecting appropriate AI agent types (RAG, Voice, Video Generation, Internal Business Support)
+- Analyzing case studies and ROI for AI initiatives
+
+**Core Capabilities:**
+- ✅ Industry-specific AI adoption strategies (5 industries)
+- ✅ Department-specific automation & efficiency improvements (5 functions)
+- ✅ Scenario-based implementation approaches (5 scenarios)
+- ✅ AI agent type recommendations (4 types: RAG, Voice, Video, Business Support)
+- ✅ Detailed case studies (6 use cases: Sales Support, Customer Support, Knowledge Search, Project Planning, Competitive Analysis, Strategic Planning)
+
+**Knowledge Base:**
+- **Industries**: Finance, Healthcare, Retail, Manufacturing, Education
+- **Functions**: Sales & Marketing, HR, Customer Support, Finance & Accounting, R&D
+- **Scenarios**: Startup, Enterprise, Remote Work, Customer Experience, Digital Transformation
+- **Agent Types**: RAG agents, Voice agents, Video generation, Internal business support
+- **Case Studies**: 6 detailed implementation examples with architecture and ROI
+
+**Consulting Workflow:**
+1. **Hearing & Current State Assessment** - Understand industry, department, company size, specific challenges, existing systems, goals/KPIs, budget, technical skills
+2. **Problem Analysis & Goal Setting** - Identify key issues, define success metrics, organize constraints, identify risks
+3. **Knowledge Selection & Loading** - Load appropriate references (industry + function + scenario + agent type + case studies)
+4. **AI Adoption Proposal Creation** - Executive summary, current analysis, AI utilization proposal (use cases, architecture, data flow), expected effects (quantitative & qualitative), implementation plan (3 phases), investment breakdown, risks & countermeasures, recommendations
+5. **Follow-up & Q&A** - Technical details, alternative options, customization, additional case studies
+
+**Proposal Components:**
+- Executive Summary with ROI
+- Current State Analysis
+- AI Utilization Proposal (Technology, Use Cases, Architecture, Data Flow)
+- Expected Effects (Cost reduction %, Efficiency improvement %, Quality metrics)
+- 3-Phase Implementation Plan (Pilot → Full Deployment → Continuous Improvement)
+- Investment Breakdown (Initial, Operational, TCO, ROI calculation)
+- Risk Assessment & Mitigation
+- Best Practices & Recommendations
+
+**Example Proposals:**
+- **Retail CX Enhancement**: Personalized recommendations, 24/7 chatbot support, review analysis, dynamic pricing → 20% conversion rate increase, 15% cart abandonment reduction, 30% satisfaction improvement
+- **Startup Sales Efficiency**: AI lead generation/scoring, automated proposal creation, personalized sales emails, transcription/analysis → 50% prep time reduction, 25% deal closure rate increase, 2x monthly leads
+- **Manufacturing Quality Control**: Image-based defect detection, sensor data anomaly detection, automated quality reports → 95%+ detection rate, 70% inspection time reduction, 30% quality cost reduction
+
+**Key Principles:**
+- Practice-oriented with specific implementation methods
+- Quantified effects (ROI, cost reduction, efficiency improvement)
+- Phased approach (Pilot → Deployment → Improvement)
+- Risk management (technical, organizational, legal)
+- Human-centric (AI augments human capabilities)
+
+**Knowledge Resources** (27 files, 162KB):
+- 5 industry guides
+- 5 function guides
+- 5 scenario guides
+- 4 agent type guides
+- 6 detailed case studies
+- README with AI adoption trends and success factors
+
+**Key Features:**
+- **Comprehensive Knowledge** - 27 curated use case documents
+- **Multi-dimensional Analysis** - Industry × Function × Scenario combinations
+- **Quantified Benefits** - All proposals include ROI and cost reduction metrics
+- **Practical Examples** - Real-world case studies with implementation details
+- **Agent Type Expertise** - RAG, Voice, Video, Business Support recommendations
+- **Bilingual**: Japanese and English support
+
+---
+
 ## Installation
 
 ### Installing a Skill
@@ -1187,6 +1261,7 @@ Contributions are welcome! To contribute a new skill:
 | bug-ticket-creator | 1.0 | Bug Reporting, QA Testing | 6 Interactive Workflows, Defect Classification, Severity/Priority Assessment, CLEAR Principles, Markdown Output, Japanese/English |
 | itil4-consultant | 1.0 | IT Service Management, ITIL 4 Implementation | 34 Practices, Maturity Assessment, 5 Workflows, Department-Specific Consulting, DevOps Integration, Roadmap Creation |
 | salesforce-expert | 1.0 | Salesforce Development, Operations Management | Sharing Settings, Approval Processes, Apex/LWC Development, Architecture Design, Bug Analysis, Governor Limit Optimization |
+| ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy, System Integration, Business Improvement | 5 Industries, 5 Functions, 5 Scenarios, 4 Agent Types, 6 Case Studies, ROI Analysis, Implementation Plans |
 
 ## License
 
@@ -2012,6 +2087,36 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### ai-adoption-consultant v1.0 (2025-11-09)
+- Initial release
+- Comprehensive AI/LLM adoption consulting skill with use case knowledge base
+- 5 core capabilities: Industry-specific strategies, Department-specific automation, Scenario-based approaches, AI agent type recommendations, Detailed case studies
+- 27 reference files (162KB total knowledge base):
+  - 5 industry guides (Finance, Healthcare, Retail, Manufacturing, Education)
+  - 5 function guides (Sales & Marketing, HR, Customer Support, Finance & Accounting, R&D)
+  - 5 scenario guides (Startup, Enterprise, Remote Work, Customer Experience, Digital Transformation)
+  - 4 agent type guides (RAG agents, Voice agents, Video generation, Internal business support)
+  - 6 detailed case studies (Sales Support, Customer Support, Knowledge Search, Project Planning, Competitive Analysis, Strategic Planning)
+  - README with AI adoption trends and success factors
+- 5-step consulting workflow: Hearing & Assessment → Problem Analysis → Knowledge Selection → Proposal Creation → Follow-up & Q&A
+- AI adoption proposal components:
+  - Executive summary with ROI calculation
+  - Current state analysis and priority identification
+  - AI utilization proposal with use cases, architecture, data flow
+  - Expected effects (quantitative: cost reduction %, efficiency %, quality metrics)
+  - 3-phase implementation plan (Pilot → Full Deployment → Continuous Improvement)
+  - Investment breakdown (initial, operational, TCO, ROI)
+  - Risk assessment & mitigation (technical, organizational, legal risks)
+  - Best practices and recommendations
+- Example proposals:
+  - Retail CX enhancement (20% conversion increase, 15% cart abandonment reduction, 30% satisfaction improvement)
+  - Startup sales efficiency (50% prep time reduction, 25% deal closure increase, 2x leads)
+  - Manufacturing quality control (95%+ detection rate, 70% inspection time reduction, 30% quality cost reduction)
+- Key principles: Practice-oriented, Quantified effects, Phased approach, Risk management, Human-centric
+- Multi-dimensional analysis framework: Industry × Function × Scenario combinations
+- Agent type expertise: RAG, Voice, Video Generation, Business Support with architecture recommendations
+- Bilingual support: Japanese and English
 
 ### salesforce-expert v1.0 (2025-11-09)
 - Initial release
