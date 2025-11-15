@@ -1,0 +1,38 @@
+# Demo Data Analysis - Generated Files
+
+# Analysis outputs (generated during demo execution)
+analysis/phase1_eda/*.html
+analysis/phase1_eda/*.md
+analysis/phase2_patterns/*.md
+analysis/phase3_visualizations/*.html
+analysis/phase3_visualizations/*.png
+analysis/phase3_visualizations/*.jpg
+analysis/phase4_validation/*.md
+analysis/phase5_summary/*.md
+
+# Processed data (generated during analysis)
+data/processed/*.csv
+data/processed/*.parquet
+data/processed/*.json
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints (if used)
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
