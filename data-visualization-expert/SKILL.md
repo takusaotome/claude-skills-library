@@ -803,6 +803,7 @@ This skill includes the following resources:
 - [ ] Use appropriate chart type for data and goal
 - [ ] Apply colorblind-safe palette
 - [ ] Ensure sufficient contrast (4.5:1 text, 3:1 graphics)
+- [ ] Configure Japanese/international font support if needed (see section below)
 - [ ] Start bar chart Y-axis at zero (unless good reason)
 - [ ] Label axes with units
 - [ ] Use direct labels instead of legends when possible
@@ -819,6 +820,90 @@ This skill includes the following resources:
 - [ ] Add data source and date
 - [ ] Get feedback from representative user
 
+## Japanese and International Font Support
+
+### Why This Matters
+
+When creating visualizations with Japanese text (or other non-Latin scripts), incorrect font configuration causes:
+- **Character rendering as boxes (□□□)**
+- **Mojibake (文字化け) / garbled text**
+- **Minus signs displaying as boxes**
+
+### Best Practice: Cross-Platform Font Configuration
+
+Always configure fonts **after** applying matplotlib style, with platform-specific fallbacks:
+
+```python
+import matplotlib.pyplot as plt
+import platform
+
+# Apply style FIRST
+plt.style.use('seaborn-v0_8-whitegrid')
+
+# Configure fonts AFTER style (so they don't get overwritten)
+if platform.system() == 'Darwin':  # macOS
+    japanese_fonts = ['Hiragino Sans', 'Hiragino Maru Gothic Pro',
+                      'Arial Unicode MS', 'Yu Gothic', 'Meirio']
+elif platform.system() == 'Windows':
+    japanese_fonts = ['Yu Gothic', 'MS Gothic', 'Meiryo',
+                      'IPAexGothic', 'IPAPGothic']
+else:  # Linux
+    japanese_fonts = ['Noto Sans CJK JP', 'Takao',
+                      'IPAexGothic', 'IPAPGothic']
+
+# Set font configuration
+plt.rcParams['font.sans-serif'] = japanese_fonts
+plt.rcParams['font.monospace'] = japanese_fonts  # For text boxes
+plt.rcParams['axes.unicode_minus'] = False  # Prevent minus sign boxes
+```
+
+### Critical Points
+
+✅ **DO:**
+- Set fonts **after** `plt.style.use()` to prevent overriding
+- Include `font.monospace` for text boxes and annotations
+- Set `axes.unicode_minus = False` to fix minus sign rendering
+- Use platform-specific font lists for cross-platform compatibility
+- Test on target platform before finalizing
+
+❌ **DON'T:**
+- Use `family='monospace'` in text() calls (it will cause mojibake)
+- Set fonts before style (style will override your settings)
+- Assume one font works on all platforms
+- Forget to configure monospace fonts
+
+### Quick Template for Japanese Visualizations
+
+```python
+import matplotlib.pyplot as plt
+import platform
+
+# Configure Japanese font support
+def setup_japanese_fonts():
+    plt.style.use('seaborn-v0_8-whitegrid')
+
+    if platform.system() == 'Darwin':
+        fonts = ['Hiragino Sans', 'Arial Unicode MS']
+    elif platform.system() == 'Windows':
+        fonts = ['Yu Gothic', 'Meiryo']
+    else:
+        fonts = ['Noto Sans CJK JP', 'Takao']
+
+    plt.rcParams['font.sans-serif'] = fonts
+    plt.rcParams['font.monospace'] = fonts
+    plt.rcParams['axes.unicode_minus'] = False
+
+# Use it
+setup_japanese_fonts()
+
+# Now create your charts
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.set_title('日本語タイトル')  # Will render correctly
+ax.set_xlabel('横軸ラベル')
+ax.set_ylabel('縦軸ラベル')
+# ... rest of your visualization
+```
+
 ## Common Mistakes to Avoid
 
 ❌ **Using pie charts for many categories** → Use horizontal bar chart
@@ -829,6 +914,7 @@ This skill includes the following resources:
 ❌ **Truncated Y-axis (bar charts)** → Start at zero
 ❌ **Missing labels/units** → Always label axes and include units
 ❌ **Cluttered layout** → Use whitespace, simplify
+❌ **Forgetting Japanese font config** → Set fonts after style with platform detection
 
 ## Additional Resources
 

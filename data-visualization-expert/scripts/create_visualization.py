@@ -18,6 +18,7 @@ Examples:
 import argparse
 import sys
 from pathlib import Path
+import platform
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -27,10 +28,18 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from typing import Optional, List, Tuple
 
-# Professional Style Configuration
+# Detect Japanese locale support
+def get_japanese_fonts():
+    """Returns appropriate Japanese fonts based on OS"""
+    if platform.system() == 'Darwin':  # macOS
+        return ['Hiragino Sans', 'Hiragino Maru Gothic Pro', 'Arial Unicode MS', 'Yu Gothic', 'Meirio']
+    elif platform.system() == 'Windows':
+        return ['Yu Gothic', 'MS Gothic', 'Meiryo', 'IPAexGothic', 'IPAPGothic']
+    else:  # Linux
+        return ['Noto Sans CJK JP', 'Takao', 'IPAexGothic', 'IPAPGothic']
+
+# Professional Style Configuration (without fonts - fonts are set in setup_style)
 STYLE_CONFIG = {
-    'font.family': 'sans-serif',
-    'font.sans-serif': ['Arial', 'Helvetica', 'DejaVu Sans'],
     'font.size': 11,
     'axes.titlesize': 14,
     'axes.labelsize': 12,
@@ -44,6 +53,7 @@ STYLE_CONFIG = {
     'figure.facecolor': 'white',
     'axes.edgecolor': '#333333',
     'axes.linewidth': 1.0,
+    'axes.unicode_minus': False,  # Prevent minus sign from displaying as box in Japanese fonts
 }
 
 # Professional Color Palettes
@@ -58,10 +68,22 @@ PALETTES = {
 }
 
 def setup_style(palette='default'):
-    """Apply professional matplotlib style"""
+    """Apply professional matplotlib style with Japanese font support"""
+    # Apply style first
     plt.style.use('seaborn-v0_8-whitegrid')
+
+    # Then override with our config
     for key, value in STYLE_CONFIG.items():
         plt.rcParams[key] = value
+
+    # Configure Japanese font support (AFTER style is applied)
+    japanese_fonts = get_japanese_fonts()
+    base_fonts = ['Arial', 'Helvetica', 'DejaVu Sans']
+
+    plt.rcParams['font.family'] = 'sans-serif'
+    plt.rcParams['font.sans-serif'] = japanese_fonts + base_fonts
+    plt.rcParams['font.monospace'] = japanese_fonts + base_fonts
+
     return PALETTES.get(palette, PALETTES['default'])
 
 
