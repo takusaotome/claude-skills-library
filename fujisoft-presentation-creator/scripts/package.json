@@ -1,0 +1,16 @@
+{
+  "name": "fujisoft-slide-visual-reviewer",
+  "version": "1.0.0",
+  "description": "Visual review tool for FUJISOFT America slide templates",
+  "main": "visual-review.js",
+  "scripts": {
+    "review": "node visual-review.js",
+    "install-deps": "npm install puppeteer"
+  },
+  "dependencies": {
+    "puppeteer": "^21.0.0"
+  },
+  "keywords": ["presentation", "review", "visual", "marp", "puppeteer"],
+  "author": "FUJISOFT America",
+  "license": "MIT"
+}
