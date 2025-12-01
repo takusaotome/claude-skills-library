@@ -76,3 +76,6 @@ htmlcov/
 *.tmp
 tmp/
 temp/
+
+# Review output
+reviews/
