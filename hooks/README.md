@@ -1,20 +1,20 @@
 # Claude Code Hooks Collection
 
-Claude Codeの便利なhook設定集です。
+A collection of useful hook configurations for Claude Code.
 
-## 使い方
+## Usage
 
-1. 使いたいhook設定をコピー
-2. `~/.claude/settings.json` の `hooks` セクションに追加
-3. Claude Codeを再起動または新しいセッションを開始
+1. Copy the desired hook configuration
+2. Add it to the `hooks` section in `~/.claude/settings.json`
+3. Restart Claude Code or start a new session
 
-## 利用可能なHooks
+## Available Hooks
 
-### 1. 現在日時をコンテキストに追加 (`current-datetime.json`)
+### 1. Current DateTime Context (`current-datetime.json`)
 
-**問題:** Claudeが日付を勘違いすることがある
+**Problem:** Claude sometimes confuses today's date
 
-**解決策:** 毎回のプロンプト送信時に現在日時をClaudeのコンテキストに自動追加
+**Solution:** Automatically add current datetime to Claude's context on every prompt submission
 
 ```json
 {
@@ -23,7 +23,7 @@ Claude Codeの便利なhook設定集です。
       "hooks": [
         {
           "type": "command",
-          "command": "echo \"[現在: $(date '+%Y年%m月%d日 (%a) %H:%M')]\""
+          "command": "echo \"[Current: $(date '+%Y-%m-%d (%a) %H:%M')]\""
         }
       ]
     }
@@ -31,13 +31,13 @@ Claude Codeの便利なhook設定集です。
 }
 ```
 
-**効果:** Claudeに `[現在: 2025年12月26日 (木) 08:45]` のような情報が毎回渡される
+**Effect:** Claude receives `[Current: 2025-12-26 (Thu) 08:45]` with every prompt
 
-### 2. 通知音 (`notification-sound.json`)
+### 2. Notification Sound (`notification-sound-macos.json`)
 
-**問題:** 長時間タスクの完了に気づかない
+**Problem:** Missing completion of long-running tasks
 
-**解決策:** 通知時にシステム音を再生
+**Solution:** Play system sound on notifications
 
 ```json
 {
@@ -55,40 +55,40 @@ Claude Codeの便利なhook設定集です。
 }
 ```
 
-**注:** macOS用。Linux/Windowsでは別のコマンドに変更が必要
+**Note:** macOS only. Modify command for Linux/Windows.
 
 ---
 
-## Hook設定の基本
+## Hook Basics
 
-### 利用可能なイベント
+### Available Events
 
-| イベント | タイミング | 用途 |
-|---------|-----------|------|
-| `SessionStart` | セッション開始時 | 環境設定、初期化 |
-| `UserPromptSubmit` | プロンプト送信時 | コンテキスト追加 |
-| `PreToolUse` | ツール実行前 | 検証、ブロック |
-| `PostToolUse` | ツール実行後 | ログ、通知 |
-| `Notification` | 通知時 | アラート音 |
-| `Stop` | 応答完了時 | 完了通知 |
+| Event | Timing | Use Case |
+|-------|--------|----------|
+| `SessionStart` | Session start | Environment setup |
+| `UserPromptSubmit` | Prompt submission | Context injection |
+| `PreToolUse` | Before tool execution | Validation, blocking |
+| `PostToolUse` | After tool execution | Logging, notifications |
+| `Notification` | On notification | Alert sounds |
+| `Stop` | Response complete | Completion notification |
 
-### 設定場所
+### Configuration Locations
 
-- **ユーザー設定:** `~/.claude/settings.json`
-- **プロジェクト設定:** `.claude/settings.json`
+- **User settings:** `~/.claude/settings.json`
+- **Project settings:** `.claude/settings.json`
 
-### 基本構文
+### Basic Syntax
 
 ```json
 {
   "hooks": {
     "EventName": [
       {
-        "matcher": "ToolPattern",  // PreToolUse等で必要
+        "matcher": "ToolPattern",
         "hooks": [
           {
             "type": "command",
-            "command": "実行するコマンド"
+            "command": "shell command to execute"
           }
         ]
       }
@@ -97,6 +97,6 @@ Claude Codeの便利なhook設定集です。
 }
 ```
 
-## 参考リンク
+## References
 
-- [Claude Code Hooks公式ドキュメント](https://docs.anthropic.com/en/docs/claude-code/hooks)
+- [Claude Code Hooks Documentation](https://docs.anthropic.com/en/docs/claude-code/hooks)

@@ -4,7 +4,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "echo \"[現在: $(date '+%Y年%m月%d日 (%a) %H:%M')]\""
+          "command": "echo \"[Current: $(date '+%Y-%m-%d (%a) %H:%M')]\""
         }
       ]
     }

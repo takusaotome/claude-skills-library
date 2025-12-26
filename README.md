@@ -6,6 +6,32 @@ A collection of professional Claude Code skills for various domains and use case
 
 This repository contains custom skills designed to extend Claude's capabilities with specialized knowledge, workflows, and tools. Each skill is self-contained and follows best practices for skill development.
 
+## Repository Structure
+
+```
+claude-skills-library/
+├── skills/                 # All Claude Code skills
+│   ├── data-scientist/
+│   ├── project-manager/
+│   ├── business-analyst/
+│   └── ... (24 skills)
+├── hooks/                  # Claude Code hook configurations
+│   ├── current-datetime.json
+│   └── notification-sound-macos.json
+├── zip-packages/           # Packaged skills for distribution
+├── docs/                   # Additional documentation
+└── README.md
+```
+
+## Hooks
+
+Useful hook configurations for Claude Code. See [hooks/README.md](hooks/README.md) for details.
+
+| Hook | Purpose |
+|------|---------|
+| `current-datetime.json` | Prevents Claude from confusing today's date |
+| `notification-sound-macos.json` | Plays sound on notifications (macOS) |
+
 ## Available Skills
 
 ### 📊 Data Scientist
@@ -1164,6 +1190,111 @@ Expert AI/LLM adoption consultant with comprehensive use case knowledge across i
 
 ---
 
+### ☁️ Render CLI Expert
+
+**File:** `zip-packages/render-cli-expert.zip`
+
+Expert skill for managing Render cloud platform services via CLI. Supports deployments, log monitoring, SSH connections, PostgreSQL connections, and service management.
+
+**When to use:**
+- Deploying and managing Render services from the terminal
+- Monitoring service logs in real-time
+- Connecting to PostgreSQL databases via psql
+- SSH remote connections to services
+- Automating Render operations in CI/CD pipelines
+- Listing workspaces and services
+
+**Core Capabilities:**
+- ✅ Service deployment with wait and confirmation options
+- ✅ Real-time log monitoring and JSON output
+- ✅ PostgreSQL database connections via psql
+- ✅ SSH access to paid services
+- ✅ CI/CD automation patterns (GitHub Actions, shell scripts)
+- ✅ Workspace and service management
+
+**Key Commands:**
+| Command | Description |
+|---------|-------------|
+| `render login` | Interactive authentication |
+| `render services` | List all services |
+| `render deploys create` | Deploy a service |
+| `render logs --tail` | Real-time log monitoring |
+| `render psql` | Connect to PostgreSQL |
+| `render ssh` | SSH into service |
+| `render restart` | Restart a service |
+
+**CI/CD Integration:**
+```bash
+# Environment variable authentication
+export RENDER_API_KEY=rnd_xxx...
+
+# Deploy with wait and auto-confirm
+render deploys create srv-abc123 --wait --confirm
+```
+
+**Auto-Update Feature:**
+- Automatic documentation check every month
+- Manual update: `python3 scripts/render_cli_updater.py`
+- Force update: `python3 scripts/render_cli_updater.py --force`
+
+**Best Practices:**
+- Use `RENDER_API_KEY` environment variable for CI/CD
+- Use `--wait` flag to confirm deployment completion
+- Use `-o json` for automation scripts
+- Use `--confirm` to skip confirmation prompts
+
+**Resources:**
+- `scripts/render_cli_updater.py` - Auto-update checker script
+- `references/cli_updates.md` - Latest update log
+- `references/last_check.json` - Last check timestamp
+
+---
+
+### 🔍 Design Implementation Reviewer
+
+**File:** `zip-packages/design-implementation-reviewer.zip`
+
+A critical code review skill focused on whether code actually works correctly—not just whether it matches a design document.
+
+**When to use:**
+- Critical code review sessions
+- Verifying implementation against requirements
+- Finding bugs the design didn't anticipate
+- Reviewing data pipelines and ETL processes
+
+**Core Capabilities:**
+- ✅ Three-layer review framework (Code Quality → Execution Flow → Goal Achievement)
+- ✅ Concurrency, idempotency, and transaction boundary checks
+- ✅ Resource management and timeout/retry logic verification
+- ✅ API contract and backward compatibility analysis
+- ✅ Design gap identification
+
+**Key Features:**
+- Always uses `ultrathink` mode for thorough analysis
+- Security review is out of scope (use dedicated security skill)
+- Structured output: Review Scope → Findings → Open Questions
+- Test Plan required for Critical/High severity findings
+
+---
+
+### 🎬 Video2Minutes
+
+**File:** `zip-packages/video2minutes.zip`
+
+Automatically transcribes video files and generates structured meeting minutes.
+
+**When to use:**
+- Converting meeting recordings to text
+- Creating meeting minutes from video content
+- Extracting key points and action items from recorded discussions
+
+**Core Capabilities:**
+- ✅ Video transcription using Whisper
+- ✅ Automatic meeting minutes generation
+- ✅ Key points and action items extraction
+
+---
+
 ## Installation
 
 ### Installing a Skill
@@ -1262,6 +1393,7 @@ Contributions are welcome! To contribute a new skill:
 | itil4-consultant | 1.0 | IT Service Management, ITIL 4 Implementation | 34 Practices, Maturity Assessment, 5 Workflows, Department-Specific Consulting, DevOps Integration, Roadmap Creation |
 | salesforce-expert | 1.0 | Salesforce Development, Operations Management | Sharing Settings, Approval Processes, Apex/LWC Development, Architecture Design, Bug Analysis, Governor Limit Optimization |
 | ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy, System Integration, Business Improvement | 5 Industries, 5 Functions, 5 Scenarios, 4 Agent Types, 6 Case Studies, ROI Analysis, Implementation Plans |
+| render-cli-expert | 1.0 | Cloud Service Management, Render Platform | Deploys, Logs, SSH, PostgreSQL, CI/CD Automation, Auto-Update |
 
 ## License
 
@@ -2087,6 +2219,48 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### design-implementation-reviewer v1.0 (2025-12-26)
+- Initial release
+- Critical code review skill focused on correctness, not just design matching
+- Three-layer review framework:
+  - Layer 1: Code Quality (type safety, null handling, edge cases, logic, exceptions)
+  - Layer 2: Execution Flow (function wiring, data flow, joins, concurrency, idempotency, transactions, resources, timeouts, API contracts)
+  - Layer 3: Goal Achievement (expected results, real data validation, success rate, end-to-end trace, design gaps)
+- Always uses `ultrathink` mode for thorough analysis
+- Security review explicitly out of scope
+- Structured output with Review Scope, Findings (with Test Plan for Critical/High), Open Questions
+
+### video2minutes v1.0 (2025-12-25)
+- Initial release
+- Video transcription and meeting minutes generation
+- Uses Whisper for transcription
+- Automatic key points and action items extraction
+
+### render-cli-expert v1.0 (2025-12-24)
+- Initial release
+- Render cloud platform CLI management skill
+- Core capabilities:
+  - Service deployment with `--wait` and `--confirm` options
+  - Real-time log monitoring with `--tail` and JSON output
+  - PostgreSQL database connections via `render psql`
+  - SSH access to paid services (Web Services, Private Services, Background Workers)
+  - CI/CD automation patterns (GitHub Actions, shell scripts)
+  - Workspace and service management
+- Installation methods: Homebrew (recommended), direct download, from source
+- Authentication: Interactive login (`render login`) or API key (`RENDER_API_KEY`)
+- Output formats: text (default), JSON, YAML
+- Common patterns:
+  - Quick deploy with wait: `render deploys create srv-xxx --wait --confirm`
+  - Real-time log monitoring: `render logs srv-xxx --tail`
+  - Database backup via psql
+  - Service health check with JSON + jq
+  - Bulk operations scripts
+- Auto-update feature:
+  - Monthly automatic documentation check
+  - `scripts/render_cli_updater.py` for manual/forced updates
+  - Update logs saved to `references/cli_updates.md`
+- Best practices: API key for CI/CD, `--wait` flag, `-o json` for automation, `--confirm` for non-interactive
 
 ### ai-adoption-consultant v1.0 (2025-11-09)
 - Initial release
