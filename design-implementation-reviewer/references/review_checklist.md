@@ -1,8 +1,13 @@
 # Critical Code Review Checklist
 
-## Pre-Review: Define Expected Results
+> **Note:** This checklist supports general-purpose code review. Security review is out of scope - use a dedicated security review checklist for that purpose.
+
+## Pre-Review: Preparation
 
 ```markdown
+□ References loaded (review_checklist.md, common_gaps.md)
+□ Using ultrathink mode for thorough analysis
+
 ## Expected Results (fill before reviewing)
 
 **What should this code do?**
@@ -136,6 +141,66 @@ Issues found:
 - [ ] _______________________________________
 ```
 
+### 2.5 Concurrency & Race Conditions
+```markdown
+□ No shared mutable state without synchronization
+□ No time-of-check to time-of-use (TOCTOU) bugs
+□ Read-modify-write operations are atomic or locked
+
+Issues found:
+- [ ] _______________________________________
+```
+
+### 2.6 Idempotency
+```markdown
+□ Operations can be safely retried without side effects
+□ Duplicate requests handled (unique key/deduplication)
+□ Side effects don't compound on retry
+
+Issues found:
+- [ ] _______________________________________
+```
+
+### 2.7 Transaction Boundaries
+```markdown
+□ Related operations in same transaction
+□ Partial failure handled correctly
+□ Commit/rollback logic correct
+
+Issues found:
+- [ ] _______________________________________
+```
+
+### 2.8 Resource Management
+```markdown
+□ Connections/files/locks properly closed/released
+□ No resource leaks on error paths
+□ Cleanup in finally blocks or context managers
+
+Issues found:
+- [ ] _______________________________________
+```
+
+### 2.9 Timeouts & Retry Logic
+```markdown
+□ External calls have timeouts
+□ Retry logic uses backoff and max attempts
+□ Exhausted retries handled gracefully
+
+Issues found:
+- [ ] _______________________________________
+```
+
+### 2.10 API Contracts & Backward Compatibility
+```markdown
+□ Input/output contracts documented and enforced
+□ Change doesn't break existing callers
+□ Default values safe for existing clients
+
+Issues found:
+- [ ] _______________________________________
+```
+
 ---
 
 ## Layer 3: Goal Achievement
@@ -195,13 +260,34 @@ _______________________________________
 
 ## Findings Summary
 
-| # | Layer | Severity | Description | Location |
-|---|-------|----------|-------------|----------|
-| 1 |       |          |             |          |
-| 2 |       |          |             |          |
-| 3 |       |          |             |          |
-| 4 |       |          |             |          |
-| 5 |       |          |             |          |
+| # | Layer | Severity | Description | Location | Test Plan? |
+|---|-------|----------|-------------|----------|------------|
+| 1 |       |          |             |          | □          |
+| 2 |       |          |             |          | □          |
+| 3 |       |          |             |          | □          |
+| 4 |       |          |             |          | □          |
+| 5 |       |          |             |          | □          |
+
+> **Reminder:** Critical and High severity findings MUST include a Test Plan.
+
+---
+
+## Review Scope & Assumptions
+
+```markdown
+**Files Reviewed:**
+- _______________________________________
+- _______________________________________
+
+**Assumptions Made:**
+- _______________________________________
+
+**Unknowns / Not Verified:**
+- _______________________________________
+
+**Security Concerns (for separate review):**
+- _______________________________________
+```
 
 ---
 

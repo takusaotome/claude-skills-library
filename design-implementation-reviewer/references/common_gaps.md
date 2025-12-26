@@ -1,5 +1,7 @@
 # Common Code Defects & Design Gaps
 
+> **Note:** This reference covers general-purpose code defects. Security vulnerabilities are out of scope - use a dedicated security reference for that purpose.
+
 ## Part 1: Code Defects (Bugs)
 
 ### Category A: Type Errors
@@ -181,82 +183,207 @@ if not errors:
     save(data)
 ```
 
+### Category F: Concurrency / Idempotency / Transactions
+
+#### F.1 Race Condition
+```python
+# BUG: TOCTOU (time-of-check to time-of-use)
+if balance >= amount:
+    # Another thread may modify balance here!
+    balance -= amount
+
+# FIX: Use atomic operation or lock
+with lock:
+    if balance >= amount:
+        balance -= amount
+```
+
+#### F.2 Non-Idempotent Operation
+```python
+# BUG: Counter increments on every retry
+def process_order(order_id):
+    increment_counter()  # Runs multiple times on retry!
+    do_work()
+
+# FIX: Check if already processed
+def process_order(order_id):
+    if is_processed(order_id):
+        return
+    increment_counter()
+    do_work()
+    mark_processed(order_id)
+```
+
+#### F.3 Missing Transaction Boundary
+```python
+# BUG: Partial update if second operation fails
+update_inventory(item_id, -1)
+create_order(order_data)  # If this fails, inventory is wrong
+
+# FIX: Wrap in transaction
+with transaction():
+    update_inventory(item_id, -1)
+    create_order(order_data)
+```
+
+### Category G: Timeouts / Retry / Resource Leak
+
+#### G.1 Missing Timeout
+```python
+# BUG: Hangs forever if API is slow
+response = requests.get(url)
+
+# FIX: Add timeout
+response = requests.get(url, timeout=30)
+```
+
+#### G.2 Unbounded Retry
+```python
+# BUG: Retries forever
+while True:
+    try:
+        result = call_api()
+        break
+    except:
+        time.sleep(1)
+
+# FIX: Max attempts with backoff
+for attempt in range(3):
+    try:
+        result = call_api()
+        break
+    except:
+        time.sleep(2 ** attempt)
+else:
+    raise MaxRetriesExceeded()
+```
+
+#### G.3 Resource Leak
+```python
+# BUG: Connection not closed on error
+conn = open_connection()
+result = conn.query()  # If this raises, connection leaks
+conn.close()
+
+# FIX: Use context manager
+with open_connection() as conn:
+    result = conn.query()
+```
+
+### Category H: API Contract / Backward Compatibility
+
+#### H.1 Breaking API Change
+```python
+# BUG: Existing callers expect 2 return values
+# BEFORE: return result, status
+# AFTER:  return result  # Breaks all callers!
+
+# FIX: Add new parameter with default
+def process(data, return_status=True):
+    if return_status:
+        return result, status
+    return result
+```
+
+#### H.2 Missing Input Validation
+```python
+# BUG: Trusts caller to provide valid data
+def save_user(user_data):
+    db.insert(user_data)  # No validation!
+
+# FIX: Validate at API boundary
+def save_user(user_data):
+    validate_user(user_data)  # Enforce contract
+    db.insert(user_data)
+```
+
+#### H.3 Unsafe Default Value
+```python
+# BUG: New parameter breaks existing behavior
+def search(query, limit=None):  # Changed from limit=10
+    # Existing callers now get unlimited results!
+
+# FIX: Preserve existing default
+def search(query, limit=10):
+    ...
+```
+
 ---
 
 ## Part 2: Design Gaps
 
-### Category F: Missing Edge Cases
+### Category I: Missing Edge Cases
 
-#### F.1 Empty Input Not Considered
+#### I.1 Empty Input Not Considered
 ```markdown
 Design says: "Process all orders"
 Missing: What if there are no orders?
 Impact: Division by zero, empty file errors
 ```
 
-#### F.2 Duplicate Data Not Considered
+#### I.2 Duplicate Data Not Considered
 ```markdown
 Design says: "Join on Order Number"
 Missing: What if Order Number is duplicated?
 Impact: Row multiplication (1:N becomes N:M)
 ```
 
-#### F.3 Special Values Not Considered
+#### I.3 Special Values Not Considered
 ```markdown
 Design says: "State is 2-letter code"
 Reality: Data contains "California", "N/A", "", null
 Impact: Lookup failures, wrong results
 ```
 
-### Category G: Invalid Assumptions
+### Category J: Invalid Assumptions
 
-#### G.1 Uniqueness Assumption
+#### J.1 Uniqueness Assumption
 ```markdown
 Design assumes: "Each order has one address"
 Reality: Multiple addresses per order (billing vs shipping)
 Impact: Wrong address selected or data loss
 ```
 
-#### G.2 Completeness Assumption
+#### J.2 Completeness Assumption
 ```markdown
 Design assumes: "All records have required fields"
 Reality: 30% of records missing City field
 Impact: 30% of records fail to match
 ```
 
-#### G.3 Format Assumption
+#### J.3 Format Assumption
 ```markdown
 Design assumes: "Phone numbers are 10 digits"
 Reality: International formats, extensions, "(555) 123-4567"
 Impact: Validation rejects valid numbers
 ```
 
-### Category H: Missing Error Handling
+### Category K: Missing Error Handling
 
-#### H.1 External Service Failure
+#### K.1 External Service Failure
 ```markdown
 Design says: "Call API to get data"
 Missing: What if API is down? Timeout? Rate limited?
 Impact: Entire pipeline fails
 ```
 
-#### H.2 File Not Found
+#### K.2 File Not Found
 ```markdown
 Design says: "Read from input file"
 Missing: What if file doesn't exist? Wrong format?
 Impact: Crash with unclear error
 ```
 
-#### H.3 Data Validation Failure
+#### K.3 Data Validation Failure
 ```markdown
 Design says: "Validate and process"
 Missing: What to do with invalid records?
 Impact: Silent skip or crash
 ```
 
-### Category I: Performance Gaps
+### Category L: Performance Gaps
 
-#### I.1 N+1 Query Pattern
+#### L.1 N+1 Query Pattern
 ```markdown
 Design says: "For each order, look up customer"
 Missing: This is O(n) lookups
@@ -264,7 +391,7 @@ Impact: 10,000 orders = 10,000 lookups = slow
 Fix: Batch lookup or join
 ```
 
-#### I.2 Memory Explosion
+#### L.2 Memory Explosion
 ```markdown
 Design says: "Load all data into memory"
 Missing: What if data is 10GB?

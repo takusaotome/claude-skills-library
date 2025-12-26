@@ -1,9 +1,33 @@
 ---
 name: design-implementation-reviewer
-description: Use this skill for critical code review that focuses on whether the code actually works correctly and achieves the expected results - not just whether it matches a design document. This skill assumes designs can be wrong, finds bugs the design didn't anticipate, and verifies end-to-end correctness. Triggers include "critical code review", "deep code review", "verify this implementation works", "find bugs in this code", or reviewing implementation against requirements.
+description: Use this skill for critical code review that focuses on whether the code actually works correctly and achieves the expected results - not just whether it matches a design document. This skill assumes designs can be wrong, finds bugs the design didn't anticipate, and verifies end-to-end correctness. Triggers include "critical code review", "deep code review", "verify this implementation works", "find bugs in this code", or reviewing implementation against requirements. NOTE - Security review is OUT OF SCOPE; use a dedicated security review skill for that purpose.
 ---
 
 # Critical Code Reviewer
+
+> **IMPORTANT: Always use `ultrathink` mode when performing reviews with this skill.**
+
+## Scope
+
+This skill covers **general-purpose code review** focusing on correctness, logic, and goal achievement.
+
+**In Scope:**
+- Code correctness, logic errors, type safety
+- Data flow, execution flow, function wiring
+- Concurrency, idempotency, transaction boundaries
+- Resource management, timeouts, retry logic
+- API contracts, backward compatibility
+- Goal achievement and design gap analysis
+
+**Out of Scope:**
+- Security vulnerabilities (SQL injection, XSS, auth bypass, etc.) → Use dedicated security review skill
+- If security concerns are observed during review, note them briefly and recommend a separate security review.
+
+## Before You Start
+
+**Required Reading:** Before starting any review, read these references:
+1. `references/review_checklist.md` - Structured checklist for systematic review
+2. `references/common_gaps.md` - Common defect patterns and detection strategies
 
 ## Philosophy
 
@@ -38,6 +62,8 @@ This skill reviews code critically to find:
 
 **Review order: Layer 1 → Layer 2 → Layer 3**
 (Fix bugs before checking flow; fix flow before checking goals)
+
+> **CRITICAL:** Always scan ALL three layers completely. Do not stop early even if issues are found in Layer 1. Document findings as you go, then continue to the next layer.
 
 ---
 
@@ -213,6 +239,48 @@ df['status'] = map_status(df['status'])  # Original lost
 if df['status'] == 'ORIGINAL':  # Never matches
 ```
 
+### 2.5 Concurrency & Race Conditions
+
+**Check for concurrent access issues:**
+- Shared mutable state without synchronization
+- Time-of-check to time-of-use (TOCTOU) bugs
+- Lost updates in read-modify-write patterns
+
+### 2.6 Idempotency
+
+**Verify operations can be safely retried:**
+- Is the operation idempotent? If not, what happens on retry?
+- Are there side effects that compound on retry?
+- Is there a unique key or deduplication mechanism?
+
+### 2.7 Transaction Boundaries
+
+**Check transaction scope:**
+- Are related operations in the same transaction?
+- What happens on partial failure?
+- Are commits/rollbacks handled correctly?
+
+### 2.8 Resource Management
+
+**Check resource lifecycle:**
+- Are connections, files, locks properly closed/released?
+- Are there potential resource leaks on error paths?
+- Is there proper cleanup in finally blocks?
+
+### 2.9 Timeouts & Retry Logic
+
+**Check timeout handling:**
+- Are there timeouts for external calls?
+- Is retry logic correct (backoff, max attempts)?
+- What happens when timeout/retry is exhausted?
+
+### 2.10 API Contracts & Backward Compatibility
+
+**Check API boundaries:**
+- Are input/output contracts documented and enforced?
+- Does the change break existing callers?
+- Are default values safe for existing clients?
+
 ---
 
 ## Layer 3: Goal Achievement Review
@@ -362,6 +430,36 @@ print(f"Sample:\n{df.head()}")
 
 ## Review Output Format
 
+### Output Structure
+
+Reviews MUST be structured in this order:
+1. **Review Scope / Assumptions / Unknowns** (defines what was reviewed)
+2. **Findings** (Critical → High → Medium → Low)
+3. **Open Questions** (if any remain after review)
+
+> **Rationale:** Declaring scope first prevents omissions - reviewers explicitly state what was/wasn't examined before listing findings.
+
+### Review Scope Template
+
+```markdown
+## Review Scope
+
+**Files Reviewed:**
+- file1.py (lines X-Y)
+- file2.py (full)
+
+**Assumptions Made:**
+- [Assumption 1 - e.g., "Assuming single-threaded execution"]
+- [Assumption 2]
+
+**Unknowns / Not Verified:**
+- [Unknown 1 - e.g., "Database isolation level not confirmed"]
+- [Unknown 2]
+
+**Out of Scope:**
+- Security review (recommend separate security audit)
+```
+
 ### Finding Template
 
 ```markdown
@@ -386,22 +484,43 @@ print(f"Sample:\n{df.head()}")
 **Fix:**
 [How to correct it]
 
+**Test Plan (required for Critical/High):**
+[How to verify the fix works - specific test cases or verification steps]
+
 **Design Gap (if applicable):**
 [What the design missed or got wrong]
 ```
 
+> **NOTE:** For Critical and High severity findings, the **Test Plan** field is mandatory. Provide specific test cases or verification steps.
+
 ### Severity Definitions
 
-| Severity | Definition |
-|----------|------------|
-| Critical | Code will crash or produce completely wrong results |
-| High | Significant portion of data affected incorrectly |
-| Medium | Edge cases mishandled or minor data issues |
-| Low | Style, performance, or maintainability issues |
+| Severity | Definition | Test Plan |
+|----------|------------|-----------|
+| Critical | Code will crash or produce completely wrong results | Required |
+| High | Significant portion of data affected incorrectly | Required |
+| Medium | Edge cases mishandled or minor data issues | Optional |
+| Low | Style, performance, or maintainability issues | Optional |
+
+### Open Questions Template
+
+```markdown
+## Open Questions
+
+- [Question 1 - e.g., "What is the expected behavior when X?"]
+- [Question 2]
+```
 
 ---
 
 ## Review Checklist Summary
+
+### Pre-Review
+```markdown
+□ Read references/review_checklist.md
+□ Read references/common_gaps.md
+□ Define expected result (input → output → success criteria)
+```
 
 ### Layer 1: Code Quality
 ```markdown
@@ -420,6 +539,12 @@ print(f"Sample:\n{df.head()}")
 □ Data flows correctly through pipeline
 □ Joins are correct (types, normalization, cardinality)
 □ Order dependencies satisfied
+□ Concurrency/race conditions checked
+□ Idempotency verified
+□ Transaction boundaries correct
+□ Resources properly managed (no leaks)
+□ Timeouts and retry logic verified
+□ API contracts and backward compatibility checked
 ```
 
 ### Layer 3: Goal Achievement
@@ -431,12 +556,19 @@ print(f"Sample:\n{df.head()}")
 □ Design gaps identified
 ```
 
+### Post-Review
+```markdown
+□ Critical/High findings include Test Plan
+□ Review Scope/Assumptions/Unknowns documented
+□ Security concerns noted for separate review (if any)
+```
+
 ---
 
 ## Usage
 
 ```bash
-# Invoke the skill
+# Invoke the skill (always uses ultrathink mode)
 /design-implementation-reviewer
 
 # Or with natural language
@@ -444,6 +576,8 @@ print(f"Sample:\n{df.head()}")
 "Does this code actually work? Check everything."
 "Review this code assuming it has bugs - find them"
 ```
+
+> **Reminder:** This skill always uses `ultrathink` mode for thorough analysis. Security review is out of scope - recommend a dedicated security review skill if security concerns are observed.
 
 ## Key Mindset
 
