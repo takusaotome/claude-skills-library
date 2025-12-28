@@ -1295,6 +1295,55 @@ Automatically transcribes video files and generates structured meeting minutes.
 
 ---
 
+### 🔍 Migration Validation Explorer
+
+**File:** `migration-validation-explorer/SKILL.md`
+
+Exploratory data-migration validation and QA ideation workflow for CRM migrations. Surfaces hidden data quality risks and generates prioritized QA backlogs.
+
+**When to use:**
+- Validating data migration projects (especially CRM migrations)
+- Discovering hidden data quality risks
+- Generating new validation angles from mapping specs
+- Turning validation reports into QA-ready checklists
+- Exploring validation gaps in migration datasets
+
+**Core Capabilities:**
+- ✅ Focus Catalog building (20+ candidate focus areas)
+- ✅ Exploratory validation cycles (diverge → converge → verify)
+- ✅ Cross-pollination cycles (lens fusion for new hypotheses)
+- ✅ QA backlog generation with risk prioritization
+- ✅ Structured reporting (executive + technical summaries)
+
+**Workflow:**
+
+| Step | Description |
+|------|-------------|
+| Step 1 | Build Focus Catalog (Keys/IDs, Relationships, Normalization, Status, Dates, Money, etc.) |
+| Step 2 | Exploratory Cycle x10 (Focus → Diverge → Converge → Verify → Deepen) |
+| Step 3 | Cross-Pollination Cycle x10 (Fuse lenses: CRM, Real-estate, Data pipeline, QA) |
+| Step 4 | Converge into QA Backlog (Check, Scope, Risk, Evidence, Method, Pass Criteria, Owner) |
+| Step 5 | Report (Exec summary, Technical summary, Appendix) |
+
+**Focus Categories:**
+- Keys/IDs: external IDs, uniqueness, formatting, nullability
+- Relationships: Account-Contact, Opportunity-Property, Invoice-LineItems
+- Normalization: address, unit number, city/state inference
+- Status/Stage: picklists, mapping tables, default fallbacks
+- Ownership: OwnerId mapping, license constraints
+- Dates: placeholders, timezone/format, lifecycle consistency
+- Money: currency parsing, zero vs null, rollups
+- Volume/dedup: record counts, duplicates, merge strategy
+- Edge cases: renewals, cancellations, "not applicable" flags
+
+**Example Use Cases:**
+- "Validate the migration dataset and find data quality issues"
+- "Create a QA checklist for this CRM migration"
+- "Explore validation gaps in the mapping specification"
+- "Generate new validation angles for the data migration"
+
+---
+
 ## Installation
 
 ### Installing a Skill
@@ -1394,6 +1443,7 @@ Contributions are welcome! To contribute a new skill:
 | salesforce-expert | 1.0 | Salesforce Development, Operations Management | Sharing Settings, Approval Processes, Apex/LWC Development, Architecture Design, Bug Analysis, Governor Limit Optimization |
 | ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy, System Integration, Business Improvement | 5 Industries, 5 Functions, 5 Scenarios, 4 Agent Types, 6 Case Studies, ROI Analysis, Implementation Plans |
 | render-cli-expert | 1.0 | Cloud Service Management, Render Platform | Deploys, Logs, SSH, PostgreSQL, CI/CD Automation, Auto-Update |
+| migration-validation-explorer | 1.0 | Data Migration QA, CRM Migrations | Focus Catalog, Exploratory Cycles, Cross-Pollination, QA Backlog Generation, Structured Reports |
 
 ## License
 
@@ -2261,6 +2311,20 @@ Future skills planned for this library:
   - `scripts/render_cli_updater.py` for manual/forced updates
   - Update logs saved to `references/cli_updates.md`
 - Best practices: API key for CI/CD, `--wait` flag, `-o json` for automation, `--confirm` for non-interactive
+
+### migration-validation-explorer v1.0 (2025-12-28)
+- Initial release
+- Exploratory data-migration validation and QA ideation workflow
+- 5-step validation workflow:
+  - Step 1: Build Focus Catalog (20+ candidate focus areas)
+  - Step 2: Exploratory Cycle x10 (Focus → Diverge → Converge → Verify → Deepen)
+  - Step 3: Cross-Pollination Cycle x10 (Lens fusion for new hypotheses)
+  - Step 4: Converge into QA Backlog (prioritized checks with risk levels)
+  - Step 5: Report (Exec summary, Technical summary, Appendix)
+- Focus categories: Keys/IDs, Relationships, Normalization, Status/Stage, Ownership, Dates, Money, Volume/dedup, Edge cases
+- Lens library: CRM migration, Real-estate domain, Data pipeline, QA perspectives
+- Structured output format for each validation cycle
+- QA backlog table generation with Check, Scope, Risk, Evidence, Method, Pass Criteria, Owner
 
 ### ai-adoption-consultant v1.0 (2025-11-09)
 - Initial release
