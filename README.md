@@ -1297,7 +1297,7 @@ Automatically transcribes video files and generates structured meeting minutes.
 
 ### 🔍 Migration Validation Explorer
 
-**File:** `migration-validation-explorer/SKILL.md`
+**File:** `skills/migration-validation-explorer/SKILL.md`
 
 Exploratory data-migration validation and QA ideation workflow for CRM migrations. Surfaces hidden data quality risks and generates prioritized QA backlogs.
 
