@@ -1,0 +1,345 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Helpdesk KB Index Schema",
+  "description": "Schema for helpdesk knowledge base index configuration",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version number"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Last update date (YYYY-MM-DD)"
+    },
+    "kb_base_path": {
+      "type": "string",
+      "description": "Base path to KB article files"
+    },
+
+    "auto_detection_patterns": {
+      "type": "object",
+      "description": "Patterns for automatic issue detection",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "Regular expression pattern"
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Detection priority (1 = highest)"
+          }
+        },
+        "required": ["pattern", "priority"]
+      }
+    },
+
+    "confidence_thresholds": {
+      "type": "object",
+      "description": "Confidence score thresholds for response selection",
+      "properties": {
+        "high": {
+          "type": "object",
+          "properties": {
+            "min_score": {"type": "integer"},
+            "action": {"type": "string"},
+            "template": {"type": "string"}
+          },
+          "required": ["min_score"]
+        },
+        "medium": {
+          "type": "object",
+          "properties": {
+            "min_score": {"type": "integer"},
+            "max_score": {"type": "integer"},
+            "action": {"type": "string"},
+            "template": {"type": "string"}
+          },
+          "required": ["min_score", "max_score"]
+        },
+        "low": {
+          "type": "object",
+          "properties": {
+            "min_score": {"type": "integer"},
+            "max_score": {"type": "integer"},
+            "action": {"type": "string"},
+            "template": {"type": "string"}
+          },
+          "required": ["min_score", "max_score"]
+        }
+      }
+    },
+
+    "error_codes": {
+      "type": "object",
+      "description": "Error code to KB article mapping",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "kb": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "array", "items": {"type": "string"}}
+            ],
+            "description": "KB article file(s)"
+          },
+          "primary_kb": {
+            "type": "string",
+            "description": "Primary KB if multiple articles"
+          },
+          "section": {
+            "type": "string",
+            "description": "Section within KB article"
+          },
+          "description": {
+            "type": "string",
+            "description": "Error description"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "Default confidence level"
+          },
+          "resolution_time": {
+            "type": "string",
+            "description": "Estimated resolution time"
+          },
+          "common_causes": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Common causes for this error"
+          },
+          "escalation_likely": {
+            "type": "boolean",
+            "description": "Whether escalation is likely needed"
+          },
+          "is_expected_behavior": {
+            "type": "boolean",
+            "description": "Whether this is expected system behavior"
+          },
+          "detailed_kb": {
+            "type": "boolean",
+            "description": "Whether this has a dedicated detailed KB"
+          }
+        },
+        "required": ["kb", "description"]
+      }
+    },
+
+    "keywords": {
+      "type": "object",
+      "description": "Keyword to KB article mapping",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "kb": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "array", "items": {"type": "string"}}
+            ],
+            "description": "KB article file(s)"
+          },
+          "primary_kb": {
+            "type": "string",
+            "description": "Primary KB if multiple articles"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Alternative terms and translations"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "Match confidence level"
+          },
+          "category": {
+            "type": "string",
+            "description": "Issue category"
+          },
+          "is_known_bug": {
+            "type": "boolean",
+            "description": "Whether this is a known bug"
+          }
+        },
+        "required": ["kb", "confidence"]
+      }
+    },
+
+    "devices": {
+      "type": "object",
+      "description": "Device/product specific configuration",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "kb": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "array", "items": {"type": "string"}}
+            ],
+            "description": "KB article file(s)"
+          },
+          "error_prefix": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Error code prefixes for this device"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "Device manufacturer"
+          },
+          "model_info": {
+            "type": "string",
+            "description": "Model information"
+          }
+        },
+        "required": ["kb"]
+      }
+    },
+
+    "categories": {
+      "type": "object",
+      "description": "Issue category definitions",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "kb": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Related KB articles"
+          },
+          "description": {
+            "type": "string",
+            "description": "Category description"
+          },
+          "typical_resolution_time": {
+            "type": "string",
+            "description": "Typical time to resolve"
+          },
+          "on_site_likely": {
+            "type": "boolean",
+            "description": "Whether on-site visit may be needed"
+          },
+          "remote_support": {
+            "type": "boolean",
+            "description": "Whether remote support is possible"
+          },
+          "self_service_possible": {
+            "type": "boolean",
+            "description": "Whether customer can self-resolve"
+          }
+        }
+      }
+    },
+
+    "escalation_rules": {
+      "type": "object",
+      "description": "Escalation rule configuration",
+      "properties": {
+        "auto_escalate": {
+          "type": "object",
+          "properties": {
+            "repeat_same_error": {
+              "type": "object",
+              "properties": {
+                "threshold": {"type": "integer"},
+                "period_days": {"type": "integer"},
+                "action": {"type": "string"}
+              }
+            },
+            "unknown_error_code": {
+              "type": "object",
+              "properties": {
+                "action": {"type": "string"}
+              }
+            },
+            "multi_system_failure": {
+              "type": "object",
+              "properties": {
+                "threshold": {"type": "integer"},
+                "action": {"type": "string"}
+              }
+            },
+            "hardware_replacement_needed": {
+              "type": "object",
+              "properties": {
+                "action": {"type": "string"}
+              }
+            }
+          }
+        },
+        "priority_escalation": {
+          "type": "object",
+          "properties": {
+            "vip_customers": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "VIP customer identifiers"
+            },
+            "high_traffic_hours": {
+              "type": "object",
+              "properties": {
+                "start": {"type": "integer"},
+                "end": {"type": "integer"}
+              }
+            },
+            "weekend_priority": {"type": "boolean"}
+          }
+        }
+      }
+    },
+
+    "escalation_contacts": {
+      "type": "object",
+      "description": "Escalation contact information",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "vendor": {
+            "type": "string",
+            "description": "Vendor/team name"
+          },
+          "contact": {
+            "type": "string",
+            "description": "Primary contact email/phone"
+          },
+          "technical": {
+            "type": "string",
+            "description": "Technical contact"
+          },
+          "response_sla": {
+            "type": "string",
+            "description": "Expected response time"
+          },
+          "scope": {
+            "type": "string",
+            "description": "Scope of responsibility"
+          },
+          "note": {
+            "type": "string",
+            "description": "Additional notes"
+          }
+        },
+        "required": ["vendor"]
+      }
+    },
+
+    "template_variables": {
+      "type": "object",
+      "description": "Template variable definitions",
+      "additionalProperties": {
+        "type": "string",
+        "description": "Variable description"
+      }
+    }
+  },
+  "required": ["version", "kb_base_path", "confidence_thresholds"]
+}

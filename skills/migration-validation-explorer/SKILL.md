@@ -1,93 +1,184 @@
 ---
 name: migration-validation-explorer
-description: Exploratory data-migration validation and QA ideation workflow for CRM migrations. Use when you need to discover hidden data quality risks, generate new validation angles, or turn mapping specs and validation reports into a prioritized QA backlog. Triggers include requests like "validate migration data", "find data quality issues", "create QA checklist for migration", "explore validation gaps", or when working with migration datasets that may have undiscovered risks.
+description: Exploratory data-migration validation and QA ideation workflow. Use when you need to discover hidden risks, generate new validation angles, and converge mapping specs/validation reports into a prioritized QA backlog for CRM migrations.
+version: 1.2
+last_updated: 2025-12-28
 ---
 
 # Migration Validation Explorer
 
-Run structured exploratory validation cycles on migration datasets to surface latent issues and converge them into a QA-ready checklist.
+A repeatable, **inventive exploratory** workflow to discover hidden risks in CRM migration data, then converge them into a QA-ready backlog.
 
-## Inputs
+## When to Use
 
-Locate these files before starting:
-- Mapping spec: `docs/data_mapping_specification*.md`
-- Validation plan: `docs/migration_data_validation_plan.md`
-- Validation report: `outputs/*/data_validation_report.md`
-- Dataset: `outputs/migration_dataset_*`
+- Mapping spec, validation plan, and validation report exist
+- You suspect **undiscovered issues** (coverage gaps, silent failures, edge cases)
+- Need to generate new validation angles beyond standard checklists
 
-Use `rg --files -g '*validation*'` or `rg --files -g '*mapping*spec*'` if paths vary.
+## What "Detection" Means
 
-## Workflow
+1. **Spec ambiguity**: contradiction, missing rule, unclear definition
+2. **Verification-ready hypothesis**: concrete check (query/diff/sample) with pass/fail criteria
+3. **Coverage gap**: existing validation misses this area or only tests happy path
+4. **Behavioral risk**: data matches but system behavior will diverge (approvals, reports, integrations)
 
-### Step 1: Build Focus Catalog
+---
 
-Create 20+ candidate focus areas from specs/reports:
+## Inputs Required
 
-| Category | Examples |
-|----------|----------|
-| Keys/IDs | external IDs, uniqueness, formatting, nullability |
-| Relationships | Account-Contact, Opportunity-Property, Invoice-LineItems |
-| Normalization | address, unit number, city/state inference |
-| Status/Stage | picklists, mapping tables, default fallbacks |
-| Ownership | OwnerId mapping, license constraints, fallback rates |
-| Dates | placeholders, timezone/format, lifecycle consistency |
-| Money | currency parsing, zero vs null, rollups vs raw |
-| Volume/dedup | record counts, duplicates, merge strategy |
-| Edge cases | renewals, cancellations, "not applicable" flags |
+**Minimum:**
+- Mapping spec (latest)
+- Data model/schema (objects, fields, relationships)
+- Validation plan + report(s)
+- Dataset extracts (legacy + transformed + loaded)
 
-### Step 2: Exploratory Cycle (x10)
+**Locate files:**
+```bash
+rg --files -g '*validation*report*'
+rg --files -g '*mapping*spec*'
+```
 
-For each cycle, pick one focus item randomly:
+---
 
-1. **Focus**: One item from catalog
-2. **Diverge**: List 6-10 possible failure modes
-3. **Converge**: Select top 2-3 plausible risks
-4. **Verify**: Define concrete checks (queries, file diffs, thresholds)
-5. **Deepen**: If verified, identify root causes + remediation
+## Core Principles
 
-### Step 3: Cross-Pollination Cycle (x10)
+### 1. Triangulate: Never Trust a Single Oracle
+Use >= 2 oracles per check:
+- Record counts by segment
+- Sum checks (money) + reconciliation
+- Referential integrity
+- UI views vs admin queries
+- Report totals vs drill-down
 
-Fuse two lenses into new validation angles:
+### 2. "Missing" Might Mean "Not Visible"
+Always validate both:
+- **Admin view** (truth of storage)
+- **Business-user view** (truth of operation)
 
-**Lens Library:**
-- CRM migration: external IDs, picklist drift, lookup cardinality, ownership licensing
-- Real-estate domain: lease lifecycle, unit/address ambiguity, broker roles, property hierarchy
-- Data pipeline: join key reuse, normalization side effects, schema drift
-- QA: sampling bias, over-reliance on SF constraints, silent fallback logic
+### 3. Convergence Is a Product
+Every cycle must produce:
+- A runnable check, OR
+- A clarified rule, OR
+- A regression test, OR
+- A monitoring metric
 
-Template:
-1. **Lens A + Lens B** -> new validation hypothesis
-2. **Apply** to specific object/relationship
+---
+
+## Workflow Overview
+
+### Step 0: Preparation
+
+**0.1 Establish Mission:**
+- Identify business-critical flows (money, compliance, customer impact)
+- Define acceptance thresholds (allowable mismatch %, max missing refs)
+
+**0.2 Build Focus Catalog (>= 20 items):**
+> Load `references/focus_catalog.md` for the full category list
+
+Key buckets: Keys/IDs, Relationships, Normalization, Status/Stage, Ownership, Dates, Money, Volume/Dedup, Automation, Integrations, Reporting, Archiving
+
+---
+
+### Step 1: Random Focus Cycle (x10)
+
+Pick **one** focus item randomly. For each:
+
+1. **Focus**: One catalog item
+2. **Diverge**: Generate 6-12 failure mode hypotheses
+   > Load `references/divergence_library.md` for failure mode patterns
+3. **Converge**: Select top 2-3 plausible/high-impact risks
+4. **Verify**: Define minimal experiments (queries, diffs, samples)
+5. **Deepen**: Root cause -> remediation -> prevention
+6. **Generalize**: Apply pattern to >= 2 other objects/flows
+
+**Output per cycle:** Use template from `assets/exploration_log_template.md`
+
+---
+
+### Step 2: Cross-Pollination Cycle (x10)
+
+Pick **two lenses** and fuse them into new hypotheses.
+
+> Load `references/lens_library.md` for available lenses
+
+1. **Lens A + Lens B** -> new hypothesis
+2. **Apply** to specific object/relationship/integration
 3. **Verify** with targeted checks
-4. **Converge** into go/no-go or follow-up
+4. **Converge** into Go/No-Go or follow-up
+5. **Generalize** into reusable test or monitoring rule
 
-### Step 4: Converge Into QA Backlog
+---
 
-Create backlog table:
+### Step 3: Converge Into QA Backlog
 
-| Check | Scope | Risk | Evidence | Method | Pass Criteria | Owner |
-|-------|-------|------|----------|--------|---------------|-------|
-| ... | ... | H/M/L | ... | ... | ... | ... |
+Create backlog using `assets/qa_backlog_template.md`:
 
-### Step 5: Report
+| Check | Scope | Risk | Evidence | Method | Pass Criteria | Owner | Status |
+|-------|-------|------|----------|--------|---------------|-------|--------|
 
-Output:
-- **Exec summary**: Top 3 risks + decision asks
-- **Technical summary**: All checks + status
-- **Appendix**: Queries/paths
+**Risk scoring:** Impact x Likelihood x Detectability (H/M/L)
 
-## Output Format
+---
 
-Per cycle:
+## Root Cause Taxonomy
+
+When issue is verified, classify:
+
+**Root Cause:**
+- Spec/definition (ambiguous rule)
+- Mapping/transform (wrong mapping, missing branch)
+- Load/automation (triggers suppressed/over-fired)
+- Operations/monitoring (silent failures)
+
+**Remediation:**
+- Data fix (backfill, re-transform)
+- Design fix (model, field types, security)
+- Process fix (migration mode, runbook)
+- Monitoring fix (reconciliations, alerts)
+
+---
+
+## Quick Start: High-Impact Checks
+
+If you must prioritize, start here:
+> See `references/seed_examples.md` for detailed examples
+
+1. Month-end boundaries (timezone/DateTime)
+2. Invoice totals + lifecycle status
+3. Cross-department view correctness
+4. Migration-mode automation control
+5. Integration retry idempotency
+6. Archive usability (searchable + permissioned)
+
+---
+
+## Resources
+
+| Resource | Purpose | When to Load |
+|----------|---------|--------------|
+| `references/focus_catalog.md` | Full focus category list | Step 0.2 |
+| `references/divergence_library.md` | Failure mode patterns | Step 1 (Diverge) |
+| `references/lens_library.md` | Cross-pollination lenses | Step 2 |
+| `references/seed_examples.md` | Worked examples | When stuck |
+| `assets/exploration_log_template.md` | Per-cycle output | Step 1, 2 |
+| `assets/qa_backlog_template.md` | Final backlog + gates | Step 3 |
+
+---
+
+## Output Summary
+
+**Per-cycle output:**
 ```
+Cycle #: [n]
 Focus: [item]
-Divergent: [hypotheses]
-Converged: [risks]
+Divergent: [6-12 hypotheses]
+Converged: [top 2-3 risks]
 Checks: [verification methods]
-Actions: [next steps]
+Result: Pass/Fail/Unknown
+Actions: [remediation + generalization]
 ```
 
-Final convergence:
-- Prioritized risks (High/Medium/Low)
-- QA backlog table
+**Final deliverables:**
+- Prioritized QA backlog table
+- Quality gates checklist
 - Open questions/assumptions

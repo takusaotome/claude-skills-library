@@ -1344,6 +1344,50 @@ Exploratory data-migration validation and QA ideation workflow for CRM migration
 
 ---
 
+### 📞 Helpdesk Responder
+
+**File:** `skills/helpdesk-responder/SKILL.md`
+
+Generic helpdesk first-response skill for creating KB-based response drafts. Adaptable to any industry or product support context.
+
+**When to use:**
+- Handling customer support tickets or inquiries
+- Creating response drafts based on knowledge base articles
+- Building a structured helpdesk workflow
+- Training support staff on response patterns
+
+**Core Capabilities:**
+- ✅ Auto-detection patterns (error codes, keywords, symptoms)
+- ✅ Confidence scoring for response selection (High/Medium/Low)
+- ✅ Multi-language response templates (English/Japanese)
+- ✅ KB index configuration with JSON schema
+- ✅ Escalation workflow with handoff format
+
+**Workflow:**
+
+| Phase | Description |
+|-------|-------------|
+| Phase 1 | Inquiry Analysis (extract info, detect patterns, categorize) |
+| Phase 2 | KB Search & Matching (confidence scoring, article prioritization) |
+| Phase 3 | Response Draft Generation (template selection, variable substitution) |
+
+**Confidence Thresholds:**
+- High (>=80%): Provide solution directly
+- Medium (50-79%): Request additional information
+- Low (<50%): Escalate for investigation
+
+**Key Components:**
+- `references/kb_schema.json` - Complete JSON schema for KB index configuration
+- `assets/response_templates.md` - Ready-to-use response templates (7 scenarios)
+
+**Example Use Cases:**
+- "Create a response draft for ticket #1234"
+- "Handle this customer inquiry about error code 30001"
+- "Generate a Japanese response for this support request"
+- "Set up a KB-based helpdesk workflow for my product"
+
+---
+
 ## Installation
 
 ### Installing a Skill
@@ -1444,6 +1488,7 @@ Contributions are welcome! To contribute a new skill:
 | ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy, System Integration, Business Improvement | 5 Industries, 5 Functions, 5 Scenarios, 4 Agent Types, 6 Case Studies, ROI Analysis, Implementation Plans |
 | render-cli-expert | 1.0 | Cloud Service Management, Render Platform | Deploys, Logs, SSH, PostgreSQL, CI/CD Automation, Auto-Update |
 | migration-validation-explorer | 1.0 | Data Migration QA, CRM Migrations | Focus Catalog, Exploratory Cycles, Cross-Pollination, QA Backlog Generation, Structured Reports |
+| helpdesk-responder | 1.0 | Customer Support, Helpdesk | KB-Based Response Drafts, Confidence Scoring, Auto-Detection, Multi-Language Templates, Escalation Workflow |
 
 ## License
 
@@ -2325,6 +2370,22 @@ Future skills planned for this library:
 - Lens library: CRM migration, Real-estate domain, Data pipeline, QA perspectives
 - Structured output format for each validation cycle
 - QA backlog table generation with Check, Scope, Risk, Evidence, Method, Pass Criteria, Owner
+
+### helpdesk-responder v1.0 (2025-12-28)
+- Initial release
+- Generic helpdesk first-response skill based on round1-helpdesk-responder
+- 3-phase workflow: Inquiry Analysis → KB Search & Matching → Response Draft Generation
+- Core features:
+  - Auto-detection patterns (error codes, device names, symptoms)
+  - Confidence scoring system (High >=80%, Medium 50-79%, Low <50%)
+  - Template-based response generation
+  - Multi-language support (English/Japanese)
+  - Escalation workflow with structured handoff format
+- Resources:
+  - `references/kb_schema.json` - Complete JSON schema for KB index configuration
+  - `assets/response_templates.md` - 7 ready-to-use response templates
+- Customizable for any industry or product support context
+- Template variables for dynamic content substitution
 
 ### ai-adoption-consultant v1.0 (2025-11-09)
 - Initial release
