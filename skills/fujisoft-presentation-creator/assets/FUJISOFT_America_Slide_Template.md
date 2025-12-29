@@ -14,9 +14,9 @@ style: |
     --title-font: 'Bahnschrift', 'Arial Black', sans-serif;
     --body-font: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --light-font: 'Lato', 'Segoe UI Light', sans-serif;
-    --round1-primary: #1a237e;
-    --round1-secondary: #3949ab;
-    --round1-accent: #5c6bc0;
+    --brand-primary: #1a237e;
+    --brand-secondary: #3949ab;
+    --brand-accent: #5c6bc0;
     --success-color: #4caf50;
     --warning-color: #ff9800;
     --info-color: #2196f3;
@@ -157,7 +157,7 @@ style: |
     width: 100%;
     height: 50px;
     background: white;
-    color: var(--round1-primary) !important;
+    color: var(--brand-primary) !important;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -176,7 +176,7 @@ style: |
   section.content h1 {
     font-size: 2.1rem;
     font-weight: 600;
-    color: var(--round1-primary);
+    color: var(--brand-primary);
     margin-bottom: 0.7em;
     font-family: var(--title-font);
     line-height: 1.3;
@@ -187,7 +187,7 @@ style: |
   section.content h2 {
     font-size: 1.6rem;
     font-weight: 500;
-    color: var(--round1-secondary);
+    color: var(--brand-secondary);
     margin-bottom: 0.6em;
     margin-top: 1em;
     font-family: var(--title-font);
@@ -198,7 +198,7 @@ style: |
   section.content h3 {
     font-size: 1.3rem;
     font-weight: 500;
-    color: var(--round1-primary);
+    color: var(--brand-primary);
     margin-bottom: 0.5em;
     margin-top: 0.8em;
     line-height: 1.3;
@@ -232,7 +232,7 @@ style: |
   }
   
   section.content th {
-    background: linear-gradient(135deg, var(--round1-primary), var(--round1-secondary));
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     color: white;
     padding: 0.8em 1em;
     text-align: left;
@@ -395,7 +395,7 @@ style: |
   /* Visual Design Elements */
   .info-box {
     background: var(--info-bg);
-    border-left: 4px solid var(--round1-accent);
+    border-left: 4px solid var(--brand-accent);
     padding: 1em;
     margin: 1em 0;
     border-radius: 0 6px 6px 0;
@@ -448,7 +448,7 @@ style: |
     font-size: 1.8em;
     font-weight: bold;
     margin: 0.2em 0;
-    color: var(--round1-primary);
+    color: var(--brand-primary);
   }
   
   .step-card {
@@ -461,7 +461,7 @@ style: |
   }
   
   .step-number {
-    background: var(--round1-primary);
+    background: var(--brand-primary);
     color: white;
     padding: 0.8em 1em;
     font-weight: bold;
@@ -515,7 +515,7 @@ style: |
   }
   
   .badge {
-    background: var(--round1-accent);
+    background: var(--brand-accent);
     color: white;
     padding: 0.3em 0.8em;
     border-radius: 15px;
@@ -557,7 +557,7 @@ style: |
   }
   
   .timeline-badge {
-    background: var(--round1-primary);
+    background: var(--brand-primary);
     color: white;
     padding: 0.5em 1em;
     border-radius: 20px;
@@ -633,7 +633,7 @@ style: |
   }
   
   .summary-box {
-    background: linear-gradient(135deg, var(--round1-primary), var(--round1-secondary));
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
     color: white;
     padding: 1.5em;
     border-radius: 8px;
@@ -737,12 +737,12 @@ style: |
   }
   
   .gantt-table th {
-    background: var(--round1-primary);
+    background: var(--brand-primary);
     color: white;
     padding: 0.6em;
     text-align: left;
     font-weight: 600;
-    border: 1px solid var(--round1-primary);
+    border: 1px solid var(--brand-primary);
   }
   
   .gantt-table td {
@@ -756,8 +756,8 @@ style: |
   }
   
   .gantt-bar {
-    background: var(--round1-primary) !important;
-    color: var(--round1-primary) !important;
+    background: var(--brand-primary) !important;
+    color: var(--brand-primary) !important;
     text-align: center;
     padding: 0.4em 0.2em;
     border-radius: 3px;
@@ -784,7 +784,7 @@ style: |
   
   .milestone-date {
     font-weight: bold;
-    color: var(--round1-primary);
+    color: var(--brand-primary);
     margin-right: 1em;
     min-width: 80px;
   }
@@ -802,11 +802,11 @@ style: |
     text-align: center;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     position: relative;
-    border-top: 4px solid var(--round1-primary);
+    border-top: 4px solid var(--brand-primary);
   }
   
   .step-large-number {
-    background: var(--round1-primary);
+    background: var(--brand-primary);
     color: white;
     font-size: 1.3em;
     font-weight: bold;
@@ -1488,7 +1488,7 @@ San Mateo, CA 94402
   </div>
   <div class="contact-item">
     <span class="icon">✉️</span>
-    inquiry@fsi-america.com
+    inquiry@your-company.com
   </div>
 </div>
 

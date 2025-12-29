@@ -478,4 +478,4 @@ The skill outputs:
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0 | 2025-12-28 | Initial generic version based on round1-helpdesk-responder |
+| 1.0 | 2025-12-28 | Initial generic version |

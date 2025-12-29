@@ -102,7 +102,7 @@ San Mateo, CA 94402
   </div>
   <div class="contact-item">
     <span class="icon">email</span>
-    inquiry@fsi-america.com
+    inquiry@your-company.com
   </div>
 </div>
 
