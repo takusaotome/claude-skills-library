@@ -1299,48 +1299,50 @@ Automatically transcribes video files and generates structured meeting minutes.
 
 **File:** `skills/migration-validation-explorer/SKILL.md`
 
-Exploratory data-migration validation and QA ideation workflow for CRM migrations. Surfaces hidden data quality risks and generates prioritized QA backlogs.
+Exploratory data-migration validation and QA ideation workflow for CRM migrations. Surfaces hidden data quality risks and generates prioritized QA backlogs with automated testing.
 
 **When to use:**
 - Validating data migration projects (especially CRM migrations)
 - Discovering hidden data quality risks
 - Generating new validation angles from mapping specs
-- Turning validation reports into QA-ready checklists
+- Automated data profiling and hypothesis testing
 - Exploring validation gaps in migration datasets
 
 **Core Capabilities:**
-- ✅ Focus Catalog building (20+ candidate focus areas)
-- ✅ Exploratory validation cycles (diverge → converge → verify)
-- ✅ Cross-pollination cycles (lens fusion for new hypotheses)
+- ✅ **4-Perspective Hypothesis Generation** (Domain, Tech, Edge Case, Statistical)
+- ✅ **Priority Scoring** (Impact × Probability × Testability)
+- ✅ **Automated Scripts** for profiling, testing, and lens combination
+- ✅ Cross-pollination with operators (AND/XOR/SEQ/REQ)
 - ✅ QA backlog generation with risk prioritization
-- ✅ Structured reporting (executive + technical summaries)
+
+**4-Perspective Framework:**
+
+| Icon | Perspective | Focus Area |
+|:----:|-------------|------------|
+| 🏢 | Domain Expert | Business rules, compliance |
+| 💻 | Tech Implementer | Code bugs, transforms |
+| 🔍 | Edge Case Hunter | Boundaries, special cases |
+| 📊 | Statistical Skeptic | Distributions, outliers |
+
+**Automation Scripts:**
+- `scripts/exploratory_profiler.py` - Data profiling with null rates, distributions
+- `scripts/hypothesis_tester.py` - Reference integrity, value concentration tests
+- `scripts/perspective_combiner.py` - Lens catalog and random combinations
 
 **Workflow:**
 
 | Step | Description |
 |------|-------------|
-| Step 1 | Build Focus Catalog (Keys/IDs, Relationships, Normalization, Status, Dates, Money, etc.) |
-| Step 2 | Exploratory Cycle x10 (Focus → Diverge → Converge → Verify → Deepen) |
-| Step 3 | Cross-Pollination Cycle x10 (Fuse lenses: CRM, Real-estate, Data pipeline, QA) |
-| Step 4 | Converge into QA Backlog (Check, Scope, Risk, Evidence, Method, Pass Criteria, Owner) |
-| Step 5 | Report (Exec summary, Technical summary, Appendix) |
-
-**Focus Categories:**
-- Keys/IDs: external IDs, uniqueness, formatting, nullability
-- Relationships: Account-Contact, Opportunity-Property, Invoice-LineItems
-- Normalization: address, unit number, city/state inference
-- Status/Stage: picklists, mapping tables, default fallbacks
-- Ownership: OwnerId mapping, license constraints
-- Dates: placeholders, timezone/format, lifecycle consistency
-- Money: currency parsing, zero vs null, rollups
-- Volume/dedup: record counts, duplicates, merge strategy
-- Edge cases: renewals, cancellations, "not applicable" flags
+| Step 0 | Preparation (Mission, Focus Catalog, Initial Profiling) |
+| Step 1 | Random Focus Cycle x10 (4-perspective diverge → prioritize → verify) |
+| Step 2 | Cross-Pollination x10 (Lens fusion with operators) |
+| Step 3 | Converge into QA Backlog |
 
 **Example Use Cases:**
-- "Validate the migration dataset and find data quality issues"
-- "Create a QA checklist for this CRM migration"
-- "Explore validation gaps in the mapping specification"
-- "Generate new validation angles for the data migration"
+- "Profile this migration dataset and find potential issues"
+- "Generate hypotheses from 4 perspectives for Account data"
+- "Test reference integrity between Contacts and Accounts"
+- "Create a prioritized QA backlog for go-live"
 
 ---
 
@@ -1487,7 +1489,7 @@ Contributions are welcome! To contribute a new skill:
 | salesforce-expert | 1.0 | Salesforce Development, Operations Management | Sharing Settings, Approval Processes, Apex/LWC Development, Architecture Design, Bug Analysis, Governor Limit Optimization |
 | ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy, System Integration, Business Improvement | 5 Industries, 5 Functions, 5 Scenarios, 4 Agent Types, 6 Case Studies, ROI Analysis, Implementation Plans |
 | render-cli-expert | 1.0 | Cloud Service Management, Render Platform | Deploys, Logs, SSH, PostgreSQL, CI/CD Automation, Auto-Update |
-| migration-validation-explorer | 1.0 | Data Migration QA, CRM Migrations | Focus Catalog, Exploratory Cycles, Cross-Pollination, QA Backlog Generation, Structured Reports |
+| migration-validation-explorer | 2.0 | Data Migration QA, CRM Migrations | 4-Perspective Hypothesis, Priority Scoring, Automated Scripts, Cross-Pollination Operators, QA Backlog |
 | helpdesk-responder | 1.0 | Customer Support, Helpdesk | KB-Based Response Drafts, Confidence Scoring, Auto-Detection, Multi-Language Templates, Escalation Workflow |
 
 ## License
@@ -2357,19 +2359,28 @@ Future skills planned for this library:
   - Update logs saved to `references/cli_updates.md`
 - Best practices: API key for CI/CD, `--wait` flag, `-o json` for automation, `--confirm` for non-interactive
 
+### migration-validation-explorer v2.0 (2025-12-28)
+- Major update with automation and structured hypothesis generation
+- **New: 4-Perspective Hypothesis Generation**
+  - Domain Expert (business rules, compliance)
+  - Tech Implementer (code bugs, transforms)
+  - Edge Case Hunter (boundaries, special cases)
+  - Statistical Skeptic (distributions, outliers)
+- **New: Priority Scoring** (Impact × Probability × Testability)
+- **New: Automation Scripts**
+  - `exploratory_profiler.py` - Data profiling with null rates, distributions
+  - `hypothesis_tester.py` - Reference integrity, value concentration tests
+  - `perspective_combiner.py` - Lens catalog and random combinations
+- **New: Cross-Pollination Operators** (AND, XOR, SEQ, REQ)
+- **New: ID Normalization principle** (float `.0` suffix handling)
+- Additional resources:
+  - `references/hypothesis_generation_guide.md`
+  - `assets/hypothesis_worksheet.md`
+
 ### migration-validation-explorer v1.0 (2025-12-28)
 - Initial release
 - Exploratory data-migration validation and QA ideation workflow
-- 5-step validation workflow:
-  - Step 1: Build Focus Catalog (20+ candidate focus areas)
-  - Step 2: Exploratory Cycle x10 (Focus → Diverge → Converge → Verify → Deepen)
-  - Step 3: Cross-Pollination Cycle x10 (Lens fusion for new hypotheses)
-  - Step 4: Converge into QA Backlog (prioritized checks with risk levels)
-  - Step 5: Report (Exec summary, Technical summary, Appendix)
-- Focus categories: Keys/IDs, Relationships, Normalization, Status/Stage, Ownership, Dates, Money, Volume/dedup, Edge cases
-- Lens library: CRM migration, Real-estate domain, Data pipeline, QA perspectives
-- Structured output format for each validation cycle
-- QA backlog table generation with Check, Scope, Risk, Evidence, Method, Pass Criteria, Owner
+- Focus categories, Lens library, QA backlog generation
 
 ### helpdesk-responder v1.0 (2025-12-28)
 - Initial release

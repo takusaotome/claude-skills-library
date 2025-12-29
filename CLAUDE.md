@@ -82,7 +82,7 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 | itil4-consultant | 1.0 | IT Service Management, ITIL 4 | 34 Practices knowledge base (4 comprehensive guides), Maturity assessment framework, 5 consulting workflows, Department-specific scenarios |
 | salesforce-expert | 1.0 | Salesforce Development, Operations Management | sharing_settings_guide.md, approval_process_guide.md, custom_development_patterns.md, architecture_best_practices.md, Bug analysis workflow, Enterprise patterns |
 | ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy, Consulting | 27 reference files (5 industries, 5 functions, 5 scenarios, 4 agent types, 6 case studies), ROI analysis, 5-step workflow, Multi-dimensional analysis |
-| migration-validation-explorer | 1.0 | Data Migration QA | Exploratory validation workflow, Focus catalog, Cross-pollination cycles, QA backlog generation |
+| migration-validation-explorer | 2.0 | Data Migration QA | 4-Perspective hypothesis generation, Priority scoring, Automated profiling/testing scripts, Cross-pollination with operators, QA backlog generation |
 | helpdesk-responder | 1.0 | Customer Support, Helpdesk | KB-based response drafts, confidence scoring, auto-detection patterns, multi-language templates, escalation workflow |
 | mermaid-to-pdf | - | Documentation | markdown_to_pdf.py, mermaid_to_image.py |
 | uat-testcase-generator | - | QA Testing | generate_uat_testcases.py, Excel generation |
