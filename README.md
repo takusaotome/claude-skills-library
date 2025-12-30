@@ -10,15 +10,17 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills
+├── skills/                 # All Claude Code skills (33 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
-│   └── ... (24 skills)
+│   ├── ffmpeg-expert/
+│   ├── lean-six-sigma-consultant/
+│   └── ...
 ├── hooks/                  # Claude Code hook configurations
 │   ├── current-datetime.json
 │   └── notification-sound-macos.json
-├── zip-packages/           # Packaged skills for distribution
+├── skill-packages/         # Packaged .skill files for distribution
 ├── docs/                   # Additional documentation
 └── README.md
 ```
@@ -36,7 +38,7 @@ Useful hook configurations for Claude Code. See [hooks/README.md](hooks/README.m
 
 ### 📊 Data Scientist
 
-**File:** `zip-packages/data-scientist.zip`
+**File:** `skill-packages/data-scientist.skill`
 
 A comprehensive data science workflow skill for analyzing tabular and time series data.
 
@@ -94,7 +96,7 @@ A comprehensive data science workflow skill for analyzing tabular and time serie
 
 ### 📋 Project Manager
 
-**File:** `zip-packages/project-manager.zip`
+**File:** `skill-packages/project-manager.skill`
 
 A comprehensive PMBOK®-aligned project management skill for professional project delivery.
 
@@ -166,7 +168,7 @@ A comprehensive PMBOK®-aligned project management skill for professional projec
 
 ### 💼 Business Analyst
 
-**File:** `zip-packages/business-analyst.zip`
+**File:** `skill-packages/business-analyst.skill`
 
 A comprehensive BABOK®-aligned business analysis skill for professional requirements engineering and business process improvement.
 
@@ -229,7 +231,7 @@ A comprehensive BABOK®-aligned business analysis skill for professional require
 
 ### 📊 Data Visualization Expert
 
-**File:** `zip-packages/data-visualization-expert.zip`
+**File:** `skill-packages/data-visualization-expert.skill`
 
 A professional data visualization skill specialized in creating reader-friendly, accessible, and aesthetically pleasing charts and dashboards.
 
@@ -299,7 +301,7 @@ A professional data visualization skill specialized in creating reader-friendly,
 
 ### 🔍 Vendor Estimate Reviewer
 
-**File:** `zip-packages/vendor-estimate-reviewer.zip`
+**File:** `skill-packages/vendor-estimate-reviewer.skill`
 
 A comprehensive skill for evaluating vendor estimates for software development projects, from the client's perspective. This skill helps you determine if a vendor's cost estimate, timeline, and approach are reasonable and whether the project is likely to succeed.
 
@@ -404,7 +406,7 @@ python scripts/analyze_estimate.py vendor_estimate.xlsx \
 
 ### 📝 Vendor RFQ Creator（ベンダー見積依頼書作成）
 
-**File:** `zip-packages/vendor-rfq-creator.zip`
+**File:** `skill-packages/vendor-rfq-creator.skill`
 
 顧客の曖昧な要望を構造化し、ベンダーに対する明確な見積もり依頼書（RFQ）を作成するスキル。システム開発プロジェクトのRFQ作成に特化し、日本語をデフォルトとして英語にも対応。
 
@@ -519,7 +521,7 @@ A skill that transforms vague client requirements into comprehensive RFQ (Reques
 
 ### 💰 Vendor Estimate Creator（ベンダー見積書作成）
 
-**File:** `zip-packages/vendor-estimate-creator.zip`
+**File:** `skill-packages/vendor-estimate-creator.skill`
 
 RFQや要件を分析し、WBS作成、工数見積、コスト計算、ROI分析を行い、プロフェッショナルな見積書を生成するスキル。システム開発プロジェクトの見積作成に特化し、日本語をデフォルトとして英語にも対応。
 
@@ -656,7 +658,7 @@ A skill that transforms RFQs or project requirements into comprehensive cost est
 
 ### 📋 Project Plan Creator（プロジェクト計画作成）
 
-**File:** `zip-packages/project-plan-creator.zip`
+**File:** `skill-packages/project-plan-creator.skill`
 
 システム開発・導入プロジェクトの包括的なプロジェクト計画を作成する専門スキル。Project Charter、WBS、Ganttチャート、RACI matrix、リスク分析等をMarkdown + Mermaidで文書化し、PMBOK準拠のプロジェクト管理成果物を生成。
 
@@ -810,7 +812,7 @@ Mermaidダイアグラム5つを含む完全なプロジェクト計画テンプ
 
 ### 🐛 Bug Ticket Creator（不具合チケット作成）
 
-**File:** `zip-packages/bug-ticket-creator.zip`
+**File:** `skill-packages/bug-ticket-creator.skill`
 
 システムテスト中に発見した不具合を包括的なバグチケットに変換する対話型スキル。ユーザーと対話しながら再現手順、環境情報、重要度判定など必要な情報を収集し、プロフェッショナルなマークダウン形式の不具合報告書を生成。
 
@@ -1053,7 +1055,7 @@ Expert ITIL 4 consultant providing context-aware recommendations for IT service 
 
 ### ☁️ Salesforce Expert
 
-**File:** `salesforce-expert.zip`
+**File:** `skill-packages/salesforce-expert.skill`
 
 Expert guidance for Salesforce system development and operations management.
 
@@ -1118,7 +1120,7 @@ Expert guidance for Salesforce system development and operations management.
 
 ### 🤖 AI Adoption Consultant
 
-**File:** `zip-packages/ai-adoption-consultant.zip`
+**File:** `skill-packages/ai-adoption-consultant.skill`
 
 Expert AI/LLM adoption consultant with comprehensive use case knowledge across industries, departments, and scenarios.
 
@@ -1192,7 +1194,7 @@ Expert AI/LLM adoption consultant with comprehensive use case knowledge across i
 
 ### ☁️ Render CLI Expert
 
-**File:** `zip-packages/render-cli-expert.zip`
+**File:** `skill-packages/render-cli-expert.skill`
 
 Expert skill for managing Render cloud platform services via CLI. Supports deployments, log monitoring, SSH connections, PostgreSQL connections, and service management.
 
@@ -1252,7 +1254,7 @@ render deploys create srv-abc123 --wait --confirm
 
 ### 🔍 Design Implementation Reviewer
 
-**File:** `zip-packages/design-implementation-reviewer.zip`
+**File:** `skill-packages/design-implementation-reviewer.skill`
 
 A critical code review skill focused on whether code actually works correctly—not just whether it matches a design document.
 
@@ -1279,7 +1281,7 @@ A critical code review skill focused on whether code actually works correctly—
 
 ### 🎬 Video2Minutes
 
-**File:** `zip-packages/video2minutes.zip`
+**File:** `skill-packages/video2minutes.skill`
 
 Automatically transcribes video files and generates structured meeting minutes.
 
@@ -1390,16 +1392,378 @@ Generic helpdesk first-response skill for creating KB-based response drafts. Ada
 
 ---
 
+### 🎬 FFmpeg Expert
+
+**File:** `skill-packages/ffmpeg-expert.skill`
+
+A comprehensive FFmpeg CLI skill for multimedia processing - video/audio conversion, editing, and optimization.
+
+**When to use:**
+- Converting video formats (MP4, WebM, MKV, MOV, AVI)
+- Transcoding codecs (H.264, H.265/HEVC, VP9, AV1, ProRes)
+- Trimming, cutting, or merging videos
+- Extracting or converting audio (MP3, AAC, FLAC, WAV)
+- Creating GIFs from video
+- Generating thumbnails
+- Preparing for streaming (HLS/DASH)
+- Using hardware acceleration (NVENC, QSV, VideoToolbox)
+- Applying filters (blur, color correction, subtitles, watermarks)
+
+**Key Components:**
+- `references/quick_reference.md` - Copy-paste ready commands
+- `references/codec_guide.md` - Codec selection guide (H.264, H.265, VP9, AV1)
+- `references/filter_reference.md` - Filter syntax and examples
+- `references/troubleshooting.md` - Common errors and solutions
+- `scripts/ffprobe_analyzer.py` - Media analyzer with encoding recommendations
+
+**Example Use Cases:**
+- "Convert this video to MP4"
+- "Extract audio from video"
+- "Create a GIF from 1:00 to 1:10"
+- "Compress with H.265"
+- "Add a watermark"
+- "Prepare for HLS streaming"
+
+---
+
+### 📊 Lean Six Sigma Consultant
+
+**File:** `skill-packages/lean-six-sigma-consultant.skill`
+
+Comprehensive Lean Six Sigma consulting skill supporting all belt levels (White Belt to Master Black Belt).
+
+**When to use:**
+- Leading or supporting process improvement projects
+- DMAIC/DMADV methodology guidance
+- Lean waste elimination (VSM, 8 Wastes/DOWNTIME, 5S)
+- Statistical analysis (process capability Cp/Cpk, control charts, hypothesis testing)
+- Root cause analysis (5 Whys, Fishbone)
+- Six Sigma training and certification preparation
+
+**Key Components:**
+- `references/methodology/` - DMAIC, DMADV, Lean principles
+- `references/tools-by-phase/` - Define, Measure, Analyze, Improve, Control
+- `references/statistics/` - Control charts, hypothesis testing, process capability
+- `references/lean-tools/` - 5S, VSM, Kaizen, 8 Wastes
+- `scripts/sigma_calculator.py` - Calculate sigma level and DPMO
+- `scripts/control_chart_analysis.py` - Control chart generation and analysis
+- `scripts/process_capability.py` - Cp/Cpk calculation
+
+**Example Use Cases:**
+- "Guide me through a DMAIC project to reduce defects"
+- "Calculate the Cpk for this process data"
+- "Create a value stream map for our order fulfillment"
+- "What control chart should I use for defect counts?"
+- "Explain the 8 wastes in our service process"
+
+---
+
+### 🦆 DuckDB Expert
+
+**File:** `skill-packages/duckdb-expert.skill`
+
+Expert skill for large-scale data analysis using DuckDB - the embedded OLAP database.
+
+**When to use:**
+- Querying large CSV, Parquet, JSON files directly
+- Analyzing datasets that don't fit in memory
+- Building ETL pipelines with SQL
+- Integrating with pandas/Polars
+- Building file-based data warehouses
+- Optimizing complex analytical queries
+
+**Key Components:**
+- `references/duckdb_functions_reference.md` - Function reference
+- `references/file_formats_guide.md` - CSV, Parquet, JSON handling
+- `references/performance_tuning_guide.md` - Query optimization
+- `scripts/duckdb_analyzer.py` - Data analysis automation
+- `scripts/etl_pipeline.py` - ETL pipeline utilities
+
+**Example Use Cases:**
+- "Analyze this 10GB Parquet file"
+- "Query multiple CSV files with a wildcard pattern"
+- "Optimize this slow analytical query"
+- "Build an ETL pipeline for data transformation"
+
+---
+
+### 🔍 Critical Code Reviewer
+
+**File:** `skill-packages/critical-code-reviewer.skill`
+
+Multi-persona code review skill using three expert perspectives for thorough quality assessment.
+
+**Reviewer Personas:**
+| Persona | Focus | Key Question |
+|---------|-------|--------------|
+| **Veteran Engineer** (20年経験) | Design decisions, anti-patterns, maintainability | "Can this be maintained in 5 years?" |
+| **TDD Expert** | Testability, dependency management, refactoring safety | "Can this be tested in isolation?" |
+| **Clean Code Expert** | Naming, readability, SOLID principles | "Can this be understood at a glance?" |
+
+**When to use:**
+- Reviewing source code from multiple expert perspectives
+- Finding design flaws and testability issues
+- Assessing code quality and maintainability
+- Python/JavaScript code gets additional language-specific checks
+
+**Key Components:**
+- `references/persona_definitions.md` - Detailed persona definitions
+- `references/code_smell_patterns.md` - Code smells and anti-patterns
+- `references/review_framework.md` - Critical analysis framework
+- `references/language_specific_checks.md` - Python/JavaScript checks
+
+---
+
+### 📄 Critical Document Reviewer
+
+**File:** `skill-packages/critical-document-reviewer.skill`
+
+Multi-persona document review skill for rigorous validation of claims and evidence.
+
+**Reviewer Personas:**
+| Persona | Focus |
+|---------|-------|
+| **Developer/Implementer** | Can I implement based on this? Technical accuracy? |
+| **Project Manager** | Risks? Consistency? Feasibility? Dependencies? |
+| **Customer/Stakeholder** | Does this meet requirements? Understandable? Business value? |
+
+**When to use:**
+- Reviewing design documents, analysis reports, or proposals
+- Validating claims have proper evidence
+- Detecting logical gaps and speculation presented as fact
+- Finding missing traceability to requirements
+
+**Detects:**
+- Insufficient evidence for claims
+- Speculation mixed with facts
+- Logical leaps (A→C without B)
+- Missing traceability
+- Confirmation bias
+
+---
+
+### 🎨 Design Thinking
+
+**File:** `skill-packages/design-thinking.skill`
+
+Human-centered innovation and problem-solving skill based on Stanford d.school / IDEO methodology.
+
+**5 Phases:**
+```
+EMPATHIZE → DEFINE → IDEATE → PROTOTYPE → TEST
+   共感    →  定義  →  発想  →   試作   → 検証
+```
+
+**When to use:**
+- New service/product planning
+- Customer experience (CX/UX) improvement
+- Problem redefinition ("What problem should we really solve?")
+- Innovation creation and brainstorming facilitation
+
+**Key Components:**
+- `references/empathize_methods.md` - User research methods
+- `references/define_methods.md` - Problem framing (HMW, POV)
+- `references/ideate_methods.md` - Brainstorming techniques
+- `references/prototype_methods.md` - Rapid prototyping
+- `references/test_methods.md` - User testing methods
+- Templates: Persona, Empathy Map, Journey Map, Ideation Canvas
+
+---
+
+### 📊 DAMA-DMBOK
+
+**File:** `skill-packages/dama-dmbok.skill`
+
+Data management skill based on DAMA-DMBOK (Data Management Body of Knowledge).
+
+**11 Knowledge Areas:**
+- Data Governance (central/governing)
+- Data Quality, Data Architecture, Data Security
+- Reference & Master Data Management (MDM)
+- Data Integration, Metadata Management
+- Data Modeling, DWH & BI, Data Storage
+- Document & Content Management
+
+**When to use:**
+- Data strategy development
+- Data governance framework implementation
+- Data quality improvement
+- Data catalog creation
+- MDM implementation
+- Data migration projects
+- Data maturity assessment
+
+**Key Components:**
+- `references/data_governance.md` - Governance framework
+- `references/data_quality.md` - Quality dimensions and improvement
+- `references/metadata_management.md` - Metadata standards
+- `references/master_data_management.md` - MDM patterns
+- Templates: Governance Charter, Maturity Assessment, Data Catalog
+
+---
+
+### 🔧 TDD Developer
+
+**File:** `skill-packages/tdd-developer.skill`
+
+Test-Driven Development methodology skill for writing tests before implementation.
+
+**TDD Cycle:**
+```
+RED → GREEN → REFACTOR
+(Write failing test → Make it pass → Improve code)
+```
+
+**When to use:**
+- User requests TDD or test-first development
+- Building new features requiring high reliability
+- Refactoring legacy code with test coverage
+- Implementing complex business logic
+- Learning TDD methodology
+
+**Key Components:**
+- `references/tdd_methodology.md` - TDD principles and workflow
+- `references/test_patterns.md` - Common testing patterns
+
+---
+
+### 📈 QA Bug Analyzer
+
+**File:** `skill-packages/qa-bug-analyzer.skill`
+
+Bug ticket analysis skill for quality trends, hotspot detection, and improvement recommendations.
+
+**When to use:**
+- Analyzing bug ticket data (CSV, Excel, JSON, Markdown)
+- Quality assessment for project reviews or release readiness
+- Trend analysis over time
+- Generating stakeholder reports
+- Identifying improvement priorities
+
+**Key Components:**
+- `scripts/analyze_bugs.py` - Automated bug analysis
+- `references/analysis_methodology.md` - Analysis approach
+- `references/quality_metrics_guide.md` - Quality metrics
+- `assets/report_template.md` - Report format
+
+**Example Use Cases:**
+- "Analyze bug trends from this CSV"
+- "Generate a quality report for project management"
+- "Which modules have the most bugs?"
+- "What areas should we focus on for improvement?"
+
+---
+
+### 📑 UAT Testcase Generator
+
+**File:** `skill-packages/uat-testcase-generator.skill`
+
+Generates UAT (User Acceptance Testing) test cases in Excel format for Salesforce CRM projects.
+
+**When to use:**
+- Creating standardized UAT test cases for Salesforce projects
+- Generating Excel files with summary and detailed test cases
+- Documenting test scenarios, preconditions, steps, and expected results
+
+---
+
+### 🔄 Docling Converter
+
+**File:** `skill-packages/docling-converter.skill`
+
+Document conversion skill using the docling CLI - convert any document to Markdown and other formats.
+
+**Supported Input:** PDF, DOCX, PPTX, HTML, Images, Excel
+**Supported Output:** Markdown, JSON, YAML, HTML, Text
+
+**When to use:**
+- Converting documents to Markdown
+- Extracting text from PDFs
+- Processing scanned documents with OCR
+- Converting office documents
+
+**Example:**
+```
+/docling-converter document.pdf --to md --ocr-lang ja
+```
+
+---
+
+### ☁️ AWS CLI Expert
+
+**File:** `skill-packages/aws-cli-expert.skill`
+
+AWS CLI expert skill for cloud infrastructure management and operations.
+
+**Key Components:**
+- `references/aws_cli_essentials.md` - Core CLI usage
+- `references/iam_guide.md` - IAM and security
+- `references/security_best_practices.md` - Security guidelines
+
+---
+
+### ☁️ Salesforce CLI Expert
+
+**File:** `skill-packages/salesforce-cli-expert.skill`
+
+Salesforce CLI (sf/sfdx) expert skill for Salesforce development and administration.
+
+**When to use:**
+- Authenticating to orgs
+- Querying data with SOQL
+- Retrieving metadata (profiles, permission sets, security settings)
+- Deploying configuration changes
+- Automating security audits
+
+---
+
+### 🤖 Codex Reviewer
+
+**File:** `skill-packages/codex-reviewer.skill`
+
+Uses OpenAI Codex CLI to review documents and code with GPT-5.1-Codex-Max model.
+
+**When to use:**
+- Code review requiring deep analysis
+- Document review
+- Design document review
+- Test plan review
+
+---
+
+### 📊 Mermaid to PDF
+
+**File:** `skill-packages/mermaid-to-pdf.skill`
+
+Converts Markdown documents with Mermaid diagrams to PDF, or individual diagrams to images.
+
+**Key Components:**
+- `scripts/markdown_to_pdf.py` - Markdown to PDF conversion
+- `scripts/mermaid_to_image.py` - Mermaid to PNG/SVG
+
+---
+
+### 🎤 Fujisoft Presentation Creator
+
+**File:** `skill-packages/fujisoft-presentation-creator.skill`
+
+Creates professional presentations following FUJISOFT America's slide template standards.
+
+**When to use:**
+- Creating business presentations
+- Proposal materials
+- MARP-format Markdown presentations
+
+---
+
 ## Installation
 
 ### Installing a Skill
 
-1. Download the desired skill `.zip` file from this repository
-2. In Claude Code, use the command to install the skill:
-   ```
-   /skills install path/to/skill.zip
-   ```
-3. The skill will be available for use immediately
+1. Download the desired `.skill` file from `skill-packages/`
+2. For Claude Desktop: Settings → Capabilities → Upload the `.skill` file
+3. For Claude Code CLI: Copy the skill folder to `~/.claude/skills/`
+4. The skill will be available for use immediately
 
 ### Skill Structure
 
@@ -1468,7 +1832,7 @@ Contributions are welcome! To contribute a new skill:
 2. Create your skill following the structure above
 3. Test thoroughly with various use cases
 4. Submit a pull request with:
-   - Skill `.zip` file
+   - Skill `.skill` file
    - Update to this README
    - Example usage scenarios
 
