@@ -39,7 +39,7 @@ skill-name/
 
 ```bash
 # Initialize new skill structure
-python /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skill-creator/scripts/init_skill.py <skill-name> --path ./
+python /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/init_skill.py <skill-name> --path ./
 
 # This creates:
 # - skill-name/ directory with standard structure
@@ -51,7 +51,7 @@ python /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/
 
 ```bash
 # Package skill into distributable .zip
-python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skill-creator/scripts/package_skill.py ./skill-name ./
+python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/package_skill.py ./skill-name ./
 
 # This:
 # 1. Validates skill structure (checks SKILL.md exists, runs quick_validate)
@@ -63,7 +63,7 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 
 ```bash
 # Quick validation before packaging
-python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skill-creator/scripts/quick_validate.py ./skill-name
+python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/quick_validate.py ./skill-name
 ```
 
 ## Current Skills in Library
