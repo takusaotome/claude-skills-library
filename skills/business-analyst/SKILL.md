@@ -1,6 +1,7 @@
 ---
 name: business-analyst
-description: Professional business analysis skill aligned with BABOK® Guide v3 standards. Use this skill when you need to elicit and document requirements, analyze business processes, conduct stakeholder analysis, develop business cases, perform gap analysis, or create business requirements documents (BRD). Ideal for requirements gathering, process mapping (BPMN), financial analysis (ROI, NPV), stakeholder engagement, and solution evaluation. Triggers: "gather requirements", "create business case", "analyze process", "stakeholder analysis", "gap analysis", "BRD", "functional requirements", or requests involving business analysis tasks.
+description: |
+  Professional business analysis skill aligned with BABOK® Guide v3 standards. Use this skill when you need to elicit and document requirements, analyze business processes, conduct stakeholder analysis, develop business cases, perform gap analysis, or create business requirements documents (BRD). Ideal for requirements gathering, process mapping (BPMN), financial analysis (ROI, NPV), stakeholder engagement, and solution evaluation. Triggers: "gather requirements", "create business case", "analyze process", "stakeholder analysis", "gap analysis", "BRD", "functional requirements", or requests involving business analysis tasks.
 ---
 
 # Business Analyst

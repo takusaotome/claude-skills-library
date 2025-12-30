@@ -1,5 +1,3 @@
-# Critical Code Reviewer
-
 ---
 name: critical-code-reviewer
 description: |
@@ -10,6 +8,8 @@ description: |
   testability issues, and code quality problems. Triggers: "critical code review",
   "multi-persona code review", "expert code review", "code quality assessment".
 ---
+
+# Critical Code Reviewer
 
 ## Overview
 

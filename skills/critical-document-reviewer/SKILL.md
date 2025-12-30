@@ -1,5 +1,3 @@
-# Critical Document Reviewer
-
 ---
 name: critical-document-reviewer
 description: |
@@ -8,6 +6,8 @@ description: |
   「本当にそうか？」「根拠は何か？」という視点で曖昧さ、根拠不足、論理飛躍を検出する。
   Use when reviewing design documents, analysis reports, incident reports, or any document requiring rigorous validation of claims and evidence.
 ---
+
+# Critical Document Reviewer
 
 ## Overview
 

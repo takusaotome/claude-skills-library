@@ -1,8 +1,7 @@
 ---
 name: migration-validation-explorer
-description: Exploratory data-migration validation and QA ideation workflow. Use when you need to discover hidden risks, generate new validation angles, and converge mapping specs/validation reports into a prioritized QA backlog for CRM migrations.
-version: 2.0
-last_updated: 2025-12-28
+description: |
+  Exploratory data-migration validation and QA ideation workflow. Use when you need to discover hidden risks, generate new validation angles, and converge mapping specs/validation reports into a prioritized QA backlog for CRM migrations. Version 2.0, updated 2025-12-28.
 ---
 
 # Migration Validation Explorer

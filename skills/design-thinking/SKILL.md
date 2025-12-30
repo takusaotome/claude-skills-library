@@ -1,5 +1,3 @@
-# Design Thinking Skill
-
 ---
 name: design-thinking
 description: |
@@ -9,6 +7,8 @@ description: |
   Triggers: "ペルソナを作りたい", "顧客の課題を理解したい", "アイデア出しをしたい",
   "ジャーニーマップを作成", "プロトタイプを作りたい", "design thinking", "HMW", "エンパシーマップ"
 ---
+
+# Design Thinking Skill
 
 ## Overview
 

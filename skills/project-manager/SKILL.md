@@ -1,6 +1,7 @@
 ---
 name: project-manager
-description: Professional project management skill aligned with PMBOK® 6th/7th Edition standards. Use this skill when you need to define requirements (ISO/IEC/IEEE 29148), review project plans, generate progress reports with Earned Value Management (EVM), conduct risk analysis, estimate costs, or provide project health assessments. Ideal for creating comprehensive project documentation, analyzing project performance metrics (SPI, CPI, EAC), managing risks across 14 categories, and ensuring stakeholder alignment. Triggers: "create project plan", "analyze project health", "calculate EVM", "risk assessment", "requirements definition", "progress report", "cost estimation", or requests involving PMBOK knowledge areas.
+description: |
+  Professional project management skill aligned with PMBOK® 6th/7th Edition standards. Use this skill when you need to define requirements (ISO/IEC/IEEE 29148), review project plans, generate progress reports with Earned Value Management (EVM), conduct risk analysis, estimate costs, or provide project health assessments. Ideal for creating comprehensive project documentation, analyzing project performance metrics (SPI, CPI, EAC), managing risks across 14 categories, and ensuring stakeholder alignment. Triggers: "create project plan", "analyze project health", "calculate EVM", "risk assessment", "requirements definition", "progress report", "cost estimation", or requests involving PMBOK knowledge areas.
 ---
 
 # Project Manager

@@ -1,8 +1,8 @@
 ---
 name: video2minutes
-description: 動画ファイルから文字起こしと議事録を自動生成
+description: |
+  動画ファイルから文字起こしと議事録を自動生成。Argument hint: [動画パス] --date [YYYY-MM-DD] --attendees [参加者]
 allowed-tools: Bash(python3:*), Bash(source:*), Bash(cat:*), Bash(ls:*), Bash(pip3:*)
-argument-hint: <動画パス> --date <YYYY-MM-DD> --attendees <参加者>
 ---
 
 # Video2Minutes - 動画から議事録生成

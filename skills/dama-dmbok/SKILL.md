@@ -1,5 +1,3 @@
-# DAMA-DMBOK Skill
-
 ---
 name: dama-dmbok
 description: |
@@ -11,6 +9,8 @@ description: |
   Triggers: "データガバナンス", "データ品質", "データカタログ", "メタデータ管理",
   "MDM", "データ戦略", "DMBOK", "データ成熟度", "データリネージ"
 ---
+
+# DAMA-DMBOK Skill
 
 ## Overview
 

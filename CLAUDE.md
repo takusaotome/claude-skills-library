@@ -145,16 +145,17 @@ Skills in this library follow industry standards:
 claude-skills-library/
 ├── README.md                    # Comprehensive skill documentation
 ├── CLAUDE.md                    # This file
-├── skill-name/                  # Skill source folders
-│   ├── SKILL.md
-│   ├── scripts/
-│   ├── references/
-│   └── assets/
-├── skill-name.zip               # Packaged skills (root level)
-└── zip-packages/                # Alternative location for packaged skills
+├── skills/                      # Skill source folders
+│   └── skill-name/
+│       ├── SKILL.md
+│       ├── scripts/
+│       ├── references/
+│       └── assets/
+└── skill-packages/              # Packaged .skill files for distribution
+    └── skill-name.skill
 ```
 
-**Note**: Packaged `.zip` files are typically placed in repository root for easy distribution.
+**Note**: `.skill` files are ZIP archives with a different extension, compatible with Claude Desktop skill uploads.
 
 ## Python Script Patterns
 

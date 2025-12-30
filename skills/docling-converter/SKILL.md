@@ -1,8 +1,10 @@
 ---
 name: docling-converter
-description: docling CLIを使用したドキュメント変換スキル。PDF、DOCX、PPTX、HTML、画像、Excel等のあらゆるドキュメントをMarkdown、JSON、YAML、HTML、テキストに変換。OCR対応で画像内テキストも抽出可能。Use when converting documents to Markdown or other formats, extracting text from PDFs, processing scanned documents with OCR, or converting office documents.
+description: |
+  docling CLIを使用したドキュメント変換スキル。PDF、DOCX、PPTX、HTML、画像、Excel等のあらゆるドキュメントをMarkdown、JSON、YAML、HTML、テキストに変換。OCR対応で画像内テキストも抽出可能。Use when converting documents to Markdown or other formats, extracting text from PDFs, processing scanned documents with OCR, or converting office documents.
+
+  Argument hint: [file_path] [--to md|json|yaml|html|text] [--ocr-lang ja] [--output output_dir]
 allowed-tools: Bash(docling:*), Bash(~/Library/Python/3.12/bin/docling:*)
-argument-hint: <ファイルパス> [--to md|json|yaml|html|text] [--ocr-lang ja] [--output <出力先>]
 ---
 
 # Docling Converter
