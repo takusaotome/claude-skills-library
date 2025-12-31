@@ -121,7 +121,48 @@ Choose pattern(s) that fit your skill's purpose. Most skills combine patterns.
 
 Use `package_skill.py` to create distributable `.zip` file. Validation runs automatically before packaging.
 
-### 5. Update Repository Documentation
+### 5. Install Skill to User Environment
+
+**CRITICAL: Skills and Commands have different installation locations.**
+
+#### Correct Installation Paths
+
+| Type | Location | Format | Purpose |
+|------|----------|--------|---------|
+| **Skills** | `~/.claude/skills/skill-name/` | Directory with `SKILL.md` | Extend Claude's capabilities |
+| **Commands** | `~/.claude/commands/` | `.md` files | Custom slash commands |
+| **Packages** | `skill-packages/` | `.skill` files (ZIP) | Distribution only |
+
+#### Installation Commands
+
+```bash
+# Install skill to user environment (CORRECT)
+cp -r ./skills/skill-name ~/.claude/skills/
+
+# Remove __pycache__ if present
+rm -rf ~/.claude/skills/skill-name/scripts/__pycache__
+
+# Verify installation
+ls ~/.claude/skills/skill-name/SKILL.md
+```
+
+#### WRONG Installation (DO NOT DO THIS)
+
+```bash
+# WRONG: Do NOT put .skill files in commands/
+cp skill-name.skill ~/.claude/commands/   # ❌ WRONG
+
+# WRONG: Do NOT put skills in commands/
+cp -r ./skills/skill-name ~/.claude/commands/   # ❌ WRONG
+```
+
+#### Summary
+
+- **`.skill` files** = ZIP archives for distribution/upload to marketplaces
+- **Local installation** = Copy the skill directory to `~/.claude/skills/`
+- **Commands folder** = Only for `.md` slash command definitions
+
+### 6. Update Repository Documentation
 
 After creating a skill, update `README.md` with:
 - Entry in "Available Skills" section with overview
@@ -198,11 +239,33 @@ Templates in `assets/` directories follow professional standards:
 
 ## Skill Metadata Format
 
-SKILL.md frontmatter (YAML):
-```yaml
+**IMPORTANT: SKILL.md File Structure**
+
+The SKILL.md file MUST follow this exact structure:
+1. **Frontmatter FIRST** (YAML between `---` delimiters) - NO content before this
+2. **Title AFTER frontmatter** (e.g., `# Skill Name`)
+3. **Content sections** follow the title
+
+**Correct Format:**
+```markdown
 ---
 name: skill-name
 description: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.
+---
+
+# Skill Name
+
+## Overview
+...
+```
+
+**WRONG Format (DO NOT DO THIS):**
+```markdown
+# Skill Name          <-- WRONG: Title before frontmatter
+
+---
+name: skill-name
+...
 ---
 ```
 
