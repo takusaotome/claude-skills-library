@@ -34,7 +34,104 @@ Useful hook configurations for Claude Code. See [hooks/README.md](hooks/README.m
 | `current-datetime.json` | Prevents Claude from confusing today's date |
 | `notification-sound-macos.json` | Plays sound on notifications (macOS) |
 
-## Available Skills
+## Skill Catalog (48 Skills)
+
+### Business Strategy & Consulting (9 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| ai-adoption-consultant | AI/LLM活用提案、業界・部門別導入戦略 | 5 Industries, 5 Functions, ROI Analysis |
+| business-analyst | BABOK準拠のビジネス分析、要件定義 | Stakeholder Analysis, BRD Templates |
+| competitive-intelligence-analyst | 競合分析、バトルカード、Win/Loss分析 | Battlecards, Market Landscape |
+| executive-briefing-writer | 経営層向け資料作成、So What分析 | Board Reports, Investor Briefings |
+| m-and-a-advisor | M&Aアドバイザリー、DD、PMI計画 | Valuation, Due Diligence, PMI |
+| pricing-strategist | 価格戦略、価格弾力性分析 | Value-Based Pricing, Price Testing |
+| strategic-planner | 事業戦略立案、SWOT、シナリオ分析 | Strategy Canvas, Scenario Planning |
+| design-thinking | デザイン思考プロセス支援 | 5-Phase Process, Empathy Maps |
+| lean-six-sigma-consultant | リーンシックスシグマ、プロセス改善 | DMAIC, Value Stream Mapping |
+
+### Project Management (3 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
+| project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
+| vendor-estimate-reviewer | ベンダー見積レビュー・妥当性評価 | 12 Review Dimensions, 60+ Risk Factors |
+
+### Software Development & IT (11 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| codex-reviewer | OpenAI Codexによるレビュー依頼 | GPT-5.1-Codex-Max Integration |
+| critical-code-reviewer | 多角的コードレビュー | Multi-Persona Review |
+| data-scientist | データ分析・ML・時系列予測 | Auto EDA, Model Comparison |
+| data-visualization-expert | データ可視化、チャート設計 | 30+ Chart Types, Accessibility |
+| design-implementation-reviewer | 設計・実装の整合性レビュー | Bug Hunting, Correctness Focus |
+| duckdb-expert | DuckDBによる大規模データ分析 | SQL Optimization, File Formats |
+| log-debugger | ログ分析・RCA・デバッグ | Log Patterns, Root Cause Analysis |
+| tdd-developer | TDD開発支援 | Red-Green-Refactor Cycle |
+| it-system-roi-analyzer | IT投資ROI分析・TCO計算 | ROI, TCO, NPV, Payback |
+| aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
+| render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
+
+### Salesforce (2 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| salesforce-cli-expert | Salesforce CLIコマンド生成 | SOQL, Metadata, Security Audit |
+| salesforce-expert | Salesforce開発・運用・トラブルシュート | Sharing, Apex, LWC, Architecture |
+
+### Media Processing Tools (4 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| ffmpeg-expert | FFmpegによる動画・音声処理 | Encoding, Filters, Streaming |
+| imagemagick-expert | ImageMagickによる画像処理 | Convert, Resize, Effects |
+| sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
+| yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
+
+### Documentation & Communication (6 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| bug-ticket-creator | バグチケット作成支援 | CLEAR Principles, Severity/Priority |
+| critical-document-reviewer | ドキュメント批評レビュー | Multi-Persona Review |
+| docling-converter | ドキュメント形式変換 | PDF, DOCX, Markdown |
+| fujisoft-presentation-creator | FUJISOFT形式プレゼン作成 | MARP Templates, Corporate Style |
+| mermaid-to-pdf | Mermaid図含むMarkdown→PDF | Diagram Rendering, PDF Export |
+| video2minutes | 動画→文字起こし・議事録 | Transcription, Meeting Minutes |
+
+### QA & Testing (4 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| migration-validation-explorer | データ移行検証・QAバックログ生成 | 4-Perspective Hypothesis, Priority Scoring |
+| qa-bug-analyzer | バグデータ分析・品質トレンド | Quality Metrics, Trend Analysis |
+| uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
+| helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
+
+### Compliance & Governance (6 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| compliance-advisor | J-SOX/SOX、RCM、内部監査計画 | COSO Framework, Internal Audit |
+| contract-reviewer | 契約書レビュー・リスク分析 | Risk Analysis, Clause Review |
+| dama-dmbok | DMBOK準拠データ管理 | Data Governance, Quality |
+| itil4-consultant | ITIL4コンサルティング | 34 Practices, Maturity Assessment |
+| pci-dss-compliance-consultant | PCI DSS v4準拠支援 | Gap Analysis, SAQ Selection |
+| financial-analyst | 財務分析・投資評価 | DCF, Comparable Analysis |
+
+### Vendor & HR Management (3 skills)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| vendor-estimate-creator | 開発見積作成 | WBS, 4 Estimation Methods, ROI |
+| vendor-rfq-creator | RFQ（見積依頼書）作成 | 150+ Checklist Items |
+| talent-acquisition-specialist | JD作成、採用計画、面接評価 | JD Templates, Interview Evaluation |
+
+---
+
+## Available Skills (Detailed)
 
 ### 📊 Data Scientist
 
@@ -1835,101 +1932,6 @@ Contributions are welcome! To contribute a new skill:
    - Skill `.skill` file
    - Update to this README
    - Example usage scenarios
-
-## Skill Catalog (48 Skills)
-
-### Business Strategy & Consulting (9 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| ai-adoption-consultant | AI/LLM活用提案、業界・部門別導入戦略 | 5 Industries, 5 Functions, ROI Analysis |
-| business-analyst | BABOK準拠のビジネス分析、要件定義 | Stakeholder Analysis, BRD Templates |
-| competitive-intelligence-analyst | 競合分析、バトルカード、Win/Loss分析 | Battlecards, Market Landscape |
-| executive-briefing-writer | 経営層向け資料作成、So What分析 | Board Reports, Investor Briefings |
-| m-and-a-advisor | M&Aアドバイザリー、DD、PMI計画 | Valuation, Due Diligence, PMI |
-| pricing-strategist | 価格戦略、価格弾力性分析 | Value-Based Pricing, Price Testing |
-| strategic-planner | 事業戦略立案、SWOT、シナリオ分析 | Strategy Canvas, Scenario Planning |
-| design-thinking | デザイン思考プロセス支援 | 5-Phase Process, Empathy Maps |
-| lean-six-sigma-consultant | リーンシックスシグマ、プロセス改善 | DMAIC, Value Stream Mapping |
-
-### Project Management (3 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
-| project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
-| vendor-estimate-reviewer | ベンダー見積レビュー・妥当性評価 | 12 Review Dimensions, 60+ Risk Factors |
-
-### Software Development & IT (11 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| codex-reviewer | OpenAI Codexによるレビュー依頼 | GPT-5.1-Codex-Max Integration |
-| critical-code-reviewer | 多角的コードレビュー | Multi-Persona Review |
-| data-scientist | データ分析・ML・時系列予測 | Auto EDA, Model Comparison |
-| data-visualization-expert | データ可視化、チャート設計 | 30+ Chart Types, Accessibility |
-| design-implementation-reviewer | 設計・実装の整合性レビュー | Bug Hunting, Correctness Focus |
-| duckdb-expert | DuckDBによる大規模データ分析 | SQL Optimization, File Formats |
-| log-debugger | ログ分析・RCA・デバッグ | Log Patterns, Root Cause Analysis |
-| tdd-developer | TDD開発支援 | Red-Green-Refactor Cycle |
-| it-system-roi-analyzer | IT投資ROI分析・TCO計算 | ROI, TCO, NPV, Payback |
-| aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
-| render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
-
-### Salesforce (2 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| salesforce-cli-expert | Salesforce CLIコマンド生成 | SOQL, Metadata, Security Audit |
-| salesforce-expert | Salesforce開発・運用・トラブルシュート | Sharing, Apex, LWC, Architecture |
-
-### Media Processing Tools (4 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| ffmpeg-expert | FFmpegによる動画・音声処理 | Encoding, Filters, Streaming |
-| imagemagick-expert | ImageMagickによる画像処理 | Convert, Resize, Effects |
-| sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
-| yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
-
-### Documentation & Communication (6 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| bug-ticket-creator | バグチケット作成支援 | CLEAR Principles, Severity/Priority |
-| critical-document-reviewer | ドキュメント批評レビュー | Multi-Persona Review |
-| docling-converter | ドキュメント形式変換 | PDF, DOCX, Markdown |
-| fujisoft-presentation-creator | FUJISOFT形式プレゼン作成 | MARP Templates, Corporate Style |
-| mermaid-to-pdf | Mermaid図含むMarkdown→PDF | Diagram Rendering, PDF Export |
-| video2minutes | 動画→文字起こし・議事録 | Transcription, Meeting Minutes |
-
-### QA & Testing (4 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| migration-validation-explorer | データ移行検証・QAバックログ生成 | 4-Perspective Hypothesis, Priority Scoring |
-| qa-bug-analyzer | バグデータ分析・品質トレンド | Quality Metrics, Trend Analysis |
-| uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
-| helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
-
-### Compliance & Governance (6 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| compliance-advisor | J-SOX/SOX、RCM、内部監査計画 | COSO Framework, Internal Audit |
-| contract-reviewer | 契約書レビュー・リスク分析 | Risk Analysis, Clause Review |
-| dama-dmbok | DMBOK準拠データ管理 | Data Governance, Quality |
-| itil4-consultant | ITIL4コンサルティング | 34 Practices, Maturity Assessment |
-| pci-dss-compliance-consultant | PCI DSS v4準拠支援 | Gap Analysis, SAQ Selection |
-| financial-analyst | 財務分析・投資評価 | DCF, Comparable Analysis |
-
-### Vendor & HR Management (3 skills)
-
-| Skill Name | Description | Key Features |
-|------------|-------------|--------------|
-| vendor-estimate-creator | 開発見積作成 | WBS, 4 Estimation Methods, ROI |
-| vendor-rfq-creator | RFQ（見積依頼書）作成 | 150+ Checklist Items |
-| talent-acquisition-specialist | JD作成、採用計画、面接評価 | JD Templates, Interview Evaluation |
 
 ## License
 
