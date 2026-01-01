@@ -14,8 +14,10 @@ claude-skills-library/
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
-│   ├── ffmpeg-expert/
-│   ├── lean-six-sigma-consultant/
+│   └── ...
+├── agents/                 # Agent definitions (15 agents)
+│   ├── code-reviewer-bug-hunter.md
+│   ├── critical-reviewer-customer.md
 │   └── ...
 ├── hooks/                  # Claude Code hook configurations
 │   ├── current-datetime.json
@@ -128,6 +130,47 @@ Useful hook configurations for Claude Code. See [hooks/README.md](hooks/README.m
 | vendor-estimate-creator | 開発見積作成 | WBS, 4 Estimation Methods, ROI |
 | vendor-rfq-creator | RFQ（見積依頼書）作成 | 150+ Checklist Items |
 | talent-acquisition-specialist | JD作成、採用計画、面接評価 | JD Templates, Interview Evaluation |
+
+---
+
+## Agent Catalog (15 Agents)
+
+Agents are specialized sub-agents that can be spawned by Claude Code using the Task tool. They run autonomously and return results.
+
+### Code Review Agents (4)
+
+| Agent Name | Description |
+|------------|-------------|
+| code-reviewer-bug-hunter | Bug Hunter: 障害モード、エッジケース、並行性問題、影響範囲分析に特化 |
+| code-reviewer-clean-code-expert | Clean Code: 命名、関数設計、可読性、SOLID原則に特化 |
+| code-reviewer-tdd-expert | TDD Expert: テスト容易性、依存関係管理、リファクタリング安全性に特化 |
+| code-reviewer-veteran-engineer | Veteran Engineer: 設計判断、アンチパターン、運用懸念、長期保守性に特化 |
+
+### Document Review Agents (3)
+
+| Agent Name | Description |
+|------------|-------------|
+| critical-reviewer-customer | Customer Persona: 要件充足、理解容易性、期待値整合、ビジネス価値の観点 |
+| critical-reviewer-developer | Developer Persona: 技術的正確性、実装可能性、曖昧性、実務的懸念の観点 |
+| critical-reviewer-pm | PM Persona: リスク、一貫性、実現可能性、依存関係、プロジェクト影響の観点 |
+
+### Development & Analysis Agents (3)
+
+| Agent Name | Description |
+|------------|-------------|
+| design-implementation-reviewer | コードが正しく動作するかの批評的レビュー（設計書との整合性ではなく実動作重視） |
+| business-analyst | BABOK準拠のビジネス分析、要件抽出、ステークホルダー分析、プロセスマッピング |
+| migration-validation-explorer | データ移行QA、隠れたリスク発見、検証仮説生成、QAバックログ作成 |
+
+### Project & Vendor Management Agents (5)
+
+| Agent Name | Description |
+|------------|-------------|
+| meeting-minutes-writer | 会議トランスクリプトから構造化された議事録を作成 |
+| project-plan-creator | PMBOK準拠のプロジェクト計画書、WBS、ガントチャート、RACI作成 |
+| vendor-estimate-creator | RFQから詳細な見積書（WBS、工数、コスト内訳、ROI分析）を作成 |
+| vendor-estimate-reviewer | ベンダー見積の妥当性評価、リスク・ギャップ・レッドフラグの特定 |
+| vendor-rfq-creator | 曖昧なクライアント要件から包括的なRFQ文書を作成 |
 
 ---
 
