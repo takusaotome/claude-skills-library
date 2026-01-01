@@ -15,9 +15,9 @@ claude-skills-library/
 │   ├── project-manager/
 │   ├── business-analyst/
 │   └── ...
-├── agents/                 # Agent definitions (15 agents)
+├── agents/                 # Agent definitions (18 agents)
 │   ├── code-reviewer-bug-hunter.md
-│   ├── critical-reviewer-customer.md
+│   ├── document-reviewer-customer.md
 │   └── ...
 ├── hooks/                  # Claude Code hook configurations
 │   ├── current-datetime.json
@@ -146,13 +146,16 @@ Agents are specialized sub-agents that can be spawned by Claude Code using the T
 | code-reviewer-tdd-expert | TDD Expert: テスト容易性、依存関係管理、リファクタリング安全性に特化 |
 | code-reviewer-veteran-engineer | Veteran Engineer: 設計判断、アンチパターン、運用懸念、長期保守性に特化 |
 
-### Document Review Agents (3)
+### Document Review Agents (6)
 
 | Agent Name | Description |
 |------------|-------------|
-| critical-reviewer-customer | Customer Persona: 要件充足、理解容易性、期待値整合、ビジネス価値の観点 |
-| critical-reviewer-developer | Developer Persona: 技術的正確性、実装可能性、曖昧性、実務的懸念の観点 |
-| critical-reviewer-pm | PM Persona: リスク、一貫性、実現可能性、依存関係、プロジェクト影響の観点 |
+| document-reviewer-customer | Customer Persona: 要件充足、理解容易性、期待値整合、ビジネス価値の観点 |
+| document-reviewer-developer | Developer Persona: 技術的正確性、実装可能性、曖昧性、実務的懸念の観点 |
+| document-reviewer-ops | Ops/SRE Persona: 監視、障害対応、運用負荷、保守性、キャパシティの観点 |
+| document-reviewer-pm | PM Persona: リスク、一貫性、実現可能性、依存関係、プロジェクト影響の観点 |
+| document-reviewer-qa | QA Persona: テスト可能性、受入基準明確性、エッジケース、異常系の観点 |
+| document-reviewer-security | Security Persona: 認証・認可、データ保護、コンプライアンス、監査要件の観点 |
 
 ### Development & Analysis Agents (3)
 

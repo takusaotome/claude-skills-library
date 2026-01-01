@@ -74,9 +74,9 @@ $ARGUMENTS
    - Customer（顧客/ステークホルダー視点）
 
 2. **並列レビュー実行**: Task tool で3つのサブエージェントを並列起動
-   - `critical-reviewer-developer`
-   - `critical-reviewer-pm`
-   - `critical-reviewer-customer`
+   - `document-reviewer-developer`
+   - `document-reviewer-pm`
+   - `document-reviewer-customer`
 
 3. **参照リソース**:
    - `skills/critical-document-reviewer/references/critical_analysis_framework.md`

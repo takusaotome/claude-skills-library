@@ -101,12 +101,12 @@ description: |
 
 | エージェント名 | ペルソナ | 主なフォーカス |
 |--------------|---------|---------------|
-| `critical-reviewer-developer` | Developer | 実装可能性、技術的正確性 |
-| `critical-reviewer-pm` | PM | リスク、整合性、依存関係 |
-| `critical-reviewer-customer` | Customer | 要件充足、ビジネス価値 |
-| `critical-reviewer-qa` | QA | テスト可能性、受入基準 |
-| `critical-reviewer-security` | Security | セキュリティ、コンプライアンス |
-| `critical-reviewer-ops` | Ops | 運用性、監視、障害対応 |
+| `document-reviewer-developer` | Developer | 実装可能性、技術的正確性 |
+| `document-reviewer-pm` | PM | リスク、整合性、依存関係 |
+| `document-reviewer-customer` | Customer | 要件充足、ビジネス価値 |
+| `document-reviewer-qa` | QA | テスト可能性、受入基準 |
+| `document-reviewer-security` | Security | セキュリティ、コンプライアンス |
+| `document-reviewer-ops` | Ops | 運用性、監視、障害対応 |
 
 各サブエージェントには以下を渡します：
 - レビュー対象文書
@@ -119,16 +119,16 @@ description: |
 Task tool を使用して選定したペルソナのエージェントを並列起動：
 
 例1: 基本レビュー（3ペルソナ）
-- critical-reviewer-developer: 実装可能性視点でレビュー
-- critical-reviewer-qa: テスト可能性視点でレビュー
-- critical-reviewer-pm: プロジェクトリスク視点でレビュー
+- document-reviewer-developer: 実装可能性視点でレビュー
+- document-reviewer-qa: テスト可能性視点でレビュー
+- document-reviewer-pm: プロジェクトリスク視点でレビュー
 
 例2: セキュリティ重視レビュー（5ペルソナ）
-- critical-reviewer-developer: 実装可能性視点
-- critical-reviewer-qa: テスト可能性視点
-- critical-reviewer-security: セキュリティ視点
-- critical-reviewer-ops: 運用性視点
-- critical-reviewer-pm: プロジェクトリスク視点
+- document-reviewer-developer: 実装可能性視点
+- document-reviewer-qa: テスト可能性視点
+- document-reviewer-security: セキュリティ視点
+- document-reviewer-ops: 運用性視点
+- document-reviewer-pm: プロジェクトリスク視点
 ```
 
 ### Phase 3: 統合（Integration）
@@ -376,10 +376,10 @@ Claude:
    推奨ペルソナ: Security, Ops → セキュリティ考慮あり、運用設計含むため追加
    → 4ペルソナでレビュー実行
 2. [Phase 2] 4つのサブエージェントを並列起動:
-   - critical-reviewer-developer: 実装可能性視点
-   - critical-reviewer-qa: テスト可能性視点
-   - critical-reviewer-security: セキュリティ視点
-   - critical-reviewer-ops: 運用性視点
+   - document-reviewer-developer: 実装可能性視点
+   - document-reviewer-qa: テスト可能性視点
+   - document-reviewer-security: セキュリティ視点
+   - document-reviewer-ops: 運用性視点
 3. [Phase 3] 結果を統合し、レビューレポートを生成。
 ```
 
@@ -394,10 +394,10 @@ Claude:
    推奨ペルソナ: QA → テスト可能な要件確認のため追加
    → 4ペルソナでレビュー実行
 2. [Phase 2] 4つのサブエージェントを並列起動:
-   - critical-reviewer-developer: 実装可能性視点
-   - critical-reviewer-pm: リスク・整合性視点
-   - critical-reviewer-customer: 要件充足視点
-   - critical-reviewer-qa: テスト可能性視点
+   - document-reviewer-developer: 実装可能性視点
+   - document-reviewer-pm: リスク・整合性視点
+   - document-reviewer-customer: 要件充足視点
+   - document-reviewer-qa: テスト可能性視点
 3. [Phase 3] 結果を統合し、レビューレポートを生成。
 ```
 
@@ -410,12 +410,12 @@ Claude:
 1. [Phase 1] 文書を分析し、セキュリティ設計と判断。
    → 全6ペルソナでレビュー実行（重要文書のため）
 2. [Phase 2] 6つのサブエージェントを並列起動:
-   - critical-reviewer-developer
-   - critical-reviewer-pm
-   - critical-reviewer-customer
-   - critical-reviewer-qa
-   - critical-reviewer-security
-   - critical-reviewer-ops
+   - document-reviewer-developer
+   - document-reviewer-pm
+   - document-reviewer-customer
+   - document-reviewer-qa
+   - document-reviewer-security
+   - document-reviewer-ops
 3. [Phase 3] 結果を統合し、レビューレポートを生成。
 ```
 
@@ -431,9 +431,9 @@ Claude:
 - `assets/review_report_template.md` - レビューレポートテンプレート
 
 ### Agents (並列レビュー用サブエージェント)
-- `agents/critical-reviewer-developer.md` - Developer/Implementer ペルソナ
-- `agents/critical-reviewer-pm.md` - Project Manager ペルソナ
-- `agents/critical-reviewer-customer.md` - Customer/Stakeholder ペルソナ
-- `agents/critical-reviewer-qa.md` - QA/Tester ペルソナ
-- `agents/critical-reviewer-security.md` - Security/Compliance ペルソナ
-- `agents/critical-reviewer-ops.md` - Operations/SRE ペルソナ
+- `agents/document-reviewer-developer.md` - Developer/Implementer ペルソナ
+- `agents/document-reviewer-pm.md` - Project Manager ペルソナ
+- `agents/document-reviewer-customer.md` - Customer/Stakeholder ペルソナ
+- `agents/document-reviewer-qa.md` - QA/Tester ペルソナ
+- `agents/document-reviewer-security.md` - Security/Compliance ペルソナ
+- `agents/document-reviewer-ops.md` - Operations/SRE ペルソナ

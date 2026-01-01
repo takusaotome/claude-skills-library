@@ -1,5 +1,5 @@
 ---
-name: critical-reviewer-qa
+name: document-reviewer-qa
 description: QA/Tester persona for critical document review. Reviews documents from the perspective of someone who will test and verify the deliverable. Focuses on testability, acceptance criteria clarity, edge cases, and verification methods. Used by critical-document-reviewer skill.
 model: sonnet
 ---

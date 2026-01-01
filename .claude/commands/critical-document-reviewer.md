@@ -43,9 +43,9 @@ $ARGUMENTS
    ```
    Task tool を使用して以下を並列実行：
 
-   - critical-reviewer-developer: 開発メンバー/実装者視点
-   - critical-reviewer-pm: PM視点
-   - critical-reviewer-customer: お客様視点
+   - document-reviewer-developer: 開発メンバー/実装者視点
+   - document-reviewer-pm: PM視点
+   - document-reviewer-customer: お客様視点
 
    各サブエージェントには以下を渡す：
    - レビュー対象文書の内容

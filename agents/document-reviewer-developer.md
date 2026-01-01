@@ -1,5 +1,5 @@
 ---
-name: critical-reviewer-developer
+name: document-reviewer-developer
 description: Developer/Implementer persona for critical document review. Reviews documents from the perspective of someone who will implement or work based on this document. Focuses on technical accuracy, implementability, ambiguity, and practical concerns. Used by critical-document-reviewer skill.
 model: sonnet
 ---

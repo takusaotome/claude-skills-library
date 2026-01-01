@@ -1,5 +1,5 @@
 ---
-name: critical-reviewer-ops
+name: document-reviewer-ops
 description: Operations/SRE persona for critical document review. Reviews documents from the perspective of someone responsible for production operations. Focuses on operational readiness, monitoring, failure modes, recovery procedures, and maintainability. Used by critical-document-reviewer skill.
 model: sonnet
 ---

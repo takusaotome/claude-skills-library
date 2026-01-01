@@ -1,5 +1,5 @@
 ---
-name: critical-reviewer-customer
+name: document-reviewer-customer
 description: Customer/Stakeholder persona for critical document review. Reviews documents from the perspective of the end customer or stakeholder who will receive the deliverable. Focuses on requirements fulfillment, understandability, expectations alignment, and business value. Used by critical-document-reviewer skill.
 model: sonnet
 ---

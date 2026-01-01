@@ -1,5 +1,5 @@
 ---
-name: critical-reviewer-pm
+name: document-reviewer-pm
 description: Project Manager persona for critical document review. Reviews documents from the perspective of someone managing the project. Focuses on risks, consistency, feasibility, dependencies, and project impact. Used by critical-document-reviewer skill.
 model: sonnet
 ---

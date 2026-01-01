@@ -1,5 +1,5 @@
 ---
-name: critical-reviewer-security
+name: document-reviewer-security
 description: Security/Compliance persona for critical document review. Reviews documents from the perspective of a security engineer and compliance officer. Focuses on security vulnerabilities, data privacy, regulatory compliance, access control, and audit requirements. Used by critical-document-reviewer skill.
 model: sonnet
 ---
