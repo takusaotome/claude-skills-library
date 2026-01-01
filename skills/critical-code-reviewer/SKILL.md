@@ -1,55 +1,58 @@
 ---
 name: critical-code-reviewer
 description: |
-  3人の異なる専門家ペルソナ（20年ベテランエンジニア、TDDエキスパート、Clean Codeエキスパート）で
-  ソースコードを批判的にレビューするスキル。設計判断、テスト容易性、可読性の観点から
-  コードの問題を検出し、改善提案を行う。Python/JavaScriptに対しては追加のチェックポイントを適用。
+  4人の異なる専門家ペルソナ（20年ベテランエンジニア、TDDエキスパート、Clean Codeエキスパート、
+  バグハンター）でソースコードを批判的にレビューするスキル。設計判断、テスト容易性、可読性、
+  失敗モード・影響範囲の観点からコードの問題を検出し、改善提案を行う。
+  Python/JavaScriptに対しては追加のチェックポイントを適用。
   Use when reviewing source code from multiple expert perspectives to find design flaws,
-  testability issues, and code quality problems. Triggers: "critical code review",
-  "multi-persona code review", "expert code review", "code quality assessment".
+  testability issues, code quality problems, and potential bugs/failure modes.
+  Triggers: "critical code review", "multi-persona code review", "expert code review",
+  "code quality assessment", "find bugs", "failure mode analysis".
 ---
 
 # Critical Code Reviewer
 
 ## Overview
 
-このスキルは、ソースコードを3人の異なる専門家の視点から批判的にレビューします：
+このスキルは、ソースコードを4人の異なる専門家の視点から批判的にレビューします：
 
 | Persona | Focus | Key Question |
 |---------|-------|--------------|
 | **Veteran Engineer** | 設計判断、アンチパターン、長期保守性 | 「これを5年後も保守できるか？」 |
 | **TDD Expert** | テスト容易性、依存関係管理、リファクタリング安全性 | 「これを単独でテストできるか？」 |
 | **Clean Code Expert** | 命名、可読性、SOLID原則 | 「一目で理解できるか？」 |
+| **Bug Hunter** | 失敗モード、影響範囲、冪等性・並行実行 | 「どう壊れる？diff外への影響は？」 |
 
 ## Multi-Persona Review Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    スキル（オーケストレーター）                  │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │ Phase 1: 準備                                        │   │
-│  │ - レビュー対象コードの特定                              │   │
-│  │ - 言語の検出（Python/JavaScript の場合は追加チェック）   │   │
-│  │ - ペルソナ確認                                        │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                           │                                 │
-│            ┌──────────────┼──────────────┐                 │
-│            ▼              ▼              ▼                 │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐          │
-│  │   Veteran   │ │    TDD     │ │ Clean Code │  並列    │
-│  │  Engineer   │ │   Expert   │ │   Expert   │  実行    │
-│  │ (20年経験)  │ │ (和田氏的) │ │ (可読性)   │          │
-│  └─────────────┘ └─────────────┘ └─────────────┘          │
-│            │              │              │                 │
-│            └──────────────┼──────────────┘                 │
-│                           ▼                                 │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │ Phase 3: 統合                                        │   │
-│  │ - 重複排除（複数ペルソナからの同一指摘を統合）          │   │
-│  │ - 重大度付与                                          │   │
-│  │ - 統合レビューレポート生成                              │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────┐
+│                      スキル（オーケストレーター）                        │
+│  ┌─────────────────────────────────────────────────────────────┐     │
+│  │ Phase 1: 準備                                                │     │
+│  │ - レビュー対象コードの特定                                     │     │
+│  │ - 言語の検出（Python/JavaScript の場合は追加チェック）          │     │
+│  │ - ペルソナ確認                                               │     │
+│  └─────────────────────────────────────────────────────────────┘     │
+│                              │                                        │
+│         ┌────────────────────┼────────────────────┐                  │
+│         ▼          ▼         ▼         ▼          │                  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                 │
+│  │ Veteran  │ │   TDD    │ │  Clean   │ │   Bug   │    並列         │
+│  │ Engineer │ │  Expert  │ │   Code   │ │  Hunter │    実行         │
+│  │(20年経験)│ │(和田氏的)│ │  Expert  │ │(失敗モード)│               │
+│  └──────────┘ └──────────┘ └──────────┘ └──────────┘                 │
+│         │          │         │         │                             │
+│         └──────────┴─────────┴─────────┘                             │
+│                              ▼                                        │
+│  ┌─────────────────────────────────────────────────────────────┐     │
+│  │ Phase 3: 統合                                                │     │
+│  │ - 重複排除（複数ペルソナからの同一指摘を統合）                   │     │
+│  │ - 重大度付与                                                  │     │
+│  │ - 統合レビューレポート生成                                      │     │
+│  └─────────────────────────────────────────────────────────────┘     │
+└───────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Workflow
@@ -71,10 +74,10 @@ description: |
 
 ### Phase 2: 並列レビュー（Parallel Review）
 
-3つのサブエージェントを**並列実行**します：
+4つのサブエージェントを**並列実行**します：
 
 ```
-Task tool を使用して3つのサブエージェントを並列起動：
+Task tool を使用して4つのサブエージェントを並列起動：
 
 1. code-reviewer-veteran-engineer: 20年ベテランエンジニア視点
    - 設計判断の妥当性
@@ -90,6 +93,12 @@ Task tool を使用して3つのサブエージェントを並列起動：
    - 命名の適切さ
    - 関数/クラス設計
    - SOLID原則の遵守
+
+4. code-reviewer-bug-hunter: バグハンター視点
+   - 失敗モード分析（境界条件、null、タイムアウト等）
+   - 影響範囲の探索（呼び出し元、後方互換性）
+   - 冪等性・並行実行の問題
+   - P0/P1優先度付け
 ```
 
 各サブエージェントには以下を渡す：
@@ -168,7 +177,7 @@ Task tool を使用して3つのサブエージェントを並列起動：
 - Target: [レビュー対象]
 - Languages: [検出された言語]
 - Date: [日付]
-- Reviewers: Veteran Engineer, TDD Expert, Clean Code Expert
+- Reviewers: Veteran Engineer, TDD Expert, Clean Code Expert, Bug Hunter
 
 ## Executive Summary
 
@@ -204,6 +213,9 @@ Task tool を使用して3つのサブエージェントを並列起動：
 ### Clean Code Expert Perspective
 [可読性の総評]
 
+### Bug Hunter Perspective
+[失敗モード・影響範囲の総評]
+
 ## Improvement Recommendations
 [改善推奨事項のリスト]
 ```
@@ -216,18 +228,20 @@ User: このPythonコードをレビューしてください。
 
 Claude:
 1. [Phase 1] Python と判定。追加チェックを有効化。
-2. [Phase 2] 3つのサブエージェントを並列起動:
+2. [Phase 2] 4つのサブエージェントを並列起動:
    - Veteran Engineer: 設計判断をレビュー
    - TDD Expert: テスト容易性をレビュー
    - Clean Code Expert: 可読性をレビュー
+   - Bug Hunter: 失敗モード・影響範囲をレビュー
 3. [Phase 3] 結果を統合し、レビューレポートを生成。
 ```
 
 ## Files
 
-- `references/persona_definitions.md` - 3ペルソナの詳細定義
+- `references/persona_definitions.md` - 4ペルソナの詳細定義
 - `references/code_smell_patterns.md` - コードスメル・アンチパターン集
 - `references/review_framework.md` - 批判的コード分析フレームワーク
 - `references/language_specific_checks.md` - Python/JavaScript固有チェック
 - `references/severity_criteria.md` - 重大度判定基準
+- `references/failure_mode_patterns.md` - 失敗モードパターン集（Bug Hunter用）
 - `assets/code_review_report_template.md` - レビューレポートテンプレート

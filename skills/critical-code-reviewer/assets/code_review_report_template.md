@@ -7,7 +7,7 @@
 | **Target** | [レビュー対象ファイル/ディレクトリ] |
 | **Languages** | [Python, JavaScript, TypeScript, etc.] |
 | **Review Date** | [YYYY-MM-DD] |
-| **Reviewer Personas** | Veteran Engineer, TDD Expert, Clean Code Expert |
+| **Reviewer Personas** | Veteran Engineer, TDD Expert, Clean Code Expert, Bug Hunter |
 
 ---
 
@@ -34,6 +34,7 @@
 | 設計品質 | ⭐⭐⭐⭐☆ | [コメント] |
 | テスト容易性 | ⭐⭐⭐☆☆ | [コメント] |
 | 可読性 | ⭐⭐⭐⭐⭐ | [コメント] |
+| 堅牢性 | ⭐⭐⭐⭐☆ | [コメント] |
 
 **Merge Readiness**: ⭕ Ready / 🔺 Conditional / ❌ Not Ready
 
@@ -51,8 +52,8 @@
 | Item | Value |
 |------|-------|
 | **Location** | `[file:line]` |
-| **Detected By** | [Veteran Engineer / TDD Expert / Clean Code Expert] |
-| **Category** | [設計 / テスト容易性 / 可読性 / アンチパターン / 言語固有] |
+| **Detected By** | [Veteran Engineer / TDD Expert / Clean Code Expert / Bug Hunter] |
+| **Category** | [設計 / テスト容易性 / 可読性 / アンチパターン / 失敗モード / 言語固有] |
 
 **Code:**
 ```[language]
@@ -198,6 +199,36 @@
 
 **Clean Code Advice:**
 > [Clean Codeの観点からのアドバイス]
+
+---
+
+### 🔍 Bug Hunter Perspective
+
+**Failure Mode Assessment:**
+[失敗モード分析の評価]
+
+**Key Observations:**
+1. [観察1]
+2. [観察2]
+
+**Boundary Conditions:**
+- [境界条件の問題]
+
+**Idempotency & Concurrency:**
+- [冪等性・並行実行の問題]
+
+**Impact Analysis:**
+| 観点 | 状態 | コメント |
+|------|------|---------|
+| 呼び出し元への影響 | ✅/⚠️/❌ | [コメント] |
+| 後方互換性 | ✅/⚠️/❌ | [コメント] |
+| リソース管理 | ✅/⚠️/❌ | [コメント] |
+
+**P0/P1 Issues:**
+- [壊れる・漏れる・戻せない問題]
+
+**Bug Hunter Advice:**
+> [失敗モード起点のアドバイス]
 
 ---
 

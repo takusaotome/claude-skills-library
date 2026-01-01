@@ -1,0 +1,258 @@
+# =============================================================================
+# Log Analyzer Configuration Template
+# =============================================================================
+# Copy this file and customize for your project.
+# Usage: python log_analyzer.py analyze app.log --config my_config.yaml
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Error Detection Keywords
+# -----------------------------------------------------------------------------
+# Keywords that indicate error-level events.
+# Case-insensitive matching is applied.
+
+error_keywords:
+  # Common error indicators
+  - error
+  - exception
+  - failed
+  - failure
+  - fatal
+  - critical
+  - crash
+  - panic
+  - abort
+
+  # Connection/Network errors
+  - timeout
+  - refused
+  - connection reset
+  - connection closed
+  - unreachable
+  - no route to host
+
+  # Permission/Auth errors
+  - denied
+  - unauthorized
+  - forbidden
+  - permission denied
+  - access denied
+  - authentication failed
+
+  # Resource errors
+  - out of memory
+  - oom
+  - disk full
+  - no space left
+  - quota exceeded
+
+  # Application-specific (customize these)
+  - traceback
+  - stacktrace
+  - segfault
+  - killed
+  - null pointer
+  - undefined
+
+# -----------------------------------------------------------------------------
+# Warning Detection Keywords
+# -----------------------------------------------------------------------------
+# Keywords that indicate warning-level events.
+
+warning_keywords:
+  - warn
+  - warning
+  - deprecated
+  - slow
+  - retry
+  - retrying
+  - skip
+  - skipping
+  - invalid
+  - missing
+  - not found
+  - unavailable
+  - degraded
+  - high latency
+  - queue full
+
+# -----------------------------------------------------------------------------
+# Ignore Patterns
+# -----------------------------------------------------------------------------
+# Regex patterns for log lines to ignore (false positives, known issues, etc.)
+
+ignore_patterns:
+  # Example: Ignore health check timeouts
+  # - "healthcheck.*timeout"
+
+  # Example: Ignore expected deprecation warnings
+  # - "DeprecationWarning.*legacy_function"
+
+  # Example: Ignore test logs
+  # - "\\[TEST\\]"
+
+# -----------------------------------------------------------------------------
+# Severity Override Rules
+# -----------------------------------------------------------------------------
+# Override severity for specific patterns.
+# Format: pattern -> severity (CRITICAL, ERROR, WARNING, INFO)
+
+severity_overrides:
+  # Example: Treat disk space warnings as critical
+  # "disk.*space.*low": CRITICAL
+
+  # Example: Downgrade specific timeout to warning
+  # "cache.*timeout": WARNING
+
+# -----------------------------------------------------------------------------
+# Log Format Configuration
+# -----------------------------------------------------------------------------
+# Customize timestamp and log level extraction patterns.
+
+log_format:
+  # Timestamp patterns (regex with capture group)
+  # The first matching pattern will be used.
+  timestamp_patterns:
+    # ISO 8601
+    - pattern: '(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?)'
+      format: '%Y-%m-%dT%H:%M:%S'
+
+    # Common log format
+    - pattern: '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})'
+      format: '%Y-%m-%d %H:%M:%S'
+
+    # Syslog format
+    - pattern: '([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})'
+      format: '%b %d %H:%M:%S'
+
+  # Log level patterns (regex)
+  level_patterns:
+    - '\b(FATAL|CRITICAL)\b'
+    - '\b(ERROR|ERR)\b'
+    - '\b(WARN(?:ING)?)\b'
+    - '\b(INFO)\b'
+    - '\b(DEBUG)\b'
+    - '\b(TRACE)\b'
+
+# -----------------------------------------------------------------------------
+# JSON Log Field Mapping
+# -----------------------------------------------------------------------------
+# Map JSON log fields to standard fields.
+# Used when parsing JSON-formatted logs.
+
+json_field_mapping:
+  timestamp_fields:
+    - timestamp
+    - time
+    - '@timestamp'
+    - ts
+    - datetime
+    - created_at
+
+  level_fields:
+    - level
+    - severity
+    - log_level
+    - loglevel
+    - lvl
+
+  message_fields:
+    - message
+    - msg
+    - text
+    - log
+    - body
+
+  source_fields:
+    - source
+    - logger
+    - component
+    - service
+    - module
+
+# -----------------------------------------------------------------------------
+# Analysis Settings
+# -----------------------------------------------------------------------------
+
+analysis:
+  # Maximum number of error patterns to report
+  max_patterns: 20
+
+  # Maximum number of sample errors to include in report
+  max_samples: 10
+
+  # Time window for grouping related errors (seconds)
+  time_window: 60
+
+  # Minimum occurrences to report as a pattern
+  min_occurrences: 2
+
+# -----------------------------------------------------------------------------
+# Correlation Settings
+# -----------------------------------------------------------------------------
+
+correlation:
+  # Time window for correlating events across logs (seconds)
+  time_window: 60
+
+  # Minimum sources required for correlation
+  min_sources: 2
+
+# -----------------------------------------------------------------------------
+# Output Settings
+# -----------------------------------------------------------------------------
+
+output:
+  # Default output format (md or json)
+  default_format: md
+
+  # Include full stack traces in output
+  include_stacktraces: true
+
+  # Maximum line length for truncation
+  max_line_length: 500
+
+  # Date format for reports
+  date_format: '%Y-%m-%d %H:%M:%S'
+
+# -----------------------------------------------------------------------------
+# Project-Specific Patterns
+# -----------------------------------------------------------------------------
+# Add your project-specific error patterns here.
+
+project_patterns:
+  # Example: Database connection patterns
+  # database:
+  #   connection_error: "Connection to database.*failed"
+  #   query_timeout: "Query execution.*timeout"
+  #   deadlock: "Deadlock detected"
+
+  # Example: API patterns
+  # api:
+  #   rate_limit: "Rate limit exceeded"
+  #   auth_failure: "Authentication failed for user"
+  #   validation_error: "Validation error:.*"
+
+  # Example: Kubernetes patterns
+  # kubernetes:
+  #   pod_crash: "Back-off restarting failed container"
+  #   oom_killed: "OOMKilled"
+  #   probe_failed: "Liveness probe failed"
+
+# -----------------------------------------------------------------------------
+# Alerting Thresholds (for reference)
+# -----------------------------------------------------------------------------
+# Define thresholds for alerting (used for documentation, not by the tool).
+
+alert_thresholds:
+  error_rate:
+    warning: 0.01    # 1%
+    critical: 0.05   # 5%
+
+  error_count_per_hour:
+    warning: 10
+    critical: 100
+
+  response_time_ms:
+    warning: 1000
+    critical: 5000
