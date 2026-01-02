@@ -2,8 +2,8 @@
 description: |
   ドキュメントまたはコードを批判的視点でレビューする統合コマンド。
   対象の種類を拡張子から自動判別し、適切なペルソナで並列レビューを実行。
-  - ドキュメント: Developer, PM, Customer の3視点
-  - コード: Veteran Engineer, TDD Expert, Clean Code Expert の3視点
+  - ドキュメント: Developer, PM, Customer, QA, Security, Ops の6視点
+  - コード: Veteran Engineer, TDD Expert, Clean Code Expert, Bug Hunter の4視点
   Usage: /critical-review <path> [追加の指示]
 allowed-tools: Read, Glob, Grep, Task, Write, TodoWrite, AskUserQuestion
 argument-hint: <path> [追加の指示]
@@ -68,23 +68,44 @@ $ARGUMENTS
 
 #### ドキュメントレビューの場合
 
-1. **ペルソナ**:
-   - Developer（開発者/実装者視点）
-   - PM（プロジェクトマネージャー視点）
-   - Customer（顧客/ステークホルダー視点）
+1. **利用可能なペルソナ（6種類）**:
 
-2. **並列レビュー実行**: Task tool で3つのサブエージェントを並列起動
+   | ペルソナ | 視点 |
+   |---------|------|
+   | Developer | 実装者視点：技術的正確性、実装可能性 |
+   | PM | プロジェクト視点：リスク、整合性、実現性 |
+   | Customer | 顧客視点：要件充足、ビジネス価値 |
+   | QA | 品質保証視点：テスト可能性、受入基準 |
+   | Security | セキュリティ視点：脆弱性、コンプライアンス |
+   | Ops | 運用視点：運用準備度、障害対応 |
+
+2. **文書タイプに応じたペルソナ選択**:
+
+   | 文書タイプ | 推奨ペルソナ |
+   |-----------|-------------|
+   | 設計文書（一般） | Developer, QA, PM |
+   | セキュリティ設計 | Developer, Security, Ops |
+   | インフラ/運用設計 | Developer, Ops, Security |
+   | 要件定義書 | Developer, PM, Customer |
+   | 提案書/企画書 | PM, Customer, Developer |
+   | 不具合分析レポート | Developer, QA, PM |
+   | その他 | Developer, PM, Customer（デフォルト） |
+
+3. **並列レビュー実行**: Task tool でサブエージェントを並列起動
    - `document-reviewer-developer`
    - `document-reviewer-pm`
    - `document-reviewer-customer`
+   - `document-reviewer-qa`
+   - `document-reviewer-security`
+   - `document-reviewer-ops`
 
-3. **参照リソース**:
+4. **参照リソース**:
    - `skills/critical-document-reviewer/references/critical_analysis_framework.md`
    - `skills/critical-document-reviewer/references/evidence_evaluation_criteria.md`
    - `skills/critical-document-reviewer/references/persona_definitions.md`
    - `skills/critical-document-reviewer/references/red_flag_patterns.md`
 
-4. **レポートテンプレート**:
+5. **レポートテンプレート**:
    - `skills/critical-document-reviewer/assets/review_report_template.md`
 
 #### コードレビューの場合
@@ -93,21 +114,27 @@ $ARGUMENTS
    - Python → 型ヒント、Pythonic patterns チェック
    - JavaScript/TypeScript → 型安全性、async patterns チェック
 
-2. **ペルソナ**:
-   - Veteran Engineer（20年ベテラン視点）
-   - TDD Expert（テスト容易性視点）
-   - Clean Code Expert（可読性/SOLID視点）
+2. **ペルソナ（4種類）**:
 
-3. **並列レビュー実行**: Task tool で3つのサブエージェントを並列起動
+   | ペルソナ | 視点 |
+   |---------|------|
+   | Veteran Engineer | 20年ベテラン視点：設計判断、アンチパターン、運用・保守性 |
+   | TDD Expert | TDD視点：テスト容易性、依存関係、リファクタリング安全性 |
+   | Clean Code Expert | Clean Code視点：命名、関数設計、SOLID原則 |
+   | Bug Hunter | バグハンター視点：失敗モード、境界条件、冪等性・並行実行 |
+
+3. **並列レビュー実行**: Task tool で4つのサブエージェントを並列起動
    - `code-reviewer-veteran-engineer`
    - `code-reviewer-tdd-expert`
    - `code-reviewer-clean-code-expert`
+   - `code-reviewer-bug-hunter`
 
 4. **参照リソース**:
    - `skills/critical-code-reviewer/references/persona_definitions.md`
    - `skills/critical-code-reviewer/references/code_smell_patterns.md`
    - `skills/critical-code-reviewer/references/review_framework.md`
    - `skills/critical-code-reviewer/references/language_specific_checks.md`
+   - `skills/critical-code-reviewer/references/failure_mode_patterns.md`
 
 5. **レポートテンプレート**:
    - `skills/critical-code-reviewer/assets/code_review_report_template.md`
@@ -116,7 +143,7 @@ $ARGUMENTS
 
 ### Step 3: 結果統合
 
-1. 3つのレビュー結果を収集
+1. レビュー結果を収集
 2. 重複する指摘を統合（複数ペルソナからの指摘として記録）
 3. 重大度を付与:
 
@@ -143,14 +170,15 @@ $ARGUMENTS
 ## 関連コマンド
 
 直接呼び出しも可能:
-- `/critical-document-reviewer` - ドキュメント専用（ペルソナ選択可能）
-- `/critical-code-reviewer` - コード専用（言語別チェック付き）
+- `/critical-document-reviewer` - ドキュメント専用（6ペルソナ、文書タイプで選択）
+- `/critical-code-reviewer` - コード専用（4ペルソナ、言語別チェック付き）
 
 ---
 
 ## 重要な指示
 
-- **並列実行**: 3つのサブエージェントは必ず並列で起動すること
+- **並列実行**: サブエージェントは必ず並列で起動すること
 - **ultrathink**: 各サブエージェントは ultrathink モードで深い分析を行う
+- **ペルソナ選択**: ドキュメントは文書タイプに応じて適切な3-6ペルソナを選択
 - **建設的**: 問題の指摘だけでなく、改善の方向性も示す
 - **良い点も認める**: 問題だけでなく、良い設計/表現も指摘する
