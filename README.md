@@ -22,6 +22,8 @@ claude-skills-library/
 ├── hooks/                  # Claude Code hook configurations
 │   ├── current-datetime.json
 │   └── notification-sound-macos.json
+├── commands/               # Slash commands for Claude Code
+│   └── clarify.md
 ├── skill-packages/         # Packaged .skill files for distribution
 ├── docs/                   # Additional documentation
 └── README.md
@@ -35,6 +37,27 @@ Useful hook configurations for Claude Code. See [hooks/README.md](hooks/README.m
 |------|---------|
 | `current-datetime.json` | Prevents Claude from confusing today's date |
 | `notification-sound-macos.json` | Plays sound on notifications (macOS) |
+
+## Commands
+
+Slash commands for Claude Code workflows.
+
+| Command | Purpose | Usage |
+|---------|---------|-------|
+| `/clarify` | Clarify plan ambiguities through structured Q&A | `/clarify [plan-file-path]` |
+
+### `/clarify` - Plan Clarification
+
+Resolves ambiguities in plan files through structured questioning using the AskUserQuestion tool.
+
+**Features**:
+- Detects vague language, missing specs, undefined constraints
+- 2-4 questions per round with pros/cons options
+- Records decisions with rationale and owner
+- Updates plan file with decisions appendix
+- Maximum 5 rounds (prevents infinite loops)
+
+**Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
 ## Skill Catalog (49 Skills)
 
