@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Salesforce Report Type Template
+
+  使用方法:
+  1. {OBJECT_NAME} を実際のオブジェクトAPI名に置換
+  2. {LABEL} を表示ラベルに置換
+  3. {CATEGORY} を適切なカテゴリに置換
+     - accounts, opportunities, cases, leads, other
+  4. <columns> セクションに必要なフィールドを追加
+-->
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>{OBJECT_NAME}</baseObject>
+    <category>{CATEGORY}</category>
+    <deployed>true</deployed>
+    <description>{LABEL} Report Type for Data Verification</description>
+    <label>{LABEL}</label>
+    <sections>
+        <!-- ID -->
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Id</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+
+        <!-- Name -->
+        <columns>
+            <checkedByDefault>true</checkedByDefault>
+            <field>Name</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+
+        <!-- Record Type (Optional) -->
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>RecordType</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+
+        <!-- Owner (Lookup -> Relationship Name) -->
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>Owner</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+
+        <!-- Created Date -->
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CreatedDate</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+
+        <!-- Created By (Lookup -> Relationship Name) -->
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CreatedBy</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+
+        <!-- Last Modified Date -->
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>LastModifiedDate</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+
+        <!-- Last Modified By (Lookup -> Relationship Name) -->
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>LastModifiedBy</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+
+        <!-- Add custom fields below -->
+        <!--
+        <columns>
+            <checkedByDefault>false</checkedByDefault>
+            <field>CustomField__c</field>
+            <table>{OBJECT_NAME}</table>
+        </columns>
+        -->
+
+    </sections>
+</ReportType>

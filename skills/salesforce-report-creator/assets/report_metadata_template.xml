@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Salesforce Report Metadata Template
+
+  使用方法:
+  1. {REPORT_NAME} をレポート名に置換
+  2. {REPORT_TYPE} をレポートタイプAPI名に置換（__c サフィックス含む）
+  3. {OBJECT_NAME} をオブジェクトAPI名に置換
+  4. <columns> セクションに必要なフィールドを追加
+
+  フィールド参照形式:
+  - 基本: {OBJECT_NAME}.{FieldName}
+  - 関連オブジェクト名表示: {OBJECT_NAME}.{Relationship}.Name
+    例: Account.Owner.Name, Contact.Account.Name
+-->
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!-- Column Definitions -->
+    <columns>
+        <field>{OBJECT_NAME}.Id</field>
+    </columns>
+    <columns>
+        <field>{OBJECT_NAME}.Name</field>
+    </columns>
+    <columns>
+        <field>{OBJECT_NAME}.RecordType</field>
+    </columns>
+    <columns>
+        <field>{OBJECT_NAME}.Owner.Name</field>
+    </columns>
+    <columns>
+        <field>{OBJECT_NAME}.CreatedDate</field>
+    </columns>
+    <columns>
+        <field>{OBJECT_NAME}.CreatedBy.Name</field>
+    </columns>
+    <columns>
+        <field>{OBJECT_NAME}.LastModifiedDate</field>
+    </columns>
+    <columns>
+        <field>{OBJECT_NAME}.LastModifiedBy.Name</field>
+    </columns>
+
+    <!-- Add custom fields below -->
+    <!--
+    <columns>
+        <field>{OBJECT_NAME}.CustomField__c</field>
+    </columns>
+    -->
+
+    <!-- Report Settings -->
+    <description>{REPORT_NAME} for Data Verification</description>
+    <format>Tabular</format>
+    <name>{REPORT_NAME}</name>
+    <reportType>{REPORT_TYPE}</reportType>
+    <scope>organization</scope>
+    <showDetails>true</showDetails>
+
+    <!-- Date Filter -->
+    <timeFrameFilter>
+        <dateColumn>{OBJECT_NAME}.CreatedDate</dateColumn>
+        <interval>INTERVAL_CUSTOM</interval>
+    </timeFrameFilter>
+</Report>

@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (48 skills)
+├── skills/                 # All Claude Code skills (49 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -36,7 +36,7 @@ Useful hook configurations for Claude Code. See [hooks/README.md](hooks/README.m
 | `current-datetime.json` | Prevents Claude from confusing today's date |
 | `notification-sound-macos.json` | Plays sound on notifications (macOS) |
 
-## Skill Catalog (48 Skills)
+## Skill Catalog (49 Skills)
 
 ### Business Strategy & Consulting (9 skills)
 
@@ -76,12 +76,13 @@ Useful hook configurations for Claude Code. See [hooks/README.md](hooks/README.m
 | aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
 | render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
 
-### Salesforce (2 skills)
+### Salesforce (3 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | salesforce-cli-expert | Salesforce CLIコマンド生成 | SOQL, Metadata, Security Audit |
 | salesforce-expert | Salesforce開発・運用・トラブルシュート | Sharing, Apex, LWC, Architecture |
+| salesforce-report-creator | SF CLIでレポート作成・デプロイ | Report Types, REST/Metadata API |
 
 ### Media Processing Tools (4 skills)
 
