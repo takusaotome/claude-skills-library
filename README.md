@@ -75,13 +75,12 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | design-thinking | デザイン思考プロセス支援 | 5-Phase Process, Empathy Maps |
 | lean-six-sigma-consultant | リーンシックスシグマ、プロセス改善 | DMAIC, Value Stream Mapping |
 
-### Project Management (3 skills)
+### Project Management (2 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
-| vendor-estimate-reviewer | ベンダー見積レビュー・妥当性評価 | 12 Review Dimensions, 60+ Risk Factors |
 
 ### Software Development & IT (11 skills)
 
@@ -147,12 +146,18 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | pci-dss-compliance-consultant | PCI DSS v4準拠支援 | Gap Analysis, SAQ Selection |
 | financial-analyst | 財務分析・投資評価 | DCF, Comparable Analysis |
 
-### Vendor & HR Management (3 skills)
+### Vendor Management (3 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | vendor-estimate-creator | 開発見積作成 | WBS, 4 Estimation Methods, ROI |
+| vendor-estimate-reviewer | ベンダー見積レビュー・妥当性評価 | 12 Review Dimensions, 60+ Risk Factors |
 | vendor-rfq-creator | RFQ（見積依頼書）作成 | 150+ Checklist Items |
+
+### HR Management (1 skill)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
 | talent-acquisition-specialist | JD作成、採用計画、面接評価 | JD Templates, Interview Evaluation |
 
 ---
