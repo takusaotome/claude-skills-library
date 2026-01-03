@@ -79,3 +79,6 @@ temp/
 
 # Review output
 reviews/
+
+# Project plans (contains confidential budget information)
+project-plans/
