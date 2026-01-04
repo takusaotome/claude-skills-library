@@ -8,8 +8,11 @@
 質の高いコード = 正しく動く + 読みやすい + 変更しやすい + テストしやすい
 ```
 
-このレビューでは「正しく動く」は `design-implementation-reviewer` に任せ、
-残りの3つの観点に集中する。
+このレビューでは4つ全ての観点をカバーする：
+- **正しく動く**: Bug Hunter（状態遷移、例外パス、依存関係、非同期競合）
+- **読みやすい**: Clean Code Expert
+- **変更しやすい**: Veteran Engineer
+- **テストしやすい**: TDD Expert
 
 ---
 
@@ -84,6 +87,94 @@
 - ネストの深さ
 - コメントの質と必要性
 
+### Layer 4: バグ検出（Bug Detection）
+
+**担当ペルソナ**: Bug Hunter
+
+```
+┌─────────────────────────────────────────────┐
+│ バグ検出チェックリスト                         │
+├─────────────────────────────────────────────┤
+│ □ 状態遷移は正しいか？（End-to-End Workflow） │
+│ □ 例外パスで状態は整合性を保つか？            │
+│ □ 全依存がrequirements.txtにあるか？         │
+│ □ 非同期処理に競合状態はないか？             │
+│ □ 同じ状態を扱う全モジュールで一貫しているか？│
+│ □ 再起動後も正しく動作するか？               │
+└─────────────────────────────────────────────┘
+```
+
+**検証項目**:
+- End-to-End Workflow Trace（状態遷移の追跡）
+- Dependency Audit（依存関係監査）
+- Exception Path State Integrity（例外パスの状態整合性）
+- Cross-Module State Consistency（クロスモジュール状態一貫性）
+
+#### 4.1 End-to-End Workflow Trace
+
+同じ状態を扱う全てのファイル/関数を特定し、処理ロジックの一貫性を確認。
+
+```bash
+# 例: TicketStatus.SENT を扱う全パスを検索
+grep -rn "TicketStatus.SENT" src/ --include="*.py"
+grep -rn "status.*=.*SENT" src/ --include="*.py"
+```
+
+**チェックポイント**:
+- 同じ状態に対して異なる処理をしているファイルがないか
+- 状態遷移の条件が全モジュールで一貫しているか
+
+#### 4.2 Dependency Audit
+
+全import文を抽出し、requirements.txt/pyproject.tomlと照合。
+
+```bash
+# 全importを抽出（関数内importも含む）
+grep -rhn "^\s*import\|^\s*from" src/ --include="*.py" | \
+  grep -v "from \." | \
+  sed 's/.*import //' | sed 's/.*from //' | \
+  cut -d' ' -f1 | cut -d'.' -f1 | sort -u
+
+# requirements.txtのパッケージ一覧と比較
+```
+
+**チェックポイント**:
+- 関数内importはrequirements.txtに含まれているか
+- 開発環境でのみインストールされているパッケージがないか
+
+#### 4.3 Exception Path State Integrity
+
+例外発生時に状態が不整合にならないか検証。
+
+**危険パターン検出**:
+```
+パターン検出基準:
+1. try ブロック内で状態を変更
+2. その後に副作用（API呼び出し、ファイルI/O等）
+3. except で状態をロールバックしていない
+
+→ 「副作用が完了するまで状態を変更しない」原則違反
+```
+
+**チェックポイント**:
+- 状態変更は副作用の成功後に行われているか
+- 例外発生時のロールバック処理があるか
+- 状態をクリアした後にその状態を参照していないか
+
+#### 4.4 Cross-Module State Consistency
+
+複数モジュールで同じ状態/フラグを扱っている場合の一貫性検証。
+
+```bash
+# 同じ状態を扱う全ファイルを列挙
+grep -rln "TicketStatus\." src/ --include="*.py"
+```
+
+**チェックポイント**:
+- 判定条件は一貫しているか
+- 更新タイミングは整合しているか
+- モジュール間で暗黙の前提条件がないか
+
 ---
 
 ## 2. Review Process（レビュープロセス）
@@ -123,6 +214,12 @@ Clean Code Expert:
 - 命名と表現力
 - 関数設計
 - SOLID原則
+
+Bug Hunter:
+- 状態遷移の一貫性（クロスモジュール）
+- 例外パスの状態整合性
+- 依存関係の完全性（requirements.txt照合）
+- 非同期競合状態の検出
 ```
 
 ### Step 3: 指摘事項の整理（Consolidation）
@@ -312,7 +409,7 @@ Can I understand? - 理解できるか？
 
 **重大度**: Critical / Major / Minor / Info
 
-**検出ペルソナ**: Veteran Engineer / TDD Expert / Clean Code Expert
+**検出ペルソナ**: Veteran Engineer / TDD Expert / Clean Code Expert / Bug Hunter
 
 **該当箇所**:
 ```[language]
@@ -320,7 +417,7 @@ Can I understand? - 理解できるか？
 [問題のあるコード]
 ```
 
-**問題の種類**: [設計 / テスト容易性 / 可読性 / アンチパターン]
+**問題の種類**: [設計 / テスト容易性 / 可読性 / アンチパターン / バグ検出]
 
 **問題の詳細**:
 [何が問題か、なぜ問題かを具体的に説明]
@@ -346,6 +443,7 @@ Can I understand? - 理解できるか？
 | 設計品質 | ⭐⭐⭐⭐☆ | [コメント] |
 | テスト容易性 | ⭐⭐⭐☆☆ | [コメント] |
 | 可読性 | ⭐⭐⭐⭐⭐ | [コメント] |
+| バグ検出 | ⭐⭐⭐⭐☆ | [コメント] |
 
 **マージ可否**: Ready / Conditional / Not Ready
 
