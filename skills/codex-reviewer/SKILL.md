@@ -1,13 +1,16 @@
 ---
 name: codex-reviewer
-description: OpenAI Codex CLIを使用してドキュメントやコードのレビューを依頼するスキル。GPT-5.1-Codex-Maxモデルを高推論モード(high)で呼び出し、最も深い分析によるレビューを実行。レビュー結果を指定フォルダに出力し、その内容を確認・分析する機能を提供。コードレビュー、ドキュメントレビュー、設計書レビュー、テスト計画レビューなど、専門的なレビューが必要な場面で使用。
+description: OpenAI Codex CLIを使用してドキュメントやコードのレビューを依頼するスキル。GPT-5.2-Codexモデルを高推論モード(high)で呼び出し、最も深い分析によるレビューを実行。レビュー結果を指定フォルダに出力し、その内容を確認・分析する機能を提供。コードレビュー、ドキュメントレビュー、設計書レビュー、テスト計画レビューなど、専門的なレビューが必要な場面で使用。
 ---
 
 # Codex Reviewer
 
 ## Overview
 
-OpenAI Codex CLIを活用して、コードやドキュメントの専門的なレビューを実行するスキルです。最も深い思考が可能なモデル **GPT-5.1-Codex-Max** を高推論モード（high）で呼び出し、徹底的な分析を行います。
+OpenAI Codex CLIを活用して、コードやドキュメントの専門的なレビューを実行するスキルです。レビュータイプに応じて最適なモデルを自動選択し、**xhigh推論モード**で徹底的な分析を行います。
+
+- **コード/テスト**: GPT-5.2-Codex（エージェント型コーディングモデル）
+- **ドキュメント/設計**: GPT-5.2-Thinking（深い推論モデル）
 
 ## When to Use
 
@@ -16,6 +19,26 @@ OpenAI Codex CLIを活用して、コードやドキュメントの専門的な�
 - テスト計画、テストケースのレビューが必要な時
 - プルリクエストの詳細レビューが必要な時
 - 外部の専門的な視点でのレビューを得たい時
+
+## ファイル拡張子とレビュータイプの対応
+
+ユーザーからファイルパスが指示された場合、以下の対応表に基づいて `--type` を自動選択すること：
+
+| 拡張子/パターン | --type | 使用モデル |
+|----------------|--------|-----------|
+| `.py`, `.js`, `.ts`, `.tsx`, `.java`, `.go`, `.rs`, `.cpp`, `.c`, `.rb`, `.php` | code | gpt-5.2-codex |
+| `.md`, `.txt`, `.rst`, `.docx`, `.pdf`, `仕様書`, `要件定義` | document | gpt-5.2-thinking |
+| `design/`, `architecture/`, `設計書`, `アーキテクチャ` | design | gpt-5.2-thinking |
+| `tests/`, `test_*`, `*.test.*`, `*_test.*`, `*.spec.*` | test | gpt-5.2-codex |
+
+**例:**
+- 「`src/main.py`をレビューして」→ `--type code`
+- 「`docs/spec.md`をレビューして」→ `--type document`
+- 「`design/architecture.md`をレビューして」→ `--type design`
+- 「`tests/test_api.py`をレビューして」→ `--type test`
+
+**軽量レビュー（クイックレビュー）の指示:**
+- 「軽量レビュー」「クイックレビュー」「高速で」「quick」などのキーワードが含まれる場合 → `--profile quick-review` を追加
 
 ## Prerequisites
 
@@ -35,7 +58,7 @@ OpenAI Codex CLIを活用して、コードやドキュメントの専門的な�
    ```toml
    # デフォルトプロファイル
    [profiles.deep-review]
-   model = "gpt-5.1-codex-max"
+   model = "gpt-5.2-codex"
    model_reasoning_effort = "high"
    approval_policy = "never"
    ```
@@ -112,7 +135,7 @@ codex exec --profile deep-review \
 ### 1. コードレビュー
 
 ```bash
-# スクリプトを使用（デフォルト: gpt-5.1-codex-max + high）
+# 自動的にgpt-5.2-codex + xhighを使用
 python3 scripts/run_codex_review.py \
   --type code \
   --target src/ \
@@ -131,6 +154,7 @@ python3 scripts/run_codex_review.py \
 ### 2. ドキュメントレビュー
 
 ```bash
+# 自動的にgpt-5.2-thinking + xhighを使用（深い推論）
 python3 scripts/run_codex_review.py \
   --type document \
   --target docs/specification.md \
@@ -148,6 +172,7 @@ python3 scripts/run_codex_review.py \
 ### 3. 設計レビュー
 
 ```bash
+# 自動的にgpt-5.2-thinking + xhighを使用（深い推論）
 python3 scripts/run_codex_review.py \
   --type design \
   --target docs/design/ \
@@ -201,10 +226,10 @@ python3 scripts/analyze_review.py \
 
 | 用途 | 推奨モデル | 推論レベル |
 |------|-----------|-----------|
-| 通常のコードレビュー | gpt-5.1-codex-max | high |
-| セキュリティレビュー | gpt-5.1-codex-max | high |
-| 設計レビュー | gpt-5.1-codex-max | high |
-| 最も深い分析が必要 | gpt-5.1-codex-max | xhigh |
+| コードレビュー | gpt-5.2-codex | xhigh |
+| テストレビュー | gpt-5.2-codex | xhigh |
+| ドキュメントレビュー | gpt-5.2-thinking | xhigh |
+| 設計レビュー | gpt-5.2-thinking | xhigh |
 
 ### スクリプト内蔵プロファイル
 
@@ -212,20 +237,22 @@ python3 scripts/analyze_review.py \
 
 | プロファイル | モデル | 推論レベル | 説明 |
 |-------------|--------|-----------|------|
-| `deep-review` | gpt-5.1-codex-max | high | 標準レビュー（推奨・デフォルト） |
-| `xhigh-review` | gpt-5.1-codex-max | xhigh | 超詳細分析（非常に遅い） |
+| `deep-review` | gpt-5.2-codex | xhigh | 標準レビュー（推奨） |
 | `quick-review` | gpt-5-codex | medium | 軽量レビュー（高速） |
 
 **使用例:**
 ```bash
-# 標準レビュー（デフォルト）
+# コードレビュー（自動的にgpt-5.2-codex + xhighを使用）
 python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews
 
-# 超詳細分析
-python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --profile xhigh-review
+# ドキュメントレビュー（自動的にgpt-5.2-thinking + xhighを使用）
+python3 scripts/run_codex_review.py --type document --target docs/ --output ./reviews
 
-# モデルと推論レベルを直接指定（プロファイルをオーバーライド）
-python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --model gpt-5.1-codex-max --reasoning xhigh
+# 軽量レビュー（高速）
+python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --profile quick-review
+
+# モデルと推論レベルを直接指定（オーバーライド）
+python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --model gpt-5-codex --reasoning medium
 ```
 
 ### Codex CLI直接使用時のプロファイル例
@@ -236,19 +263,13 @@ Codex CLIを直接使用する場合は、以下のプロファイルを `~/.cod
 # ~/.codex/config.toml
 
 # デフォルト設定
-model = "gpt-5.1-codex-max"
-model_reasoning_effort = "high"
+model = "gpt-5.2-codex"
+model_reasoning_effort = "xhigh"
 approval_policy = "on-request"
 
 # 標準レビュー用プロファイル（推奨）
 [profiles.deep-review]
-model = "gpt-5.1-codex-max"
-model_reasoning_effort = "high"
-approval_policy = "never"
-
-# 超詳細分析用プロファイル（非常に遅い）
-[profiles.xhigh-review]
-model = "gpt-5.1-codex-max"
+model = "gpt-5.2-codex"
 model_reasoning_effort = "xhigh"
 approval_policy = "never"
 

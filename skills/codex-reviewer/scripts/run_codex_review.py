@@ -3,7 +3,7 @@
 Codex Review Runner
 
 OpenAI Codex CLIを使用してコードやドキュメントのレビューを実行するスクリプト。
-最も深い思考が可能なモデル GPT-5.1-Codex-Max を高推論モード(high)で呼び出します。
+最新のエージェント型コーディングモデル GPT-5.2-Codex を高推論モード(high)で呼び出します。
 
 Usage:
     python3 run_codex_review.py --type code --target src/ --output ./reviews
@@ -126,14 +126,35 @@ PROFILES = {
         "description": "軽量レビュー（高速）"
     },
     "deep-review": {
-        "model": "gpt-5.1-codex-max",
-        "reasoning": "high",
-        "description": "標準レビュー（推奨）"
-    },
-    "xhigh-review": {
-        "model": "gpt-5.1-codex-max",
+        "model": "gpt-5.2-codex",
         "reasoning": "xhigh",
-        "description": "超詳細分析（非常に遅い）"
+        "description": "標準レビュー（推奨）"
+    }
+}
+
+# レビュータイプ別のデフォルトモデル設定
+# コードレビュー/テストはgpt-5.2-codex、ドキュメント/設計はgpt-5.2-thinking
+# gpt-5.2系はすべてxhigh推論を使用
+TYPE_MODEL_DEFAULTS = {
+    "code": {
+        "model": "gpt-5.2-codex",
+        "reasoning": "xhigh",
+        "description": "コードレビュー向け（エージェント型コーディングモデル）"
+    },
+    "document": {
+        "model": "gpt-5.2-thinking",
+        "reasoning": "xhigh",
+        "description": "ドキュメントレビュー向け（深い推論モデル）"
+    },
+    "design": {
+        "model": "gpt-5.2-thinking",
+        "reasoning": "xhigh",
+        "description": "設計レビュー向け（深い推論モデル）"
+    },
+    "test": {
+        "model": "gpt-5.2-codex",
+        "reasoning": "xhigh",
+        "description": "テストレビュー向け（エージェント型コーディングモデル）"
     }
 }
 
@@ -181,7 +202,7 @@ def run_codex_review(
     review_type: str,
     target: str,
     output_dir: str,
-    profile: str = "deep-review",
+    profile: Optional[str] = None,
     focus_areas: Optional[List[str]] = None,
     custom_prompt: Optional[str] = None,
     working_dir: Optional[str] = None,
@@ -191,6 +212,11 @@ def run_codex_review(
 ) -> tuple[bool, str]:
     """
     Codex CLIを使用してレビューを実行
+
+    モデル選択の優先順位:
+    1. --model/--reasoning オプション（明示的指定）
+    2. --profile オプション（プロファイル指定）
+    3. レビュータイプ別デフォルト（code→gpt-5.2-codex, document→gpt-5.2-thinking等）
 
     Returns:
         tuple: (成功フラグ, 出力ファイルパス or エラーメッセージ)
@@ -204,10 +230,24 @@ def run_codex_review(
     # プロンプトの構築
     prompt = build_prompt(review_type, target, focus_areas, custom_prompt)
 
-    # プロファイルからモデルと推論レベルを取得
-    profile_config = PROFILES.get(profile, PROFILES["deep-review"])
-    use_model = model if model else profile_config["model"]
-    use_reasoning = reasoning if reasoning else profile_config["reasoning"]
+    # モデルと推論レベルの決定（優先順位: 明示指定 > プロファイル > レビュータイプ別デフォルト）
+    if model:
+        use_model = model
+    elif profile:
+        profile_config = PROFILES.get(profile, PROFILES["deep-review"])
+        use_model = profile_config["model"]
+    else:
+        type_config = TYPE_MODEL_DEFAULTS.get(review_type, TYPE_MODEL_DEFAULTS["code"])
+        use_model = type_config["model"]
+
+    if reasoning:
+        use_reasoning = reasoning
+    elif profile:
+        profile_config = PROFILES.get(profile, PROFILES["deep-review"])
+        use_reasoning = profile_config["reasoning"]
+    else:
+        type_config = TYPE_MODEL_DEFAULTS.get(review_type, TYPE_MODEL_DEFAULTS["code"])
+        use_reasoning = type_config["reasoning"]
 
     # コマンドの構築
     cmd = ["codex", "exec"]
@@ -262,22 +302,30 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 例:
-  # コードレビュー（デフォルト: gpt-5.1-codex-max + high）
+  # コードレビュー（自動的にgpt-5.2-codex + highを使用）
   python3 run_codex_review.py --type code --target src/ --output ./reviews
+
+  # ドキュメントレビュー（自動的にgpt-5.2-thinking + xhighを使用）
+  python3 run_codex_review.py --type document --target docs/spec.md --output ./reviews
 
   # セキュリティ重視のコードレビュー
   python3 run_codex_review.py --type code --target src/ --output ./reviews --focus security
 
-  # 超詳細分析でドキュメントレビュー（xhigh推論）
-  python3 run_codex_review.py --type document --target docs/spec.md --output ./reviews --profile xhigh-review
+  # プロファイルを明示指定してレビュー
+  python3 run_codex_review.py --type code --target src/ --output ./reviews --profile quick-review
 
   # カスタムプロンプトでレビュー
   python3 run_codex_review.py --type code --target src/ --output ./reviews --custom-prompt "APIエンドポイントのセキュリティを確認してください。対象: {target}"
 
-利用可能なプロファイル:
-  deep-review   : 標準レビュー（gpt-5.1-codex-max, high）- 推奨
-  xhigh-review  : 超詳細分析（gpt-5.1-codex-max, xhigh）
-  quick-review  : 軽量レビュー（gpt-5-codex, medium）- 高速
+レビュータイプ別デフォルトモデル（すべてxhigh推論）:
+  code     : gpt-5.2-codex (xhigh)    - エージェント型コーディングモデル
+  document : gpt-5.2-thinking (xhigh) - 深い推論モデル
+  design   : gpt-5.2-thinking (xhigh) - 深い推論モデル
+  test     : gpt-5.2-codex (xhigh)    - エージェント型コーディングモデル
+
+利用可能なプロファイル（--profileで明示指定時）:
+  deep-review   : gpt-5.2-codex, xhigh（推奨）
+  quick-review  : gpt-5-codex, medium（高速）
         """
     )
 
@@ -303,8 +351,8 @@ def main():
     parser.add_argument(
         "--profile", "-p",
         choices=list(PROFILES.keys()),
-        default="deep-review",
-        help="使用するプロファイル（デフォルト: deep-review）"
+        default=None,
+        help="使用するプロファイル（未指定時はレビュータイプ別のデフォルトモデルを使用）"
     )
 
     parser.add_argument(
@@ -324,7 +372,7 @@ def main():
 
     parser.add_argument(
         "--model", "-m",
-        help="モデルをオーバーライド（例: gpt-5.1-codex-max）"
+        help="モデルをオーバーライド（例: gpt-5.2-codex）"
     )
 
     parser.add_argument(
@@ -355,10 +403,24 @@ def main():
     if args.focus:
         focus_areas = [f.strip() for f in args.focus.split(",")]
 
-    # プロファイル情報の取得
-    profile_info = PROFILES.get(args.profile, PROFILES["deep-review"])
-    use_model = args.model if args.model else profile_info["model"]
-    use_reasoning = args.reasoning if args.reasoning else profile_info["reasoning"]
+    # モデルと推論レベルの決定（優先順位: 明示指定 > プロファイル > レビュータイプ別デフォルト）
+    if args.model:
+        use_model = args.model
+    elif args.profile:
+        profile_info = PROFILES.get(args.profile, PROFILES["deep-review"])
+        use_model = profile_info["model"]
+    else:
+        type_config = TYPE_MODEL_DEFAULTS.get(args.type, TYPE_MODEL_DEFAULTS["code"])
+        use_model = type_config["model"]
+
+    if args.reasoning:
+        use_reasoning = args.reasoning
+    elif args.profile:
+        profile_info = PROFILES.get(args.profile, PROFILES["deep-review"])
+        use_reasoning = profile_info["reasoning"]
+    else:
+        type_config = TYPE_MODEL_DEFAULTS.get(args.type, TYPE_MODEL_DEFAULTS["code"])
+        use_reasoning = type_config["reasoning"]
 
     print(f"レビュー開始:")
     print(f"  タイプ: {args.type}")
