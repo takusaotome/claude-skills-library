@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (49 skills)
+├── skills/                 # All Claude Code skills (50 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -98,12 +98,13 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
 | render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
 
-### Salesforce (3 skills)
+### Salesforce (4 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | salesforce-cli-expert | Salesforce CLIコマンド生成 | SOQL, Metadata, Security Audit |
 | salesforce-expert | Salesforce開発・運用・トラブルシュート | Sharing, Apex, LWC, Architecture |
+| salesforce-flow-expert | Flow実装・検証・デプロイ自動化 | Validation, Metadata Gen, Deploy |
 | salesforce-report-creator | SF CLIでレポート作成・デプロイ | Report Types, REST/Metadata API |
 
 ### Media Processing Tools (4 skills)
@@ -2965,6 +2966,36 @@ Future skills planned for this library:
 - Best practices: Security (with sharing, CRUD/FLS), Performance (bulkification), Maintainability (separation of concerns), Testing (85%+ coverage)
 - Complete code examples: Real-world Apex triggers, handlers, services, batch jobs, LWC components, REST APIs
 - Bilingual support: Japanese and English
+
+### salesforce-flow-expert v1.0 (2025-01-09)
+- Initial release: Phase 1 & 2 (validation, metadata generation, deployment automation)
+- Comprehensive Salesforce Flow implementation guide from design through production deployment
+- 4 core capabilities: Flow Design & Pattern Selection, Flow Metadata XML Generation, Pre-Deployment Validation, Deployment & Troubleshooting
+- 4 Python automation scripts (~950 lines total):
+  - `validate_flow.py` (550 lines) - Pre-deployment validation: reference errors, governor limits, metadata validation, naming conventions
+  - `generate_flow_metadata.py` (210 lines) - Automated Flow-meta.xml generation with API version compatibility
+  - `deploy_flow.py` (250 lines) - sf CLI deployment wrapper with error handling, pre-validation, rollback support
+  - `extract_flow_elements.py` (180 lines) - Flow structure analysis and documentation generation
+- 5 comprehensive reference guides (~2,450 lines total):
+  - `variable_reference_patterns.md` (600 lines) - Top 10 reference errors catalog with fix patterns, prevention checklists
+  - `flow_types_guide.md` (500 lines) - Screen Flow, Record-Triggered, Schedule-Triggered, Autolaunched patterns
+  - `deployment_guide.md` (300 lines) - sf CLI command reference, error handling, rollback procedures
+  - `metadata_xml_reference.md` (550 lines) - Complete XML structure, API version differences, element ordering
+  - `governor_limits_optimization.md` (500 lines) - DML/SOQL optimization, bulkification patterns
+- 7 templates: 4 Flow metadata templates (Screen, Record-Triggered, Schedule, Autolaunched), error reference table, package.xml, sfdx-project.json
+- Validation capabilities: Detects 90%+ of errors before deployment
+  - Priority 1: Variable/element reference validation (undeclared variables, invalid element references, type mismatches, collection vs single value errors)
+  - Governor limit analysis (DML in loops, SOQL in loops, total SOQL/DML counts)
+  - Metadata validation (API version, required fields, element ordering, XML structure)
+  - Naming convention checks (camelCase variables, PascalCase elements)
+- Error catalog: Top 10 most common Flow errors with frequency, root cause, fix pattern, prevention checklist
+- Flow type support: All 4 types (Screen Flow, Record-Triggered Flow, Schedule-Triggered Flow, Autolaunched Flow)
+- Deployment features: Pre-deployment validation, automated metadata generation, sf CLI integration, error parsing, rollback support
+- Best practices: Bulkification (DML/SOQL outside loops), Before-Save optimization, recursion prevention, error handling
+- Complete workflow: Design → Build → Validate → Deploy → Monitor (5-phase end-to-end process)
+- Output formats: text, json, markdown for validation reports
+
+**File:** `skill-packages/salesforce-flow-expert.skill`
 
 ### project-plan-creator v1.0 (2025-11-07)
 - Initial release
