@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (49 Skills)
+## Skill Catalog (57 Skills)
 
-### Business Strategy & Consulting (9 skills)
+### Business Strategy & Consulting (11 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -74,6 +74,8 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | strategic-planner | 事業戦略立案、SWOT、シナリオ分析 | Strategy Canvas, Scenario Planning |
 | design-thinking | デザイン思考プロセス支援 | 5-Phase Process, Empathy Maps |
 | lean-six-sigma-consultant | リーンシックスシグマ、プロセス改善 | DMAIC, Value Stream Mapping |
+| kpi-designer | KPI設計・パフォーマンス測定 | SMART KPIs, Dashboard Design |
+| patent-analyst | 特許分析・IP戦略 | Prior Art Search, Patent Landscape |
 
 ### Project Management (2 skills)
 
@@ -136,13 +138,17 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
 | helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
 
-### Compliance & Governance (6 skills)
+### Compliance & Governance (10 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
+| bcp-planner | BCP（事業継続計画）策定支援 | Risk Assessment, Recovery Strategies |
 | compliance-advisor | J-SOX/SOX、RCM、内部監査計画 | COSO Framework, Internal Audit |
 | contract-reviewer | 契約書レビュー・リスク分析 | Risk Analysis, Clause Review |
 | dama-dmbok | DMBOK準拠データ管理 | Data Governance, Quality |
+| esg-reporter | ESG報告書作成支援 | GRI Standards, TCFD Alignment |
+| internal-audit-assistant | 内部監査計画・実施支援 | Audit Planning, Sampling Methods |
+| iso-implementation-guide | ISO規格実装ガイド | ISO 9001, 27001, 14001 |
 | itil4-consultant | ITIL4コンサルティング | 34 Practices, Maturity Assessment |
 | pci-dss-compliance-consultant | PCI DSS v4準拠支援 | Gap Analysis, SAQ Selection |
 | financial-analyst | 財務分析・投資評価 | DCF, Comparable Analysis |
@@ -155,11 +161,18 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | vendor-estimate-reviewer | ベンダー見積レビュー・妥当性評価 | 12 Review Dimensions, 60+ Risk Factors |
 | vendor-rfq-creator | RFQ（見積依頼書）作成 | 150+ Checklist Items |
 
-### HR Management (1 skill)
+### HR Management (2 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
+| change-management-consultant | 組織変革マネジメント、チェンジ管理 | Kotter 8-Step, Stakeholder Engagement |
 | talent-acquisition-specialist | JD作成、採用計画、面接評価 | JD Templates, Interview Evaluation |
+
+### Operations & Supply Chain (1 skill)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| supply-chain-consultant | サプライチェーン最適化、在庫管理 | Supply Chain Modeling, Optimization |
 
 ---
 
