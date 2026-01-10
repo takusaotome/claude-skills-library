@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>{{API_VERSION}}</apiVersion>
+    <description>{{DESCRIPTION}}</description>
+    <label>{{FLOW_LABEL}}</label>
+    <processType>AutoLaunchedFlow</processType>
+    <status>{{STATUS}}</status>
+
+    <!-- Record-Triggered Flow Configuration -->
+    <!-- Replaces Process Builder and Workflow Rules -->
+
+    <start>
+        <object>{{OBJECT_API_NAME}}</object>  <!-- e.g., Account, Opportunity -->
+        <recordTriggerType>{{TRIGGER_TYPE}}</recordTriggerType>  <!-- Create, Update, Delete -->
+        <triggerType>{{TRIGGER_TIMING}}</triggerType>  <!-- RecordAfterSave or RecordBeforeSave -->
+
+        <!-- Entry Criteria (optional) -->
+        <!--
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Active</stringValue>
+            </value>
+        </filters>
+        -->
+
+        <!-- Optimization: Fast Field Updates (for Before-Save) -->
+        <!--
+        <optimizeForPerformance>true</optimizeForPerformance>
+        -->
+    </start>
+
+    <!-- Example: Access Triggering Record -->
+    <!--
+    <recordLookups>
+        <name>Get_Triggering_Record</name>
+        <label>Get Triggering Record</label>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <object>{{OBJECT_API_NAME}}</object>
+    </recordLookups>
+    -->
+</Flow>

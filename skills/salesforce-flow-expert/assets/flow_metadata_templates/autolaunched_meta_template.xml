@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>{{API_VERSION}}</apiVersion>
+    <description>{{DESCRIPTION}}</description>
+    <label>{{FLOW_LABEL}}</label>
+    <processType>AutoLaunchedFlow</processType>
+    <status>{{STATUS}}</status>
+
+    <!-- Autolaunched Flow Configuration -->
+    <!-- Called by Apex, Process Builder, other Flows, or REST API -->
+    <!-- No user interaction -->
+
+    <!-- Input Parameters (passed from caller) -->
+    <!--
+    <variables>
+        <name>inputRecordId</name>
+        <dataType>String</dataType>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+
+    <variables>
+        <name>inputAmount</name>
+        <dataType>Currency</dataType>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    -->
+
+    <!-- Output Parameters (returned to caller) -->
+    <!--
+    <variables>
+        <name>outputSuccess</name>
+        <dataType>Boolean</dataType>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+
+    <variables>
+        <name>outputMessage</name>
+        <dataType>String</dataType>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    -->
+
+    <!-- Example: Call from Apex -->
+    <!--
+    Map<String, Object> params = new Map<String, Object>();
+    params.put('inputRecordId', accountId);
+    params.put('inputAmount', 1000);
+
+    Flow.Interview.MyAutolauchedFlow flowInterview = new Flow.Interview.MyAutolauchedFlow(params);
+    flowInterview.start();
+
+    Boolean success = (Boolean) flowInterview.getVariableValue('outputSuccess');
+    String message = (String) flowInterview.getVariableValue('outputMessage');
+    -->
+</Flow>

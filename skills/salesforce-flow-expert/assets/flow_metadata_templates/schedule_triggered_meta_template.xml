@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>{{API_VERSION}}</apiVersion>
+    <description>{{DESCRIPTION}}</description>
+    <label>{{FLOW_LABEL}}</label>
+    <processType>AutoLaunchedFlow</processType>
+    <status>{{STATUS}}</status>
+
+    <!-- Schedule-Triggered Flow Configuration -->
+    <!-- Batch processing, cleanup jobs, periodic tasks -->
+
+    <start>
+        <object>{{OBJECT_API_NAME}}</object>  <!-- e.g., Account, Opportunity -->
+
+        <scheduledPaths>
+            <name>Scheduled_Path_Daily</name>
+            <pathType>AsyncAfterCommit</pathType>
+
+            <!-- Schedule Configuration -->
+            <schedule>
+                <frequency>Daily</frequency>  <!-- Daily, Weekly, Monthly -->
+                <startDate>{{START_DATE}}</startDate>  <!-- YYYY-MM-DD -->
+                <startTime>{{START_TIME}}</startTime>  <!-- HH:MM:SS (24-hour) -->
+            </schedule>
+
+            <!-- Entry Criteria (filter records to process) -->
+            <!--
+            <filterLogic>and</filterLogic>
+            <filters>
+                <field>Status__c</field>
+                <operator>EqualTo</operator>
+                <value>
+                    <stringValue>Pending</stringValue>
+                </value>
+            </filters>
+            -->
+
+            <connector>
+                <targetReference>Process_Records</targetReference>
+            </connector>
+        </scheduledPaths>
+    </start>
+
+    <!-- Example: Process Records in Batches -->
+    <!--
+    <recordLookups>
+        <name>Get_Records_To_Process</name>
+        <label>Get Records To Process</label>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <object>{{OBJECT_API_NAME}}</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+    </recordLookups>
+    -->
+</Flow>
