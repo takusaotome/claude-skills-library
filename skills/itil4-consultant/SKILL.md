@@ -25,7 +25,7 @@ Use this skill when:
 
 This skill leverages 4 comprehensive knowledge documents:
 
-### 1. ITIL 4 Foundation Overview (`knowledge/itil4-knowledge/ITIL 4ファンデーションの概要と主要ポイント.md`)
+### 1. ITIL 4 Foundation Overview (`references/ITIL 4ファンデーションの概要と主要ポイント.md`)
 - Service Value System (SVS)
 - 4 Dimensions of Service Management
 - 7 Guiding Principles
@@ -33,7 +33,7 @@ This skill leverages 4 comprehensive knowledge documents:
 - Continual Improvement Model - 7 steps
 - Overview of 34 Practices
 
-### 2. General Management Practices (`knowledge/itil4-knowledge/ITIL 4 一般的マネジメントプラクティス詳細ガイド.md`)
+### 2. General Management Practices (`references/ITIL 4 一般的マネジメントプラクティス詳細ガイド.md`)
 **14 Practices**:
 1. Architecture Management
 2. Continual Improvement
@@ -50,7 +50,7 @@ This skill leverages 4 comprehensive knowledge documents:
 13. Supplier Management
 14. Workforce & Talent Management
 
-### 3. Service Management Practices (`knowledge/itil4-knowledge/ITIL 4 サービスマネジメントプラクティス詳細ガイド.md`)
+### 3. Service Management Practices (`references/ITIL 4 サービスマネジメントプラクティス詳細ガイド.md`)
 **17 Practices**:
 1. Availability Management
 2. Business Analysis
@@ -70,7 +70,7 @@ This skill leverages 4 comprehensive knowledge documents:
 16. Service Request Management
 17. Service Validation & Testing
 
-### 4. Technical Management Practices (`knowledge/itil4-knowledge/ITIL 4 技術的マネジメントプラクティス ― 詳細解説.md`)
+### 4. Technical Management Practices (`references/ITIL 4 技術的マネジメントプラクティス ― 詳細解説.md`)
 **3 Practices**:
 1. Deployment Management
 2. Infrastructure & Platform Management

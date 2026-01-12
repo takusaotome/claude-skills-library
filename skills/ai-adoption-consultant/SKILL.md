@@ -341,6 +341,71 @@ AI導入提案の標準的なワークフロー：
 3. **代替案の提示**: 予算・期間の制約に応じた複数プラン
 4. **段階的な詳細化**: まず概要、要望に応じて詳細化
 
+## Regional Specialization
+
+### USA Market Focus
+
+For US-specific AI adoption consulting, reference `references/regions/usa/` directory (84KB, 8 files):
+
+#### 1. Comprehensive Market Analysis
+**File**: `original-usa-report.md` (27KB)
+
+Comprehensive US market analysis covering:
+- Major US companies implementing AI/LLM (Disney, Coca-Cola, Walmart, CarMax, Morgan Stanley, etc.)
+- Industry-specific trends (Entertainment, Retail, Finance, IT, Consulting)
+- Regulatory landscape and compliance considerations
+- ROI metrics and success indicators from US cases
+
+**Use when**: Consulting for US-based organizations, understanding US market dynamics, benchmarking against US competitors
+
+#### 2. Business Scenario Case Studies (6 files)
+
+| Scenario | File | Key Companies | Notable Results |
+|----------|------|---------------|-----------------|
+| **Sales Support** | `sales_support_cases.md` (5.7KB) | Walmart, CarMax, Wayfair | 49% sales increase (CarMax), CX enhancement |
+| **Customer Support** | `customer_support_cases.md` (6.5KB) | Delta Air Lines, Home Depot | 20% inquiry reduction |
+| **Knowledge Search** | `knowledge_search_cases.md` (7.1KB) | Morgan Stanley, Home Depot, Lowe's | 98% adoption rate, 20%→80% access improvement |
+| **Project Planning** | `project_planning_cases.md` (6.7KB) | BCG, Mattel | 40% productivity improvement, 15min→300 ideas |
+| **Competitive Analysis** | `competitive_analysis_cases.md` (7.2KB) | E2open, Salesforce | Hundreds of hours saved |
+| **Strategic Planning** | `strategic_planning_cases.md` (8.0KB) | Disney, Coca-Cola | 90% cost reduction, 100-person×3-year efficiency |
+
+#### 3. Regional Usage Guide
+**File**: `README.md` (6.7KB)
+
+Overview of USA market characteristics, company roster, success patterns, and technology trends.
+
+### When to Use USA References
+
+**米国企業向けコンサルティング時**:
+- Load `original-usa-report.md` for comprehensive market context
+- Reference industry-specific case studies (Entertainment→Disney, Retail→Walmart/CarMax)
+- Use success metrics for ROI justification (49% sales increase, 90% cost reduction benchmarks)
+
+**日本企業の米国展開支援時**:
+- Understand US market expectations and regulatory requirements
+- Benchmark against US competitors' AI adoption maturity
+- Adapt US best practices to Japanese organizational culture
+
+**グローバル戦略立案時**:
+- Compare USA vs. Japan approaches (combine with Japan region references)
+- Identify transferable practices across regions
+- Learn from US early-adopter experiences
+
+### USA Market Characteristics
+
+**Key differentiators from other regions**:
+1. **Executive-level commitment**: AI strategies positioned as C-suite initiatives (Disney, Coca-Cola)
+2. **Partnership approach**: Strategic alliances with OpenAI, Bain & Company
+3. **Rapid scaling**: Pilot→full deployment in months, not years
+4. **Quantified ROI focus**: Clear metrics (49% sales increase, 90% cost reduction, 98% adoption)
+5. **Customer co-creation**: Consumer-facing AI campaigns (Coca-Cola's "Create Real Magic")
+
+**Technology preferences**:
+- ChatGPT/GPT-4 dominant
+- Azure OpenAI for enterprise security
+- Custom AI development (Home Depot "Magic Apron", Wayfair "Agent Co-Pilot")
+- Integration-first approach (CRM, existing platforms)
+
 ## Resources
 
 このスキルは以下のknowledge baseを活用します：
