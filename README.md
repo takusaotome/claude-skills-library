@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (50 skills)
+├── skills/                 # All Claude Code skills (51 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (57 Skills)
+## Skill Catalog (58 Skills)
 
 ### Business Strategy & Consulting (11 skills)
 
@@ -84,7 +84,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 
-### Software Development & IT (11 skills)
+### Software Development & IT (12 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -99,6 +99,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | it-system-roi-analyzer | IT投資ROI分析・TCO計算 | ROI, TCO, NPV, Payback |
 | aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
 | render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
+| gogcli-expert | gogcli（Google Workspace CLI）操作支援 | 13 Services, OAuth2, Multi-Account |
 
 ### Salesforce (4 skills)
 
@@ -1888,6 +1889,39 @@ AWS CLI expert skill for cloud infrastructure management and operations.
 
 ---
 
+### ☁️ gogcli Expert
+
+**File:** `skill-packages/gogcli-expert.skill`
+
+Expert skill for gogcli (steipete/gogcli), a Go-based CLI tool for managing 13 Google Workspace services from the terminal.
+
+**When to use:**
+- Managing Gmail (search, send, labels, filters, vacation)
+- Calendar operations (events, conflicts, free/busy, recurring events)
+- Drive file operations (list, upload, download, export, permissions)
+- Sheets data reading/writing (A1 notation, append, formatting)
+- Docs/Slides export (PDF, DOCX, PPTX via Drive export)
+- Tasks management (create, complete, recurring)
+- Workspace admin (Groups, Classroom, People, Contacts)
+- Setting up OAuth2 / service account authentication
+- Multi-account and multi-client configuration
+
+**Core Capabilities:**
+- 13 Google Workspace services: Gmail, Calendar, Drive, Sheets, Docs, Slides, Contacts, Tasks, Chat, Groups, Keep, Classroom, People
+- OAuth2 + Service Account authentication with scope control
+- Multi-account management with aliases and domain mapping
+- `--json` / `--plain` output for pipeline integration
+- Command sandboxing with `--enable-commands` for agent safety
+
+**Key Components:**
+- `references/quick_reference.md` - All 13 services command cheat sheet
+- `references/communication_services.md` - Gmail/Calendar/Chat detailed guide
+- `references/productivity_services.md` - Drive/Sheets/Docs/Slides/Tasks/Keep detailed guide
+- `references/workspace_admin_services.md` - Groups/Classroom/People + service account guide
+- `references/troubleshooting.md` - Comprehensive troubleshooting guide
+
+---
+
 ### ☁️ Salesforce CLI Expert
 
 **File:** `skill-packages/salesforce-cli-expert.skill`
@@ -2846,6 +2880,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### gogcli-expert v1.0 (2026-01-29)
+- Initial release
+- Google Workspace CLI (gogcli / steipete/gogcli) expert skill
+- 13 Google Workspace services: Gmail, Calendar, Drive, Sheets, Docs, Slides, Contacts, Tasks, Chat, Groups, Keep, Classroom, People
+- Authentication: OAuth2, service account (domain-wide delegation), multi-account, multi-client
+- 5 reference guides: quick reference, communication services, productivity services, workspace admin, troubleshooting
+- 8 common automation patterns: daily digest, schedule check, team availability, batch download, CSV export, sandboxing, CI/CD, multi-account
+- Security best practices: least-privilege auth, command sandboxing, credential management
 
 ### design-implementation-reviewer v1.0 (2025-12-26)
 - Initial release
