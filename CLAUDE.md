@@ -163,13 +163,15 @@ cp -r ./skills/skill-name ~/.claude/commands/   # ❌ WRONG
 - **Local installation** = Copy the skill directory to `~/.claude/skills/`
 - **Commands folder** = Only for `.md` slash command definitions
 
-### 6. Update Repository Documentation
+### 6. Update Repository Documentation (MANDATORY)
 
-After creating a skill, update `README.md` with:
-- Entry in "Available Skills" section with overview
-- Entry in "Skill Catalog" table
-- Deep dive section with workflows, examples, and best practices
-- Version history entry
+**CRITICAL: スキルを追加・更新したら、必ず `README.md` を更新すること。漏れ防止のため以下のチェックリストをすべて実施する。**
+
+- [ ] **Repository Structure** のスキル数カウントを +1 する（`├── skills/ # All Claude Code skills (N skills)`）
+- [ ] **Skill Catalog (N Skills)** のカウントを +1 する
+- [ ] 該当カテゴリのテーブルにエントリを追加し、カテゴリのスキル数を +1 する（例: `### Software Development & IT (N skills)`）
+- [ ] **Available Skills (Detailed)** セクションに概要・When to use・Key Features を追加する
+- [ ] **Version History** セクションの先頭にバージョンエントリを追加する
 
 ## Key Standards and Frameworks
 

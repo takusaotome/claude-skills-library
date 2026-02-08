@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (51 skills)
+├── skills/                 # All Claude Code skills (53 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (58 Skills)
+## Skill Catalog (60 Skills)
 
 ### Business Strategy & Consulting (11 skills)
 
@@ -84,7 +84,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 
-### Software Development & IT (12 skills)
+### Software Development & IT (13 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -95,6 +95,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | design-implementation-reviewer | 設計・実装の整合性レビュー | Bug Hunting, Correctness Focus |
 | duckdb-expert | DuckDBによる大規模データ分析 | SQL Optimization, File Formats |
 | log-debugger | ログ分析・RCA・デバッグ | Log Patterns, Root Cause Analysis |
+| streamlit-expert | Streamlit Webアプリ開発支援 | OIDC Auth, Plotly/Altair, Caching |
 | tdd-developer | TDD開発支援 | Red-Green-Refactor Cycle |
 | it-system-roi-analyzer | IT投資ROI分析・TCO計算 | ROI, TCO, NPV, Payback |
 | aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
@@ -119,10 +120,11 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (6 skills)
+### Documentation & Communication (7 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
+| ai-text-humanizer | AI生成テキストのAI臭検出・人間化リライト | 6-Pattern Detection, 0-100 Scoring, 3 Humanization Techniques |
 | bug-ticket-creator | バグチケット作成支援 | CLEAR Principles, Severity/Priority |
 | critical-document-reviewer | ドキュメント批評レビュー | Multi-Persona Review |
 | docling-converter | ドキュメント形式変換 | PDF, DOCX, Markdown |
@@ -1976,6 +1978,67 @@ Creates professional presentations following FUJISOFT America's slide template s
 
 ---
 
+### 🌊 Streamlit Expert
+
+**File:** `skills/streamlit-expert/`
+
+Streamlit Webアプリケーション開発の専門スキル。v1.42〜v1.52+の最新機能に対応。
+
+**When to use:**
+- Streamlitアプリの新規構築
+- OIDC認証（Google, Microsoft, Okta, Auth0）の実装
+- データ可視化ダッシュボードの作成
+- パフォーマンス最適化（キャッシュ、セッション管理）
+
+**Key Features:**
+- 認証: `st.login()` / `st.logout()` / `st.user` によるネイティブOIDC
+- 可視化: Plotly, Altair, ネイティブチャートの最適選択
+- シークレット管理: `st.secrets` によるセキュアな資格情報管理
+- パフォーマンス: キャッシュ戦略、大規模データセット処理
+- モダン機能: カスタムテーマ、マルチページアプリ、Custom Components v2
+
+---
+
+### ✍️ AI Text Humanizer
+
+**File:** `skills/ai-text-humanizer/`
+
+AI（LLM）生成テキストの「AI臭」を検出・診断し、人間らしい文章にリライトするスキル。
+
+**When to use:**
+- AI生成テキストの品質チェック・改善
+- 「AIっぽい」文章を人間らしくリライトしたいとき
+- テキストがAI生成かどうかの簡易判定
+
+**6つの検出パターン:**
+
+| # | Pattern | Weight | Description |
+|---|---------|--------|-------------|
+| 1 | 視覚的マーカー残存 | 15% | `**太字**`、エムダッシュ、括弧過多、箇条書き過多 |
+| 2 | 単調なリズム | 20% | 同一文末連続、接続詞過多、均一文長 |
+| 3 | マニュアル的構成 | 20% | 長い前置き、構成宣言、ステップ表記、薄い結論 |
+| 4 | 非コミット姿勢 | 15% | ヘッジ語、強制中立、断定回避、両論併記 |
+| 5 | 抽象語の濫用 | 15% | 空疎な抽象語、根拠なき強評価、修飾語の空転 |
+| 6 | 定型メタファー | 15% | 羅針盤、DNA、車の両輪、エンジン等の定型比喩 |
+
+**3つの人間化技法:**
+1. **バランスを崩す** — 立場を取る、強い断定を使う
+2. **客観を崩す** — 主観・経験・判断を入れる
+3. **論理を崩す** — 完璧な構造を壊す、自然な脱線を入れる
+
+**Score Interpretation:**
+
+| Score | Level | Action |
+|-------|-------|--------|
+| 0-25 | Natural | 修正不要 |
+| 26-50 | Slightly AI | 軽微な修正で改善可能 |
+| 51-75 | Clearly AI | リライト推奨 |
+| 76-100 | Strongly AI | 全面リライト推奨 |
+
+**Note:** 検出スクリプト (`detect_ai_patterns.py`) は日本語テキスト専用。英語テキストの場合はClaude自身が `references/` を参照して分析・リライトする。
+
+---
+
 ## Installation
 
 ### Installing a Skill
@@ -2880,6 +2943,24 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### streamlit-expert v1.0 (2026-02-08)
+- Initial release
+- Streamlit v1.42〜v1.52+対応のWebアプリ開発支援スキル
+- OIDC認証（st.login/st.logout/st.user）、シークレット管理、データ可視化、パフォーマンス最適化
+- 対応プロバイダー: Google, Microsoft Entra ID, Okta, Auth0
+- 可視化ライブラリ選択ガイド: Plotly, Altair, ネイティブチャート
+- キャッシュ戦略、セッション状態管理、大規模データ処理のベストプラクティス
+
+### ai-text-humanizer v1.0 (2026-02-08)
+- Initial release
+- AI生成テキスト（日本語）の「AI臭」を検出・スコアリング・リライトするスキル
+- 6パターン検出: 視覚的マーカー残存、単調なリズム、マニュアル的構成、非コミット姿勢、抽象語の濫用、定型メタファー
+- 0-100 AI臭スコア算出（正規表現ベース、`detect_ai_patterns.py`）
+- 3つの人間化技法: バランスを崩す・客観を崩す・論理を崩す
+- 3ワークフロー: AI臭診断、リライト実行、Before/After比較
+- Markdown/JSON出力対応
+- 英語テキストはClaude自身がreferences/を参照して分析・リライト
 
 ### gogcli-expert v1.0 (2026-01-29)
 - Initial release

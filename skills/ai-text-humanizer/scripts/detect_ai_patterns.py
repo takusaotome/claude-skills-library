@@ -228,7 +228,7 @@ class AIPatternDetector:
             score += 5.0
 
         # Excessive conjunctions
-        conj_pattern = r"^(また|さらに|そして|しかし|一方|加えて|つまり|なお|ただし|しかしながら|したがって|このように|それゆえ|このため)[、，]?"
+        conj_pattern = r"^(また|さらに|そして|しかし|一方で|一方|加えて|つまり|なお|ただし|しかしながら|したがって|このように|それゆえ|このため)[、，]\s*"
         conj_count = 0
         lines = text.split("\n")
         for i, line in enumerate(lines):
@@ -331,7 +331,6 @@ class AIPatternDetector:
 
         # Weak conclusion
         if lines:
-            last_lines = "\n".join(lines[-5:])
             weak_patterns = [
                 r"が重要です",
                 r"が求められています",
@@ -340,11 +339,18 @@ class AIPatternDetector:
                 r"を目指していきましょう",
                 r"が鍵となるでしょう",
             ]
+            tail = lines[-5:]
             for pat in weak_patterns:
-                if re.search(pat, last_lines):
-                    matches.append(PatternMatch(3, "薄い結論", last_lines[-40:], len(lines), 5.0))
-                    score += 5.0
-                    break
+                for tail_index, line in enumerate(tail):
+                    if re.search(pat, line):
+                        line_number = len(lines) - len(tail) + tail_index + 1
+                        snippet = line.strip()[-60:]
+                        matches.append(PatternMatch(3, "薄い結論", snippet, line_number, 5.0))
+                        score += 5.0
+                        break
+                else:
+                    continue
+                break
 
         # Even section sizes
         if len(paragraphs) >= 3:
@@ -568,6 +574,16 @@ class AIPatternDetector:
 
 def format_report(result: AnalysisResult) -> str:
     """Format analysis result as Markdown report."""
+    def code_span(text: str) -> str:
+        normalized = re.sub(r"\s+", " ", str(text).replace("\r", " ").replace("\n", " ")).strip()
+        if not normalized:
+            normalized = "…"
+        max_ticks = 0
+        for m in re.finditer(r"`+", normalized):
+            max_ticks = max(max_ticks, len(m.group(0)))
+        delimiter = "`" * (max_ticks + 1)
+        return f"{delimiter}{normalized}{delimiter}"
+
     lines = []
     lines.append("# AI臭検出レポート\n")
     lines.append("## 総合スコア\n")
@@ -595,7 +611,7 @@ def format_report(result: AnalysisResult) -> str:
         else:
             for m in pr.matches[:10]:
                 loc = f"L{m.line_number}" if m.line_number > 0 else ""
-                lines.append(f"- [{m.pattern_name}] {loc} `{m.matched_text}`")
+                lines.append(f"- [{m.pattern_name}] {loc} {code_span(m.matched_text)}")
             if len(pr.matches) > 10:
                 lines.append(f"- ... 他{len(pr.matches) - 10}件")
             lines.append("")
@@ -666,6 +682,11 @@ def main():
         default="markdown",
         help="Output format (default: markdown)",
     )
+    parser.add_argument(
+        "--encoding", "-e",
+        default="utf-8",
+        help="Input file encoding (default: utf-8)",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input_file)
@@ -673,7 +694,23 @@ def main():
         print(f"Error: File not found: {args.input_file}", file=sys.stderr)
         sys.exit(1)
 
-    text = input_path.read_text(encoding="utf-8")
+    try:
+        text = input_path.read_text(encoding=args.encoding)
+    except LookupError:
+        print(f"Error: Unknown encoding: {args.encoding}", file=sys.stderr)
+        sys.exit(1)
+    except UnicodeDecodeError as e:
+        print(
+            f"Error: Cannot decode input as {args.encoding}: {e}. "
+            "Try converting the file to UTF-8 or pass --encoding (e.g. cp932).",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    except OSError as e:
+        print(f"Error: Cannot read file {args.input_file}: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    text = text.lstrip("\ufeff").replace("\r\n", "\n").replace("\r", "\n")
     if not text.strip():
         print("Error: Input file is empty", file=sys.stderr)
         sys.exit(1)
