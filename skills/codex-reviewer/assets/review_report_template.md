@@ -7,7 +7,7 @@
 | レビュー日時 | {date} |
 | レビュータイプ | {review_type} |
 | レビュー対象 | {target} |
-| 使用モデル | gpt-5.1-codex-max |
+| 使用モデル | gpt-5.3-codex-max |
 | 推論レベル | high |
 | レビューアー | Codex CLI |
 
@@ -122,4 +122,4 @@
 
 ---
 
-*このレポートは OpenAI Codex CLI (gpt-5.1-codex-max, high) によって自動生成されました。*
+*このレポートは OpenAI Codex CLI (gpt-5.3-codex-max, high) によって自動生成されました。*
