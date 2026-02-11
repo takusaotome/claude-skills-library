@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (53 skills)
+├── skills/                 # All Claude Code skills (54 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,14 +59,15 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (60 Skills)
+## Skill Catalog (61 Skills)
 
-### Business Strategy & Consulting (11 skills)
+### Business Strategy & Consulting (12 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | ai-adoption-consultant | AI/LLM活用提案、業界・部門別導入戦略 | 5 Industries, 5 Functions, ROI Analysis |
 | business-analyst | BABOK準拠のビジネス分析、要件定義 | Stakeholder Analysis, BRD Templates |
+| business-plan-creator | 事業計画書の体系的作成、収支シミュレーション | 5-Phase Workflow, Financial Modeling, Industry Templates |
 | competitive-intelligence-analyst | 競合分析、バトルカード、Win/Loss分析 | Battlecards, Market Landscape |
 | executive-briefing-writer | 経営層向け資料作成、So What分析 | Board Reports, Investor Briefings |
 | m-and-a-advisor | M&Aアドバイザリー、DD、PMI計画 | Valuation, Due Diligence, PMI |
@@ -2037,6 +2038,26 @@ AI（LLM）生成テキストの「AI臭」を検出・診断し、人間らし�
 
 **Note:** 検出スクリプト (`detect_ai_patterns.py`) は日本語テキスト専用。英語テキストの場合はClaude自身が `references/` を参照して分析・リライトする。
 
+### 📝 Business Plan Creator
+
+**File:** `skills/business-plan-creator/`
+
+事業計画書を体系的に作成するスキル。新規事業、既存事業拡大、スタートアップのピッチ資料、社内新規プロジェクト提案など、あらゆる事業計画のドキュメントを構造化して作成する。
+
+**When to use:**
+- 新規事業の事業計画書を作成したいとき
+- 投資家向けピッチ資料や銀行融資申請書が必要なとき
+- 社内稟議・新規事業提案書を作成したいとき
+- 収支シミュレーションや市場分析を含む計画書が必要なとき
+
+**Key Features:**
+- 5フェーズワークフロー（ヒアリング → 分析 → 戦略設計 → 数値計画 → ドキュメント化）
+- 7つの分析フレームワーク（TAM/SAM/SOM、PEST、5フォース、SWOT、BMC、リーンキャンバス、バリューチェーン）
+- 財務モデリング（ユニットエコノミクス、3シナリオ分析、P/L・CF計画）
+- 業種別テンプレート（SaaS、EC/D2C、コンサル、飲食、製造、AI、不動産）
+- 標準構成（12セクション）と簡易構成（7セクション）の2パターン
+- 日本語・英語の両言語対応
+
 ---
 
 ## Installation
@@ -2943,6 +2964,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### business-plan-creator v1.0 (2026-02-11)
+- Initial release
+- 事業計画書を体系的に作成するスキル（日本語・英語対応）
+- 5フェーズワークフロー: ヒアリング → 分析 → 戦略設計 → 数値計画 → ドキュメント化
+- 7分析フレームワーク: TAM/SAM/SOM、PEST、5フォース、SWOT、BMC、リーンキャンバス、バリューチェーン
+- 財務モデリング: ユニットエコノミクス、3シナリオ分析、P/L・CF計画
+- 業種別テンプレート: SaaS、EC/D2C、コンサル、飲食、製造、AI、不動産
+- 標準構成（12セクション）と簡易構成（7セクション）の2パターン
 
 ### streamlit-expert v1.0 (2026-02-08)
 - Initial release

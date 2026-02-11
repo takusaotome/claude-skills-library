@@ -88,6 +88,7 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 | uat-testcase-generator | - | QA Testing | generate_uat_testcases.py, Excel generation |
 | salesforce-cli-expert | - | Salesforce | CLI reference guide |
 | gogcli-expert | 1.0 | Google Workspace CLI | 13 services (Gmail, Calendar, Drive, Sheets, etc.), OAuth2/SA auth, multi-account |
+| business-plan-creator | 1.0 | Business Planning | 5-Phase Workflow, Financial Modeling, Industry Templates, frameworks.md, financial-modeling.md |
 
 ## Skill Development Workflow
 
