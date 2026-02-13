@@ -102,7 +102,7 @@ San Mateo, CA 94402
   </div>
   <div class="contact-item">
     <span class="icon">email</span>
-    inquiry@your-company.com
+    inquiry@fsi-america.com
   </div>
 </div>
 
@@ -372,3 +372,21 @@ linear-gradient(135deg, #4a90a4 0%, #2b5797 25%, #1e3a8a 75%, #1a237e 100%)
 - Split content across multiple slides
 - Use visual hierarchy (info boxes, grids) to organize
 - Prioritize by importance, move details to appendix
+
+### Gray Rectangles Behind Cards in PDF
+
+**Problem**: When exporting to PDF via `marp --pdf`, cards (`.step-card`, `.metric-card`, `.tier-card`, etc.) show gray rectangles behind them. This is caused by CSS `box-shadow` — Marp's Chromium-based PDF renderer draws `box-shadow` as visible gray boxes instead of subtle shadows.
+
+**Solution**:
+- **Never use `box-shadow`** in any CSS when the output will be PDF
+- Use `border` instead for visual separation:
+  ```css
+  /* BAD — causes gray rectangles in PDF */
+  .step-card { box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+
+  /* GOOD — clean in both HTML and PDF */
+  .step-card { border: 1px solid #e0e0e0; }
+  ```
+- For elements that already have `border-left` (`.info-box`, `.success-box`, etc.) or `border` (`.metric-box`), simply remove `box-shadow` — no replacement needed
+- The template (`assets/FUJISOFT_America_Slide_Template.md`) has already been updated to exclude all `box-shadow` properties
+- The only acceptable use of `box-shadow` is `box-shadow: none;` (to explicitly disable shadows on elements like tables)

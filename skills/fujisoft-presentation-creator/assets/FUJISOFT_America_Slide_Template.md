@@ -14,9 +14,9 @@ style: |
     --title-font: 'Bahnschrift', 'Arial Black', sans-serif;
     --body-font: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --light-font: 'Lato', 'Segoe UI Light', sans-serif;
-    --brand-primary: #1a237e;
-    --brand-secondary: #3949ab;
-    --brand-accent: #5c6bc0;
+    --round1-primary: #1a237e;
+    --round1-secondary: #3949ab;
+    --round1-accent: #5c6bc0;
     --success-color: #4caf50;
     --warning-color: #ff9800;
     --info-color: #2196f3;
@@ -157,7 +157,7 @@ style: |
     width: 100%;
     height: 50px;
     background: white;
-    color: var(--brand-primary) !important;
+    color: var(--round1-primary) !important;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -170,13 +170,12 @@ style: |
     z-index: 5;
     text-align: left;
     border-bottom: 4px solid #8c9eff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
   
   section.content h1 {
     font-size: 2.1rem;
     font-weight: 600;
-    color: var(--brand-primary);
+    color: var(--round1-primary);
     margin-bottom: 0.7em;
     font-family: var(--title-font);
     line-height: 1.3;
@@ -187,7 +186,7 @@ style: |
   section.content h2 {
     font-size: 1.6rem;
     font-weight: 500;
-    color: var(--brand-secondary);
+    color: var(--round1-secondary);
     margin-bottom: 0.6em;
     margin-top: 1em;
     font-family: var(--title-font);
@@ -198,7 +197,7 @@ style: |
   section.content h3 {
     font-size: 1.3rem;
     font-weight: 500;
-    color: var(--brand-primary);
+    color: var(--round1-primary);
     margin-bottom: 0.5em;
     margin-top: 0.8em;
     line-height: 1.3;
@@ -232,7 +231,7 @@ style: |
   }
   
   section.content th {
-    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+    background: linear-gradient(135deg, var(--round1-primary), var(--round1-secondary));
     color: white;
     padding: 0.8em 1em;
     text-align: left;
@@ -395,60 +394,55 @@ style: |
   /* Visual Design Elements */
   .info-box {
     background: var(--info-bg);
-    border-left: 4px solid var(--brand-accent);
+    border-left: 4px solid var(--round1-accent);
     padding: 1em;
     margin: 1em 0;
     border-radius: 0 6px 6px 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
-  
+
   .success-box {
     background: var(--success-bg);
     border-left: 4px solid var(--success-color);
     padding: 1em;
     margin: 1em 0;
     border-radius: 0 6px 6px 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
-  
+
   .warning-box {
     background: var(--warning-bg);
     border-left: 4px solid var(--warning-color);
     padding: 1em;
     margin: 1em 0;
     border-radius: 0 6px 6px 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
-  
+
   .error-box {
     background: var(--error-bg);
     border-left: 4px solid var(--error-color);
     padding: 1em;
     margin: 1em 0;
     border-radius: 0 6px 6px 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   }
-  
+
   .metric-card {
     background: var(--neutral-bg);
     padding: 1.2em;
     border-radius: 8px;
     text-align: center;
     margin: 0.5em;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s;
   }
-  
+
   .metric-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
   }
   
   .metric-value {
     font-size: 1.8em;
     font-weight: bold;
     margin: 0.2em 0;
-    color: var(--brand-primary);
+    color: var(--round1-primary);
   }
   
   .step-card {
@@ -457,11 +451,11 @@ style: |
     border-radius: 8px;
     overflow: hidden;
     margin: 0.5em;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
   }
-  
+
   .step-number {
-    background: var(--brand-primary);
+    background: var(--round1-primary);
     color: white;
     padding: 0.8em 1em;
     font-weight: bold;
@@ -515,7 +509,7 @@ style: |
   }
   
   .badge {
-    background: var(--brand-accent);
+    background: var(--round1-accent);
     color: white;
     padding: 0.3em 0.8em;
     border-radius: 15px;
@@ -557,7 +551,7 @@ style: |
   }
   
   .timeline-badge {
-    background: var(--brand-primary);
+    background: var(--round1-primary);
     color: white;
     padding: 0.5em 1em;
     border-radius: 20px;
@@ -633,7 +627,7 @@ style: |
   }
   
   .summary-box {
-    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+    background: linear-gradient(135deg, var(--round1-primary), var(--round1-secondary));
     color: white;
     padding: 1.5em;
     border-radius: 8px;
@@ -659,7 +653,6 @@ style: |
     border-radius: 8px;
     padding: 1.2em;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     border: 2px solid #e0e0e0;
   }
   
@@ -737,12 +730,12 @@ style: |
   }
   
   .gantt-table th {
-    background: var(--brand-primary);
+    background: var(--round1-primary);
     color: white;
     padding: 0.6em;
     text-align: left;
     font-weight: 600;
-    border: 1px solid var(--brand-primary);
+    border: 1px solid var(--round1-primary);
   }
   
   .gantt-table td {
@@ -756,8 +749,8 @@ style: |
   }
   
   .gantt-bar {
-    background: var(--brand-primary) !important;
-    color: var(--brand-primary) !important;
+    background: var(--round1-primary) !important;
+    color: var(--round1-primary) !important;
     text-align: center;
     padding: 0.4em 0.2em;
     border-radius: 3px;
@@ -784,7 +777,7 @@ style: |
   
   .milestone-date {
     font-weight: bold;
-    color: var(--brand-primary);
+    color: var(--round1-primary);
     margin-right: 1em;
     min-width: 80px;
   }
@@ -800,13 +793,13 @@ style: |
     padding: 2em 1.5em;
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
     position: relative;
-    border-top: 4px solid var(--brand-primary);
+    border-top: 4px solid var(--round1-primary);
   }
   
   .step-large-number {
-    background: var(--brand-primary);
+    background: var(--round1-primary);
     color: white;
     font-size: 1.3em;
     font-weight: bold;
@@ -1488,7 +1481,7 @@ San Mateo, CA 94402
   </div>
   <div class="contact-item">
     <span class="icon">✉️</span>
-    inquiry@your-company.com
+    inquiry@fsi-america.com
   </div>
 </div>
 
