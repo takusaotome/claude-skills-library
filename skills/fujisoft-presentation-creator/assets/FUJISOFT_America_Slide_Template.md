@@ -1469,8 +1469,8 @@ cd scripts && node visual-review.js ../slides.html
 <div class="company-logo">FUJISOFT America, Inc.</div>
 
 <div class="address">
-1710 S. Amphlett Blvd<br>
-Suite 215<br>
+1825 South Grant Street<br>
+Ste. 200<br>
 San Mateo, CA 94402
 </div>
 
