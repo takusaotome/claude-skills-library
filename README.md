@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (54 skills)
+├── skills/                 # All Claude Code skills (55 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (61 Skills)
+## Skill Catalog (62 Skills)
 
 ### Business Strategy & Consulting (12 skills)
 
@@ -85,7 +85,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 
-### Software Development & IT (13 skills)
+### Software Development & IT (14 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -102,6 +102,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
 | render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
 | gogcli-expert | gogcli（Google Workspace CLI）操作支援 | 13 Services, OAuth2, Multi-Account |
+| office-script-expert | Office Scripts（Excel Online）開発支援 | ExcelScript API, 13 Bug Patterns, lib/Testing |
 
 ### Salesforce (4 skills)
 
@@ -1979,6 +1980,36 @@ Creates professional presentations following FUJISOFT America's slide template s
 
 ---
 
+### 📊 Office Script Expert
+
+**File:** `skills/office-script-expert/`
+
+Office Scripts（Excel Online / Microsoft 365）開発の専門スキル。プラットフォーム制約、ExcelScript APIパターン、テスト戦略、本番開発で発見された13のバグパターンをカバー。
+
+**When to use:**
+- Office Scripts（TypeScript）でExcel Onlineの自動化スクリプトを開発する
+- ExcelScript APIのパターンや制約を確認する
+- Office Scripts特有のバグパターンを回避する
+- lib/抽出 + インライン化のアーキテクチャでテスト可能なコードを書く
+
+**Key Features:**
+- 6つの重要プラットフォーム制約（P1-P6）: import不可、外部ライブラリ不可、120秒タイムアウト等
+- lib/抽出 + Vitestによるテスト戦略
+- 13の実運用バグパターンと回避策
+- ExcelScript API パターン集（シート読み書き、CSV解析、保護/解除、日付変換等）
+- 実装前チェックリスト
+
+**Reference Guides:**
+- `excel_api_patterns.md` - ExcelScript API の9つの主要パターン
+- `common_bug_patterns.md` - 13の実運用バグパターン
+- `platform_limitations.md` - 6つの重要プラットフォーム制約
+- `testing_strategy.md` - lib/抽出 + Vitest テスト戦略
+
+**Assets:**
+- `implementation_checklist.md` - デプロイ前の実装チェックリスト
+
+---
+
 ### 🌊 Streamlit Expert
 
 **File:** `skills/streamlit-expert/`
@@ -2964,6 +2995,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### office-script-expert v1.0 (2026-02-13)
+- Initial release
+- Office Scripts（Excel Online / Microsoft 365）開発支援スキル
+- 6つの重要プラットフォーム制約（P1-P6）: import不可、外部ライブラリ不可、Map/Set反復問題、120秒タイムアウト等
+- lib/抽出 + Vitestによるテスト戦略（Office Scripts自体はimport不可のためlib/で開発・テストしインライン化）
+- 13の実運用バグパターン（common_bug_patterns.md）
+- ExcelScript API パターン集9種（シート読み書き、CSV解析、保護/解除、日付変換、丸め関数等）
+- 実装前チェックリスト（implementation_checklist.md）
 
 ### business-plan-creator v1.0 (2026-02-11)
 - Initial release

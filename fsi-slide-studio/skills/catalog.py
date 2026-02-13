@@ -1,14 +1,18 @@
 """Skill catalog - loads and provides metadata for all available skills."""
 
+import logging
 from pathlib import Path
 
 import yaml
 
 from config.settings import SKILL_CATEGORIES_PATH, SKILLS_LIBRARY_PATH
 
+logger = logging.getLogger(__name__)
+
 
 def load_skill_categories() -> dict:
     """Load skill categories from YAML configuration."""
+    logger.debug("Loading skill categories from %s", SKILL_CATEGORIES_PATH)
     with open(SKILL_CATEGORIES_PATH, "r") as f:
         return yaml.safe_load(f)
 
@@ -51,6 +55,7 @@ def load_skill_content(skill_name: str) -> str:
     """
     skill_dir = SKILLS_LIBRARY_PATH / skill_name
     if not skill_dir.is_dir():
+        logger.warning("Skill '%s' not found at %s", skill_name, skill_dir)
         return f"Error: Skill '{skill_name}' not found."
 
     parts = []
@@ -58,7 +63,9 @@ def load_skill_content(skill_name: str) -> str:
     # Load SKILL.md
     skill_md = skill_dir / "SKILL.md"
     if skill_md.exists():
-        parts.append(f"# Skill: {skill_name}\n\n{skill_md.read_text()}")
+        content = skill_md.read_text()
+        logger.info("Loaded skill '%s' SKILL.md (%d bytes)", skill_name, len(content))
+        parts.append(f"# Skill: {skill_name}\n\n{content}")
 
     # Load key reference files
     refs_dir = skill_dir / "references"

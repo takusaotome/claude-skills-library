@@ -25,34 +25,80 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# --- IME Composition Fix ---
-# Prevent Enter during IME composition (Japanese/Chinese input) from
-# submitting the chat message.  Only suppress Enter while composing;
-# normal Enter (no IME) still sends as usual.
+# --- Custom CSS ---
+_CUSTOM_CSS = """
+<style>
+[data-testid="stChatMessage"] h1 { font-size: 1.4rem !important; }
+[data-testid="stChatMessage"] h2 { font-size: 1.2rem !important; }
+[data-testid="stChatMessage"] h3 { font-size: 1.05rem !important; }
+[data-testid="stChatMessage"] p { margin-bottom: 0.4em !important; }
+</style>
+"""
+st.markdown(_CUSTOM_CSS, unsafe_allow_html=True)
+
+# --- IME Composition Fix (Safari + Chrome) ---
+# Safari fires compositionend BEFORE keydown for the Enter that confirms IME,
+# so e.isComposing is already false when keydown fires.  Chrome fires them in
+# the opposite order (keydown first, then compositionend).
+#
+# Fix: use a `justComposed` timer (300 ms) to catch the Safari ordering.
+# All listeners are on `document` capture phase so they fire BEFORE React's
+# root handler on #root, allowing stopPropagation() to actually prevent
+# Streamlit from seeing the Enter key.
 _IME_FIX_JS = """
 <script>
 (function() {
     var doc = window.parent.document;
-    function fix() {
-        var els = doc.querySelectorAll('textarea');
-        for (var i = 0; i < els.length; i++) {
-            var el = els[i];
-            if (el.dataset.imeFix) continue;
-            if (!el.closest('[data-testid="stChatInput"]')) continue;
-            el.dataset.imeFix = '1';
-            var composing = false;
-            el.addEventListener('compositionstart', function() { composing = true; });
-            el.addEventListener('compositionend', function() { composing = false; });
-            el.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey && (composing || e.isComposing)) {
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
-                }
-            }, true);
-        }
+    if (doc._imeFix) return;
+    doc._imeFix = true;
+
+    var composing = false;
+    var justComposed = false;
+    var composingTimer = null;
+
+    function isChatInput(e) {
+        return e.target && e.target.closest &&
+               e.target.closest('[data-testid="stChatInput"]');
     }
-    new MutationObserver(fix).observe(doc.body, {childList: true, subtree: true});
-    fix();
+
+    doc.addEventListener('compositionstart', function(e) {
+        if (isChatInput(e)) {
+            composing = true;
+            justComposed = false;
+            clearTimeout(composingTimer);
+            composingTimer = setTimeout(function() { composing = false; }, 10000);
+        }
+    }, true);
+
+    doc.addEventListener('compositionend', function(e) {
+        if (isChatInput(e)) {
+            composing = false;
+            clearTimeout(composingTimer);
+            // Only mark justComposed if real text was composed.
+            // Safari fires empty composition cycles on bare Enter —
+            // skipping those lets normal Enter sends through.
+            if (e.data && e.data.length > 0) {
+                justComposed = true;
+                setTimeout(function() { justComposed = false; }, 300);
+            }
+        }
+    }, true);
+
+    doc.addEventListener('focusout', function(e) {
+        if (isChatInput(e)) {
+            composing = false;
+            clearTimeout(composingTimer);
+        }
+    }, true);
+
+    doc.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey && isChatInput(e) &&
+            (composing || justComposed)) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        }
+    }, true);
 })();
 </script>
 """
@@ -68,7 +114,7 @@ if "current_pdf_path" not in st.session_state:
 if "current_html_path" not in st.session_state:
     st.session_state.current_html_path = None
 if "language" not in st.session_state:
-    st.session_state.language = "EN"
+    st.session_state.language = "JP"
 if "bridge" not in st.session_state:
     st.session_state.bridge = AsyncBridge()
 
@@ -130,6 +176,17 @@ with st.sidebar:
                     data=f.read(),
                     file_name=pdf_path.name,
                     mime="application/pdf",
+                    use_container_width=True,
+                )
+            # Markdown source download
+            md_path = pdf_path.with_suffix(".md")
+            if md_path.exists():
+                label_md = "Download Markdown" if language == "EN" else "Markdown ダウンロード"
+                st.download_button(
+                    label=label_md,
+                    data=md_path.read_text(encoding="utf-8"),
+                    file_name=md_path.name,
+                    mime="text/markdown",
                     use_container_width=True,
                 )
 
@@ -289,6 +346,6 @@ if st.session_state.current_html_path:
         preview_label = (
             "Slide Preview" if st.session_state.language == "EN" else "スライドプレビュー"
         )
-        with st.expander(preview_label, expanded=False):
+        with st.expander(preview_label, expanded=True):
             html_content = html_path.read_text()
             st.components.v1.html(html_content, height=600, scrolling=True)

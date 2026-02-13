@@ -52,8 +52,13 @@ def convert_marp_to_pdf(markdown: str, filename: str = "presentation") -> Path:
         logger.info("PDF conversion completed in %.2fs: %s", elapsed, output_path)
         if result.stderr:
             logger.debug("marp stderr: %s", result.stderr[:500])
-    finally:
+        # Save Markdown source alongside the PDF
+        md_output_path = OUTPUT_DIR / f"{stem}.md"
+        Path(tmp_path).rename(md_output_path)
+        logger.info("Markdown source saved: %s", md_output_path)
+    except Exception:
         Path(tmp_path).unlink(missing_ok=True)
+        raise
 
     return output_path
 

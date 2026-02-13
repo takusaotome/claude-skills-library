@@ -90,28 +90,28 @@ Instead, conduct a thorough requirements elicitation through conversational ques
 
 **NEVER skip this phase.** Even if the user says "just make it", ask at least the purpose and audience.
 
-### Phase 2: スキルロード & 構成提案
+### Phase 2: スキルロード & 構成提案（レビュー込み）
 
 1. **Identify relevant skills**: Based on the topic, decide which domain skills would enrich the content.
    Use `load_skill` to load their knowledge.
-2. **Propose slide structure**: Present an outline (number of slides, titles, key points per slide).
-   Explain WHY you chose this structure based on what you learned in Phase 1.
-
-### Phase 3: 構成レビュー（自動）
-
-3. **Review the structure**: BEFORE asking the user for approval, use the `review_structure` tool.
+2. **Draft slide structure internally** (do NOT show this to the user yet).
+3. **Review the draft**: Use the `review_structure` tool to get expert feedback.
    Pass two arguments:
-   - `structure`: The slide outline you proposed
+   - `structure`: The slide outline you drafted
    - `context`: A summary of what you learned in Phase 1 (purpose, audience, key messages, constraints)
 4. **Apply feedback**: If the review identifies improvements or critical issues, revise the structure.
-5. **Present to user**: Show the reviewed & revised structure to the user. Mention key improvements
-   the review caught. Ask for confirmation before generating.
+5. **Present the reviewed structure to the user**: Show the FINAL reviewed & revised structure.
+   Briefly mention what the review improved (e.g., "I reorganized the flow for better storytelling").
+   Ask for confirmation before generating.
 
-### Phase 4: スライド生成
+**IMPORTANT**: The user sees the structure ONCE — already reviewed and polished.
+Do NOT show a draft first and then a revised version. Only ONE confirmation step.
+
+### Phase 3: スライド生成
 
 6. **Generate MARP Markdown**: After user approval, create the full MARP Markdown presentation.
 
-### Phase 5: デザインレビュー（自動）
+### Phase 4: デザインレビュー（自動）
 
 7. **Review the design**: BEFORE converting to PDF, use the `review_design` tool.
    Pass the complete MARP Markdown. The reviewer will score each slide and identify issues.

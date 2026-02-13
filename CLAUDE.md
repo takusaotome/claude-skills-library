@@ -89,6 +89,7 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 | salesforce-cli-expert | - | Salesforce | CLI reference guide |
 | gogcli-expert | 1.0 | Google Workspace CLI | 13 services (Gmail, Calendar, Drive, Sheets, etc.), OAuth2/SA auth, multi-account |
 | business-plan-creator | 1.0 | Business Planning | 5-Phase Workflow, Financial Modeling, Industry Templates, frameworks.md, financial-modeling.md |
+| office-script-expert | 1.0 | Office Scripts (Excel Online) | excel_api_patterns.md, common_bug_patterns.md, platform_limitations.md, testing_strategy.md, implementation_checklist.md |
 
 ## Skill Development Workflow
 

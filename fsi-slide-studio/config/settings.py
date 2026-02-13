@@ -1,5 +1,6 @@
 """Application settings for FSI Slide Studio."""
 
+import logging
 from pathlib import Path
 import os
 
@@ -31,8 +32,28 @@ DEFAULT_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
 # Anthropic API
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
+# Logging
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+LOG_DIR = PROJECT_ROOT / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+LOG_FILE = LOG_DIR / "fsi-slide-studio.log"
+
+
+def setup_logging():
+    """Configure structured logging for the application."""
+    log_format = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    logging.basicConfig(
+        level=getattr(logging, LOG_LEVEL),
+        format=log_format,
+        handlers=[
+            logging.FileHandler(LOG_FILE, encoding="utf-8"),
+            logging.StreamHandler(),
+        ],
+    )
+
+
 # App
 APP_TITLE = "FSI Slide Studio"
 APP_ICON = "🎨"
-DEFAULT_LANGUAGE = "EN"
+DEFAULT_LANGUAGE = "JP"
 SUPPORTED_LANGUAGES = ["EN", "JP"]

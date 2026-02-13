@@ -12,6 +12,9 @@ require the main thread).
 """
 
 import asyncio
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AsyncBridge:
@@ -19,6 +22,7 @@ class AsyncBridge:
 
     def __init__(self) -> None:
         self._loop = asyncio.new_event_loop()
+        logger.info("AsyncBridge: new event loop created")
 
     def run(self, coro, timeout: float = 600):
         """Run a coroutine on the persistent loop (blocks the calling thread).
@@ -39,6 +43,7 @@ class AsyncBridge:
         # Ensure this loop is the "current" loop so libraries that call
         # asyncio.get_event_loop() internally pick up the right one.
         asyncio.set_event_loop(self._loop)
+        logger.debug("AsyncBridge.run(): dispatching coroutine")
         return self._loop.run_until_complete(coro)
 
     @property
@@ -61,3 +66,4 @@ class AsyncBridge:
         except Exception:
             pass
         self._loop.close()
+        logger.info("AsyncBridge: event loop shut down")

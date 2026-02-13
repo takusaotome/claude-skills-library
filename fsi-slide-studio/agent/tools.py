@@ -199,10 +199,18 @@ Your job is to review generated MARP Markdown slides for visual quality and desi
 - Template CSS classes used correctly
 - No inline styles that conflict with template
 
-### Content Density
-- Tables: max 5 rows (excluding header)
-- Bullet lists: max 8 items per slide
-- One message per slide
+### Content Density (CRITICAL - overflow prevention)
+- Bullet lists: max 5 items per slide, max 2 lines per item
+- Tables: max 4 rows (excluding header), max 5 columns, max 30 chars per cell
+- **Height estimation**: For each slide, estimate total content height:
+  * H2 title: 50px, H3 heading: 40px, each bullet: 35px, each table row: 40px,
+    table header: 45px, info-box: 80px, metric-box row: 120px, paragraph line: 25px
+  * Available height: 520px (viewport 720px minus header/footer/padding)
+  * Total MUST be under 520px. Flag anything over 450px as risk.
+- **Combination check**: Flag slides combining multiple element types
+  (e.g., table + bullets + info-box) as HIGH RISK for overflow
+- **Overflow risk per slide**: Rate each as LOW (<400px) / MEDIUM (400-480px) / HIGH (480-520px) / CRITICAL (>520px)
+- If any slide is CRITICAL: it MUST be split — this is a blocking issue
 
 ### Footer & Layout
 - Footer clearance: at least 100px from last content element to footer
@@ -222,6 +230,7 @@ Your job is to review generated MARP Markdown slides for visual quality and desi
 
 For EACH slide, provide:
 - **Slide N: [Title]** — Score: X/100
+- **Estimated height**: Xpx / 520px — Overflow risk: LOW/MEDIUM/HIGH/CRITICAL
 - Issues found (if any)
 - Specific fix instructions (use exact CSS class names or markdown syntax)
 

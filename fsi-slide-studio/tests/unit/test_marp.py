@@ -1,6 +1,7 @@
 """Tests for converter/marp.py."""
 
 import subprocess
+from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 import pytest
@@ -44,6 +45,23 @@ class TestConvertMarpToPdf:
         mock_run.side_effect = subprocess.TimeoutExpired("marp", 120)
         with pytest.raises(subprocess.TimeoutExpired):
             convert_marp_to_pdf(SAMPLE_MARP, "test")
+
+    @patch("converter.marp.Path.rename")
+    @patch("converter.marp.subprocess.run")
+    def test_saves_markdown_source_on_success(self, mock_run, mock_rename):
+        mock_run.return_value = MagicMock(stderr="")
+        result = convert_marp_to_pdf(SAMPLE_MARP, "test_pres")
+        # rename should be called to save the .md file
+        mock_rename.assert_called_once()
+        rename_target = mock_rename.call_args[0][0]
+        assert str(rename_target).endswith("test_pres.md")
+
+    @patch("converter.marp.subprocess.run")
+    def test_cleans_up_tmp_on_failure(self, mock_run):
+        mock_run.side_effect = subprocess.CalledProcessError(1, "marp")
+        with pytest.raises(subprocess.CalledProcessError):
+            convert_marp_to_pdf(SAMPLE_MARP, "test")
+        # tmp file should be cleaned up (unlink called in except block)
 
 
 class TestConvertMarpToHtml:
