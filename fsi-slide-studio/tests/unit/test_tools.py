@@ -9,6 +9,7 @@ from agent.tools import (
     _load_checklist,
     list_skills,
     load_skill,
+    render_mermaid,
     convert_to_pdf,
     convert_to_html,
     review_structure,
@@ -118,6 +119,59 @@ class TestConvertToHtml:
         assert result.get("is_error") is True
 
 
+class TestRenderMermaid:
+    @pytest.mark.asyncio
+    @patch("agent.tools.render_mermaid_to_png")
+    async def test_success_returns_filename_and_embed(self, mock_render):
+        mock_render.return_value = Path("/tmp/output/gantt_chart.png")
+        result = await render_mermaid(
+            {"mermaid_code": "gantt\n  title Test", "filename": "gantt_chart"}
+        )
+        assert "content" in result
+        assert "is_error" not in result
+        text = result["content"][0]["text"]
+        assert "gantt_chart.png" in text
+        assert "![" in text  # embed instruction included
+
+    @pytest.mark.asyncio
+    @patch("agent.tools.render_mermaid_to_png")
+    async def test_failure_returns_error(self, mock_render):
+        mock_render.side_effect = RuntimeError("mmdc not found")
+        result = await render_mermaid(
+            {"mermaid_code": "gantt\n  title Test", "filename": "chart"}
+        )
+        assert result.get("is_error") is True
+        assert "failed" in result["content"][0]["text"].lower()
+
+    @pytest.mark.asyncio
+    @patch("agent.tools.render_mermaid_to_png")
+    async def test_default_filename(self, mock_render):
+        mock_render.return_value = Path("/tmp/output/diagram.png")
+        await render_mermaid({"mermaid_code": "flowchart TD\n  A-->B"})
+        mock_render.assert_called_once_with("flowchart TD\n  A-->B", "diagram")
+
+    @pytest.mark.asyncio
+    @patch("agent.tools.render_mermaid_to_png")
+    async def test_passes_args_to_converter(self, mock_render):
+        mock_render.return_value = Path("/tmp/output/timeline.png")
+        await render_mermaid(
+            {"mermaid_code": "sequenceDiagram\n  A->>B: msg", "filename": "timeline"}
+        )
+        mock_render.assert_called_once_with(
+            "sequenceDiagram\n  A->>B: msg", "timeline"
+        )
+
+    @pytest.mark.asyncio
+    @patch("agent.tools.render_mermaid_to_png")
+    async def test_subprocess_error_is_caught(self, mock_render):
+        import subprocess
+        mock_render.side_effect = subprocess.CalledProcessError(1, "mmdc")
+        result = await render_mermaid(
+            {"mermaid_code": "pie\n  title Budget", "filename": "budget"}
+        )
+        assert result.get("is_error") is True
+
+
 class TestReviewStructure:
     @pytest.mark.asyncio
     async def test_returns_review_text(self):
@@ -180,4 +234,4 @@ class TestCreatePresentationToolsServer:
         kwargs = claude_agent_sdk.create_sdk_mcp_server.call_args[1]
         assert kwargs["name"] == "presentation-tools"
         assert kwargs["version"] == "2.0.0"
-        assert len(kwargs["tools"]) == 6
+        assert len(kwargs["tools"]) == 7

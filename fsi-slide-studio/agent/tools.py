@@ -7,7 +7,7 @@ from typing import Any
 from claude_agent_sdk import tool, create_sdk_mcp_server, query, ClaudeAgentOptions
 
 from skills.catalog import get_all_skills, load_skill_content
-from converter.marp import convert_marp_to_pdf, convert_marp_to_html
+from converter.marp import convert_marp_to_pdf, convert_marp_to_html, render_mermaid_to_png
 from config.settings import SKILLS_LIBRARY_PATH
 
 logger = logging.getLogger(__name__)
@@ -119,6 +119,42 @@ async def convert_to_html(args: dict[str, Any]) -> dict[str, Any]:
     except Exception as e:
         return {
             "content": [{"type": "text", "text": f"HTML conversion failed: {e}"}],
+            "is_error": True,
+        }
+
+
+# --- Mermaid tools ---
+
+
+@tool(
+    "render_mermaid",
+    "Render a Mermaid diagram to a PNG image. "
+    "Pass Mermaid diagram code (e.g., gantt, flowchart, sequence, pie, etc.) "
+    "and a filename. Returns the image filename. "
+    "Use the returned filename in MARP Markdown as ![](filename.png) to embed the diagram in a slide. "
+    "The image is saved in the output directory where MARP can access it with --allow-local-files.",
+    {"mermaid_code": str, "filename": str},
+)
+async def render_mermaid(args: dict[str, Any]) -> dict[str, Any]:
+    mermaid_code = args.get("mermaid_code", "")
+    filename = args.get("filename", "diagram")
+    logger.info("render_mermaid: starting for '%s'", filename)
+    try:
+        png_path = render_mermaid_to_png(mermaid_code, filename)
+        return {
+            "content": [
+                {
+                    "type": "text",
+                    "text": (
+                        f"Mermaid diagram rendered: {png_path.name}\n"
+                        f"Embed in MARP slide as: ![](/{png_path.name})"
+                    ),
+                }
+            ]
+        }
+    except Exception as e:
+        return {
+            "content": [{"type": "text", "text": f"Mermaid rendering failed: {e}"}],
             "is_error": True,
         }
 
@@ -347,6 +383,7 @@ def create_presentation_tools_server():
         tools=[
             list_skills,
             load_skill,
+            render_mermaid,
             convert_to_pdf,
             convert_to_html,
             review_structure,

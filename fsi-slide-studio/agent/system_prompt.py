@@ -176,6 +176,28 @@ Every content page MUST include footer elements:
 - Two-column: `.two-column` > `.column`
 - ROI display: `.roi-box`, `.summary-box`
 
+## Mermaid Diagrams
+
+You can embed Mermaid diagrams (Gantt charts, flowcharts, sequence diagrams, pie charts, etc.) in slides.
+
+**Workflow:**
+1. Write the Mermaid code for the diagram
+2. Call `render_mermaid` with the code and a descriptive filename
+3. The tool returns a PNG filename (e.g., `timeline.png`)
+4. Embed in the MARP slide: `![](timeline.png)`
+
+**When to use Mermaid:**
+- Gantt charts for project timelines / implementation schedules
+- Flowcharts for process flows or decision trees
+- Sequence diagrams for system interactions
+- Pie charts for budget or resource allocation breakdowns
+
+**Rules:**
+- Render each diagram BEFORE generating the final MARP Markdown
+- Use descriptive filenames (e.g., `project_gantt`, `system_flow`, not `diagram1`)
+- One diagram per slide for readability
+- Add a brief text description or key takeaway below the diagram
+
 ## MARP Markdown Output Format
 
 When generating the presentation, output the COMPLETE MARP Markdown including:
@@ -183,6 +205,7 @@ When generating the presentation, output the COMPLETE MARP Markdown including:
 2. All slides separated by `---`
 3. Proper class annotations for each slide
 4. Footer on every content/thankyou page
+5. Mermaid diagrams as `![](filename.png)` (pre-rendered via `render_mermaid`)
 
 Start the markdown with the template frontmatter, then the cover slide, content slides, and thank you slide.
 """

@@ -6,9 +6,10 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-from converter.marp import convert_marp_to_pdf, convert_marp_to_html
+from converter.marp import convert_marp_to_pdf, convert_marp_to_html, render_mermaid_to_png
 
 SAMPLE_MARP = "---\nmarp: true\n---\n# Test Slide\nContent"
+SAMPLE_MERMAID = "gantt\n    title Project\n    section A\n    Task1 :a1, 2024-01-01, 30d"
 
 
 class TestConvertMarpToPdf:
@@ -99,3 +100,44 @@ class TestConvertMarpToHtml:
         convert_marp_to_html(SAMPLE_MARP, "test")
         kwargs = mock_run.call_args[1]
         assert kwargs.get("timeout") == 120
+
+
+class TestRenderMermaidToPng:
+    @patch("converter.marp.shutil.which", return_value="/usr/local/bin/mmdc")
+    @patch("converter.marp.subprocess.run")
+    def test_returns_png_path(self, mock_run, mock_which):
+        mock_run.return_value = MagicMock(stderr="")
+        result = render_mermaid_to_png(SAMPLE_MERMAID, "gantt_chart")
+        assert result.suffix == ".png"
+        assert result.name == "gantt_chart.png"
+
+    @patch("converter.marp.shutil.which", return_value="/usr/local/bin/mmdc")
+    @patch("converter.marp.subprocess.run")
+    def test_calls_mmdc_with_correct_args(self, mock_run, mock_which):
+        mock_run.return_value = MagicMock(stderr="")
+        render_mermaid_to_png(SAMPLE_MERMAID, "test")
+        args = mock_run.call_args[0][0]
+        assert args[0] == "/usr/local/bin/mmdc"
+        assert "-i" in args
+        assert "-o" in args
+        assert "-w" in args
+        assert "-b" in args
+
+    @patch("converter.marp.shutil.which", return_value=None)
+    def test_raises_when_mmdc_not_found(self, mock_which):
+        with pytest.raises(RuntimeError, match="mmdc"):
+            render_mermaid_to_png(SAMPLE_MERMAID, "test")
+
+    @patch("converter.marp.shutil.which", return_value="/usr/local/bin/mmdc")
+    @patch("converter.marp.subprocess.run")
+    def test_raises_on_called_process_error(self, mock_run, mock_which):
+        mock_run.side_effect = subprocess.CalledProcessError(1, "mmdc")
+        with pytest.raises(subprocess.CalledProcessError):
+            render_mermaid_to_png(SAMPLE_MERMAID, "test")
+
+    @patch("converter.marp.shutil.which", return_value="/usr/local/bin/mmdc")
+    @patch("converter.marp.subprocess.run")
+    def test_strips_extension_from_filename(self, mock_run, mock_which):
+        mock_run.return_value = MagicMock(stderr="")
+        result = render_mermaid_to_png(SAMPLE_MERMAID, "chart.png")
+        assert result.name == "chart.png"

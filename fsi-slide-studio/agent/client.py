@@ -48,6 +48,7 @@ class PresentationAgent:
                 "mcp__ptools__convert_to_pdf",
                 "mcp__ptools__convert_to_html",
                 "mcp__ptools__review_structure",
+                "mcp__ptools__render_mermaid",
                 "mcp__ptools__review_design",
             ],
             cwd=str(OUTPUT_DIR),
