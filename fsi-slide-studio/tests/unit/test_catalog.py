@@ -29,6 +29,7 @@ class TestLoadSkillCategories:
         assert "TestCategory2" in cats
 
 
+@patch("skills.catalog.SKILLS_LIBRARY_PATH", Path("/nonexistent"))
 @patch("skills.catalog.SKILL_CATEGORIES_PATH", SAMPLE_YAML)
 class TestGetAllSkills:
     def test_returns_flat_list(self):
@@ -49,7 +50,34 @@ class TestGetAllSkills:
         assert names_by_cat["test-skill-1"] == "TestCategory1"
         assert names_by_cat["demo-skill"] == "TestCategory2"
 
+    def test_auto_discovers_skills_on_disk(self, tmp_path):
+        # Create a skill not in the YAML
+        extra = tmp_path / "extra-skill"
+        extra.mkdir()
+        (extra / "SKILL.md").write_text(
+            "---\nname: extra-skill\ndescription: An auto-discovered skill\n---\n# Extra"
+        )
+        with patch("skills.catalog.SKILLS_LIBRARY_PATH", tmp_path):
+            skills = get_all_skills()
+        names = {s["name"] for s in skills}
+        assert "extra-skill" in names
+        extra_skill = next(s for s in skills if s["name"] == "extra-skill")
+        assert extra_skill["category"] == "Other"
+        assert "auto-discovered" in extra_skill["description"].lower()
 
+    def test_auto_discovered_does_not_duplicate_yaml_skills(self, tmp_path):
+        # Create a skill that IS already in the YAML
+        ts1 = tmp_path / "test-skill-1"
+        ts1.mkdir()
+        (ts1 / "SKILL.md").write_text("---\nname: test-skill-1\ndescription: dup\n---\n")
+        with patch("skills.catalog.SKILLS_LIBRARY_PATH", tmp_path):
+            skills = get_all_skills()
+        test1_entries = [s for s in skills if s["name"] == "test-skill-1"]
+        assert len(test1_entries) == 1
+        assert test1_entries[0]["category"] == "TestCategory1"
+
+
+@patch("skills.catalog.SKILLS_LIBRARY_PATH", Path("/nonexistent"))
 @patch("skills.catalog.SKILL_CATEGORIES_PATH", SAMPLE_YAML)
 class TestGetSkillCatalogText:
     def test_returns_string(self):
@@ -65,6 +93,17 @@ class TestGetSkillCatalogText:
         text = get_skill_catalog_text()
         assert "test-skill-1" in text
         assert "demo-skill" in text
+
+    def test_includes_auto_discovered_category(self, tmp_path):
+        extra = tmp_path / "new-skill"
+        extra.mkdir()
+        (extra / "SKILL.md").write_text(
+            "---\nname: new-skill\ndescription: Found on disk\n---\n"
+        )
+        with patch("skills.catalog.SKILLS_LIBRARY_PATH", tmp_path):
+            text = get_skill_catalog_text()
+        assert "### Other" in text
+        assert "new-skill" in text
 
 
 class TestLoadSkillContent:

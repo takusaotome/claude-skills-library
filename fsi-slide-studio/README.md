@@ -4,9 +4,10 @@ A Streamlit chat application that generates professional FUJISOFT America-brande
 
 ## Features
 
-- Chat-based presentation generation with a 5-phase workflow (hearing, structure proposal, structure review, slide generation, design review)
-- Dynamic skill loading from 30+ domain expert skills (Strategy, Finance, Operations, Compliance, IT, Analytics, and more)
+- Chat-based presentation generation with a 4-phase workflow (hearing, structure proposal with internal review, slide generation, design review)
+- Dynamic skill loading from 63 domain expert skills across 13 categories with auto-discovery (new skills added to `skills/` are automatically available)
 - MARP Markdown to PDF/HTML conversion with FUJISOFT America corporate template
+- Mermaid diagram rendering (Gantt, flowchart, sequence, pie) embedded as PNG in slides
 - Automated structure review and design review via independent AI reviewers
 - Token-level streaming display for real-time response rendering
 - IME composition fix for Japanese/Chinese input
@@ -19,9 +20,9 @@ Streamlit (Chat UI + IME fix + Streaming)
     |
 AsyncBridge (Persistent event loop)
     |
-Claude Agent SDK (Multi-turn + 6 MCP tools)
+Claude Agent SDK (Multi-turn + 7 MCP tools)
     |
-Skill Library (30+ domain skills + MARP template)
+Skill Library (63 skills with auto-discovery + MARP template)
 ```
 
 ## Quick Start
@@ -83,7 +84,8 @@ fsi-slide-studio/
 │   ├── async_bridge.py       # Persistent event loop bridge
 │   ├── client.py             # Claude Agent SDK client management
 │   ├── system_prompt.py      # System prompt builder
-│   └── tools.py              # Custom MCP tools (6 tools)
+│   ├── tools.py              # Custom MCP tools (7 tools)
+│   └── tool_activity.py      # Tool activity formatting
 ├── skills/
 │   ├── __init__.py
 │   ├── router.py             # Skill routing (keyword matching)
@@ -94,7 +96,7 @@ fsi-slide-studio/
 ├── config/
 │   ├── settings.py           # App settings
 │   └── skill_categories.yaml # Skill category mappings
-├── tests/                    # Unit tests (76 tests)
+├── tests/                    # Unit tests (118 tests)
 ├── output/                   # Generated files
 ├── logs/                     # Application logs
 ├── Dockerfile
@@ -113,6 +115,7 @@ fsi-slide-studio/
 | `convert_to_pdf` | Convert MARP Markdown content to a PDF file |
 | `convert_to_html` | Convert MARP Markdown content to an HTML file for preview |
 | `review_structure` | Review a proposed slide structure before generation |
+| `render_mermaid` | Render Mermaid diagrams (Gantt, flowchart, sequence, pie) to PNG |
 | `review_design` | Review generated MARP Markdown slides for design quality |
 
 ## Testing

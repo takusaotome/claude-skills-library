@@ -1,6 +1,12 @@
-"""Skill catalog - loads and provides metadata for all available skills."""
+"""Skill catalog - loads and provides metadata for all available skills.
+
+Combines a curated YAML category file with auto-discovery of any skill
+that exists on disk.  Skills defined in the YAML keep their category;
+skills found on disk but absent from the YAML are placed in "Other".
+"""
 
 import logging
+import re
 from pathlib import Path
 
 import yaml
@@ -8,6 +14,24 @@ import yaml
 from config.settings import SKILL_CATEGORIES_PATH, SKILLS_LIBRARY_PATH
 
 logger = logging.getLogger(__name__)
+
+
+def _parse_frontmatter_description(skill_md_path: Path) -> str:
+    """Extract the 'description' field from SKILL.md YAML frontmatter."""
+    try:
+        text = skill_md_path.read_text(errors="replace")
+        match = re.match(r"^---\s*\n(.*?)\n---", text, re.DOTALL)
+        if match:
+            fm = yaml.safe_load(match.group(1))
+            if isinstance(fm, dict):
+                desc = fm.get("description", "")
+                if isinstance(desc, str):
+                    # Take only the first sentence/line for brevity
+                    first_line = desc.strip().split("\n")[0].strip()
+                    return first_line[:200] if first_line else ""
+    except Exception as e:
+        logger.debug("Failed to parse frontmatter of %s: %s", skill_md_path, e)
+    return ""
 
 
 def load_skill_categories() -> dict:
@@ -18,9 +42,18 @@ def load_skill_categories() -> dict:
 
 
 def get_all_skills() -> list[dict]:
-    """Return flat list of all skills with their category and description."""
+    """Return flat list of ALL skills with their category and description.
+
+    1. Load curated skills from skill_categories.yaml (with assigned categories).
+    2. Scan SKILLS_LIBRARY_PATH for any additional skills not in the YAML.
+    3. Auto-discovered skills are placed in the "Other" category with their
+       description extracted from SKILL.md frontmatter.
+    """
     categories = load_skill_categories()
     skills = []
+    known_names: set[str] = set()
+
+    # 1. Curated skills from YAML
     for category_name, category_data in categories.get("categories", {}).items():
         for skill in category_data.get("skills", []):
             skills.append(
@@ -30,16 +63,37 @@ def get_all_skills() -> list[dict]:
                     "category": category_name,
                 }
             )
+            known_names.add(skill["name"])
+
+    # 2. Auto-discover skills on disk that are not in the YAML
+    if SKILLS_LIBRARY_PATH.is_dir():
+        for skill_dir in sorted(SKILLS_LIBRARY_PATH.iterdir()):
+            skill_md = skill_dir / "SKILL.md"
+            if skill_dir.is_dir() and skill_md.exists() and skill_dir.name not in known_names:
+                desc = _parse_frontmatter_description(skill_md)
+                skills.append(
+                    {
+                        "name": skill_dir.name,
+                        "description": desc or f"(Auto-discovered skill: {skill_dir.name})",
+                        "category": "Other",
+                    }
+                )
+                logger.info("Auto-discovered skill: %s", skill_dir.name)
+
     return skills
 
 
 def get_skill_catalog_text() -> str:
     """Generate a formatted text catalog of all skills for the system prompt."""
-    categories = load_skill_categories()
+    all_skills = get_all_skills()
+    by_category: dict[str, list[dict]] = {}
+    for s in all_skills:
+        by_category.setdefault(s["category"], []).append(s)
+
     lines = []
-    for category_name, category_data in categories.get("categories", {}).items():
+    for category_name, cat_skills in by_category.items():
         lines.append(f"\n### {category_name}")
-        for skill in category_data.get("skills", []):
+        for skill in cat_skills:
             lines.append(f"- **{skill['name']}**: {skill['description']}")
     return "\n".join(lines)
 

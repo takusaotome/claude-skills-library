@@ -56,10 +56,12 @@ categories:
       - supply chain
       - lean
       - six sigma
+      - change management
       - 業務改善
       - プロジェクト
       - 品質
       - サプライチェーン
+      - 変革管理
     skills:
       - name: business-analyst
         description: "Business analysis aligned with BABOK Guide v3 - requirements, stakeholder analysis, process mapping"
@@ -107,8 +109,6 @@ categories:
         description: "PCI DSS 4.0.1 compliance audit support for cardholder data environments"
       - name: bcp-planner
         description: "Business continuity planning - BIA, recovery strategies, plan development"
-      - name: sox-expert
-        description: "SOX compliance - internal controls, financial reporting, audit readiness"
 
   IT:
     keywords:
@@ -116,12 +116,34 @@ categories:
       - ITSM
       - ITIL
       - data governance
+      - customer support
+      - helpdesk
+      - Office
+      - Excel
       - データ管理
+      - カスタマーサポート
+      - ヘルプデスク
     skills:
       - name: dama-dmbok
         description: "Data management aligned with DAMA-DMBOK - governance, quality, metadata, MDM"
       - name: itil4-consultant
         description: "ITIL 4-based IT service management consulting with 34 practice areas"
+      - name: helpdesk-responder
+        description: "Customer support and helpdesk - KB-based response, escalation workflows, SLA management"
+      - name: office-script-expert
+        description: "Office Scripts / Excel Online automation - ExcelScript API patterns, best practices"
+
+  Salesforce:
+    keywords:
+      - Salesforce
+      - CRM
+      - Flow
+      - セールスフォース
+    skills:
+      - name: salesforce-expert
+        description: "Salesforce development and operations - architecture patterns, sharing settings, approval processes"
+      - name: salesforce-flow-expert
+        description: "Salesforce Flow implementation - Screen/Record-Triggered/Scheduled flows, best practices"
 
   Analytics:
     keywords:
@@ -137,15 +159,34 @@ categories:
       - name: data-visualization-expert
         description: "Data visualization - charts, dashboards, accessible and reader-friendly designs"
 
+  Presentation:
+    keywords:
+      - presentation
+      - slide
+      - deck
+      - document review
+      - プレゼン
+      - スライド
+      - 資料レビュー
+    skills:
+      - name: fujisoft-presentation-creator
+        description: "FUJISOFT America presentation methodology - MARP template, design patterns, quality workflows"
+      - name: critical-document-reviewer
+        description: "6-persona document review - developer, PM, customer, QA, security, operations perspectives"
+
   Content:
     keywords:
       - executive
       - briefing
+      - writing
       - エグゼクティブ
       - ブリーフィング
+      - ライティング
     skills:
       - name: executive-briefing-writer
         description: "Executive-level briefing materials, board reports, management presentations"
+      - name: ai-text-humanizer
+        description: "AI text humanization - natural writing techniques, tone adjustment, readability improvement"
 
   HR:
     keywords:
@@ -181,8 +222,10 @@ categories:
       - QA
       - bug
       - UAT
+      - migration
       - テスト
       - 品質保証
+      - 移行
     skills:
       - name: bug-ticket-creator
         description: "Bug/defect report creation with severity classification and reproduction steps"
@@ -190,3 +233,5 @@ categories:
         description: "Bug ticket data analysis to identify quality trends and assess software quality"
       - name: migration-validation-explorer
         description: "Data migration QA - hypothesis generation, priority scoring, validation scripts"
+      - name: uat-testcase-generator
+        description: "UAT test case generation - scenario design, Excel output, traceability matrices"

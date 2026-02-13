@@ -12,6 +12,7 @@ from pathlib import Path
 from config.settings import APP_TITLE, APP_ICON, SUPPORTED_LANGUAGES, OUTPUT_DIR, setup_logging
 from agent.client import PresentationAgent
 from agent.async_bridge import AsyncBridge
+from agent.tool_activity import format_tool_activity, build_activities_caption
 
 # Initialize logging once at module load
 setup_logging()
@@ -206,6 +207,7 @@ _TOOL_LABELS = {
     "review_design": ("Reviewing design", "デザインをレビュー中"),
     "convert_to_pdf": ("Generating PDF", "PDFを生成中"),
     "convert_to_html": ("Generating preview", "プレビューを生成中"),
+    "render_mermaid": ("Rendering diagram", "図表をレンダリング中"),
 }
 
 
@@ -215,9 +217,13 @@ async def _stream_agent_response(agent, user_input, on_tool, on_text):
 
     Handles both token-level deltas (text_delta) from StreamEvent and
     block-level text from AssistantMessage as fallback.
+
+    Returns:
+        Tuple of (response_text, tool_activities_list).
     """
     accumulated = []
     has_deltas = False
+    tool_activities = []
     async for chunk in agent.send_message_streaming(user_input):
         ctype = chunk["type"]
         if ctype == "text_delta":
@@ -226,16 +232,19 @@ async def _stream_agent_response(agent, user_input, on_tool, on_text):
             on_text("".join(accumulated))
         elif ctype == "text":
             if not has_deltas:
-                # Fallback: no StreamEvent deltas, use block-level text
                 accumulated.append(chunk["content"])
                 on_text("".join(accumulated))
                 logger.debug("Fallback to block-level text")
         elif ctype == "tool_use":
             on_tool(chunk["content"])
+        elif ctype == "tool_use_complete":
+            activity = format_tool_activity(chunk["content"], chunk.get("input", {}))
+            tool_activities.append(activity)
         elif ctype == "error":
             accumulated.append(f"\n\n⚠️ {chunk['content']}")
             on_text("".join(accumulated))
-    return "".join(accumulated) if accumulated else "(No response)"
+    text = "".join(accumulated) if accumulated else "(No response)"
+    return text, tool_activities
 
 
 def _check_for_generated_files():
@@ -265,6 +274,11 @@ st.markdown(f"### {header_text}")
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
+        activities = msg.get("tool_activities", [])
+        if activities:
+            caption = build_activities_caption(activities, st.session_state.language)
+            if caption:
+                st.caption(caption)
 
 # Chat input
 placeholder = (
@@ -297,6 +311,7 @@ if user_input := st.chat_input(placeholder):
         status_placeholder.status(status_text, state="running")
 
         full_response = ""
+        tool_activities = []
         try:
             if not st.session_state.bridge.is_alive:
                 st.session_state.bridge = AsyncBridge()
@@ -313,7 +328,7 @@ if user_input := st.chat_input(placeholder):
                 response_placeholder.markdown(text + " ▌")
 
             logger.info("Streaming response for user input (%d chars)", len(user_input))
-            full_response = st.session_state.bridge.run(
+            full_response, tool_activities = st.session_state.bridge.run(
                 _stream_agent_response(
                     st.session_state.agent,
                     user_input,
@@ -324,19 +339,31 @@ if user_input := st.chat_input(placeholder):
         except Exception as e:
             logger.error("Response failed: %s", e, exc_info=True)
             full_response = f"Error: {str(e)}"
+            tool_activities = []
 
         status_placeholder.empty()
         response_placeholder.markdown(full_response)
+        if tool_activities:
+            caption = build_activities_caption(tool_activities, st.session_state.language)
+            if caption:
+                st.caption(caption)
 
-    st.session_state.messages.append({"role": "assistant", "content": full_response})
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": full_response,
+        "tool_activities": tool_activities,
+    })
 
     # Check if a PDF/HTML was generated and rerun to update sidebar
-    old_pdf = st.session_state.current_pdf_path
-    old_html = st.session_state.current_html_path
-    _check_for_generated_files()
-    if (st.session_state.current_pdf_path != old_pdf
-            or st.session_state.current_html_path != old_html):
-        st.rerun()
+    # Only scan output directory when conversion tools were actually used
+    converted_tools = {a["tool"] for a in tool_activities}
+    if converted_tools & {"convert_to_pdf", "convert_to_html"}:
+        old_pdf = st.session_state.current_pdf_path
+        old_html = st.session_state.current_html_path
+        _check_for_generated_files()
+        if (st.session_state.current_pdf_path != old_pdf
+                or st.session_state.current_html_path != old_html):
+            st.rerun()
 
 # --- Slide Preview ---
 if st.session_state.current_html_path:
