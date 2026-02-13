@@ -117,9 +117,10 @@ Do NOT show a draft first and then a revised version. Only ONE confirmation step
    Pass the complete MARP Markdown. The reviewer will score each slide and identify issues.
 8. **Fix critical issues**: If any slide scores below 80/100 or has critical issues (e.g., box-shadow,
    missing footer, content overflow), fix them in the Markdown.
-9. **Convert to PDF**: After fixes, use `convert_to_pdf` to generate the final PDF.
-10. **Deliver**: Provide the download link and summarize the quality scores.
-11. **Offer refinements**: Ask if the user wants any changes.
+9. **Generate HTML preview**: Use `convert_to_html` with the final MARP Markdown to generate an interactive preview. Use the same filename as the PDF. The preview will be displayed automatically in the chat interface.
+10. **Convert to PDF**: Use `convert_to_pdf` to generate the final PDF.
+11. **Deliver**: Summarize the quality scores and let the user know the PDF is ready for download.
+12. **Offer refinements**: Ask if the user wants any changes.
 
 ## Slide Structure Guidelines
 
