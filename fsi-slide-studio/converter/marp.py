@@ -1,10 +1,14 @@
 """MARP CLI wrapper for Markdown to PDF/HTML conversion."""
 
+import logging
 import subprocess
 import tempfile
+import time
 from pathlib import Path
 
 from config.settings import OUTPUT_DIR
+
+logger = logging.getLogger(__name__)
 
 
 def convert_marp_to_pdf(markdown: str, filename: str = "presentation") -> Path:
@@ -17,7 +21,11 @@ def convert_marp_to_pdf(markdown: str, filename: str = "presentation") -> Path:
     Returns:
         Path to the generated PDF file.
     """
-    output_path = OUTPUT_DIR / f"{filename}.pdf"
+    stem = Path(filename).stem  # "proposal.pdf" → "proposal"
+    output_path = OUTPUT_DIR / f"{stem}.pdf"
+    logger.info("PDF conversion started: %s (%d bytes)", filename, len(markdown))
+    t0 = time.monotonic()
+
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".md", delete=False, dir=OUTPUT_DIR
     ) as tmp:
@@ -25,7 +33,7 @@ def convert_marp_to_pdf(markdown: str, filename: str = "presentation") -> Path:
         tmp_path = tmp.name
 
     try:
-        subprocess.run(
+        result = subprocess.run(
             [
                 "marp",
                 "--pdf",
@@ -40,6 +48,10 @@ def convert_marp_to_pdf(markdown: str, filename: str = "presentation") -> Path:
             text=True,
             timeout=120,
         )
+        elapsed = time.monotonic() - t0
+        logger.info("PDF conversion completed in %.2fs: %s", elapsed, output_path)
+        if result.stderr:
+            logger.debug("marp stderr: %s", result.stderr[:500])
     finally:
         Path(tmp_path).unlink(missing_ok=True)
 
@@ -56,7 +68,11 @@ def convert_marp_to_html(markdown: str, filename: str = "presentation") -> Path:
     Returns:
         Path to the generated HTML file.
     """
-    output_path = OUTPUT_DIR / f"{filename}.html"
+    stem = Path(filename).stem  # "presentation.html" → "presentation"
+    output_path = OUTPUT_DIR / f"{stem}.html"
+    logger.info("HTML conversion started: %s (%d bytes)", filename, len(markdown))
+    t0 = time.monotonic()
+
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".md", delete=False, dir=OUTPUT_DIR
     ) as tmp:
@@ -64,7 +80,7 @@ def convert_marp_to_html(markdown: str, filename: str = "presentation") -> Path:
         tmp_path = tmp.name
 
     try:
-        subprocess.run(
+        result = subprocess.run(
             [
                 "marp",
                 "--html",
@@ -78,6 +94,10 @@ def convert_marp_to_html(markdown: str, filename: str = "presentation") -> Path:
             text=True,
             timeout=120,
         )
+        elapsed = time.monotonic() - t0
+        logger.info("HTML conversion completed in %.2fs: %s", elapsed, output_path)
+        if result.stderr:
+            logger.debug("marp stderr: %s", result.stderr[:500])
     finally:
         Path(tmp_path).unlink(missing_ok=True)
 

@@ -1,5 +1,7 @@
 """Custom MCP tools for the presentation agent."""
 
+import logging
+import time
 from typing import Any
 
 from claude_agent_sdk import tool, create_sdk_mcp_server, query, ClaudeAgentOptions
@@ -7,6 +9,8 @@ from claude_agent_sdk import tool, create_sdk_mcp_server, query, ClaudeAgentOpti
 from skills.catalog import get_all_skills, load_skill_content
 from converter.marp import convert_marp_to_pdf, convert_marp_to_html
 from config.settings import SKILLS_LIBRARY_PATH
+
+logger = logging.getLogger(__name__)
 
 
 def _load_checklist() -> str:
@@ -32,6 +36,7 @@ def _load_checklist() -> str:
     {},
 )
 async def list_skills(args: dict[str, Any]) -> dict[str, Any]:
+    logger.info("list_skills: fetching skill catalog")
     skills = get_all_skills()
     lines = []
     current_category = None
@@ -54,7 +59,9 @@ async def list_skills(args: dict[str, Any]) -> dict[str, Any]:
 )
 async def load_skill(args: dict[str, Any]) -> dict[str, Any]:
     skill_name = args.get("skill_name", "")
+    logger.info("load_skill: loading '%s'", skill_name)
     content = load_skill_content(skill_name)
+    logger.info("load_skill: loaded '%s' (%d bytes)", skill_name, len(content))
     return {"content": [{"type": "text", "text": content}]}
 
 
@@ -71,13 +78,14 @@ async def load_skill(args: dict[str, Any]) -> dict[str, Any]:
 async def convert_to_pdf(args: dict[str, Any]) -> dict[str, Any]:
     markdown_content = args.get("markdown_content", "")
     filename = args.get("filename", "presentation")
+    logger.info("convert_to_pdf: starting for '%s'", filename)
     try:
         pdf_path = convert_marp_to_pdf(markdown_content, filename)
         return {
             "content": [
                 {
                     "type": "text",
-                    "text": f"PDF generated successfully: {pdf_path}",
+                    "text": f"PDF generated successfully: {pdf_path.name}",
                 }
             ]
         }
@@ -97,13 +105,14 @@ async def convert_to_pdf(args: dict[str, Any]) -> dict[str, Any]:
 async def convert_to_html(args: dict[str, Any]) -> dict[str, Any]:
     markdown_content = args.get("markdown_content", "")
     filename = args.get("filename", "presentation")
+    logger.info("convert_to_html: starting for '%s'", filename)
     try:
         html_path = convert_marp_to_html(markdown_content, filename)
         return {
             "content": [
                 {
                     "type": "text",
-                    "text": f"HTML generated successfully: {html_path}",
+                    "text": f"HTML generated successfully: {html_path.name}",
                 }
             ]
         }
@@ -242,6 +251,8 @@ async def review_structure(args: dict[str, Any]) -> dict[str, Any]:
         "Review this structure thoroughly and provide your assessment."
     )
 
+    logger.info("review_structure: calling query()...")
+    t0 = time.monotonic()
     try:
         response_parts = []
         async for message in query(
@@ -257,9 +268,13 @@ async def review_structure(args: dict[str, Any]) -> dict[str, Any]:
                     if hasattr(block, "text"):
                         response_parts.append(block.text)
 
+        elapsed = time.monotonic() - t0
+        logger.info("review_structure: query completed in %.2fs", elapsed)
         review_text = "\n".join(response_parts) if response_parts else "No review generated."
         return {"content": [{"type": "text", "text": review_text}]}
     except Exception as e:
+        elapsed = time.monotonic() - t0
+        logger.error("review_structure: failed after %.2fs: %s", elapsed, e)
         return {
             "content": [{"type": "text", "text": f"Structure review failed: {e}"}],
             "is_error": True,
@@ -285,6 +300,8 @@ async def review_design(args: dict[str, Any]) -> dict[str, Any]:
         "Review every slide in detail and provide your assessment."
     )
 
+    logger.info("review_design: calling query()...")
+    t0 = time.monotonic()
     try:
         response_parts = []
         async for message in query(
@@ -300,9 +317,13 @@ async def review_design(args: dict[str, Any]) -> dict[str, Any]:
                     if hasattr(block, "text"):
                         response_parts.append(block.text)
 
+        elapsed = time.monotonic() - t0
+        logger.info("review_design: query completed in %.2fs", elapsed)
         review_text = "\n".join(response_parts) if response_parts else "No review generated."
         return {"content": [{"type": "text", "text": review_text}]}
     except Exception as e:
+        elapsed = time.monotonic() - t0
+        logger.error("review_design: failed after %.2fs: %s", elapsed, e)
         return {
             "content": [{"type": "text", "text": f"Design review failed: {e}"}],
             "is_error": True,

@@ -4,12 +4,18 @@ A Streamlit chat application that generates FUJISOFT America-branded
 presentations using the Claude Agent SDK and domain expert skills.
 """
 
+import logging
+
 import streamlit as st
 from pathlib import Path
 
-from config.settings import APP_TITLE, APP_ICON, SUPPORTED_LANGUAGES, OUTPUT_DIR
+from config.settings import APP_TITLE, APP_ICON, SUPPORTED_LANGUAGES, OUTPUT_DIR, setup_logging
 from agent.client import PresentationAgent
 from agent.async_bridge import AsyncBridge
+
+# Initialize logging once at module load
+setup_logging()
+logger = logging.getLogger(__name__)
 
 # --- Page Config ---
 st.set_page_config(
@@ -80,6 +86,7 @@ with st.sidebar:
         format_func=lambda x: "English" if x == "EN" else "日本語",
     )
     if language != st.session_state.language:
+        logger.info("Language changed: %s -> %s", st.session_state.language, language)
         st.session_state.language = language
         # Reset agent to apply new language
         if st.session_state.agent:
@@ -96,6 +103,7 @@ with st.sidebar:
     # New conversation button
     label_new = "New Conversation" if language == "EN" else "新しい会話"
     if st.button(label_new, use_container_width=True):
+        logger.info("New conversation requested")
         if st.session_state.agent:
             try:
                 st.session_state.bridge.run(st.session_state.agent.disconnect())
@@ -146,19 +154,31 @@ _TOOL_LABELS = {
 
 # --- Helper Functions ---
 async def _stream_agent_response(agent, user_input, on_tool, on_text):
-    """Consume streaming response and invoke callbacks for live progress."""
-    parts = []
+    """Consume streaming response and invoke callbacks for live progress.
+
+    Handles both token-level deltas (text_delta) from StreamEvent and
+    block-level text from AssistantMessage as fallback.
+    """
+    accumulated = []
+    has_deltas = False
     async for chunk in agent.send_message_streaming(user_input):
         ctype = chunk["type"]
-        if ctype == "text":
-            parts.append(chunk["content"])
-            on_text("\n".join(parts))
+        if ctype == "text_delta":
+            has_deltas = True
+            accumulated.append(chunk["content"])
+            on_text("".join(accumulated))
+        elif ctype == "text":
+            if not has_deltas:
+                # Fallback: no StreamEvent deltas, use block-level text
+                accumulated.append(chunk["content"])
+                on_text("".join(accumulated))
+                logger.debug("Fallback to block-level text")
         elif ctype == "tool_use":
             on_tool(chunk["content"])
         elif ctype == "error":
-            parts.append(f"\n\n⚠️ {chunk['content']}")
-            on_text("\n".join(parts))
-    return "\n".join(parts) if parts else "(No response)"
+            accumulated.append(f"\n\n⚠️ {chunk['content']}")
+            on_text("".join(accumulated))
+    return "".join(accumulated) if accumulated else "(No response)"
 
 
 def _check_for_generated_files():
@@ -197,6 +217,7 @@ placeholder = (
 )
 
 if user_input := st.chat_input(placeholder):
+    logger.info("User message received (%d chars)", len(user_input))
     # Display user message
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
@@ -232,8 +253,9 @@ if user_input := st.chat_input(placeholder):
                 status_placeholder.status(f"🔧 {label}...", state="running")
 
             def _on_text(text):
-                response_placeholder.markdown(text)
+                response_placeholder.markdown(text + " ▌")
 
+            logger.info("Streaming response for user input (%d chars)", len(user_input))
             full_response = st.session_state.bridge.run(
                 _stream_agent_response(
                     st.session_state.agent,
@@ -243,6 +265,7 @@ if user_input := st.chat_input(placeholder):
                 )
             )
         except Exception as e:
+            logger.error("Response failed: %s", e, exc_info=True)
             full_response = f"Error: {str(e)}"
 
         status_placeholder.empty()
@@ -250,8 +273,13 @@ if user_input := st.chat_input(placeholder):
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-    # Check if a PDF was generated
+    # Check if a PDF/HTML was generated and rerun to update sidebar
+    old_pdf = st.session_state.current_pdf_path
+    old_html = st.session_state.current_html_path
     _check_for_generated_files()
+    if (st.session_state.current_pdf_path != old_pdf
+            or st.session_state.current_html_path != old_html):
+        st.rerun()
 
 # --- Slide Preview ---
 if st.session_state.current_html_path:
