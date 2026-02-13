@@ -82,3 +82,10 @@ reviews/
 
 # Project plans (contains confidential budget information)
 project-plans/
+
+# Environment files
+.env
+
+# Generated output
+fsi-slide-studio/output/
+fsi-slide-studio/logs/
