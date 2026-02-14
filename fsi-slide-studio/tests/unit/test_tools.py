@@ -225,7 +225,7 @@ class TestReviewDesign:
 
 
 class TestCreatePresentationToolsServer:
-    def test_creates_server_with_six_tools(self):
+    def test_creates_server_with_seven_tools(self):
         import claude_agent_sdk
 
         claude_agent_sdk.create_sdk_mcp_server.reset_mock()

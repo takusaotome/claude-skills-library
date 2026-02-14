@@ -66,3 +66,22 @@ class TestAsyncBridge:
         id2 = bridge.run(get_loop_id())
         assert id1 == id2
         bridge.shutdown()
+
+    def test_shutdown_cancels_pending_tasks(self):
+        bridge = AsyncBridge()
+        pending_tasks = []
+
+        async def never_ending():
+            await asyncio.sleep(3600)
+
+        async def schedule_pending():
+            task = asyncio.ensure_future(never_ending())
+            pending_tasks.append(task)
+
+        bridge.run(schedule_pending())
+        assert len(pending_tasks) == 1
+        assert not pending_tasks[0].done()
+
+        bridge.shutdown()
+        assert not bridge.is_alive
+        assert pending_tasks[0].cancelled()

@@ -147,8 +147,12 @@ class PresentationAgent:
                 # (text blocks are already handled token-by-token via StreamEvent)
                 for block in message.content:
                     if isinstance(block, ToolUseBlock):
-                        # Only yield if StreamEvent didn't already catch it
-                        logger.debug("AssistantMessage ToolUseBlock: %s", block.name)
+                        logger.debug("AssistantMessage ToolUseBlock: %s (input=%s)", block.name, block.input)
+                        yield {
+                            "type": "tool_use_complete",
+                            "content": block.name,
+                            "input": block.input,
+                        }
                     elif isinstance(block, ToolResultBlock):
                         content_str = ""
                         if isinstance(block.content, str):

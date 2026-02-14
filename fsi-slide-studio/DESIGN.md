@@ -119,8 +119,8 @@ skills/catalog.py              ← YAML + 自動検出を統合し、以下の�
          │
          │ load_skill_content() は以下のパスからスキルを読み込む:
          ▼
-SKILLS_LIBRARY_PATH            ← 親リポジトリの skills/ ディレクトリ
-  (default: ../skills)            (claude-skills-library/skills/)
+SKILLS_LIBRARY_PATH            ← シブリングリポジトリの skills/ ディレクトリ
+  (default: ../claude-skills-library/skills/)
          │
          ├── financial-analyst/SKILL.md        ← YAML 登録済み (Finance)
          ├── financial-analyst/references/*.md
@@ -471,8 +471,7 @@ Agent: 「PDF生成完了！品質レビュー結果のサマリーです:
 | `agent/client.py` | `send_message_streaming()` async generator, StreamEvent 対応, 7ツール許可リスト, `add_dirs=[PROJECT_ROOT]` (CLAUDE.md 自動読込) |
 | `agent/tool_activity.py` | **新規ファイル**: ツール完了ラベル定義, キャプション生成 (7ツール対応) |
 | `agent/async_bridge.py` | **新規ファイル**: 永続イベントループ, `run()` / `shutdown()` / `is_alive`, Streamlit rerun 耐性 |
-| `skills/catalog.py` | リファレンスファイル 3000-byte truncation |
+| `skills/catalog.py` | リファレンスファイル 3000-byte truncation, 自動検出機能（YAML 未登録スキルをディスクスキャンで "Other" に自動追加, SKILL.md フロントマターから description 抽出）, 合計 63 スキル利用可能 |
 | `config/skill_categories.yaml` | 13カテゴリ, 44 curated スキル（Salesforce・Presentation カテゴリ追加） |
-| `skills/catalog.py` | 自動検出機能追加: YAML 未登録スキルをディスクスキャンで "Other" に自動追加。SKILL.md フロントマターから description 抽出。合計 63 スキル利用可能 |
 | `converter/marp.py` | `convert_marp_to_html()`, `render_mermaid_to_png()` 関数追加, PDF 変換成功時に `.md` ソース保存 |
 | `config/settings.py` | `OUTPUT_DIR` / `LOG_DIR` の `mkdir(exist_ok=True)` 自動作成, `setup_logging()`, デフォルト言語 JP |

@@ -239,7 +239,8 @@ async def _stream_agent_response(agent, user_input, on_tool, on_text):
             on_tool(chunk["content"])
         elif ctype == "tool_use_complete":
             activity = format_tool_activity(chunk["content"], chunk.get("input", {}))
-            tool_activities.append(activity)
+            if activity is not None:
+                tool_activities.append(activity)
         elif ctype == "error":
             accumulated.append(f"\n\n⚠️ {chunk['content']}")
             on_text("".join(accumulated))
