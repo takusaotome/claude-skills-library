@@ -5,7 +5,6 @@ from pathlib import Path
 
 from config.settings import (
     PROJECT_ROOT,
-    REPO_ROOT,
     SKILLS_LIBRARY_PATH,
     DEFAULT_MODEL,
     APP_TITLE,
@@ -19,9 +18,6 @@ from config.settings import (
 class TestPaths:
     def test_project_root_is_directory(self):
         assert PROJECT_ROOT.is_dir()
-
-    def test_repo_root_is_parent_of_project_root(self):
-        assert REPO_ROOT == PROJECT_ROOT.parent
 
     def test_skills_library_path_is_directory(self):
         assert SKILLS_LIBRARY_PATH.is_dir()

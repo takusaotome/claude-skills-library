@@ -175,22 +175,6 @@ cp -r ./skills/skill-name ~/.claude/commands/   # ❌ WRONG
 - [ ] **Available Skills (Detailed)** セクションに概要・When to use・Key Features を追加する
 - [ ] **Version History** セクションの先頭にバージョンエントリを追加する
 
-## Development Rules (MANDATORY)
-
-### TDD (Test-Driven Development)
-
-This project follows strict TDD. When writing any code, **always use the `tdd-developer` skill** and follow this cycle:
-
-1. **RED**: Write failing tests first that define the expected behavior
-2. **GREEN**: Write the minimum code to make the tests pass
-3. **REFACTOR**: Clean up the code while keeping tests green
-
-**Rules:**
-- Never write production code without a corresponding test
-- Run tests after every change: `cd fsi-slide-studio && python3 -m pytest tests/ -v`
-- New MCP tools require both converter-layer tests (`test_marp.py`) and tool-layer tests (`test_tools.py`)
-- Test files live in `fsi-slide-studio/tests/unit/`
-
 ## Key Standards and Frameworks
 
 Skills in this library follow industry standards:

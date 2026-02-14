@@ -20,14 +20,15 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 WORKDIR /app
 
 # Install Python dependencies
-COPY fsi-slide-studio/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY fsi-slide-studio/ .
+COPY . .
 
-# Copy skills library (read at runtime for domain knowledge)
-COPY skills/ /app/skills-library/
+# Skills library is NOT baked in — set SKILLS_LIBRARY_PATH at runtime
+# For Docker: mount or copy skills separately
+# docker run -v /path/to/skills:/app/skills-library -e SKILLS_LIBRARY_PATH=/app/skills-library ...
 
 EXPOSE 8501
 

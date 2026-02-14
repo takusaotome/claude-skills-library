@@ -86,6 +86,3 @@ project-plans/
 # Environment files
 .env
 
-# Generated output
-fsi-slide-studio/output/
-fsi-slide-studio/logs/

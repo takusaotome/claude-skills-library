@@ -36,7 +36,6 @@ Skill Library (63 skills with auto-discovery + MARP template)
 ### Installation
 
 ```bash
-cd fsi-slide-studio
 pip install -r requirements.txt
 npm install -g @marp-team/marp-cli
 ```
@@ -61,7 +60,7 @@ streamlit run app.py
 | `ANTHROPIC_API_KEY` | (required) | Anthropic API key |
 | `CLAUDE_MODEL` | `claude-sonnet-4-5-20250929` | Claude model to use |
 | `LOG_LEVEL` | `INFO` | Logging level |
-| `SKILLS_LIBRARY_PATH` | `../skills` | Path to the skills library directory |
+| `SKILLS_LIBRARY_PATH` | `../claude-skills-library/skills` | Path to the skills library directory |
 
 ## Docker Deployment
 

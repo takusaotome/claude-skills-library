@@ -10,9 +10,9 @@ load_dotenv()
 
 # Paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-REPO_ROOT = PROJECT_ROOT.parent
+_DEFAULT_SKILLS_PATH = str(PROJECT_ROOT.parent / "claude-skills-library" / "skills")
 SKILLS_LIBRARY_PATH = Path(
-    os.getenv("SKILLS_LIBRARY_PATH", str(REPO_ROOT / "skills"))
+    os.getenv("SKILLS_LIBRARY_PATH", _DEFAULT_SKILLS_PATH)
 )
 PRESENTATION_TEMPLATE_PATH = (
     SKILLS_LIBRARY_PATH

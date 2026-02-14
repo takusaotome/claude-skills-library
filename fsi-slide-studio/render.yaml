@@ -2,7 +2,7 @@ services:
   - type: web
     name: fsi-slide-studio
     runtime: docker
-    dockerfilePath: fsi-slide-studio/Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: .
     plan: standard
     region: oregon
