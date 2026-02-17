@@ -584,7 +584,10 @@ class AIPatternDetector:
         high_metaphors = [
             (r"羅針盤", "羅針盤"),
             (r"(?:道の)?地図(?:を描く|となる)", "地図"),
-            (r"設計書|青写真", "設計書/青写真"),
+            # Treat "設計書" as a stock metaphor only in metaphorical contexts.
+            # Literal document titles like "在庫連携バッチ 設計書" should not be flagged.
+            (r"青写真", "設計書/青写真"),
+            (r"(?:[^\s。、「」『』()（）]+の)?設計書(?:として機能(?:し|する|します)?|となる|となります|になる|になります)", "設計書/青写真"),
             (r"(?:企業|組織|チーム)の?DNA", "DNA"),
             (r"車の両輪", "車の両輪"),
             (r"潤滑油", "潤滑油"),

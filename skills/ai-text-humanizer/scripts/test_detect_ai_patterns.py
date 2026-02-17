@@ -77,6 +77,40 @@ class TestPattern1DocTypeAwareness(unittest.TestCase):
         self.assertFalse(any(m.pattern_name == "見出しマーカー" for m in p1.matches))
 
 
+class TestPattern6DesignDocVsMetaphor(unittest.TestCase):
+    """Pattern 6: avoid literal '設計書' false positives while keeping metaphor detection."""
+
+    def test_literal_design_doc_title_not_detected(self):
+        detector = AIPatternDetector(doc_type="structured")
+        text = "## 在庫連携バッチ 設計書（概要）\n本文です。"
+        result = detector.detect_all(text)
+        p6 = result.pattern_results[5]
+        self.assertFalse(
+            any(m.pattern_name == "設計書/青写真" for m in p6.matches),
+            "Literal document title containing 設計書 should not be flagged as stock metaphor",
+        )
+
+    def test_metaphorical_designbook_detected(self):
+        detector = AIPatternDetector()
+        text = "この方針は現場改革の設計書となります。"
+        result = detector.detect_all(text)
+        p6 = result.pattern_results[5]
+        self.assertTrue(
+            any(m.pattern_name == "設計書/青写真" for m in p6.matches),
+            "Metaphorical use like '〜の設計書となる' should be detected",
+        )
+
+    def test_blueprint_detected(self):
+        detector = AIPatternDetector()
+        text = "この計画は次の3年の青写真です。"
+        result = detector.detect_all(text)
+        p6 = result.pattern_results[5]
+        self.assertTrue(
+            any(m.pattern_name == "設計書/青写真" for m in p6.matches),
+            "青写真 should continue to be detected",
+        )
+
+
 class TestPattern4SmokeTests(unittest.TestCase):
     """Smoke tests — existing Pattern 4 hedge detection should not break."""
 

@@ -1,5 +1,5 @@
 {
-  "total_score": 41.0,
+  "total_score": 34.0,
   "level": "Slightly AI",
   "doc_type": "structured",
   "char_count": 503,
@@ -101,21 +101,11 @@
     {
       "id": 6,
       "name": "定型メタファー",
-      "score": 15.0,
+      "score": 8.0,
       "max_score": 15.0,
-      "details": "設計書/青写真(2), 羅針盤(1), 車の両輪(1)",
-      "match_count": 4,
+      "details": "羅針盤(1), 車の両輪(1)",
+      "match_count": 2,
       "examples": [
-        {
-          "type": "設計書/青写真",
-          "text": "設計書",
-          "line": 1
-        },
-        {
-          "type": "設計書/青写真",
-          "text": "設計書",
-          "line": 4
-        },
         {
           "type": "羅針盤",
           "text": "羅針盤",
