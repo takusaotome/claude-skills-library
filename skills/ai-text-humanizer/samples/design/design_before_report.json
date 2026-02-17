@@ -1,6 +1,7 @@
 {
-  "total_score": 56.0,
-  "level": "Clearly AI",
+  "total_score": 41.0,
+  "level": "Slightly AI",
+  "doc_type": "structured",
   "char_count": 503,
   "paragraph_count": 7,
   "sentence_count": 28,
@@ -8,37 +9,11 @@
     {
       "id": 1,
       "name": "視覚的マーカー残存",
-      "score": 15.0,
+      "score": 0.0,
       "max_score": 15.0,
-      "details": "見出しマーカー(7)",
-      "match_count": 7,
-      "examples": [
-        {
-          "type": "見出しマーカー",
-          "text": "## 在庫連携バッチ 設計書（概要）",
-          "line": 1
-        },
-        {
-          "type": "見出しマーカー",
-          "text": "### 1. 目的",
-          "line": 3
-        },
-        {
-          "type": "見出しマーカー",
-          "text": "### 2. 構成",
-          "line": 6
-        },
-        {
-          "type": "見出しマーカー",
-          "text": "### 3. 処理フロー",
-          "line": 12
-        },
-        {
-          "type": "見出しマーカー",
-          "text": "### 4. エラーハンドリング",
-          "line": 18
-        }
-      ]
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
     },
     {
       "id": 2,

@@ -48,6 +48,35 @@ class TestPattern1SmokeTests(unittest.TestCase):
         self.assertTrue(any(m.pattern_name == "エムダッシュ" for m in p1.matches))
 
 
+class TestPattern1DocTypeAwareness(unittest.TestCase):
+    """Pattern 1: structural markdown scoring should depend on doc_type."""
+
+    def test_heading_and_bullets_not_scored_in_structured_doc(self):
+        detector = AIPatternDetector(doc_type="structured")
+        text = "## 設計概要\n- 項目A\n- 項目B\n本文です。"
+        result = detector.detect_all(text)
+        p1 = result.pattern_results[0]
+        self.assertFalse(any(m.pattern_name == "見出しマーカー" for m in p1.matches))
+        self.assertFalse(any(m.pattern_name == "箇条書き過多" for m in p1.matches))
+        self.assertEqual(result.doc_type, "structured")
+
+    def test_heading_scored_in_email_doc(self):
+        detector = AIPatternDetector(doc_type="email")
+        text = "## 件名: ご連絡\n本文です。"
+        result = detector.detect_all(text)
+        p1 = result.pattern_results[0]
+        self.assertTrue(any(m.pattern_name == "見出しマーカー" for m in p1.matches))
+        self.assertEqual(result.doc_type, "email")
+
+    def test_auto_doc_type_resolves_structured_with_table(self):
+        detector = AIPatternDetector()
+        text = "## 見積書\n\n| 項目 | 金額 |\n|---|---:|\n| 実装 | 100 |\n"
+        result = detector.detect_all(text)
+        self.assertEqual(result.doc_type, "structured")
+        p1 = result.pattern_results[0]
+        self.assertFalse(any(m.pattern_name == "見出しマーカー" for m in p1.matches))
+
+
 class TestPattern4SmokeTests(unittest.TestCase):
     """Smoke tests — existing Pattern 4 hedge detection should not break."""
 

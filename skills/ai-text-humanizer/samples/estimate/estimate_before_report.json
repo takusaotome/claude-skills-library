@@ -1,6 +1,7 @@
 {
-  "total_score": 42.5,
+  "total_score": 27.5,
   "level": "Slightly AI",
+  "doc_type": "structured",
   "char_count": 453,
   "paragraph_count": 6,
   "sentence_count": 17,
@@ -8,37 +9,11 @@
     {
       "id": 1,
       "name": "視覚的マーカー残存",
-      "score": 15.0,
+      "score": 0.0,
       "max_score": 15.0,
-      "details": "見出しマーカー(5)",
-      "match_count": 5,
-      "examples": [
-        {
-          "type": "見出しマーカー",
-          "text": "## 見積書（ドラフト）",
-          "line": 1
-        },
-        {
-          "type": "見出しマーカー",
-          "text": "### 1. 概要",
-          "line": 3
-        },
-        {
-          "type": "見出しマーカー",
-          "text": "### 2. 見積内訳",
-          "line": 6
-        },
-        {
-          "type": "見出しマーカー",
-          "text": "### 3. 前提条件",
-          "line": 15
-        },
-        {
-          "type": "見出しマーカー",
-          "text": "### 4. 補足",
-          "line": 20
-        }
-      ]
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
     },
     {
       "id": 2,

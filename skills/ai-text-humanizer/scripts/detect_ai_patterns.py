@@ -36,6 +36,7 @@ class AnalysisResult:
     """Complete analysis result."""
     total_score: float
     level: str
+    doc_type: str
     char_count: int
     paragraph_count: int
     sentence_count: int
@@ -103,6 +104,8 @@ class TextAnalyzer:
 class AIPatternDetector:
     """Detect 6 AI writing patterns and calculate AI-smell score."""
 
+    DOC_TYPES = {"auto", "email", "chat", "blog", "structured"}
+
     PATTERN_NAMES = {
         1: "視覚的マーカー残存",
         2: "単調なリズム",
@@ -121,15 +124,44 @@ class AIPatternDetector:
         6: 15.0,
     }
 
-    def __init__(self):
+    def __init__(self, doc_type: str = "auto"):
+        if doc_type not in self.DOC_TYPES:
+            raise ValueError(f"Unknown doc_type: {doc_type}. Choose from {sorted(self.DOC_TYPES)}")
         self.analyzer = TextAnalyzer()
+        self.doc_type = doc_type
+
+    def _resolve_doc_type(self, text: str) -> str:
+        """Resolve document type in auto mode with lightweight heuristics."""
+        if self.doc_type != "auto":
+            return self.doc_type
+
+        has_table = bool(re.search(r"^\|.*\|$", text, flags=re.M))
+        has_code_fence = "```" in text
+        has_heading = bool(re.search(r"^#{1,6}\s", text, flags=re.M))
+        has_structured_keyword = bool(
+            re.search(r"(見積書|提案書|報告書|仕様書|設計書|README|readme|要件定義|設計資料)", text)
+        )
+        has_email_marker = bool(re.search(r"^件名[:：]", text, flags=re.M)) or "お疲れ様です" in text
+
+        if has_table or has_code_fence or has_structured_keyword:
+            return "structured"
+        if has_heading and len(text) >= 500:
+            return "blog"
+        if has_email_marker:
+            return "email"
+        return "chat"
+
+    @staticmethod
+    def _allows_structural_markdown(resolved_doc_type: str) -> bool:
+        return resolved_doc_type in {"blog", "structured"}
 
     def detect_all(self, text: str) -> AnalysisResult:
+        resolved_doc_type = self._resolve_doc_type(text)
         sentences = self.analyzer.split_sentences(text)
         lines = text.split("\n")
 
         results = [
-            self._detect_pattern1(text, lines),
+            self._detect_pattern1(text, lines, resolved_doc_type),
             self._detect_pattern2(text, sentences),
             self._detect_pattern3(text, lines, sentences),
             self._detect_pattern4(text, sentences, lines),
@@ -143,6 +175,7 @@ class AIPatternDetector:
         return AnalysisResult(
             total_score=round(total, 1),
             level=level,
+            doc_type=resolved_doc_type,
             char_count=self.analyzer.count_chars(text),
             paragraph_count=self.analyzer.count_paragraphs(text),
             sentence_count=len(sentences),
@@ -159,10 +192,11 @@ class AIPatternDetector:
         else:
             return "Strongly AI"
 
-    def _detect_pattern1(self, text: str, lines: list) -> PatternResult:
+    def _detect_pattern1(self, text: str, lines: list, resolved_doc_type: str) -> PatternResult:
         """Pattern 1: Visual Marker Residue."""
         matches = []
         score = 0.0
+        allow_structural_markdown = self._allows_structural_markdown(resolved_doc_type)
 
         # Bold markers
         for i, line in enumerate(lines):
@@ -171,10 +205,11 @@ class AIPatternDetector:
                 score += 3.0
 
         # Heading markers
-        for i, line in enumerate(lines):
-            if re.match(r"^#{1,6}\s", line):
-                matches.append(PatternMatch(1, "見出しマーカー", line.strip()[:50], i + 1, 3.0))
-                score += 3.0
+        if not allow_structural_markdown:
+            for i, line in enumerate(lines):
+                if re.match(r"^#{1,6}\s", line):
+                    matches.append(PatternMatch(1, "見出しマーカー", line.strip()[:50], i + 1, 3.0))
+                    score += 3.0
 
         # Em dash
         for i, line in enumerate(lines):
@@ -203,10 +238,11 @@ class AIPatternDetector:
                 score += 3.0
 
         # Bullet points ratio
-        bullet_lines = sum(1 for line in lines if re.match(r"^\s*[-•]\s", line))
-        if lines and bullet_lines / len(lines) > 0.3:
-            matches.append(PatternMatch(1, "箇条書き過多", f"箇条書き{bullet_lines}/{len(lines)}行 ({bullet_lines/len(lines)*100:.0f}%)", 0, 5.0))
-            score += 5.0
+        if not allow_structural_markdown:
+            bullet_lines = sum(1 for line in lines if re.match(r"^\s*[-•]\s", line))
+            if lines and bullet_lines / len(lines) > 0.3:
+                matches.append(PatternMatch(1, "箇条書き過多", f"箇条書き{bullet_lines}/{len(lines)}行 ({bullet_lines/len(lines)*100:.0f}%)", 0, 5.0))
+                score += 5.0
 
         max_score = self.PATTERN_MAX_SCORES[1]
         return PatternResult(
@@ -622,6 +658,7 @@ def format_report(result: AnalysisResult) -> str:
     lines.append(f"|------|-------|")
     lines.append(f"| AI臭スコア | **{result.total_score}** / 100 |")
     lines.append(f"| 判定 | {result.level} |")
+    lines.append(f"| 文書種別 | {result.doc_type} |")
     lines.append(f"| 文字数 | {result.char_count} 文字 |")
     lines.append(f"| 段落数 | {result.paragraph_count} 段落 |")
     lines.append(f"| 文数 | {result.sentence_count} 文 |")
@@ -675,6 +712,7 @@ def format_json(result: AnalysisResult) -> str:
     data = {
         "total_score": result.total_score,
         "level": result.level,
+        "doc_type": result.doc_type,
         "char_count": result.char_count,
         "paragraph_count": result.paragraph_count,
         "sentence_count": result.sentence_count,
@@ -718,6 +756,12 @@ def main():
         default="utf-8",
         help="Input file encoding (default: utf-8)",
     )
+    parser.add_argument(
+        "--doc-type",
+        choices=["auto", "email", "chat", "blog", "structured"],
+        default="auto",
+        help="Document type for markdown-aware detection (default: auto)",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input_file)
@@ -746,7 +790,7 @@ def main():
         print("Error: Input file is empty", file=sys.stderr)
         sys.exit(1)
 
-    detector = AIPatternDetector()
+    detector = AIPatternDetector(doc_type=args.doc_type)
     result = detector.detect_all(text)
 
     if args.format == "json":
