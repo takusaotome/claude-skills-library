@@ -196,6 +196,12 @@ class AIPatternDetector:
                 matches.append(PatternMatch(1, "括弧過多", f"段落内に{paren_count}個の（）", 0, 5.0))
                 score += 5.0
 
+        # Nested quotation marks
+        for i, line in enumerate(lines):
+            for m in re.finditer(r"「[^」]*『[^』]*』[^」]*」", line):
+                matches.append(PatternMatch(1, "入れ子引用符", m.group()[:40], i + 1, 3.0))
+                score += 3.0
+
         # Bullet points ratio
         bullet_lines = sum(1 for line in lines if re.match(r"^\s*[-•]\s", line))
         if lines and bullet_lines / len(lines) > 0.3:
@@ -227,14 +233,16 @@ class AIPatternDetector:
             matches.append(PatternMatch(2, "文末連続", f"同一文末{max_consec}連続", 0, 5.0))
             score += 5.0
 
-        # Excessive conjunctions
-        conj_pattern = r"^(また|さらに|そして|しかし|一方で|一方|加えて|つまり|なお|ただし|しかしながら|したがって|このように|それゆえ|このため)[、，]\s*"
-        conj_count = 0
+        # Excessive conjunctions (sentence-based to catch mid-line conjunctions)
         lines = text.split("\n")
-        for i, line in enumerate(lines):
-            if re.match(conj_pattern, line.strip()):
+        conj_pattern = r"^(また|さらに|そして|しかし|一方で|一方|加えて|つまり|なお|ただし|しかしながら|したがって|このように|それゆえ|このため)[、，]"
+        conj_count = 0
+        for sent in sentences:
+            if re.match(conj_pattern, sent):
                 conj_count += 1
-                matches.append(PatternMatch(2, "接続詞開始", line.strip()[:30], i + 1, 0))
+                pos = text.find(sent)
+                line_num = text[:pos].count("\n") + 1 if pos >= 0 else 0
+                matches.append(PatternMatch(2, "接続詞開始", sent[:30], line_num, 0))
 
         if sentences:
             conj_ratio = conj_count / len(sentences)
@@ -329,6 +337,16 @@ class AIPatternDetector:
                     matches.append(PatternMatch(3, "ステップ表記", line.strip()[:40], i + 1, 3.0))
                     score += 3.0
 
+        # Exhaustive listing (3+ comma-separated items, 2+ occurrences)
+        listing_pattern = r"[^、。\n]+[、，][^、。\n]+[、，][^、。\n]+"
+        listing_count = 0
+        for i, line in enumerate(lines):
+            if re.search(listing_pattern, line):
+                listing_count += 1
+        if listing_count >= 2:
+            matches.append(PatternMatch(3, "網羅的列挙", "3項目以上の並列列挙が%d回" % listing_count, 0, 5.0))
+            score += 5.0
+
         # Weak conclusion
         if lines:
             weak_patterns = [
@@ -392,17 +410,20 @@ class AIPatternDetector:
                     matches.append(PatternMatch(4, name, f"...{line[max(0,m.start()-15):m.end()]}...", i + 1, 3.0))
                     score += 3.0
 
-        # Forced neutrality
+        # Forced neutrality (paragraph-based, counting occurrences not unique patterns)
         neutral_patterns = [
             r"一方で",
             r"他方では",
             r"という見方もあります",
             r"という意見もあります",
         ]
-        for i, line in enumerate(lines):
-            neutral_count = sum(1 for pat in neutral_patterns if re.search(pat, line))
+        paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+        for para in paragraphs:
+            neutral_count = sum(len(re.findall(pat, para)) for pat in neutral_patterns)
             if neutral_count >= 2:
-                matches.append(PatternMatch(4, "強制中立", line.strip()[:50], i + 1, 5.0))
+                para_pos = text.find(para)
+                line_num = text[:para_pos].count("\n") + 1 if para_pos >= 0 else 0
+                matches.append(PatternMatch(4, "強制中立", para[:50], line_num, 5.0))
                 score += 5.0
 
         # Weak negation
@@ -421,6 +442,7 @@ class AIPatternDetector:
             (r"傾向にあります", "断定回避"),
             (r"ことが多いです", "断定回避"),
             (r"一般的に", "断定回避"),
+            (r"個人の見解であり", "免責表現"),
             (r"ケースバイケースで", "免責表現"),
             (r"状況によって異なり", "免責表現"),
         ]
@@ -497,6 +519,15 @@ class AIPatternDetector:
             for mod in spinning_mods:
                 if mod in line:
                     matches.append(PatternMatch(5, "修飾語の空転", mod, i + 1, 1.5))
+                    score += 1.5
+
+        # Buzzwords
+        buzzwords = ["シナジー", "レバレッジ", "スケーラブル", "アジャイル",
+                     "イニシアチブ", "コンセンサス", "プロアクティブ"]
+        for i, line in enumerate(lines):
+            for word in buzzwords:
+                if word in line:
+                    matches.append(PatternMatch(5, "バズワード", word, i + 1, 1.5))
                     score += 1.5
 
         max_score = self.PATTERN_MAX_SCORES[5]

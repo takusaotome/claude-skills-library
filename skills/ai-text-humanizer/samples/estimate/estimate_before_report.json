@@ -1,0 +1,133 @@
+{
+  "total_score": 42.5,
+  "level": "Slightly AI",
+  "char_count": 453,
+  "paragraph_count": 6,
+  "sentence_count": 17,
+  "patterns": [
+    {
+      "id": 1,
+      "name": "視覚的マーカー残存",
+      "score": 15.0,
+      "max_score": 15.0,
+      "details": "見出しマーカー(5)",
+      "match_count": 5,
+      "examples": [
+        {
+          "type": "見出しマーカー",
+          "text": "## 見積書（ドラフト）",
+          "line": 1
+        },
+        {
+          "type": "見出しマーカー",
+          "text": "### 1. 概要",
+          "line": 3
+        },
+        {
+          "type": "見出しマーカー",
+          "text": "### 2. 見積内訳",
+          "line": 6
+        },
+        {
+          "type": "見出しマーカー",
+          "text": "### 3. 前提条件",
+          "line": 15
+        },
+        {
+          "type": "見出しマーカー",
+          "text": "### 4. 補足",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "単調なリズム",
+      "score": 8.0,
+      "max_score": 20.0,
+      "details": "文末連続(1), 機械的閉じ方(1)",
+      "match_count": 2,
+      "examples": [
+        {
+          "type": "文末連続",
+          "text": "同一文末3連続",
+          "line": 0
+        },
+        {
+          "type": "機械的閉じ方",
+          "text": "要です。適切なアプローチにより、飛躍的な成果が期待されます。",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "マニュアル的構成",
+      "score": 10.0,
+      "max_score": 20.0,
+      "details": "網羅的列挙(1), 薄い結論(1)",
+      "match_count": 2,
+      "examples": [
+        {
+          "type": "網羅的列挙",
+          "text": "3項目以上の並列列挙が2回",
+          "line": 0
+        },
+        {
+          "type": "薄い結論",
+          "text": "すだけでなく、プロジェクト成功の設計書として機能することが重要です。適切なアプローチにより、飛躍的な成果が期待されます。",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "非コミット姿勢",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 5,
+      "name": "抽象語の濫用",
+      "score": 5.5,
+      "max_score": 15.0,
+      "details": "空疎な抽象語(1), 実体なき名詞(1), 修飾語の空転(1)",
+      "match_count": 3,
+      "examples": [
+        {
+          "type": "空疎な抽象語",
+          "text": "包括的",
+          "line": 4
+        },
+        {
+          "type": "実体なき名詞",
+          "text": "アプローチ",
+          "line": 21
+        },
+        {
+          "type": "修飾語の空転",
+          "text": "適切な",
+          "line": 21
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "定型メタファー",
+      "score": 4.0,
+      "max_score": 15.0,
+      "details": "設計書/青写真(1)",
+      "match_count": 1,
+      "examples": [
+        {
+          "type": "設計書/青写真",
+          "text": "設計書",
+          "line": 21
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "total_score": 25.0,
+  "level": "Natural",
+  "char_count": 314,
+  "paragraph_count": 6,
+  "sentence_count": 12,
+  "patterns": [
+    {
+      "id": 1,
+      "name": "視覚的マーカー残存",
+      "score": 15.0,
+      "max_score": 15.0,
+      "details": "太字マーカー(3), 見出しマーカー(1), 括弧過多(1)",
+      "match_count": 5,
+      "examples": [
+        {
+          "type": "太字マーカー",
+          "text": "**進捗確認**",
+          "line": 11
+        },
+        {
+          "type": "太字マーカー",
+          "text": "**課題整理**",
+          "line": 11
+        },
+        {
+          "type": "太字マーカー",
+          "text": "**次フェーズ方針**",
+          "line": 11
+        },
+        {
+          "type": "見出しマーカー",
+          "text": "## 件名: 来週の打ち合わせ日程について",
+          "line": 1
+        },
+        {
+          "type": "括弧過多",
+          "text": "段落内に3個の（）",
+          "line": 0
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "単調なリズム",
+      "score": 10.0,
+      "max_score": 20.0,
+      "details": "文末連続(1), 接続詞開始(3)",
+      "match_count": 4,
+      "examples": [
+        {
+          "type": "文末連続",
+          "text": "同一文末3連続",
+          "line": 0
+        },
+        {
+          "type": "接続詞開始",
+          "text": "また、議題としては、**進捗確認**、**課題整理**、**",
+          "line": 11
+        },
+        {
+          "type": "接続詞開始",
+          "text": "さらに、必要に応じて体制面の見直しについても議論したいと考え",
+          "line": 11
+        },
+        {
+          "type": "接続詞開始",
+          "text": "一方で、参加者の都合によっては議題の優先順位を調整する可能性",
+          "line": 11
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "マニュアル的構成",
+      "score": 0.0,
+      "max_score": 20.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 4,
+      "name": "非コミット姿勢",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 5,
+      "name": "抽象語の濫用",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 6,
+      "name": "定型メタファー",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    }
+  ]
+}

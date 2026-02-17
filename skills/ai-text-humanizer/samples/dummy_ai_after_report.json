@@ -1,0 +1,75 @@
+{
+  "total_score": 8.0,
+  "level": "Natural",
+  "char_count": 355,
+  "paragraph_count": 4,
+  "sentence_count": 11,
+  "patterns": [
+    {
+      "id": 1,
+      "name": "視覚的マーカー残存",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 2,
+      "name": "単調なリズム",
+      "score": 3.0,
+      "max_score": 20.0,
+      "details": "not A but B(1)",
+      "match_count": 1,
+      "examples": [
+        {
+          "type": "not A but B",
+          "text": "立ち上げは小さく始めるのが現実的です。初期の投資対効果は短期では見えにくいですが",
+          "line": 5
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "マニュアル的構成",
+      "score": 5.0,
+      "max_score": 20.0,
+      "details": "網羅的列挙(1)",
+      "match_count": 1,
+      "examples": [
+        {
+          "type": "網羅的列挙",
+          "text": "3項目以上の並列列挙が2回",
+          "line": 0
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "非コミット姿勢",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 5,
+      "name": "抽象語の濫用",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 6,
+      "name": "定型メタファー",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    }
+  ]
+}

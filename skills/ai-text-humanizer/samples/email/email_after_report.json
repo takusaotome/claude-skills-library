@@ -1,0 +1,81 @@
+{
+  "total_score": 15.0,
+  "level": "Natural",
+  "char_count": 212,
+  "paragraph_count": 4,
+  "sentence_count": 9,
+  "patterns": [
+    {
+      "id": 1,
+      "name": "視覚的マーカー残存",
+      "score": 5.0,
+      "max_score": 15.0,
+      "details": "括弧過多(1)",
+      "match_count": 1,
+      "examples": [
+        {
+          "type": "括弧過多",
+          "text": "段落内に3個の（）",
+          "line": 0
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "単調なリズム",
+      "score": 5.0,
+      "max_score": 20.0,
+      "details": "文末連続(1)",
+      "match_count": 1,
+      "examples": [
+        {
+          "type": "文末連続",
+          "text": "同一文末3連続",
+          "line": 0
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "マニュアル的構成",
+      "score": 5.0,
+      "max_score": 20.0,
+      "details": "網羅的列挙(1)",
+      "match_count": 1,
+      "examples": [
+        {
+          "type": "網羅的列挙",
+          "text": "3項目以上の並列列挙が2回",
+          "line": 0
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "非コミット姿勢",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 5,
+      "name": "抽象語の濫用",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    },
+    {
+      "id": 6,
+      "name": "定型メタファー",
+      "score": 0.0,
+      "max_score": 15.0,
+      "details": "検出なし",
+      "match_count": 0,
+      "examples": []
+    }
+  ]
+}
