@@ -288,7 +288,7 @@ class ProfessionalPDF(FPDF):
         """Render body paragraph with inline markdown support."""
         self.set_font(FONT_FAMILY, "", 9.5)
         self.set_text_color(*self.theme.text_dark)
-        self.multi_cell(0, 5.5, text, markdown=True)
+        self.multi_cell(0, 5.5, text, markdown=True, align="L", wrapmode="CHAR")
         self.ln(2)
 
     def bullet_list(self, items: List[str]):
@@ -299,7 +299,7 @@ class ProfessionalPDF(FPDF):
             x = self.get_x()
             self.cell(5, 5, "\u30fb", new_x="END")
             self.cell(2)
-            self.multi_cell(0, 5, item, markdown=True)
+            self.multi_cell(0, 5, item, markdown=True, align="L", wrapmode="CHAR")
             self.set_x(x)
         self.ln(2)
 
@@ -349,6 +349,12 @@ class ProfessionalPDF(FPDF):
             size_pt=9,
         )
 
+        # Reset PDF state so _initial_style captures clean colors.
+        # font_face() captures current fill_color as the base for non-filled rows.
+        self.set_fill_color(*self.theme.white)
+        self.set_text_color(*self.theme.text_dark)
+        self.set_font(FONT_FAMILY, "", 9)
+
         with self.table(
             borders_layout=TableBordersLayout.NONE,
             cell_fill_color=DeviceRGB(*[c / 255 for c in self.theme.primary_light]),
@@ -378,6 +384,12 @@ class ProfessionalPDF(FPDF):
             emphasis="BOLD",
             size_pt=8,
         )
+
+        # Reset PDF state so _initial_style captures clean colors.
+        # font_face() captures current fill_color as the base for non-filled rows.
+        self.set_fill_color(*self.theme.white)
+        self.set_text_color(*self.theme.text_dark)
+        self.set_font(FONT_FAMILY, "", 8)
 
         with self.table(
             borders_layout=TableBordersLayout.NONE,
