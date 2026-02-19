@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (55 skills)
+├── skills/                 # All Claude Code skills (56 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (62 Skills)
+## Skill Catalog (63 Skills)
 
 ### Business Strategy & Consulting (12 skills)
 
@@ -85,7 +85,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 
-### Software Development & IT (14 skills)
+### Software Development & IT (15 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -102,6 +102,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
 | render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
 | gogcli-expert | gogcli（Google Workspace CLI）操作支援 | 13 Services, OAuth2, Multi-Account |
+| network-diagnostics | ネットワーク品質診断・ボトルネック特定 | Ping/Speed/HTTP/Traceroute, Cross-Platform |
 | office-script-expert | Office Scripts（Excel Online）開発支援 | ExcelScript API, 13 Bug Patterns, lib/Testing |
 
 ### Salesforce (4 skills)
@@ -2010,6 +2011,37 @@ Office Scripts（Excel Online / Microsoft 365）開発の専門スキル。プ�
 
 ---
 
+### 🌐 Network Diagnostics
+
+**File:** `skills/network-diagnostics/`
+
+ネットワーク品質を総合的に診断し、ボトルネックの特定と根本原因の深堀りまで行うスキル。OS標準ツールのみ使用（外部依存なし）、macOSおよびLinux対応。
+
+**When to use:**
+- ネットワーク品質の総合診断
+- 接続の遅延・速度低下の原因調査
+- レイテンシ・帯域幅・ジッターの測定
+- ネットワークヘルスレポートの生成
+
+**Key Features:**
+- 3-Phase ワークフロー: Collect → Analyze & Report → Deep-Dive
+- 接続種別（Ethernet/Wi-Fi）対応の品質閾値判定
+- 複数CDNによる速度テスト（Cloudflare, OVH, Hetzner）
+- HTTP接続タイミング分解（DNS/TCP/TLS/TTFB）
+- macOS/Linux クロスプラットフォーム対応（iproute2 + net-tools fallback）
+
+**Scripts:**
+- `network_diagnostics.py` - データ収集スクリプト（JSON出力、CLI対応）
+
+**Reference Guides:**
+- `network_quality_thresholds.md` - 品質閾値定義（接続種別×GOOD/WARNING/CRITICAL）
+- `deep_dive_procedures.md` - 6カテゴリの深堀り調査手順
+
+**Assets:**
+- `network_report_template.md` - 日本語レポートテンプレート（罫線テーブル）
+
+---
+
 ### 🌊 Streamlit Expert
 
 **File:** `skills/streamlit-expert/`
@@ -2995,6 +3027,16 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### network-diagnostics v1.0 (2026-02-18)
+- Initial release
+- ネットワーク品質の総合診断スキル（OS標準ツールのみ、外部依存なし）
+- 3-Phase ワークフロー: Collect（自動データ収集）→ Analyze & Report（閾値判定+レポート）→ Deep-Dive（深堀り調査）
+- データ収集: 接続情報、Ping（Gateway+8.8.8.8+1.1.1.1）、HTTP タイミング（DNS/TCP/TLS/TTFB）、速度テスト（3CDN）、Traceroute
+- 接続種別対応閾値: Ethernet（厳格）/ Wi-Fi（緩和）で独立した GOOD/WARNING/CRITICAL 判定
+- macOS / Linux クロスプラットフォーム対応（iproute2 優先、net-tools fallback）
+- 6カテゴリの深堀り調査手順: 高レイテンシ、パケットロス、DNS遅延、低速DL、経路異常、高ジッター
+- 45件のユニットテスト（unittest + mock、外部依存なし）
 
 ### office-script-expert v1.0 (2026-02-13)
 - Initial release
