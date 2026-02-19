@@ -84,7 +84,7 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 | ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy, Consulting | 27 reference files (5 industries, 5 functions, 5 scenarios, 4 agent types, 6 case studies), ROI analysis, 5-step workflow, Multi-dimensional analysis |
 | migration-validation-explorer | 2.0 | Data Migration QA | 4-Perspective hypothesis generation, Priority scoring, Automated profiling/testing scripts, Cross-pollination with operators, QA backlog generation |
 | helpdesk-responder | 1.0 | Customer Support, Helpdesk | KB-based response drafts, confidence scoring, auto-detection patterns, multi-language templates, escalation workflow |
-| mermaid-to-pdf | - | Documentation | markdown_to_pdf.py, mermaid_to_image.py |
+| markdown-to-pdf | 2.0 | Documentation, Business Documents | markdown_to_pdf.py, markdown_to_fpdf.py, themes.py, mermaid_to_image.py |
 | uat-testcase-generator | - | QA Testing | generate_uat_testcases.py, Excel generation |
 | salesforce-cli-expert | - | Salesforce | CLI reference guide |
 | gogcli-expert | 1.0 | Google Workspace CLI | 13 services (Gmail, Calendar, Drive, Sheets, etc.), OAuth2/SA auth, multi-account |

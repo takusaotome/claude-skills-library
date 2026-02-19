@@ -1,24 +1,33 @@
-# Mermaid to PDF スキル - 使用ガイド
+# Markdown to PDF スキル - 使用ガイド
 
 ## 概要
 
-**mermaid-to-pdf**スキルは、Mermaid図を含むMarkdownドキュメントを高品質なPDFに変換するためのツールです。技術文書、設計書、プロジェクト資料などのPDF化に最適です。
+**markdown-to-pdf**スキルは、Markdownドキュメントを高品質なPDFに変換するためのツールです。2つのレンダリングモードを提供します：
+
+1. **Playwrightモード** — HTML/CSSベースのPDF変換。Mermaid図のサポート付き。技術文書に最適。
+2. **fpdf2モード** — プロフェッショナルなPDF生成。カバーページ、テーマ、スタイル付きテーブル、CJKフォント対応。ビジネス文書（見積書、提案書、レポート）に最適。
 
 ## スキルの配置場所
 
-- **パッケージファイル**: `~/mermaid-to-pdf.zip`
-- **インストール済み**: `~/.claude/skills/mermaid-to-pdf/`
-- **サンプルファイル**: `~/sample_design_document.md`
+- **パッケージファイル**: `skill-packages/markdown-to-pdf.skill`
+- **インストール済み**: `~/.claude/skills/markdown-to-pdf/`
 
 ## 機能
 
-### 1. Markdown to PDF変換
+### 1. Markdown to PDF変換（Playwrightモード）
 - Markdownファイル内のMermaidコードブロックを自動検出
 - 各Mermaid図を高品質な画像に変換
 - 画像を埋め込んだPDFを生成
 - カスタムCSSスタイルのサポート
 
-### 2. Mermaid to 画像変換
+### 2. プロフェッショナルPDF生成（fpdf2モード）
+- YAMLフロントマターによるメタデータ管理
+- カバーページ自動生成
+- テーマ対応（navy / gray）
+- プロフェッショナルなテーブルスタイル（交互行色、ヘッダー色）
+- CJKフォント自動探索（macOS / Windows / Linux）
+
+### 3. Mermaid to 画像変換
 - Mermaid図をPNG/SVG形式で出力
 - テーマ選択（default, forest, dark, neutral）
 - カスタム背景色と画像サイズ
@@ -72,14 +81,62 @@ npm install -g @mermaid-js/mermaid-cli
 
 ## 使用方法
 
-### 基本的な使い方
+### fpdf2モード（プロフェッショナルPDF）
 
-#### 1. Markdown → PDF変換
+#### 依存関係
+
+```bash
+pip install fpdf2 mistune pyyaml
+```
+
+#### 基本的な使い方
+
+```bash
+# 基本変換
+python3 scripts/markdown_to_fpdf.py input.md output.pdf
+
+# テーマ指定
+python3 scripts/markdown_to_fpdf.py input.md output.pdf --theme navy
+python3 scripts/markdown_to_fpdf.py input.md output.pdf --theme gray --confidential
+
+# カバーページなし
+python3 scripts/markdown_to_fpdf.py input.md output.pdf --no-cover
+
+# フォント手動指定
+python3 scripts/markdown_to_fpdf.py input.md output.pdf --font-regular /path/to/font.ttc --font-bold /path/to/bold.ttc
+```
+
+#### YAMLフロントマター
+
+Markdownファイルの先頭にYAMLフロントマターを追加して、カバーページやテーマを制御できます：
+
+```yaml
+---
+title: 御見積書
+subtitle: AI プラットフォーム PoC サポート
+theme: navy
+document_number: FSAI-2026-0001
+date: 2026年2月17日
+author: 山田 太郎
+company: Example Corp.
+recipient: Client Inc.
+confidential: false
+cover: true
+---
+```
+
+詳しいフィールド仕様は `references/fpdf_styling_guide.md` を参照してください。
+
+### Playwrightモード（Mermaid図対応PDF）
+
+#### 基本的な使い方
+
+##### 1. Markdown → PDF変換
 
 **macOS / Linux:**
 ```bash
 # スキルディレクトリに移動
-cd ~/.claude/skills/mermaid-to-pdf
+cd ~/.claude/skills/markdown-to-pdf
 
 # 基本的な変換（PNG形式）
 python3 scripts/markdown_to_pdf.py sample_design_document.md output.pdf
@@ -97,7 +154,7 @@ python3 scripts/markdown_to_pdf.py sample_design_document.md output.pdf --css cu
 **Windows (PowerShell):**
 ```powershell
 # スキルディレクトリに移動
-cd $env:USERPROFILE\.claude\skills\mermaid-to-pdf
+cd $env:USERPROFILE\.claude\skills\markdown-to-pdf
 
 # 基本的な変換（PNG形式）
 python scripts\markdown_to_pdf.py sample_design_document.md output.pdf
@@ -163,7 +220,7 @@ python scripts\mermaid_to_image.py diagram.mmd output.png
 
 ```bash
 # サンプル文書をPDFに変換
-cd ~/.claude/skills/mermaid-to-pdf
+cd ~/.claude/skills/markdown-to-pdf
 python scripts/markdown_to_pdf.py \
     ~/sample_design_document.md \
     ~/design_document.pdf
@@ -321,8 +378,12 @@ python scripts/markdown_to_pdf.py input.md output.pdf --image-format svg --css c
 ### スキル内リソース
 - `SKILL.md` - スキルの詳細な使用方法
 - `references/mermaid_guide.md` - Mermaid図の完全ガイド
+- `references/fpdf_styling_guide.md` - fpdf2スタイリングガイド
+- `scripts/markdown_to_fpdf.py` - プロフェッショナルPDF変換（fpdf2）
+- `scripts/markdown_to_pdf.py` - Mermaid対応PDF変換（Playwright）
 - `scripts/mermaid_to_image.py` - 画像変換スクリプト
-- `scripts/markdown_to_pdf.py` - PDF変換スクリプト
+- `scripts/themes.py` - テーマ定義 + フォント探索
+- `assets/sample_frontmatter.yaml` - フロントマターサンプル
 
 ### 外部リンク
 - [Mermaid公式ドキュメント](https://mermaid.js.org/)
@@ -360,6 +421,6 @@ A: はい、スクリプトは自由に使用できます。ただし、依存�
 
 ---
 
-**バージョン**: 1.0
-**最終更新**: 2025-10-26
+**バージョン**: 2.0
+**最終更新**: 2026-02-19
 **作成者**: Claude Code + skill-creator

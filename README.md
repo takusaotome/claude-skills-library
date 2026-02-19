@@ -132,7 +132,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | critical-document-reviewer | ドキュメント批評レビュー | Multi-Persona Review |
 | docling-converter | ドキュメント形式変換 | PDF, DOCX, Markdown |
 | fujisoft-presentation-creator | FUJISOFT形式プレゼン作成 | MARP Templates, Corporate Style |
-| mermaid-to-pdf | Mermaid図含むMarkdown→PDF | Diagram Rendering, PDF Export |
+| markdown-to-pdf | Markdown→プロフェッショナルPDF | fpdf2, Playwright, Mermaid, Business Docs |
 | video2minutes | 動画→文字起こし・議事録 | Transcription, Meeting Minutes |
 
 ### QA & Testing (4 skills)
@@ -1956,14 +1956,22 @@ Uses OpenAI Codex CLI to review documents and code with GPT-5.1-Codex-Max model.
 
 ---
 
-### 📊 Mermaid to PDF
+### 📊 Markdown to PDF
 
-**File:** `skill-packages/mermaid-to-pdf.skill`
+**File:** `skill-packages/markdown-to-pdf.skill`
 
-Converts Markdown documents with Mermaid diagrams to PDF, or individual diagrams to images.
+Converts Markdown documents to professional PDF with two rendering modes: (1) fpdf2 mode for business documents with cover pages, themed styling, and styled tables, (2) Playwright mode for technical documentation with Mermaid diagram support.
+
+**When to use:**
+- Creating professional business PDFs (estimates, proposals, reports)
+- Converting Markdown with cover pages and themed headers/footers
+- Converting technical documentation with Mermaid diagrams
+- Extracting Mermaid diagrams as images
 
 **Key Components:**
-- `scripts/markdown_to_pdf.py` - Markdown to PDF conversion
+- `scripts/markdown_to_fpdf.py` - Professional PDF (fpdf2, cover pages, themes, tables)
+- `scripts/markdown_to_pdf.py` - Mermaid-aware PDF (Playwright/HTML/CSS)
+- `scripts/themes.py` - Theme definitions and CJK font discovery
 - `scripts/mermaid_to_image.py` - Mermaid to PNG/SVG
 
 ---
@@ -3027,6 +3035,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### markdown-to-pdf v2.0 (2026-02-19)
+- Renamed from mermaid-to-pdf to markdown-to-pdf
+- Added fpdf2-based professional PDF mode (markdown_to_fpdf.py)
+- Cover page generation from YAML frontmatter
+- Navy/Gray color themes with styled headers/footers
+- Professional table rendering (data_table / info_table)
+- Cross-platform CJK font discovery (macOS/Windows/Linux)
+- Mermaid block fallback in fpdf2 mode
 
 ### network-diagnostics v1.0 (2026-02-18)
 - Initial release

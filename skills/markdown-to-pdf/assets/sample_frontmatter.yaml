@@ -1,0 +1,42 @@
+# ===== Client-Facing Estimate =====
+# Use for: Proposals, estimates, client reports
+
+# ---
+# title: 御見積書
+# subtitle: AI プラットフォーム PoC サポート
+# theme: navy
+# document_number: FSAI-2026-0001
+# date: 2026年2月17日
+# author: 山田 太郎
+# company: FujiSoft America, Inc.
+# recipient: Client Inc.
+# confidential: false
+# cover: true
+# header_text: "FSAI-2026-0001 | FujiSoft America, Inc."
+# ---
+
+
+# ===== Internal Cost Analysis =====
+# Use for: Cost analysis, internal memos, internal reviews
+
+# ---
+# title: 原価試算表
+# subtitle: パートナーシップモデル - 社内検討用
+# theme: gray
+# document_number: FSAI-INT-2026-0001
+# date: 2026年2月13日
+# author: 山田 太郎
+# company: FujiSoft America, Inc.
+# confidential: true
+# cover: true
+# ---
+
+
+# ===== Simple Report (No Cover) =====
+# Use for: Quick reports, meeting summaries
+
+# ---
+# title: Weekly Report
+# theme: navy
+# cover: false
+# ---
