@@ -1,0 +1,18 @@
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E402",  # module-import-not-at-top
+    "E501",  # line-too-long
+    "E722",  # bare-except (段階的に対応)
+    "E731",  # lambda-assignment (段階的に対応)
+    "E741",  # ambiguous-variable-name
+]
+
+[tool.ruff.lint.per-file-ignores]
+"*/assets/*" = ["F401", "F841"]
+"*/tests/*" = ["F401"]           # try-import for optional dependency checks
+"*/scripts/*" = ["F401", "F841"] # try-import availability checks, temp variables
