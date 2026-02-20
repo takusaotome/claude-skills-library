@@ -115,12 +115,22 @@ Web検索が利用可能な場合は、市場データや競合情報を積極�
 | 自分の整理用 | Markdown | 制限なし |
 | 創業計画書（公的機関） | DOCX（所定フォーマット） | 指定に従う |
 
-ドキュメント作成時は、該当するスキル（docx, pptx, xlsx）のSKILL.mdを必ず先に参照すること。
+ドキュメント作成時は、出力形式に対応する専門スキルが「現在の環境で利用可能か」を確認してから適用する。
 
-- Word文書 → `/mnt/skills/public/docx/SKILL.md`
-- PowerPoint → `/mnt/skills/public/pptx/SKILL.md`
-- Excel → `/mnt/skills/public/xlsx/SKILL.md`
-- PDF → `/mnt/skills/public/pdf/SKILL.md`
+1. `skills/` 配下で該当スキルを検索する（例: docx / pptx / xlsx / pdf）。
+2. 見つかった場合のみ、そのスキルの `SKILL.md` を参照して出力を作成する。
+3. 見つからない場合はMarkdownで納品し、必要に応じて代替形式（PDF化など）を提案する。
+
+## 定型作業の自動化（scripts/）
+
+このスキルには、定型作業を高速化するためのスクリプトを同梱する。
+
+- `scripts/generate_outline.py`:
+  目的と業種に応じた事業計画のMarkdownアウトラインを生成する。
+  - 例: `python3 skills/business-plan-creator/scripts/generate_outline.py --purpose investor_pitch --industry saas --language ja --company "Acme" --output /tmp/business_plan_outline.md`
+- `scripts/generate_financial_scenarios.py`:
+  楽観・標準・悲観の3シナリオ財務CSVを生成する。
+  - 例: `python3 skills/business-plan-creator/scripts/generate_financial_scenarios.py --base-revenue 12000000 --base-cogs-rate 0.35 --base-opex 450000 --months 12 --output /tmp/financial_scenarios.csv`
 
 ## 事業計画書の構成テンプレート
 
