@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (56 skills)
+├── skills/                 # All Claude Code skills (57 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (63 Skills)
+## Skill Catalog (64 Skills)
 
 ### Business Strategy & Consulting (12 skills)
 
@@ -135,10 +135,11 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | markdown-to-pdf | Markdown→プロフェッショナルPDF | fpdf2, Playwright, Mermaid, Business Docs |
 | video2minutes | 動画→文字起こし・議事録 | Transcription, Meeting Minutes |
 
-### QA & Testing (4 skills)
+### QA & Testing (5 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
+| dual-axis-skill-reviewer | スキル品質レビュー（Auto+LLM二軸） | Deterministic Scoring, LLM Merge, Batch Review |
 | migration-validation-explorer | データ移行検証・QAバックログ生成 | 4-Perspective Hypothesis, Priority Scoring |
 | qa-bug-analyzer | バグデータ分析・品質トレンド | Quality Metrics, Trend Analysis |
 | uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
@@ -2109,6 +2110,29 @@ AI（LLM）生成テキストの「AI臭」を検出・診断し、人間らし�
 
 **Note:** 検出スクリプト (`detect_ai_patterns.py`) は日本語テキスト専用。英語テキストの場合はClaude自身が `references/` を参照して分析・リライトする。
 
+### 🔍 Dual Axis Skill Reviewer
+
+**File:** `skills/dual-axis-skill-reviewer/`
+
+スキルの品質を二軸（Auto + LLM）で定量評価するレビュースキル。決定論的なコードベースチェック（構造、スクリプト、テスト、実行安全性）とLLMによる深層レビューを組み合わせ、再現性のあるスコアリングを提供する。
+
+**When to use:**
+- `skills/*/SKILL.md` の品質スコアリングが必要なとき
+- マージゲートとしてスコア閾値（例: 90点以上）を設定したいとき
+- 低スコアスキルの具体的改善項目を取得したいとき
+- 別プロジェクトのスキルをクロスプロジェクトでレビューしたいとき
+
+**Key Features:**
+- Auto軸: メタデータ(20)、ワークフロー網羅(25)、実行安全性(25)、成果物(10)、テスト健全性(20)の5次元スコアリング
+- LLM軸: スクリプトの正確性、リスク、保守性をJSON形式で評価
+- 重み付き統合スコア（`--auto-weight` / `--llm-weight`で調整可能）
+- `--all` オプションで全スキル一括レビュー＆サマリテーブル出力
+- `--project-root` によるクロスプロジェクト対応
+- knowledge_only スキルの自動判定（スクリプト不在でも不当減点を回避）
+- 90点未満で改善項目を自動生成
+
+---
+
 ### 📝 Business Plan Creator
 
 **File:** `skills/business-plan-creator/`
@@ -3035,6 +3059,16 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### dual-axis-skill-reviewer v1.0 (2026-02-20)
+- Dual-axis skill quality review (Auto + LLM scoring)
+- Auto axis: 5-dimension deterministic checks (metadata, workflow, execution safety, artifacts, test health)
+- LLM axis: Deep content review with JSON schema merge
+- Weighted final score with configurable auto/LLM weights
+- Batch review (`--all`) with summary table output
+- Cross-project review via `--project-root`
+- knowledge_only skill auto-detection to avoid unfair penalties
+- Improvement items auto-generated when score < 90
 
 ### markdown-to-pdf v2.0 (2026-02-19)
 - Renamed from mermaid-to-pdf to markdown-to-pdf
