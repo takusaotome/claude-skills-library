@@ -127,6 +127,28 @@ python markdown_to_fpdf.py input.md output.pdf \
     --font-bold /path/to/bold.ttc
 ```
 
+## Mermaid Diagram Rendering
+
+In fpdf2 mode, Mermaid code blocks (` ```mermaid `) are converted to PNG images via the `MermaidRenderer` class and embedded in the PDF.
+
+### Backend Priority
+
+1. **mmdc** (mermaid-cli) — preferred. Install: `npm install -g @mermaid-js/mermaid-cli`
+2. **Playwright** — fallback. Install: `pip install playwright && playwright install chromium`
+
+In AUTO mode (default), mmdc is tried first. If it fails for reasons other than syntax errors, Playwright is attempted as a fallback. Syntax errors are never retried with a different backend.
+
+### Strict vs Permissive Mode
+
+- **Strict (default):** Mermaid conversion failure raises `MermaidRenderError` and halts PDF generation. This ensures diagrams are always present in the output.
+- **Permissive (`--no-strict-mermaid`):** Mermaid conversion failure falls back to rendering the diagram source as a code block. Useful when mmdc/Playwright may not be available.
+
+### Constraints
+
+- PNG format is used (SVG embedding in fpdf2 is not supported without `fpdf2[svg]`)
+- The Playwright backend requires CDN access (`cdn.jsdelivr.net`) to load the Mermaid JavaScript library
+- A shared `MermaidRenderer` instance is used per document for cache efficiency
+
 ## Best Practices for Business Documents
 
 1. **Always use frontmatter** for estimates and proposals — it enables cover pages and consistent headers

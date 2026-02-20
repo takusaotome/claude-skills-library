@@ -79,6 +79,8 @@ npm install -g @mermaid-js/mermaid-cli
 
 **Custom styling:** `--css styles.css`
 
+**Mermaid control:** `--no-strict-mermaid` (allow fallback), `--debug-mermaid` (verbose output)
+
 **Debugging:** `--keep-temp`
 
 ## Task 2: Convert Mermaid Diagrams to Images
@@ -99,6 +101,8 @@ npm install -g @mermaid-js/mermaid-cli
 - `--theme default|forest|dark|neutral`
 - `--width <pixels>` / `--height <pixels>` (PNG only)
 - `--background white|transparent|<color>`
+- `--use-playwright` — Force Playwright backend
+- `--debug` — Print detailed debug output
 
 ## Task 3: Convert Markdown to Professional PDF (fpdf2 mode)
 
@@ -149,7 +153,7 @@ For detailed field reference, see `references/fpdf_styling_guide.md`.
 | `- item` | Bulleted list |
 | `\| table \|` | Styled table (data_table by default) |
 | ` ```code``` ` | Code block (gray background) |
-| ` ```mermaid``` ` | Mermaid → image (fallback to code block) |
+| ` ```mermaid``` ` | Mermaid → PNG image (strict: fail on error, `--no-strict-mermaid`: fallback to code block) |
 | `<!-- pagebreak -->` | Page break |
 | `---` | Horizontal rule |
 | `<!-- info-table -->` | Override next table to info_table style |
@@ -186,6 +190,8 @@ python scripts/markdown_to_fpdf.py input.md output.pdf [options]
 | `--no-cover` | Suppress cover page |
 | `--font-regular PATH` | Custom regular font |
 | `--font-bold PATH` | Custom bold font |
+| `--no-strict-mermaid` | Allow Mermaid fallback to code block on failure (default: strict) |
+| `--debug-mermaid` | Print detailed Mermaid conversion debug output |
 
 ### Font Requirements
 
@@ -206,9 +212,13 @@ Professional PDF generation from Markdown with fpdf2. Supports YAML frontmatter,
 
 HTML/CSS-based Markdown to PDF with Mermaid diagram support via Playwright.
 
+### `scripts/mermaid_renderer.py`
+
+Unified Mermaid rendering engine with mmdc/Playwright backends, SHA256 caching, error categorization, and strict/permissive mode support.
+
 ### `scripts/mermaid_to_image.py`
 
-Converts Mermaid diagram code to PNG/SVG images.
+CLI wrapper for `mermaid_renderer.py`. Converts Mermaid diagram code to PNG/SVG images.
 
 ### `scripts/themes.py`
 
@@ -237,11 +247,31 @@ python scripts/markdown_to_fpdf.py input.md output.pdf \
     --font-bold /path/to/bold.ttc
 ```
 
+### Mermaid conversion fails (strict mode)
+
+By default, Mermaid conversion failures halt PDF generation. Error messages include diagnostic information and fix suggestions.
+
+**Common errors and fixes:**
+
+| Error Category | Fix |
+|---------------|-----|
+| `mmdc_not_found` | `npm install -g @mermaid-js/mermaid-cli` |
+| `browser_launch_failed` | `pip install playwright && playwright install chromium` |
+| `syntax_error` | Check syntax at [mermaid.live](https://mermaid.live/) |
+| `timeout` | Simplify diagram or increase `--timeout` |
+
+**To allow graceful fallback** (renders code block instead of failing):
+```bash
+python scripts/markdown_to_fpdf.py input.md output.pdf --no-strict-mermaid
+```
+
 ### Playwright mode: Mermaid diagrams not rendering
 
 Install mermaid-cli: `npm install -g @mermaid-js/mermaid-cli`
 
 Or install Playwright: `pip install playwright && playwright install chromium`
+
+Note: The Playwright Mermaid backend requires CDN access (`cdn.jsdelivr.net`) to load the Mermaid library.
 
 ### Playwright mode: Poor image quality
 
@@ -254,3 +284,7 @@ Use SVG format: `--image-format svg` (recommended)
 3. **Use `<!-- pagebreak -->`** for clean section transitions in fpdf2 mode
 4. **Use `<!-- info-table -->`** for key-value tables in fpdf2 mode
 5. **Preview Mermaid** at [mermaid.live](https://mermaid.live/) before conversion
+6. **Mermaid Gantt chart font sizes** → fpdf2 mode renders Mermaid at 1200px width then scales to A4 page width (190mm). To ensure readability, use `fontSize: 16` or larger in the `%%{init: ...}%%` block. Recommended settings for Gantt charts:
+   ```
+   'gantt': { 'fontSize': 18, 'sectionFontSize': 20, 'barHeight': 30, 'leftPadding': 180 }
+   ```

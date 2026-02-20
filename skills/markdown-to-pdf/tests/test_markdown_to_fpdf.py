@@ -282,13 +282,12 @@ class TestItalicFontRendering:
 
 class TestMermaidFallback:
 
-    def test_mermaid_fallback(self, mermaid_md, tmp_pdf):
-        """Mermaid blocks should fall back to code blocks when conversion fails."""
+    def test_mermaid_fallback_permissive(self, mermaid_md, tmp_pdf):
+        """Mermaid blocks should fall back to code blocks in permissive mode."""
         mod = _import_fpdf_module()
         fm, body = mod.parse_frontmatter(mermaid_md)
-        # mermaid_to_image.py might not be available in test env,
-        # so mermaid blocks should gracefully fall back
-        mod.render_pdf(body, str(tmp_pdf), frontmatter=fm)
+        # In permissive mode, Mermaid failures fall back to code blocks
+        mod.render_pdf(body, str(tmp_pdf), frontmatter=fm, strict_mermaid=False)
         assert tmp_pdf.exists()
 
 
@@ -396,3 +395,126 @@ class TestFontOneSideSpecification:
         bold.write_bytes(b"fake")
         with pytest.raises(SystemExit):
             discover_fonts(font_regular=None, font_bold=str(bold))
+
+
+# ===== Mermaid Strict/Permissive Mode Tests =====
+
+class TestMermaidStrictMode:
+
+    def test_strict_mode_raises_on_failure(self, tmp_pdf):
+        """strict_mermaid=True should raise MermaidRenderError when conversion fails."""
+        mod = _import_fpdf_module()
+        from mermaid_renderer import (
+            MermaidRenderError, MermaidRenderer, MermaidResult, MermaidErrorCategory,
+        )
+
+        md = "```mermaid\ngraph TD; A-->B\n```"
+
+        # Mock MermaidRenderer to always fail
+        fail_result = MermaidResult(
+            success=False,
+            error_category=MermaidErrorCategory.MMDC_NOT_FOUND,
+            error_message="mmdc not found",
+        )
+
+        with patch.object(MermaidRenderer, "render", return_value=fail_result):
+            with pytest.raises(MermaidRenderError):
+                mod.render_pdf(md, str(tmp_pdf), strict_mermaid=True)
+
+    def test_permissive_mode_allows_fallback(self, tmp_pdf):
+        """strict_mermaid=False should produce PDF with code block fallback."""
+        mod = _import_fpdf_module()
+        from mermaid_renderer import (
+            MermaidRenderer, MermaidResult, MermaidErrorCategory,
+        )
+
+        md = "```mermaid\ngraph TD; A-->B\n```"
+
+        fail_result = MermaidResult(
+            success=False,
+            error_category=MermaidErrorCategory.MMDC_NOT_FOUND,
+            error_message="mmdc not found",
+        )
+
+        with patch.object(MermaidRenderer, "render", return_value=fail_result):
+            mod.render_pdf(md, str(tmp_pdf), strict_mermaid=False)
+            assert tmp_pdf.exists()
+            assert tmp_pdf.stat().st_size > 0
+
+    def test_default_is_strict(self):
+        """render_pdf should default to strict_mermaid=True."""
+        mod = _import_fpdf_module()
+        import inspect
+        sig = inspect.signature(mod.render_pdf)
+        assert sig.parameters["strict_mermaid"].default is True
+
+
+# ===== PDF Content Verification Tests =====
+
+class TestPDFContentVerification:
+
+    def test_table_content_produces_substantial_pdf(self, tmp_pdf):
+        """PDF with table content should be substantially larger than empty PDF."""
+        mod = _import_fpdf_module()
+        # Render a PDF with a table
+        md_table = "| Name | Age |\n|------|-----|\n| Alice | 30 |\n| Bob | 25 |"
+        mod.render_pdf(md_table, str(tmp_pdf))
+        table_size = tmp_pdf.stat().st_size
+
+        # Render a minimal empty PDF for comparison
+        empty_pdf = tmp_pdf.parent / "empty.pdf"
+        mod.render_pdf("", str(empty_pdf))
+        empty_size = empty_pdf.stat().st_size
+
+        # Table PDF should be at least 20% larger than empty PDF
+        assert table_size > empty_size * 1.2, (
+            f"Table PDF ({table_size}B) should be substantially larger than "
+            f"empty PDF ({empty_size}B)"
+        )
+
+    def test_table_headers_in_decompressed_pdf(self, tmp_pdf):
+        """Verify table header text exists in decompressed PDF streams."""
+        import zlib
+        mod = _import_fpdf_module()
+        md = "| Name | Age |\n|------|-----|\n| Alice | 30 |\n| Bob | 25 |"
+        mod.render_pdf(md, str(tmp_pdf))
+        pdf_bytes = tmp_pdf.read_bytes()
+
+        # Extract and decompress all FlateDecode streams
+        decompressed = b""
+        import re as re_mod
+        for match in re_mod.finditer(rb"stream\r?\n(.*?)\r?\nendstream", pdf_bytes, re_mod.DOTALL):
+            try:
+                decompressed += zlib.decompress(match.group(1))
+            except zlib.error:
+                pass
+
+        # fpdf2 with CJK fonts uses CID encoding, so text might not be ASCII.
+        # Instead, verify that we have multiple text-showing operators (Tj/TJ)
+        # which indicates table cells were rendered.
+        text_ops = re_mod.findall(rb"\bT[jJ]\b", decompressed)
+        assert len(text_ops) >= 4, (
+            f"Expected at least 4 text operators for 2 headers + 2 rows, "
+            f"found {len(text_ops)}"
+        )
+
+    def test_no_raw_mermaid_fence_in_pdf_permissive(self, tmp_pdf):
+        """Permissive mode with failed Mermaid should not leave raw ```mermaid fence."""
+        mod = _import_fpdf_module()
+        from mermaid_renderer import (
+            MermaidRenderer, MermaidResult, MermaidErrorCategory,
+        )
+
+        md = "```mermaid\ngraph TD; A-->B\n```"
+
+        fail_result = MermaidResult(
+            success=False,
+            error_category=MermaidErrorCategory.MMDC_NOT_FOUND,
+            error_message="mmdc not found",
+        )
+
+        with patch.object(MermaidRenderer, "render", return_value=fail_result):
+            mod.render_pdf(md, str(tmp_pdf), strict_mermaid=False)
+            pdf_bytes = tmp_pdf.read_bytes()
+            # Should NOT contain the raw Mermaid fence marker
+            assert b"```mermaid" not in pdf_bytes

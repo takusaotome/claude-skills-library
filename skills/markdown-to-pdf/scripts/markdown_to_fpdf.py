@@ -18,9 +18,7 @@ Usage:
 
 import argparse
 import re
-import subprocess
 import sys
-import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -456,9 +454,15 @@ def _compute_col_widths(pdf: FPDF, headers: List[str], rows: List[List[str]]) ->
 class FPDFRenderer:
     """Renders mistune AST tokens to a ProfessionalPDF instance."""
 
-    def __init__(self, pdf: ProfessionalPDF):
+    def __init__(self, pdf: ProfessionalPDF, strict_mermaid: bool = True,
+                 debug_mermaid: bool = False):
         self.pdf = pdf
         self._next_table_style = "data"  # "data" or "info"
+        self._strict_mermaid = strict_mermaid
+        self._debug_mermaid = debug_mermaid
+        self._mermaid_success = 0
+        self._mermaid_failure = 0
+        self._mermaid_renderer = None  # lazy init — shared across document
 
     def render(self, tokens: List[Dict]):
         """Walk all top-level tokens."""
@@ -602,31 +606,44 @@ class FPDFRenderer:
             self.pdf.render_data_table(headers, rows)
 
     def _render_mermaid(self, code: str):
-        """Attempt to convert Mermaid to image; fall back to code block."""
-        mermaid_script = _SCRIPT_DIR / "mermaid_to_image.py"
-        if not mermaid_script.exists():
-            self.pdf.code_block(code)
-            return
+        """Render Mermaid diagram via MermaidRenderer (in-process).
 
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-            tmp_path = tmp.name
-
-        try:
-            result = subprocess.run(
-                [sys.executable, str(mermaid_script), "--code", code, tmp_path],
-                capture_output=True, text=True, timeout=30,
+        In strict mode (default), raises MermaidRenderError on failure.
+        In permissive mode, falls back to rendering as a code block.
+        """
+        if self._mermaid_renderer is None:
+            from mermaid_renderer import MermaidBackend, MermaidRenderer
+            self._mermaid_renderer = MermaidRenderer(
+                backend=MermaidBackend.AUTO,
+                output_format="png",
+                width=1200,
+                debug=self._debug_mermaid,
             )
-            if result.returncode == 0 and Path(tmp_path).exists() and Path(tmp_path).stat().st_size > 0:
-                self.pdf.embed_image(tmp_path)
+
+        result = self._mermaid_renderer.render(code)
+        if result.success:
+            self._mermaid_success += 1
+            self.pdf.embed_image(result.image_path)
+        else:
+            self._mermaid_failure += 1
+            print(
+                f"  Mermaid failed: {result.error_category.value}: {result.error_message}",
+                file=sys.stderr,
+            )
+            if result.fix_suggestion:
+                print(f"  Fix: {result.fix_suggestion}", file=sys.stderr)
+            if self._strict_mermaid:
+                from mermaid_renderer import MermaidRenderError
+                raise MermaidRenderError(result)
             else:
                 self.pdf.code_block(code)
-        except (subprocess.TimeoutExpired, Exception):
-            self.pdf.code_block(code)
-        finally:
-            try:
-                Path(tmp_path).unlink(missing_ok=True)
-            except Exception:
-                pass
+
+    def report_mermaid_stats(self):
+        """Print Mermaid rendering statistics."""
+        total = self._mermaid_success + self._mermaid_failure
+        if total > 0:
+            print(f"Mermaid: {self._mermaid_success}/{total} succeeded, "
+                  f"{self._mermaid_failure}/{total} failed")
 
 
 # ============================================================
@@ -642,6 +659,8 @@ def render_pdf(
     no_cover: bool = False,
     font_regular: Optional[str] = None,
     font_bold: Optional[str] = None,
+    strict_mermaid: bool = True,
+    debug_mermaid: bool = False,
 ) -> str:
     """Render Markdown text to a professional PDF.
 
@@ -654,6 +673,8 @@ def render_pdf(
         no_cover: Suppress cover page even if frontmatter says cover: true.
         font_regular: Explicit regular font path.
         font_bold: Explicit bold font path.
+        strict_mermaid: If True (default), raise MermaidRenderError on failure.
+        debug_mermaid: If True, print detailed Mermaid debug output.
 
     Returns:
         The output file path.
@@ -688,8 +709,14 @@ def render_pdf(
 
     # Parse and render
     tokens = parse_markdown(markdown_text)
-    renderer = FPDFRenderer(pdf)
+    renderer = FPDFRenderer(pdf, strict_mermaid=strict_mermaid,
+                            debug_mermaid=debug_mermaid)
     renderer.render(tokens)
+
+    # Report Mermaid stats and cleanup cache
+    renderer.report_mermaid_stats()
+    if renderer._mermaid_renderer is not None:
+        renderer._mermaid_renderer.cleanup_cache()
 
     # Output
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
@@ -717,6 +744,10 @@ def main():
                         help="Path to regular weight CJK font (.ttc/.ttf/.otf)")
     parser.add_argument("--font-bold", default=None,
                         help="Path to bold weight CJK font (.ttc/.ttf/.otf)")
+    parser.add_argument("--no-strict-mermaid", action="store_true",
+                        help="Allow Mermaid fallback to code block on failure (default: strict)")
+    parser.add_argument("--debug-mermaid", action="store_true",
+                        help="Print detailed Mermaid conversion debug output")
 
     args = parser.parse_args()
 
@@ -728,18 +759,28 @@ def main():
     text = input_path.read_text(encoding="utf-8")
     frontmatter, body = parse_frontmatter(text)
 
-    output = render_pdf(
-        markdown_text=body,
-        output_path=args.output,
-        frontmatter=frontmatter,
-        theme_name=args.theme,
-        confidential=args.confidential,
-        no_cover=args.no_cover,
-        font_regular=args.font_regular,
-        font_bold=args.font_bold,
-    )
-
-    print(f"Generated: {output}")
+    try:
+        output = render_pdf(
+            markdown_text=body,
+            output_path=args.output,
+            frontmatter=frontmatter,
+            theme_name=args.theme,
+            confidential=args.confidential,
+            no_cover=args.no_cover,
+            font_regular=args.font_regular,
+            font_bold=args.font_bold,
+            strict_mermaid=not args.no_strict_mermaid,
+            debug_mermaid=args.debug_mermaid,
+        )
+        print(f"Generated: {output}")
+    except Exception as e:
+        # Catch MermaidRenderError (and any other render errors) at CLI boundary
+        err_name = type(e).__name__
+        print(f"Error ({err_name}): {e}", file=sys.stderr)
+        # Provide fix suggestion if available
+        if hasattr(e, "result") and hasattr(e.result, "fix_suggestion") and e.result.fix_suggestion:
+            print(f"Fix: {e.result.fix_suggestion}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
