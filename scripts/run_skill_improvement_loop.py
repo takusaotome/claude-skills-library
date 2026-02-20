@@ -409,6 +409,21 @@ def apply_improvement(
             _rollback(project_root, skill_name, branch_name)
             return None
 
+        # Auto-fix lint issues before committing
+        if shutil.which("ruff"):
+            subprocess.run(
+                ["ruff", "check", "--fix", f"skills/{skill_name}/"],
+                cwd=project_root,
+                capture_output=True,
+                check=False,
+            )
+            subprocess.run(
+                ["ruff", "format", f"skills/{skill_name}/"],
+                cwd=project_root,
+                capture_output=True,
+                check=False,
+            )
+
         # Commit, push, create PR
         subprocess.run(
             ["git", "add", f"skills/{skill_name}/"],
@@ -481,6 +496,12 @@ def apply_improvement(
 
 def _rollback(project_root: Path, skill_name: str, branch_name: str) -> None:
     """Roll back changes and return to main."""
+    subprocess.run(
+        ["git", "reset", "HEAD", "--", f"skills/{skill_name}/"],
+        cwd=project_root,
+        capture_output=True,
+        check=False,
+    )
     subprocess.run(
         ["git", "checkout", "--", f"skills/{skill_name}/"],
         cwd=project_root,
