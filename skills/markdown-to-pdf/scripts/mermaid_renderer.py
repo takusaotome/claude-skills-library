@@ -21,14 +21,14 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Optional
 
 
 class MermaidBackend(Enum):
-    AUTO = "auto"           # mmdc -> playwright (SYNTAX_ERROR blocks fallback)
+    AUTO = "auto"  # mmdc -> playwright (SYNTAX_ERROR blocks fallback)
     MMDC = "mmdc"
     PLAYWRIGHT = "playwright"
 
@@ -55,16 +55,11 @@ class MermaidResult:
         if self.error_category is None:
             return None
         suggestions = {
-            MermaidErrorCategory.MMDC_NOT_FOUND:
-                "Install mermaid-cli: npm install -g @mermaid-js/mermaid-cli",
-            MermaidErrorCategory.BROWSER_LAUNCH_FAILED:
-                "Install Playwright: pip install playwright && playwright install chromium",
-            MermaidErrorCategory.SYNTAX_ERROR:
-                "Check Mermaid syntax at https://mermaid.live/",
-            MermaidErrorCategory.TIMEOUT:
-                "Simplify the diagram or increase --timeout",
-            MermaidErrorCategory.UNKNOWN:
-                "Run with --debug-mermaid for details",
+            MermaidErrorCategory.MMDC_NOT_FOUND: "Install mermaid-cli: npm install -g @mermaid-js/mermaid-cli",
+            MermaidErrorCategory.BROWSER_LAUNCH_FAILED: "Install Playwright: pip install playwright && playwright install chromium",
+            MermaidErrorCategory.SYNTAX_ERROR: "Check Mermaid syntax at https://mermaid.live/",
+            MermaidErrorCategory.TIMEOUT: "Simplify the diagram or increase --timeout",
+            MermaidErrorCategory.UNKNOWN: "Run with --debug-mermaid for details",
         }
         return suggestions.get(self.error_category)
 
@@ -126,9 +121,7 @@ class MermaidRenderer:
             return MermaidResult(success=True, image_path=cached, backend_used="cache")
 
         # Determine effective output path
-        effective_path = output_path or os.path.join(
-            self.cache_dir, f"{cache_key}.{self.output_format}"
-        )
+        effective_path = output_path or os.path.join(self.cache_dir, f"{cache_key}.{self.output_format}")
 
         # Route to backend
         if self.backend == MermaidBackend.AUTO:
@@ -178,9 +171,7 @@ class MermaidRenderer:
         # Write code to temp file
         tmp_input = None
         try:
-            tmp_input = tempfile.NamedTemporaryFile(
-                mode="w", suffix=".mmd", delete=False, encoding="utf-8"
-            )
+            tmp_input = tempfile.NamedTemporaryFile(mode="w", suffix=".mmd", delete=False, encoding="utf-8")
             tmp_input.write(code)
             tmp_input.close()
 
@@ -192,14 +183,10 @@ class MermaidRenderer:
             if self.debug:
                 print(f"  mmdc cmd: {' '.join(cmd)}", file=sys.stderr)
 
-            result = subprocess.run(
-                cmd, capture_output=True, text=True, timeout=self.timeout
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=self.timeout)
 
             if result.returncode == 0 and Path(output_path).exists():
-                return MermaidResult(
-                    success=True, image_path=output_path, backend_used="mmdc"
-                )
+                return MermaidResult(success=True, image_path=output_path, backend_used="mmdc")
 
             # Classify error
             stderr = result.stderr or ""
@@ -313,9 +300,7 @@ class MermaidRenderer:
                     svg_element.screenshot(path=output_path)
 
                 browser.close()
-                return MermaidResult(
-                    success=True, image_path=output_path, backend_used="playwright"
-                )
+                return MermaidResult(success=True, image_path=output_path, backend_used="playwright")
 
         except Exception as e:
             err_msg = str(e)
@@ -335,9 +320,7 @@ class MermaidRenderer:
     def check_mmdc_available() -> bool:
         """Check if mermaid-cli (mmdc) is installed and callable."""
         try:
-            result = subprocess.run(
-                ["mmdc", "--version"], capture_output=True, text=True, timeout=5
-            )
+            result = subprocess.run(["mmdc", "--version"], capture_output=True, text=True, timeout=5)
             return result.returncode == 0
         except (FileNotFoundError, subprocess.TimeoutExpired):
             return False

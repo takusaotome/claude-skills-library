@@ -11,9 +11,10 @@ Setup:
     3. Run with: streamlit run auth_template.py
 """
 
-import streamlit as st
-from typing import Optional, List
 from functools import wraps
+from typing import List, Optional
+
+import streamlit as st
 
 # ============================================================================
 # Configuration

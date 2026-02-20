@@ -14,20 +14,20 @@ Example:
 import argparse
 import sys
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 
 class FlowMetadataGenerator:
     """Generate Flow metadata files"""
 
     VALID_FLOW_TYPES = {
-        'screenFlow': 'Flow',
-        'recordTriggeredFlow': 'AutoLaunchedFlow',
-        'scheduleTriggeredFlow': 'AutoLaunchedFlow',
-        'autolaunched': 'AutoLaunchedFlow'
+        "screenFlow": "Flow",
+        "recordTriggeredFlow": "AutoLaunchedFlow",
+        "scheduleTriggeredFlow": "AutoLaunchedFlow",
+        "autolaunched": "AutoLaunchedFlow",
     }
 
-    def __init__(self, flow_file: str, flow_type: str, api_version: str = '60.0', status: str = 'Draft'):
+    def __init__(self, flow_file: str, flow_type: str, api_version: str = "60.0", status: str = "Draft"):
         """
         Initialize metadata generator
 
@@ -63,7 +63,7 @@ class FlowMetadataGenerator:
             sys.exit(1)
 
         # Check status
-        if self.status not in ['Draft', 'Active', 'Obsolete', 'InvalidDraft']:
+        if self.status not in ["Draft", "Active", "Obsolete", "InvalidDraft"]:
             print(f"ERROR: Invalid status: {self.status}")
             print("Valid statuses: Draft, Active, Obsolete, InvalidDraft")
             sys.exit(1)
@@ -81,11 +81,12 @@ class FlowMetadataGenerator:
     def _generate_label(self) -> str:
         """Generate human-readable label from filename"""
         # Convert MyFlowName to My Flow Name
-        label = self.flow_name.replace('_', ' ').replace('-', ' ')
+        label = self.flow_name.replace("_", " ").replace("-", " ")
 
         # Add spaces before capital letters (camelCase to Title Case)
         import re
-        label = re.sub(r'([a-z])([A-Z])', r'\1 \2', label)
+
+        label = re.sub(r"([a-z])([A-Z])", r"\1 \2", label)
 
         return label
 
@@ -102,33 +103,37 @@ class FlowMetadataGenerator:
         metadata_lines = [
             '<?xml version="1.0" encoding="UTF-8"?>',
             '<Flow xmlns="http://soap.sforce.com/2006/04/metadata">',
-            f'    <apiVersion>{self.api_version}</apiVersion>',
-            f'    <description>Flow created via generate_flow_metadata.py</description>',
-            f'    <label>{self.flow_label}</label>',
-            f'    <processType>{process_type}</processType>',
-            f'    <status>{self.status}</status>',
+            f"    <apiVersion>{self.api_version}</apiVersion>",
+            "    <description>Flow created via generate_flow_metadata.py</description>",
+            f"    <label>{self.flow_label}</label>",
+            f"    <processType>{process_type}</processType>",
+            f"    <status>{self.status}</status>",
         ]
 
         # Add type-specific metadata
-        if self.flow_type == 'recordTriggeredFlow':
-            metadata_lines.extend([
-                '    <!-- Record-Triggered Flow Configuration -->',
-                '    <!-- Uncomment and configure triggerType: -->',
-                '    <!-- <triggerType>RecordAfterSave</triggerType> -->',
-                '    <!-- <triggerType>RecordBeforeSave</triggerType> -->',
-                '    <!-- Add start configuration for triggers -->',
-            ])
+        if self.flow_type == "recordTriggeredFlow":
+            metadata_lines.extend(
+                [
+                    "    <!-- Record-Triggered Flow Configuration -->",
+                    "    <!-- Uncomment and configure triggerType: -->",
+                    "    <!-- <triggerType>RecordAfterSave</triggerType> -->",
+                    "    <!-- <triggerType>RecordBeforeSave</triggerType> -->",
+                    "    <!-- Add start configuration for triggers -->",
+                ]
+            )
 
-        elif self.flow_type == 'scheduleTriggeredFlow':
-            metadata_lines.extend([
-                '    <!-- Schedule-Triggered Flow Configuration -->',
-                '    <!-- Add scheduledPaths in start element -->',
-                '    <!-- Example: Daily at 2:00 AM -->',
-            ])
+        elif self.flow_type == "scheduleTriggeredFlow":
+            metadata_lines.extend(
+                [
+                    "    <!-- Schedule-Triggered Flow Configuration -->",
+                    "    <!-- Add scheduledPaths in start element -->",
+                    "    <!-- Example: Daily at 2:00 AM -->",
+                ]
+            )
 
-        metadata_lines.append('</Flow>')
+        metadata_lines.append("</Flow>")
 
-        return '\n'.join(metadata_lines)
+        return "\n".join(metadata_lines)
 
     def write_metadata_file(self, output_path: Optional[str] = None) -> Path:
         """
@@ -150,7 +155,7 @@ class FlowMetadataGenerator:
         content = self.generate_metadata()
 
         # Write to file
-        with open(metadata_file, 'w', encoding='utf-8') as f:
+        with open(metadata_file, "w", encoding="utf-8") as f:
             f.write(content)
 
         return metadata_file
@@ -158,7 +163,7 @@ class FlowMetadataGenerator:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Generate Salesforce Flow metadata file',
+        description="Generate Salesforce Flow metadata file",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Flow Types:
@@ -176,35 +181,36 @@ Examples:
 
   # Generate with custom API version and output path
   python3 generate_flow_metadata.py MyFlow.flow --type autolaunched --api-version 61.0 --output custom-meta.xml
-        """
+        """,
     )
 
-    parser.add_argument('flow_file', help='Path to Flow definition file (.flow)')
-    parser.add_argument('--type', required=True,
-                       choices=['screenFlow', 'recordTriggeredFlow', 'scheduleTriggeredFlow', 'autolaunched'],
-                       help='Type of Flow')
-    parser.add_argument('--api-version', default='60.0',
-                       help='Salesforce API version (default: 60.0)')
-    parser.add_argument('--status', default='Draft',
-                       choices=['Draft', 'Active', 'Obsolete', 'InvalidDraft'],
-                       help='Flow status (default: Draft)')
-    parser.add_argument('--output', '-o',
-                       help='Output metadata file path (default: <flow_name>.flow-meta.xml)')
+    parser.add_argument("flow_file", help="Path to Flow definition file (.flow)")
+    parser.add_argument(
+        "--type",
+        required=True,
+        choices=["screenFlow", "recordTriggeredFlow", "scheduleTriggeredFlow", "autolaunched"],
+        help="Type of Flow",
+    )
+    parser.add_argument("--api-version", default="60.0", help="Salesforce API version (default: 60.0)")
+    parser.add_argument(
+        "--status",
+        default="Draft",
+        choices=["Draft", "Active", "Obsolete", "InvalidDraft"],
+        help="Flow status (default: Draft)",
+    )
+    parser.add_argument("--output", "-o", help="Output metadata file path (default: <flow_name>.flow-meta.xml)")
 
     args = parser.parse_args()
 
     # Generate metadata
     generator = FlowMetadataGenerator(
-        flow_file=args.flow_file,
-        flow_type=args.type,
-        api_version=args.api_version,
-        status=args.status
+        flow_file=args.flow_file, flow_type=args.type, api_version=args.api_version, status=args.status
     )
 
     metadata_file = generator.write_metadata_file(output_path=args.output)
 
     # Success message
-    print(f"✅ Flow metadata generated successfully!")
+    print("✅ Flow metadata generated successfully!")
     print(f"   Flow Name: {generator.flow_name}")
     print(f"   Flow Type: {args.type} → processType: {generator.VALID_FLOW_TYPES[args.type]}")
     print(f"   API Version: {args.api_version}")
@@ -217,5 +223,5 @@ Examples:
     print(f"  3. Deploy to org: python3 deploy_flow.py --source-dir {metadata_file.parent} --target-org <org-alias>")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

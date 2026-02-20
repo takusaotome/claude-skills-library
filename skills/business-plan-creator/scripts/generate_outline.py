@@ -6,7 +6,6 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-
 PURPOSE_LABELS = {
     "ja": {
         "investor_pitch": "投資家向けピッチ",

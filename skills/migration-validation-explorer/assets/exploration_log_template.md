@@ -135,5 +135,3 @@ Apply this pattern to:
 ---
 
 ### Notes / Open Questions
-
-

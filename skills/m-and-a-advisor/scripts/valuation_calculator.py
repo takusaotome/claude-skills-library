@@ -27,14 +27,14 @@ Examples:
 
 import argparse
 import json
-import sys
-from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Any
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Tuple
 
 try:
     import numpy as np
+
     NUMPY_AVAILABLE = True
 except ImportError:
     NUMPY_AVAILABLE = False
@@ -45,9 +45,11 @@ except ImportError:
 # DATA CLASSES
 # =============================================================================
 
+
 @dataclass
 class WACCParameters:
     """Parameters for WACC calculation"""
+
     risk_free_rate: float
     equity_risk_premium: float
     beta: float
@@ -77,6 +79,7 @@ class WACCParameters:
 @dataclass
 class DCFResult:
     """Container for DCF valuation results"""
+
     pv_fcf: float
     terminal_value: float
     pv_terminal_value: float
@@ -92,6 +95,7 @@ class DCFResult:
 @dataclass
 class ComparableResult:
     """Container for comparable company multiple result"""
+
     company: str
     ev_ebitda: float
     ev_revenue: float
@@ -102,6 +106,7 @@ class ComparableResult:
 @dataclass
 class SynergyItem:
     """Container for synergy analysis"""
+
     category: str
     item: str
     annual_impact: float
@@ -115,31 +120,32 @@ class SynergyItem:
 # WACC CALCULATOR
 # =============================================================================
 
+
 class WACCCalculator:
     """Calculate Weighted Average Cost of Capital"""
 
     # US Market Reference Data (2024-2025)
     REFERENCE_DATA = {
-        'risk_free_rate_10y': 0.0425,  # 10-year Treasury yield
-        'equity_risk_premium': 0.055,   # Historical ERP
-        'size_premium': {
-            'large': 0.00,    # Large cap
-            'mid': 0.0100,    # Mid cap
-            'small': 0.0175,  # Small cap
-            'micro': 0.0350,  # Micro cap
+        "risk_free_rate_10y": 0.0425,  # 10-year Treasury yield
+        "equity_risk_premium": 0.055,  # Historical ERP
+        "size_premium": {
+            "large": 0.00,  # Large cap
+            "mid": 0.0100,  # Mid cap
+            "small": 0.0175,  # Small cap
+            "micro": 0.0350,  # Micro cap
         },
-        'industry_betas': {
-            'technology': 1.20,
-            'healthcare': 0.85,
-            'financial_services': 1.05,
-            'manufacturing': 1.00,
-            'retail': 1.10,
-            'utilities': 0.65,
-            'real_estate': 0.85,
-            'energy': 1.15,
-            'consumer_goods': 0.90,
-            'default': 1.00,
-        }
+        "industry_betas": {
+            "technology": 1.20,
+            "healthcare": 0.85,
+            "financial_services": 1.05,
+            "manufacturing": 1.00,
+            "retail": 1.10,
+            "utilities": 0.65,
+            "real_estate": 0.85,
+            "energy": 1.15,
+            "consumer_goods": 0.90,
+            "default": 1.00,
+        },
     }
 
     def __init__(self, params: WACCParameters):
@@ -152,7 +158,7 @@ class WACCCalculator:
 
         total_capital = self.params.market_value_equity + self.params.market_value_debt
         if total_capital == 0:
-            return {'wacc': 0, 'cost_of_equity': cost_of_equity, 'after_tax_cost_of_debt': after_tax_cost_of_debt}
+            return {"wacc": 0, "cost_of_equity": cost_of_equity, "after_tax_cost_of_debt": after_tax_cost_of_debt}
 
         equity_weight = self.params.market_value_equity / total_capital
         debt_weight = self.params.market_value_debt / total_capital
@@ -160,17 +166,17 @@ class WACCCalculator:
         wacc = (equity_weight * cost_of_equity) + (debt_weight * after_tax_cost_of_debt)
 
         return {
-            'risk_free_rate': self.params.risk_free_rate,
-            'equity_risk_premium': self.params.equity_risk_premium,
-            'beta': self.params.beta,
-            'size_premium': self.params.size_premium,
-            'cost_of_equity': cost_of_equity,
-            'cost_of_debt_pre_tax': self.params.cost_of_debt,
-            'tax_rate': self.params.tax_rate,
-            'cost_of_debt_after_tax': after_tax_cost_of_debt,
-            'equity_weight': equity_weight,
-            'debt_weight': debt_weight,
-            'wacc': wacc,
+            "risk_free_rate": self.params.risk_free_rate,
+            "equity_risk_premium": self.params.equity_risk_premium,
+            "beta": self.params.beta,
+            "size_premium": self.params.size_premium,
+            "cost_of_equity": cost_of_equity,
+            "cost_of_debt_pre_tax": self.params.cost_of_debt,
+            "tax_rate": self.params.tax_rate,
+            "cost_of_debt_after_tax": after_tax_cost_of_debt,
+            "equity_weight": equity_weight,
+            "debt_weight": debt_weight,
+            "wacc": wacc,
         }
 
     def generate_report(self) -> str:
@@ -185,7 +191,9 @@ class WACCCalculator:
         report.append("## Cost of Equity (CAPM)\n")
         report.append("```")
         report.append("Re = Rf + β × ERP + Size Premium")
-        report.append(f"Re = {results['risk_free_rate']:.2%} + {results['beta']:.2f} × {results['equity_risk_premium']:.2%} + {results['size_premium']:.2%}")
+        report.append(
+            f"Re = {results['risk_free_rate']:.2%} + {results['beta']:.2f} × {results['equity_risk_premium']:.2%} + {results['size_premium']:.2%}"
+        )
         report.append(f"Re = {results['cost_of_equity']:.2%}")
         report.append("```\n")
 
@@ -207,16 +215,22 @@ class WACCCalculator:
         report.append("## WACC Calculation\n")
         report.append("```")
         report.append("WACC = (E/V) × Re + (D/V) × Rd × (1-T)")
-        report.append(f"WACC = {results['equity_weight']:.1%} × {results['cost_of_equity']:.2%} + {results['debt_weight']:.1%} × {results['cost_of_debt_after_tax']:.2%}")
+        report.append(
+            f"WACC = {results['equity_weight']:.1%} × {results['cost_of_equity']:.2%} + {results['debt_weight']:.1%} × {results['cost_of_debt_after_tax']:.2%}"
+        )
         report.append(f"WACC = {results['wacc']:.2%}")
         report.append("```\n")
 
         report.append("| Component | Weight | Cost | Contribution |")
         report.append("|-----------|--------|------|--------------|")
-        equity_contribution = results['equity_weight'] * results['cost_of_equity']
-        debt_contribution = results['debt_weight'] * results['cost_of_debt_after_tax']
-        report.append(f"| Equity | {results['equity_weight']:.1%} | {results['cost_of_equity']:.2%} | {equity_contribution:.2%} |")
-        report.append(f"| Debt | {results['debt_weight']:.1%} | {results['cost_of_debt_after_tax']:.2%} | {debt_contribution:.2%} |")
+        equity_contribution = results["equity_weight"] * results["cost_of_equity"]
+        debt_contribution = results["debt_weight"] * results["cost_of_debt_after_tax"]
+        report.append(
+            f"| Equity | {results['equity_weight']:.1%} | {results['cost_of_equity']:.2%} | {equity_contribution:.2%} |"
+        )
+        report.append(
+            f"| Debt | {results['debt_weight']:.1%} | {results['cost_of_debt_after_tax']:.2%} | {debt_contribution:.2%} |"
+        )
         report.append(f"| **WACC** | **100%** | | **{results['wacc']:.2%}** |\n")
 
         return "\n".join(report)
@@ -225,6 +239,7 @@ class WACCCalculator:
 # =============================================================================
 # DCF VALUATION
 # =============================================================================
+
 
 class DCFValuation:
     """DCF Valuation for M&A"""
@@ -310,7 +325,7 @@ class DCFValuation:
                     result = self.calculate()
                     row.append(result.equity_value)
                 except ValueError:
-                    row.append(float('nan'))
+                    row.append(float("nan"))
                 self.wacc = original_wacc
                 self.terminal_growth = original_growth
             matrix.append(row)
@@ -353,7 +368,9 @@ class DCFValuation:
         report.append("## Terminal Value\n")
         report.append("```")
         report.append("TV = FCF(n) × (1 + g) / (WACC - g)")
-        report.append(f"TV = ${self.fcf[-1]:,.0f}M × (1 + {self.terminal_growth:.2%}) / ({self.wacc:.2%} - {self.terminal_growth:.2%})")
+        report.append(
+            f"TV = ${self.fcf[-1]:,.0f}M × (1 + {self.terminal_growth:.2%}) / ({self.wacc:.2%} - {self.terminal_growth:.2%})"
+        )
         report.append(f"TV = ${result.terminal_value:,.0f}M")
         report.append(f"PV of TV = ${result.pv_terminal_value:,.0f}M")
         report.append("```\n")
@@ -394,6 +411,7 @@ class DCFValuation:
 # COMPARABLE COMPANIES ANALYSIS
 # =============================================================================
 
+
 class ComparableAnalysis:
     """Comparable companies (trading multiples) analysis"""
 
@@ -405,20 +423,22 @@ class ComparableAnalysis:
         """Calculate trading multiples for each comparable"""
         results = []
         for comp in self.comps:
-            ev = comp.get('enterprise_value', 0)
-            ebitda = comp.get('ebitda', 0)
-            ebit = comp.get('ebit', 0)
-            revenue = comp.get('revenue', 0)
-            net_income = comp.get('net_income', 0)
-            market_cap = comp.get('market_cap', 0)
+            ev = comp.get("enterprise_value", 0)
+            ebitda = comp.get("ebitda", 0)
+            ebit = comp.get("ebit", 0)
+            revenue = comp.get("revenue", 0)
+            net_income = comp.get("net_income", 0)
+            market_cap = comp.get("market_cap", 0)
 
-            results.append(ComparableResult(
-                company=comp.get('company', 'Unknown'),
-                ev_ebitda=ev / ebitda if ebitda > 0 else 0,
-                ev_revenue=ev / revenue if revenue > 0 else 0,
-                pe_ratio=market_cap / net_income if net_income > 0 else 0,
-                ev_ebit=ev / ebit if ebit > 0 else 0,
-            ))
+            results.append(
+                ComparableResult(
+                    company=comp.get("company", "Unknown"),
+                    ev_ebitda=ev / ebitda if ebitda > 0 else 0,
+                    ev_revenue=ev / revenue if revenue > 0 else 0,
+                    pe_ratio=market_cap / net_income if net_income > 0 else 0,
+                    ev_ebit=ev / ebit if ebit > 0 else 0,
+                )
+            )
         return results
 
     def calculate_statistics(self) -> Dict[str, Dict[str, float]]:
@@ -426,52 +446,54 @@ class ComparableAnalysis:
         multiples = self.calculate_multiples()
 
         stats = {
-            'ev_ebitda': {'values': [m.ev_ebitda for m in multiples if m.ev_ebitda > 0]},
-            'ev_revenue': {'values': [m.ev_revenue for m in multiples if m.ev_revenue > 0]},
-            'pe_ratio': {'values': [m.pe_ratio for m in multiples if m.pe_ratio > 0]},
-            'ev_ebit': {'values': [m.ev_ebit for m in multiples if m.ev_ebit > 0]},
+            "ev_ebitda": {"values": [m.ev_ebitda for m in multiples if m.ev_ebitda > 0]},
+            "ev_revenue": {"values": [m.ev_revenue for m in multiples if m.ev_revenue > 0]},
+            "pe_ratio": {"values": [m.pe_ratio for m in multiples if m.pe_ratio > 0]},
+            "ev_ebit": {"values": [m.ev_ebit for m in multiples if m.ev_ebit > 0]},
         }
 
         for key, data in stats.items():
-            values = data['values']
+            values = data["values"]
             if values:
-                data['mean'] = sum(values) / len(values)
+                data["mean"] = sum(values) / len(values)
                 sorted_values = sorted(values)
                 n = len(sorted_values)
-                data['median'] = sorted_values[n // 2] if n % 2 == 1 else (sorted_values[n // 2 - 1] + sorted_values[n // 2]) / 2
-                data['min'] = min(values)
-                data['max'] = max(values)
+                data["median"] = (
+                    sorted_values[n // 2] if n % 2 == 1 else (sorted_values[n // 2 - 1] + sorted_values[n // 2]) / 2
+                )
+                data["min"] = min(values)
+                data["max"] = max(values)
             else:
-                data['mean'] = data['median'] = data['min'] = data['max'] = 0
+                data["mean"] = data["median"] = data["min"] = data["max"] = 0
 
         return stats
 
     def apply_multiples_to_target(self) -> Dict[str, Dict[str, float]]:
         """Apply comparable multiples to target company"""
         stats = self.calculate_statistics()
-        target_ebitda = self.target.get('ebitda', 0)
-        target_revenue = self.target.get('revenue', 0)
-        target_ebit = self.target.get('ebit', 0)
-        target_net_debt = self.target.get('net_debt', 0)
+        target_ebitda = self.target.get("ebitda", 0)
+        target_revenue = self.target.get("revenue", 0)
+        target_ebit = self.target.get("ebit", 0)
+        target_net_debt = self.target.get("net_debt", 0)
 
         implied_values = {
-            'ev_ebitda': {
-                'enterprise_value_mean': target_ebitda * stats['ev_ebitda']['mean'],
-                'enterprise_value_median': target_ebitda * stats['ev_ebitda']['median'],
-                'equity_value_mean': target_ebitda * stats['ev_ebitda']['mean'] - target_net_debt,
-                'equity_value_median': target_ebitda * stats['ev_ebitda']['median'] - target_net_debt,
+            "ev_ebitda": {
+                "enterprise_value_mean": target_ebitda * stats["ev_ebitda"]["mean"],
+                "enterprise_value_median": target_ebitda * stats["ev_ebitda"]["median"],
+                "equity_value_mean": target_ebitda * stats["ev_ebitda"]["mean"] - target_net_debt,
+                "equity_value_median": target_ebitda * stats["ev_ebitda"]["median"] - target_net_debt,
             },
-            'ev_revenue': {
-                'enterprise_value_mean': target_revenue * stats['ev_revenue']['mean'],
-                'enterprise_value_median': target_revenue * stats['ev_revenue']['median'],
-                'equity_value_mean': target_revenue * stats['ev_revenue']['mean'] - target_net_debt,
-                'equity_value_median': target_revenue * stats['ev_revenue']['median'] - target_net_debt,
+            "ev_revenue": {
+                "enterprise_value_mean": target_revenue * stats["ev_revenue"]["mean"],
+                "enterprise_value_median": target_revenue * stats["ev_revenue"]["median"],
+                "equity_value_mean": target_revenue * stats["ev_revenue"]["mean"] - target_net_debt,
+                "equity_value_median": target_revenue * stats["ev_revenue"]["median"] - target_net_debt,
             },
-            'ev_ebit': {
-                'enterprise_value_mean': target_ebit * stats['ev_ebit']['mean'],
-                'enterprise_value_median': target_ebit * stats['ev_ebit']['median'],
-                'equity_value_mean': target_ebit * stats['ev_ebit']['mean'] - target_net_debt,
-                'equity_value_median': target_ebit * stats['ev_ebit']['median'] - target_net_debt,
+            "ev_ebit": {
+                "enterprise_value_mean": target_ebit * stats["ev_ebit"]["mean"],
+                "enterprise_value_median": target_ebit * stats["ev_ebit"]["median"],
+                "equity_value_mean": target_ebit * stats["ev_ebit"]["mean"] - target_net_debt,
+                "equity_value_median": target_ebit * stats["ev_ebit"]["median"] - target_net_debt,
             },
         }
         return implied_values
@@ -492,16 +514,26 @@ class ComparableAnalysis:
         report.append("| Company | EV/EBITDA | EV/Revenue | EV/EBIT | P/E |")
         report.append("|---------|-----------|------------|---------|-----|")
         for m in multiples:
-            report.append(f"| {m.company} | {m.ev_ebitda:.1f}x | {m.ev_revenue:.2f}x | {m.ev_ebit:.1f}x | {m.pe_ratio:.1f}x |")
+            report.append(
+                f"| {m.company} | {m.ev_ebitda:.1f}x | {m.ev_revenue:.2f}x | {m.ev_ebit:.1f}x | {m.pe_ratio:.1f}x |"
+            )
         report.append("")
 
         report.append("## Multiple Statistics\n")
         report.append("| Multiple | Mean | Median | Min | Max |")
         report.append("|----------|------|--------|-----|-----|")
-        report.append(f"| EV/EBITDA | {stats['ev_ebitda']['mean']:.1f}x | {stats['ev_ebitda']['median']:.1f}x | {stats['ev_ebitda']['min']:.1f}x | {stats['ev_ebitda']['max']:.1f}x |")
-        report.append(f"| EV/Revenue | {stats['ev_revenue']['mean']:.2f}x | {stats['ev_revenue']['median']:.2f}x | {stats['ev_revenue']['min']:.2f}x | {stats['ev_revenue']['max']:.2f}x |")
-        report.append(f"| EV/EBIT | {stats['ev_ebit']['mean']:.1f}x | {stats['ev_ebit']['median']:.1f}x | {stats['ev_ebit']['min']:.1f}x | {stats['ev_ebit']['max']:.1f}x |")
-        report.append(f"| P/E | {stats['pe_ratio']['mean']:.1f}x | {stats['pe_ratio']['median']:.1f}x | {stats['pe_ratio']['min']:.1f}x | {stats['pe_ratio']['max']:.1f}x |\n")
+        report.append(
+            f"| EV/EBITDA | {stats['ev_ebitda']['mean']:.1f}x | {stats['ev_ebitda']['median']:.1f}x | {stats['ev_ebitda']['min']:.1f}x | {stats['ev_ebitda']['max']:.1f}x |"
+        )
+        report.append(
+            f"| EV/Revenue | {stats['ev_revenue']['mean']:.2f}x | {stats['ev_revenue']['median']:.2f}x | {stats['ev_revenue']['min']:.2f}x | {stats['ev_revenue']['max']:.2f}x |"
+        )
+        report.append(
+            f"| EV/EBIT | {stats['ev_ebit']['mean']:.1f}x | {stats['ev_ebit']['median']:.1f}x | {stats['ev_ebit']['min']:.1f}x | {stats['ev_ebit']['max']:.1f}x |"
+        )
+        report.append(
+            f"| P/E | {stats['pe_ratio']['mean']:.1f}x | {stats['pe_ratio']['median']:.1f}x | {stats['pe_ratio']['min']:.1f}x | {stats['pe_ratio']['max']:.1f}x |\n"
+        )
 
         report.append("## Target Company Metrics\n")
         report.append("| Metric | Value |")
@@ -514,19 +546,27 @@ class ComparableAnalysis:
         report.append("## Implied Valuation\n")
         report.append("| Method | Enterprise Value | Equity Value |")
         report.append("|--------|------------------|--------------|")
-        report.append(f"| EV/EBITDA (Median) | ${implied['ev_ebitda']['enterprise_value_median']:,.0f}M | ${implied['ev_ebitda']['equity_value_median']:,.0f}M |")
-        report.append(f"| EV/Revenue (Median) | ${implied['ev_revenue']['enterprise_value_median']:,.0f}M | ${implied['ev_revenue']['equity_value_median']:,.0f}M |")
-        report.append(f"| EV/EBIT (Median) | ${implied['ev_ebit']['enterprise_value_median']:,.0f}M | ${implied['ev_ebit']['equity_value_median']:,.0f}M |\n")
+        report.append(
+            f"| EV/EBITDA (Median) | ${implied['ev_ebitda']['enterprise_value_median']:,.0f}M | ${implied['ev_ebitda']['equity_value_median']:,.0f}M |"
+        )
+        report.append(
+            f"| EV/Revenue (Median) | ${implied['ev_revenue']['enterprise_value_median']:,.0f}M | ${implied['ev_revenue']['equity_value_median']:,.0f}M |"
+        )
+        report.append(
+            f"| EV/EBIT (Median) | ${implied['ev_ebit']['enterprise_value_median']:,.0f}M | ${implied['ev_ebit']['equity_value_median']:,.0f}M |\n"
+        )
 
         # Summary range
         equity_values = [
-            implied['ev_ebitda']['equity_value_median'],
-            implied['ev_revenue']['equity_value_median'],
-            implied['ev_ebit']['equity_value_median'],
+            implied["ev_ebitda"]["equity_value_median"],
+            implied["ev_revenue"]["equity_value_median"],
+            implied["ev_ebit"]["equity_value_median"],
         ]
         equity_values = [v for v in equity_values if v > 0]
         if equity_values:
-            report.append(f"**Implied Equity Value Range:** ${min(equity_values):,.0f}M - ${max(equity_values):,.0f}M\n")
+            report.append(
+                f"**Implied Equity Value Range:** ${min(equity_values):,.0f}M - ${max(equity_values):,.0f}M\n"
+            )
 
         return "\n".join(report)
 
@@ -534,6 +574,7 @@ class ComparableAnalysis:
 # =============================================================================
 # SYNERGY NPV CALCULATOR
 # =============================================================================
+
 
 class SynergyNPVCalculator:
     """Calculate NPV of expected synergies"""
@@ -553,12 +594,12 @@ class SynergyNPVCalculator:
         annual_totals = [0.0] * years
 
         for syn in self.synergies:
-            annual_impact = syn.get('annual_impact', 0)
-            probability = syn.get('probability', 1.0)
+            annual_impact = syn.get("annual_impact", 0)
+            probability = syn.get("probability", 1.0)
             realization = [
-                syn.get('realization_year1', 0),
-                syn.get('realization_year2', 0),
-                syn.get('realization_year3', 1.0),
+                syn.get("realization_year1", 0),
+                syn.get("realization_year2", 0),
+                syn.get("realization_year3", 1.0),
                 1.0,
                 1.0,
             ]
@@ -632,22 +673,23 @@ class SynergyNPVCalculator:
 # CLI HANDLERS
 # =============================================================================
 
+
 def handle_dcf_command(args):
     """Handle DCF valuation command"""
-    with open(args.input_file, 'r') as f:
+    with open(args.input_file, "r") as f:
         data = json.load(f)
 
     dcf = DCFValuation(
-        fcf_projections=data.get('fcf_projections', data.get('cash_flows', [])),
-        wacc=data.get('wacc', 0.08),
-        terminal_growth_rate=data.get('terminal_growth_rate', 0.02),
-        net_debt=data.get('net_debt', 0),
-        minority_interest=data.get('minority_interest', 0),
-        non_operating_assets=data.get('non_operating_assets', 0),
-        shares_outstanding=data.get('shares_outstanding', 1),
+        fcf_projections=data.get("fcf_projections", data.get("cash_flows", [])),
+        wacc=data.get("wacc", 0.08),
+        terminal_growth_rate=data.get("terminal_growth_rate", 0.02),
+        net_debt=data.get("net_debt", 0),
+        minority_interest=data.get("minority_interest", 0),
+        non_operating_assets=data.get("non_operating_assets", 0),
+        shares_outstanding=data.get("shares_outstanding", 1),
     )
 
-    report = dcf.generate_report(data.get('company_name', 'Target Company'))
+    report = dcf.generate_report(data.get("company_name", "Target Company"))
     print(report)
 
     if args.output:
@@ -657,18 +699,18 @@ def handle_dcf_command(args):
 
 def handle_wacc_command(args):
     """Handle WACC calculation command"""
-    with open(args.input_file, 'r') as f:
+    with open(args.input_file, "r") as f:
         data = json.load(f)
 
     params = WACCParameters(
-        risk_free_rate=data.get('risk_free_rate', 0.0425),
-        equity_risk_premium=data.get('equity_risk_premium', 0.055),
-        beta=data.get('beta', 1.0),
-        size_premium=data.get('size_premium', 0.01),
-        cost_of_debt=data.get('cost_of_debt', 0.05),
-        tax_rate=data.get('tax_rate', 0.25),
-        market_value_equity=data.get('market_value_equity', 0),
-        market_value_debt=data.get('market_value_debt', 0),
+        risk_free_rate=data.get("risk_free_rate", 0.0425),
+        equity_risk_premium=data.get("equity_risk_premium", 0.055),
+        beta=data.get("beta", 1.0),
+        size_premium=data.get("size_premium", 0.01),
+        cost_of_debt=data.get("cost_of_debt", 0.05),
+        tax_rate=data.get("tax_rate", 0.25),
+        market_value_equity=data.get("market_value_equity", 0),
+        market_value_debt=data.get("market_value_debt", 0),
     )
 
     calculator = WACCCalculator(params)
@@ -682,16 +724,16 @@ def handle_wacc_command(args):
 
 def handle_multiples_command(args):
     """Handle comparable companies analysis command"""
-    with open(args.target_file, 'r') as f:
+    with open(args.target_file, "r") as f:
         target = json.load(f)
 
-    with open(args.comps_file, 'r') as f:
+    with open(args.comps_file, "r") as f:
         comps_data = json.load(f)
 
-    comps = comps_data if isinstance(comps_data, list) else comps_data.get('companies', [])
+    comps = comps_data if isinstance(comps_data, list) else comps_data.get("companies", [])
 
     analyzer = ComparableAnalysis(target, comps)
-    report = analyzer.generate_report(target.get('company_name', 'Target Company'))
+    report = analyzer.generate_report(target.get("company_name", "Target Company"))
     print(report)
 
     if args.output:
@@ -701,11 +743,11 @@ def handle_multiples_command(args):
 
 def handle_synergy_command(args):
     """Handle synergy NPV calculation command"""
-    with open(args.input_file, 'r') as f:
+    with open(args.input_file, "r") as f:
         data = json.load(f)
 
-    synergies = data.get('synergies', [])
-    realization_costs = data.get('realization_costs', 0)
+    synergies = data.get("synergies", [])
+    realization_costs = data.get("realization_costs", 0)
 
     calculator = SynergyNPVCalculator(
         synergies=synergies,
@@ -723,18 +765,18 @@ def handle_synergy_command(args):
 
 def handle_sensitivity_command(args):
     """Handle sensitivity analysis command"""
-    with open(args.input_file, 'r') as f:
+    with open(args.input_file, "r") as f:
         data = json.load(f)
 
     dcf = DCFValuation(
-        fcf_projections=data.get('fcf_projections', data.get('cash_flows', [])),
-        wacc=data.get('wacc', 0.08),
-        terminal_growth_rate=data.get('terminal_growth_rate', 0.02),
-        net_debt=data.get('net_debt', 0),
+        fcf_projections=data.get("fcf_projections", data.get("cash_flows", [])),
+        wacc=data.get("wacc", 0.08),
+        terminal_growth_rate=data.get("terminal_growth_rate", 0.02),
+        net_debt=data.get("net_debt", 0),
     )
 
-    wacc_range = (data.get('wacc_min', 0.06), data.get('wacc_max', 0.10))
-    growth_range = (data.get('growth_min', 0.01), data.get('growth_max', 0.03))
+    wacc_range = (data.get("wacc_min", 0.06), data.get("wacc_max", 0.10))
+    growth_range = (data.get("growth_min", 0.01), data.get("growth_max", 0.03))
 
     matrix, wacc_values, growth_values = dcf.sensitivity_analysis(
         wacc_range=wacc_range,
@@ -768,60 +810,59 @@ def handle_sensitivity_command(args):
 # MAIN
 # =============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(
-        description='M&A Valuation Calculator - Enterprise Valuation Toolkit',
+        description="M&A Valuation Calculator - Enterprise Valuation Toolkit",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__
+        epilog=__doc__,
     )
 
-    subparsers = parser.add_subparsers(dest='command', help='Valuation command')
+    subparsers = parser.add_subparsers(dest="command", help="Valuation command")
 
     # DCF command
-    dcf_parser = subparsers.add_parser('dcf', help='DCF valuation analysis')
-    dcf_parser.add_argument('input_file', help='JSON file with FCF projections')
-    dcf_parser.add_argument('--output', '-o', help='Output file path')
+    dcf_parser = subparsers.add_parser("dcf", help="DCF valuation analysis")
+    dcf_parser.add_argument("input_file", help="JSON file with FCF projections")
+    dcf_parser.add_argument("--output", "-o", help="Output file path")
 
     # WACC command
-    wacc_parser = subparsers.add_parser('wacc', help='WACC calculation')
-    wacc_parser.add_argument('input_file', help='JSON file with WACC parameters')
-    wacc_parser.add_argument('--output', '-o', help='Output file path')
+    wacc_parser = subparsers.add_parser("wacc", help="WACC calculation")
+    wacc_parser.add_argument("input_file", help="JSON file with WACC parameters")
+    wacc_parser.add_argument("--output", "-o", help="Output file path")
 
     # Multiples command
-    multiples_parser = subparsers.add_parser('multiples', help='Comparable companies analysis')
-    multiples_parser.add_argument('target_file', help='JSON file with target company metrics')
-    multiples_parser.add_argument('comps_file', help='JSON file with comparable companies')
-    multiples_parser.add_argument('--output', '-o', help='Output file path')
+    multiples_parser = subparsers.add_parser("multiples", help="Comparable companies analysis")
+    multiples_parser.add_argument("target_file", help="JSON file with target company metrics")
+    multiples_parser.add_argument("comps_file", help="JSON file with comparable companies")
+    multiples_parser.add_argument("--output", "-o", help="Output file path")
 
     # Synergy command
-    synergy_parser = subparsers.add_parser('synergy', help='Synergy NPV calculation')
-    synergy_parser.add_argument('input_file', help='JSON file with synergy items')
-    synergy_parser.add_argument('--discount-rate', '-r', type=float, default=0.08,
-                                help='Discount rate (default: 0.08)')
-    synergy_parser.add_argument('--output', '-o', help='Output file path')
+    synergy_parser = subparsers.add_parser("synergy", help="Synergy NPV calculation")
+    synergy_parser.add_argument("input_file", help="JSON file with synergy items")
+    synergy_parser.add_argument("--discount-rate", "-r", type=float, default=0.08, help="Discount rate (default: 0.08)")
+    synergy_parser.add_argument("--output", "-o", help="Output file path")
 
     # Sensitivity command
-    sensitivity_parser = subparsers.add_parser('sensitivity', help='Sensitivity analysis matrix')
-    sensitivity_parser.add_argument('input_file', help='JSON file with model parameters')
-    sensitivity_parser.add_argument('--steps', '-s', type=int, default=5,
-                                    help='Number of steps in matrix (default: 5)')
-    sensitivity_parser.add_argument('--output', '-o', help='Output file path')
+    sensitivity_parser = subparsers.add_parser("sensitivity", help="Sensitivity analysis matrix")
+    sensitivity_parser.add_argument("input_file", help="JSON file with model parameters")
+    sensitivity_parser.add_argument("--steps", "-s", type=int, default=5, help="Number of steps in matrix (default: 5)")
+    sensitivity_parser.add_argument("--output", "-o", help="Output file path")
 
     args = parser.parse_args()
 
-    if args.command == 'dcf':
+    if args.command == "dcf":
         handle_dcf_command(args)
-    elif args.command == 'wacc':
+    elif args.command == "wacc":
         handle_wacc_command(args)
-    elif args.command == 'multiples':
+    elif args.command == "multiples":
         handle_multiples_command(args)
-    elif args.command == 'synergy':
+    elif args.command == "synergy":
         handle_synergy_command(args)
-    elif args.command == 'sensitivity':
+    elif args.command == "sensitivity":
         handle_sensitivity_command(args)
     else:
         parser.print_help()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -2,6 +2,4 @@
 
 
 def pytest_configure(config):
-    config.addinivalue_line(
-        "markers", "integration: requires external tools (mmdc/playwright)"
-    )
+    config.addinivalue_line("markers", "integration: requires external tools (mmdc/playwright)")

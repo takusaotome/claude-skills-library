@@ -7,33 +7,27 @@ without requiring actual network commands.
 """
 
 import json
-import unittest
-from unittest.mock import patch, MagicMock, PropertyMock
+import os
 import subprocess
 import sys
-import os
+import unittest
+from unittest.mock import patch
 
 # Add parent scripts dir to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'scripts'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
 from network_diagnostics import (
-    PlatformDetector,
     ConnectionCollector,
-    PingTester,
-    HttpTimingTester,
-    SpeedTester,
-    TracerouteTester,
-    NetworkDiagnostics,
     ConnectionInfo,
+    HttpTimingTester,
     PingResult,
-    HttpTiming,
-    DownloadSpeed,
+    PingTester,
+    PlatformDetector,
+    SpeedTester,
     TracerouteHop,
-    TracerouteResult,
-    DiagnosticsResult,
+    TracerouteTester,
     hex_netmask_to_cidr,
 )
-
 
 # =============================================================================
 # Test Fixtures - Platform-specific command outputs
@@ -221,6 +215,7 @@ CURL_SPEED_OUTPUT = "10485760 0.800000 13107200.000"
 # Test Classes
 # =============================================================================
 
+
 class TestHexNetmaskToCidr(unittest.TestCase):
     """Test hex netmask to CIDR conversion."""
 
@@ -246,29 +241,29 @@ class TestHexNetmaskToCidr(unittest.TestCase):
 class TestPlatformDetector(unittest.TestCase):
     """Test platform detection and command availability checks."""
 
-    @patch('shutil.which')
+    @patch("shutil.which")
     def test_check_command_exists(self, mock_which):
-        mock_which.return_value = '/usr/bin/ping'
+        mock_which.return_value = "/usr/bin/ping"
         detector = PlatformDetector()
-        self.assertTrue(detector.check_command('ping'))
+        self.assertTrue(detector.check_command("ping"))
 
-    @patch('shutil.which')
+    @patch("shutil.which")
     def test_check_command_missing(self, mock_which):
         mock_which.return_value = None
         detector = PlatformDetector()
-        self.assertFalse(detector.check_command('traceroute'))
+        self.assertFalse(detector.check_command("traceroute"))
 
-    @patch('platform.system')
+    @patch("platform.system")
     def test_detect_macos(self, mock_system):
-        mock_system.return_value = 'Darwin'
+        mock_system.return_value = "Darwin"
         detector = PlatformDetector()
-        self.assertEqual(detector.system(), 'Darwin')
+        self.assertEqual(detector.system(), "Darwin")
 
-    @patch('platform.system')
+    @patch("platform.system")
     def test_detect_linux(self, mock_system):
-        mock_system.return_value = 'Linux'
+        mock_system.return_value = "Linux"
         detector = PlatformDetector()
-        self.assertEqual(detector.system(), 'Linux')
+        self.assertEqual(detector.system(), "Linux")
 
 
 class TestPingParser(unittest.TestCase):
@@ -278,10 +273,10 @@ class TestPingParser(unittest.TestCase):
         self.tester = PingTester.__new__(PingTester)
 
     def test_parse_macos_ping_output(self):
-        result = self.tester._parse_ping_output(MACOS_PING_OUTPUT, '8.8.8.8', 'Google DNS', 5)
+        result = self.tester._parse_ping_output(MACOS_PING_OUTPUT, "8.8.8.8", "Google DNS", 5)
         self.assertIsNotNone(result)
-        self.assertEqual(result.target, '8.8.8.8')
-        self.assertEqual(result.target_name, 'Google DNS')
+        self.assertEqual(result.target, "8.8.8.8")
+        self.assertEqual(result.target_name, "Google DNS")
         self.assertAlmostEqual(result.avg_ms, 4.389, places=2)
         self.assertAlmostEqual(result.min_ms, 3.987, places=2)
         self.assertAlmostEqual(result.max_ms, 5.012, places=2)
@@ -290,7 +285,7 @@ class TestPingParser(unittest.TestCase):
         self.assertEqual(result.count, 5)
 
     def test_parse_linux_ping_output(self):
-        result = self.tester._parse_ping_output(LINUX_PING_OUTPUT, '8.8.8.8', 'Google DNS', 5)
+        result = self.tester._parse_ping_output(LINUX_PING_OUTPUT, "8.8.8.8", "Google DNS", 5)
         self.assertIsNotNone(result)
         self.assertAlmostEqual(result.avg_ms, 4.386, places=2)
         self.assertAlmostEqual(result.min_ms, 3.980, places=2)
@@ -299,28 +294,28 @@ class TestPingParser(unittest.TestCase):
         self.assertAlmostEqual(result.packet_loss_pct, 0.0, places=1)
 
     def test_parse_packet_loss(self):
-        result = self.tester._parse_ping_output(PING_PACKET_LOSS_OUTPUT, '10.0.0.99', 'test', 5)
+        result = self.tester._parse_ping_output(PING_PACKET_LOSS_OUTPUT, "10.0.0.99", "test", 5)
         self.assertIsNotNone(result)
         self.assertAlmostEqual(result.packet_loss_pct, 40.0, places=1)
         self.assertAlmostEqual(result.avg_ms, 1.715, places=2)
 
     def test_parse_100_percent_loss(self):
-        result = self.tester._parse_ping_output(PING_100_LOSS_OUTPUT, '192.168.99.99', 'unreachable', 3)
+        result = self.tester._parse_ping_output(PING_100_LOSS_OUTPUT, "192.168.99.99", "unreachable", 3)
         self.assertIsNotNone(result)
         self.assertAlmostEqual(result.packet_loss_pct, 100.0, places=1)
         self.assertIsNone(result.avg_ms)
         self.assertIsNone(result.min_ms)
         self.assertIsNone(result.max_ms)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_ping_timeout_handling(self, mock_run):
-        mock_run.side_effect = subprocess.TimeoutExpired(cmd='ping', timeout=20)
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd="ping", timeout=20)
         tester = PingTester.__new__(PingTester)
         tester._errors = []
-        result = tester._run_ping('8.8.8.8', 'Google DNS', 5)
+        result = tester._run_ping("8.8.8.8", "Google DNS", 5)
         self.assertIsNone(result)
         self.assertEqual(len(tester._errors), 1)
-        self.assertIn('timeout', tester._errors[0].lower())
+        self.assertIn("timeout", tester._errors[0].lower())
 
 
 class TestTracerouteParser(unittest.TestCase):
@@ -330,40 +325,40 @@ class TestTracerouteParser(unittest.TestCase):
         self.tester = TracerouteTester.__new__(TracerouteTester)
 
     def test_parse_normal_hop(self):
-        result = self.tester._parse_traceroute_output(TRACEROUTE_OUTPUT, '8.8.8.8', 'Google DNS')
+        result = self.tester._parse_traceroute_output(TRACEROUTE_OUTPUT, "8.8.8.8", "Google DNS")
         self.assertIsNotNone(result)
         hop1 = result.hops[0]
         self.assertEqual(hop1.hop_number, 1)
-        self.assertEqual(hop1.hostname, 'gateway')
-        self.assertEqual(hop1.ip, '192.168.1.1')
+        self.assertEqual(hop1.hostname, "gateway")
+        self.assertEqual(hop1.ip, "192.168.1.1")
         self.assertAlmostEqual(hop1.rtt_ms, 1.234, places=2)
         self.assertFalse(hop1.is_timeout)
 
     def test_parse_timeout_hop(self):
-        result = self.tester._parse_traceroute_output(TRACEROUTE_OUTPUT, '8.8.8.8', 'Google DNS')
+        result = self.tester._parse_traceroute_output(TRACEROUTE_OUTPUT, "8.8.8.8", "Google DNS")
         hop3 = result.hops[2]
         self.assertEqual(hop3.hop_number, 3)
         self.assertTrue(hop3.is_timeout)
         self.assertIsNone(hop3.rtt_ms)
 
     def test_parse_full_traceroute(self):
-        result = self.tester._parse_traceroute_output(TRACEROUTE_OUTPUT, '8.8.8.8', 'Google DNS')
-        self.assertEqual(result.target, '8.8.8.8')
-        self.assertEqual(result.target_name, 'Google DNS')
+        result = self.tester._parse_traceroute_output(TRACEROUTE_OUTPUT, "8.8.8.8", "Google DNS")
+        self.assertEqual(result.target, "8.8.8.8")
+        self.assertEqual(result.target_name, "Google DNS")
         self.assertEqual(len(result.hops), 5)
         self.assertEqual(result.total_hops, 5)
 
     def test_parse_short_traceroute(self):
-        result = self.tester._parse_traceroute_output(TRACEROUTE_SINGLE_RTT_OUTPUT, '1.1.1.1', 'Cloudflare')
+        result = self.tester._parse_traceroute_output(TRACEROUTE_SINGLE_RTT_OUTPUT, "1.1.1.1", "Cloudflare")
         self.assertEqual(len(result.hops), 3)
         self.assertTrue(result.hops[1].is_timeout)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_traceroute_timeout_handling(self, mock_run):
-        mock_run.side_effect = subprocess.TimeoutExpired(cmd='traceroute', timeout=60)
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd="traceroute", timeout=60)
         tester = TracerouteTester.__new__(TracerouteTester)
         tester._errors = []
-        result = tester._run_traceroute('8.8.8.8', 'Google DNS')
+        result = tester._run_traceroute("8.8.8.8", "Google DNS")
         self.assertIsNone(result)
         self.assertEqual(len(tester._errors), 1)
 
@@ -375,9 +370,9 @@ class TestHttpTimingParser(unittest.TestCase):
         self.tester = HttpTimingTester.__new__(HttpTimingTester)
 
     def test_parse_curl_timing(self):
-        result = self.tester._parse_curl_output(CURL_TIMING_OUTPUT, 'https://example.com')
+        result = self.tester._parse_curl_output(CURL_TIMING_OUTPUT, "https://example.com")
         self.assertIsNotNone(result)
-        self.assertEqual(result.url, 'https://example.com')
+        self.assertEqual(result.url, "https://example.com")
         self.assertAlmostEqual(result.dns_ms, 12.345, places=2)
         # TCP = connect - dns
         self.assertAlmostEqual(result.tcp_ms, 22.222, places=2)
@@ -392,16 +387,16 @@ class TestHttpTimingParser(unittest.TestCase):
 
     def test_tls_handshake_calculation(self):
         """TLS time = appconnect - connect."""
-        result = self.tester._parse_curl_output(CURL_TIMING_OUTPUT, 'https://example.com')
+        result = self.tester._parse_curl_output(CURL_TIMING_OUTPUT, "https://example.com")
         expected_tls = (0.078901 - 0.034567) * 1000  # 44.334 ms
         self.assertAlmostEqual(result.tls_ms, expected_tls, places=1)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_curl_timeout_handling(self, mock_run):
-        mock_run.side_effect = subprocess.TimeoutExpired(cmd='curl', timeout=15)
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd="curl", timeout=15)
         tester = HttpTimingTester.__new__(HttpTimingTester)
         tester._errors = []
-        result = tester._run_http_timing('https://example.com')
+        result = tester._run_http_timing("https://example.com")
         self.assertIsNone(result)
         self.assertEqual(len(tester._errors), 1)
 
@@ -411,36 +406,36 @@ class TestConnectionCollectorMacOS(unittest.TestCase):
 
     def test_parse_macos_ifconfig(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
-        ip, cidr, mac, mtu = collector._parse_macos_ifconfig(MACOS_IFCONFIG_OUTPUT, 'en0')
-        self.assertEqual(ip, '192.168.1.100')
+        ip, cidr, mac, mtu = collector._parse_macos_ifconfig(MACOS_IFCONFIG_OUTPUT, "en0")
+        self.assertEqual(ip, "192.168.1.100")
         self.assertEqual(cidr, 24)
-        self.assertEqual(mac, 'aa:bb:cc:dd:ee:ff')
+        self.assertEqual(mac, "aa:bb:cc:dd:ee:ff")
         self.assertEqual(mtu, 1500)
 
     def test_parse_scutil_dns(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
         dns_servers = collector._parse_scutil_dns(MACOS_SCUTIL_DNS_OUTPUT)
-        self.assertEqual(dns_servers, ['192.168.1.1', '8.8.8.8'])
+        self.assertEqual(dns_servers, ["192.168.1.1", "8.8.8.8"])
 
     def test_parse_macos_gateway(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
         gateway = collector._parse_macos_gateway(MACOS_NETSTAT_GATEWAY)
-        self.assertEqual(gateway, '192.168.1.1')
+        self.assertEqual(gateway, "192.168.1.1")
 
     def test_parse_macos_route_get_default(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
         iface = collector._parse_macos_default_interface(MACOS_ROUTE_GET_DEFAULT)
-        self.assertEqual(iface, 'en0')
+        self.assertEqual(iface, "en0")
 
     def test_parse_networksetup_interface_type(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
-        itype = collector._parse_networksetup_type(MACOS_NETWORKSETUP_OUTPUT, 'en0')
-        self.assertEqual(itype, 'Wi-Fi')
+        itype = collector._parse_networksetup_type(MACOS_NETWORKSETUP_OUTPUT, "en0")
+        self.assertEqual(itype, "Wi-Fi")
 
     def test_parse_networksetup_ethernet(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
-        itype = collector._parse_networksetup_type(MACOS_NETWORKSETUP_OUTPUT, 'en1')
-        self.assertEqual(itype, 'Ethernet')
+        itype = collector._parse_networksetup_type(MACOS_NETWORKSETUP_OUTPUT, "en1")
+        self.assertEqual(itype, "Ethernet")
 
     def test_parse_networksetup_usb_lan(self):
         usb_output = """\
@@ -449,8 +444,8 @@ Device: en7
 Ethernet Address: 98:fd:b4:9a:3c:b8
 """
         collector = ConnectionCollector.__new__(ConnectionCollector)
-        itype = collector._parse_networksetup_type(usb_output, 'en7')
-        self.assertEqual(itype, 'Ethernet')
+        itype = collector._parse_networksetup_type(usb_output, "en7")
+        self.assertEqual(itype, "Ethernet")
 
 
 class TestConnectionCollectorLinux(unittest.TestCase):
@@ -458,36 +453,36 @@ class TestConnectionCollectorLinux(unittest.TestCase):
 
     def test_parse_linux_ip_addr(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
-        ip, cidr, mac, mtu = collector._parse_linux_ip_addr(LINUX_IP_ADDR_OUTPUT, 'eth0')
-        self.assertEqual(ip, '192.168.1.100')
+        ip, cidr, mac, mtu = collector._parse_linux_ip_addr(LINUX_IP_ADDR_OUTPUT, "eth0")
+        self.assertEqual(ip, "192.168.1.100")
         self.assertEqual(cidr, 24)
-        self.assertEqual(mac, 'aa:bb:cc:dd:ee:ff')
+        self.assertEqual(mac, "aa:bb:cc:dd:ee:ff")
         self.assertEqual(mtu, 1500)
 
     def test_parse_linux_ifconfig_fallback(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
-        ip, cidr, mac, mtu = collector._parse_linux_ifconfig(LINUX_IFCONFIG_OUTPUT, 'eth0')
-        self.assertEqual(ip, '192.168.1.100')
+        ip, cidr, mac, mtu = collector._parse_linux_ifconfig(LINUX_IFCONFIG_OUTPUT, "eth0")
+        self.assertEqual(ip, "192.168.1.100")
         self.assertEqual(cidr, 24)
-        self.assertEqual(mac, 'aa:bb:cc:dd:ee:ff')
+        self.assertEqual(mac, "aa:bb:cc:dd:ee:ff")
         self.assertEqual(mtu, 1500)
 
     def test_parse_resolv_conf(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
         dns_servers = collector._parse_resolv_conf(RESOLV_CONF)
-        self.assertEqual(dns_servers, ['192.168.1.1', '8.8.8.8'])
+        self.assertEqual(dns_servers, ["192.168.1.1", "8.8.8.8"])
 
     def test_parse_linux_ip_route(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
         gateway, iface = collector._parse_linux_ip_route(LINUX_IP_ROUTE_OUTPUT)
-        self.assertEqual(gateway, '192.168.1.1')
-        self.assertEqual(iface, 'eth0')
+        self.assertEqual(gateway, "192.168.1.1")
+        self.assertEqual(iface, "eth0")
 
     def test_parse_linux_route_n_fallback(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
         gateway, iface = collector._parse_linux_route_n(LINUX_ROUTE_N_OUTPUT)
-        self.assertEqual(gateway, '192.168.1.1')
-        self.assertEqual(iface, 'eth0')
+        self.assertEqual(gateway, "192.168.1.1")
+        self.assertEqual(iface, "eth0")
 
 
 class TestSpeedTester(unittest.TestCase):
@@ -497,20 +492,18 @@ class TestSpeedTester(unittest.TestCase):
         self.tester = SpeedTester.__new__(SpeedTester)
 
     def test_parse_curl_speed(self):
-        result = self.tester._parse_speed_output(
-            CURL_SPEED_OUTPUT, 'https://example.com/10MB.bin', 'Test Server', 0.8
-        )
+        result = self.tester._parse_speed_output(CURL_SPEED_OUTPUT, "https://example.com/10MB.bin", "Test Server", 0.8)
         self.assertIsNotNone(result)
-        self.assertEqual(result.url, 'https://example.com/10MB.bin')
-        self.assertEqual(result.label, 'Test Server')
+        self.assertEqual(result.url, "https://example.com/10MB.bin")
+        self.assertEqual(result.label, "Test Server")
         self.assertGreater(result.speed_mbps, 0)
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_timeout_handling(self, mock_run):
-        mock_run.side_effect = subprocess.TimeoutExpired(cmd='curl', timeout=30)
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd="curl", timeout=30)
         tester = SpeedTester.__new__(SpeedTester)
         tester._errors = []
-        result = tester._run_speed_test('https://example.com/10MB.bin', 'Test', 30)
+        result = tester._run_speed_test("https://example.com/10MB.bin", "Test", 30)
         self.assertIsNone(result)
         self.assertEqual(len(tester._errors), 1)
 
@@ -518,32 +511,32 @@ class TestSpeedTester(unittest.TestCase):
 class TestTimeoutHandling(unittest.TestCase):
     """Test timeout handling across all command types."""
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_ping_timeout(self, mock_run):
-        mock_run.side_effect = subprocess.TimeoutExpired(cmd='ping', timeout=20)
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd="ping", timeout=20)
         tester = PingTester.__new__(PingTester)
         tester._errors = []
-        result = tester._run_ping('8.8.8.8', 'Google DNS', 5)
+        result = tester._run_ping("8.8.8.8", "Google DNS", 5)
         self.assertIsNone(result)
-        self.assertTrue(any('timeout' in e.lower() for e in tester._errors))
+        self.assertTrue(any("timeout" in e.lower() for e in tester._errors))
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_traceroute_timeout(self, mock_run):
-        mock_run.side_effect = subprocess.TimeoutExpired(cmd='traceroute', timeout=60)
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd="traceroute", timeout=60)
         tester = TracerouteTester.__new__(TracerouteTester)
         tester._errors = []
-        result = tester._run_traceroute('8.8.8.8', 'Google DNS')
+        result = tester._run_traceroute("8.8.8.8", "Google DNS")
         self.assertIsNone(result)
-        self.assertTrue(any('timeout' in e.lower() for e in tester._errors))
+        self.assertTrue(any("timeout" in e.lower() for e in tester._errors))
 
-    @patch('subprocess.run')
+    @patch("subprocess.run")
     def test_curl_timeout(self, mock_run):
-        mock_run.side_effect = subprocess.TimeoutExpired(cmd='curl', timeout=15)
+        mock_run.side_effect = subprocess.TimeoutExpired(cmd="curl", timeout=15)
         tester = HttpTimingTester.__new__(HttpTimingTester)
         tester._errors = []
-        result = tester._run_http_timing('https://example.com')
+        result = tester._run_http_timing("https://example.com")
         self.assertIsNone(result)
-        self.assertTrue(any('timeout' in e.lower() for e in tester._errors))
+        self.assertTrue(any("timeout" in e.lower() for e in tester._errors))
 
 
 class TestDiagnosticsResultSerialization(unittest.TestCase):
@@ -551,44 +544,57 @@ class TestDiagnosticsResultSerialization(unittest.TestCase):
 
     def test_serialize_ping_result(self):
         pr = PingResult(
-            target='8.8.8.8', target_name='Google DNS',
-            avg_ms=4.389, min_ms=3.987, max_ms=5.012, stddev_ms=0.365,
-            packet_loss_pct=0.0, count=5
+            target="8.8.8.8",
+            target_name="Google DNS",
+            avg_ms=4.389,
+            min_ms=3.987,
+            max_ms=5.012,
+            stddev_ms=0.365,
+            packet_loss_pct=0.0,
+            count=5,
         )
         d = pr.to_dict()
-        self.assertEqual(d['target'], '8.8.8.8')
-        self.assertEqual(d['avg_ms'], 4.389)
+        self.assertEqual(d["target"], "8.8.8.8")
+        self.assertEqual(d["avg_ms"], 4.389)
         j = json.dumps(d)
-        self.assertIn('8.8.8.8', j)
+        self.assertIn("8.8.8.8", j)
 
     def test_serialize_connection_info(self):
         ci = ConnectionInfo(
-            interface='en0', type='Wi-Fi', ip='192.168.1.100',
-            cidr=24, gateway='192.168.1.1', dns=['8.8.8.8'],
-            isp=None, mac='aa:bb:cc:dd:ee:ff', mtu=1500
+            interface="en0",
+            type="Wi-Fi",
+            ip="192.168.1.100",
+            cidr=24,
+            gateway="192.168.1.1",
+            dns=["8.8.8.8"],
+            isp=None,
+            mac="aa:bb:cc:dd:ee:ff",
+            mtu=1500,
         )
         d = ci.to_dict()
-        self.assertEqual(d['interface'], 'en0')
-        self.assertEqual(d['type'], 'Wi-Fi')
-        self.assertIsNone(d['isp'])
+        self.assertEqual(d["interface"], "en0")
+        self.assertEqual(d["type"], "Wi-Fi")
+        self.assertIsNone(d["isp"])
 
     def test_serialize_traceroute_hop(self):
-        hop = TracerouteHop(
-            hop_number=1, hostname='gateway', ip='192.168.1.1',
-            rtt_ms=1.234, is_timeout=False
-        )
+        hop = TracerouteHop(hop_number=1, hostname="gateway", ip="192.168.1.1", rtt_ms=1.234, is_timeout=False)
         d = hop.to_dict()
-        self.assertEqual(d['hop_number'], 1)
-        self.assertFalse(d['is_timeout'])
+        self.assertEqual(d["hop_number"], 1)
+        self.assertFalse(d["is_timeout"])
 
     def test_serialize_100_loss_ping(self):
         pr = PingResult(
-            target='192.168.99.99', target_name='unreachable',
-            avg_ms=None, min_ms=None, max_ms=None, stddev_ms=None,
-            packet_loss_pct=100.0, count=3
+            target="192.168.99.99",
+            target_name="unreachable",
+            avg_ms=None,
+            min_ms=None,
+            max_ms=None,
+            stddev_ms=None,
+            packet_loss_pct=100.0,
+            count=3,
         )
         d = pr.to_dict()
-        self.assertIsNone(d['avg_ms'])
+        self.assertIsNone(d["avg_ms"])
         j = json.dumps(d)
         self.assertIn('"avg_ms": null', j)
 
@@ -599,9 +605,9 @@ class TestNetmaskConversions(unittest.TestCase):
     def test_parse_linux_dotted_netmask(self):
         collector = ConnectionCollector.__new__(ConnectionCollector)
         # The Linux ifconfig fallback parser should handle dotted netmask
-        ip, cidr, mac, mtu = collector._parse_linux_ifconfig(LINUX_IFCONFIG_OUTPUT, 'eth0')
+        ip, cidr, mac, mtu = collector._parse_linux_ifconfig(LINUX_IFCONFIG_OUTPUT, "eth0")
         self.assertEqual(cidr, 24)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

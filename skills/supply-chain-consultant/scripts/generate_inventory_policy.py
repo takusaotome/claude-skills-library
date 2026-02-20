@@ -86,7 +86,7 @@ def generate_policy_table(data: list[dict], service_level: float) -> str:
         "# Inventory Policy Table",
         "",
         f"**Generated**: {now}",
-        f"**Service Level**: {service_level*100:.1f}% (Z = {z:.2f})",
+        f"**Service Level**: {service_level * 100:.1f}% (Z = {z:.2f})",
         f"**SKUs**: {len(data)}",
         "",
         "## Policy Summary",
@@ -98,12 +98,17 @@ def generate_policy_table(data: list[dict], service_level: float) -> str:
     total_ss_value = 0.0
     for row in data:
         ss = calc_safety_stock(
-            z, row["lead_time_days"], row["daily_demand_stddev"],
-            row["daily_demand_avg"], row["lead_time_stddev"],
+            z,
+            row["lead_time_days"],
+            row["daily_demand_stddev"],
+            row["daily_demand_avg"],
+            row["lead_time_stddev"],
         )
         eoq = calc_eoq(
-            row["annual_demand"], row["order_cost"],
-            row["unit_cost"], row["holding_cost_pct"],
+            row["annual_demand"],
+            row["order_cost"],
+            row["unit_cost"],
+            row["holding_cost_pct"],
         )
         rop = round(row["daily_demand_avg"] * row["lead_time_days"]) + ss
         max_stock = rop + eoq
@@ -115,14 +120,16 @@ def generate_policy_table(data: list[dict], service_level: float) -> str:
             f"| {policy_type} | {ss:,} | {eoq:,} | {rop:,} | {max_stock:,} | {review_freq} |"
         )
 
-    lines.extend([
-        "",
-        "## Cost Summary",
-        "",
-        f"- **Total Safety Stock Value**: ${total_ss_value:,.0f}",
-        f"- **Annual Carrying Cost (SS only)**: ${total_ss_value * 0.20:,.0f} (at 20%)",
-        "",
-    ])
+    lines.extend(
+        [
+            "",
+            "## Cost Summary",
+            "",
+            f"- **Total Safety Stock Value**: ${total_ss_value:,.0f}",
+            f"- **Annual Carrying Cost (SS only)**: ${total_ss_value * 0.20:,.0f} (at 20%)",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -131,7 +138,9 @@ def main():
     parser.add_argument("input_file", help="CSV file with SKU inventory parameters")
     parser.add_argument("-o", "--output", help="Output markdown file (default: stdout)")
     parser.add_argument(
-        "--service-level", type=float, default=0.975,
+        "--service-level",
+        type=float,
+        default=0.975,
         help="Target service level (default: 0.975 = 97.5%%)",
     )
     args = parser.parse_args()

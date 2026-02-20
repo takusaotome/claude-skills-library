@@ -15,11 +15,12 @@ Usage:
     3. Run with: streamlit run dashboard_template.py
 """
 
-import streamlit as st
-import pandas as pd
-import numpy as np
 from datetime import datetime, timedelta
 from typing import Optional, Tuple
+
+import numpy as np
+import pandas as pd
+import streamlit as st
 
 # Optional imports (install as needed)
 try:
@@ -72,9 +73,7 @@ def load_main_data() -> pd.DataFrame:
     np.random.seed(42)
     n_rows = 10000
 
-    dates = pd.date_range(
-        end=datetime.now(), periods=n_rows, freq="h"
-    )
+    dates = pd.date_range(end=datetime.now(), periods=n_rows, freq="h")
 
     df = pd.DataFrame(
         {
@@ -82,9 +81,7 @@ def load_main_data() -> pd.DataFrame:
             "value": np.random.randn(n_rows).cumsum() + 100,
             "volume": np.random.exponential(1000, n_rows),
             "category": np.random.choice(["A", "B", "C", "D"], n_rows),
-            "region": np.random.choice(
-                ["North", "South", "East", "West"], n_rows
-            ),
+            "region": np.random.choice(["North", "South", "East", "West"], n_rows),
             "is_active": np.random.choice([True, False], n_rows, p=[0.8, 0.2]),
         }
     )
@@ -117,8 +114,7 @@ def filter_data(
 
     # Date filter
     filtered = filtered[
-        (filtered["timestamp"].dt.date >= date_range[0])
-        & (filtered["timestamp"].dt.date <= date_range[1])
+        (filtered["timestamp"].dt.date >= date_range[0]) & (filtered["timestamp"].dt.date <= date_range[1])
     ]
 
     # Category filter
@@ -171,9 +167,7 @@ def create_kpi_cards(stats: dict):
 def create_time_series_chart(df: pd.DataFrame, chart_library: str = "native"):
     """Create time series chart using specified library."""
     # Resample data for better performance
-    daily = df.groupby(df["timestamp"].dt.date).agg(
-        {"value": "mean", "volume": "sum"}
-    ).reset_index()
+    daily = df.groupby(df["timestamp"].dt.date).agg({"value": "mean", "volume": "sum"}).reset_index()
     daily.columns = ["date", "value", "volume"]
 
     if chart_library == "plotly" and PLOTLY_AVAILABLE:
@@ -209,9 +203,7 @@ def create_time_series_chart(df: pd.DataFrame, chart_library: str = "native"):
 
 def create_category_chart(df: pd.DataFrame, chart_library: str = "native"):
     """Create category distribution chart."""
-    category_stats = df.groupby("category").agg(
-        {"value": "mean", "volume": "sum", "timestamp": "count"}
-    ).reset_index()
+    category_stats = df.groupby("category").agg({"value": "mean", "volume": "sum", "timestamp": "count"}).reset_index()
     category_stats.columns = ["category", "avg_value", "total_volume", "count"]
 
     if chart_library == "plotly" and PLOTLY_AVAILABLE:
@@ -452,9 +444,7 @@ def main():
         )
 
         if len(filtered_df) > CONFIG["max_display_rows"]:
-            st.caption(
-                f"Showing {CONFIG['max_display_rows']:,} of {len(filtered_df):,} records"
-            )
+            st.caption(f"Showing {CONFIG['max_display_rows']:,} of {len(filtered_df):,} records")
 
         # Download button
         csv = filtered_df.to_csv(index=False)

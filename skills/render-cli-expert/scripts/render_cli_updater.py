@@ -15,16 +15,13 @@ Usage:
 
 import argparse
 import json
-import os
-import re
 import sys
-import urllib.request
 import urllib.error
-from datetime import datetime, timedelta
+import urllib.request
+from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Optional
-
 
 # Configuration
 SKILL_DIR = Path(__file__).parent.parent
@@ -45,7 +42,7 @@ class SimpleHTMLTextExtractor(HTMLParser):
     def __init__(self):
         super().__init__()
         self.text_parts = []
-        self.skip_tags = {'script', 'style', 'nav', 'footer', 'header'}
+        self.skip_tags = {"script", "style", "nav", "footer", "header"}
         self.current_skip = False
         self.skip_depth = 0
 
@@ -67,7 +64,7 @@ class SimpleHTMLTextExtractor(HTMLParser):
                 self.text_parts.append(text)
 
     def get_text(self) -> str:
-        return '\n'.join(self.text_parts)
+        return "\n".join(self.text_parts)
 
 
 def load_last_check() -> Optional[dict]:
@@ -76,7 +73,7 @@ def load_last_check() -> Optional[dict]:
         return None
 
     try:
-        with open(LAST_CHECK_FILE, 'r', encoding='utf-8') as f:
+        with open(LAST_CHECK_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     except (json.JSONDecodeError, IOError) as e:
         print(f"Warning: Could not load last check file: {e}")
@@ -87,7 +84,7 @@ def save_last_check(data: dict) -> None:
     """Save the last check information to JSON file."""
     REFERENCES_DIR.mkdir(parents=True, exist_ok=True)
 
-    with open(LAST_CHECK_FILE, 'w', encoding='utf-8') as f:
+    with open(LAST_CHECK_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
@@ -96,7 +93,7 @@ def needs_update(last_check: Optional[dict]) -> bool:
     if last_check is None:
         return True
 
-    last_check_date_str = last_check.get('last_check_date')
+    last_check_date_str = last_check.get("last_check_date")
     if not last_check_date_str:
         return True
 
@@ -111,13 +108,13 @@ def needs_update(last_check: Optional[dict]) -> bool:
 def fetch_url(url: str, timeout: int = 30) -> Optional[str]:
     """Fetch content from a URL."""
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
 
     try:
         request = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(request, timeout=timeout) as response:
-            return response.read().decode('utf-8')
+            return response.read().decode("utf-8")
     except urllib.error.URLError as e:
         print(f"Error fetching {url}: {e}")
         return None
@@ -136,10 +133,7 @@ def extract_text_from_html(html: str) -> str:
 def fetch_github_release() -> Optional[dict]:
     """Fetch the latest release information from GitHub."""
     try:
-        headers = {
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'Render-CLI-Updater/1.0'
-        }
+        headers = {"Accept": "application/vnd.github.v3+json", "User-Agent": "Render-CLI-Updater/1.0"}
         request = urllib.request.Request(GITHUB_RELEASES_URL, headers=headers)
         with urllib.request.urlopen(request, timeout=30) as response:
             return json.load(response)
@@ -154,20 +148,20 @@ def generate_update_report(docs_content: str, release_info: Optional[dict]) -> s
 
     report = f"""# Render CLI Updates
 
-Last updated: {now.strftime('%Y-%m-%d %H:%M:%S')}
+Last updated: {now.strftime("%Y-%m-%d %H:%M:%S")}
 
 ## Latest Release Information
 
 """
 
     if release_info:
-        report += f"""- **Version**: {release_info.get('tag_name', 'Unknown')}
-- **Published**: {release_info.get('published_at', 'Unknown')[:10] if release_info.get('published_at') else 'Unknown'}
-- **Release URL**: {release_info.get('html_url', GITHUB_RELEASES_URL)}
+        report += f"""- **Version**: {release_info.get("tag_name", "Unknown")}
+- **Published**: {release_info.get("published_at", "Unknown")[:10] if release_info.get("published_at") else "Unknown"}
+- **Release URL**: {release_info.get("html_url", GITHUB_RELEASES_URL)}
 
 ### Release Notes
 
-{release_info.get('body', 'No release notes available.')}
+{release_info.get("body", "No release notes available.")}
 
 """
     else:
@@ -182,7 +176,7 @@ Source: {RENDER_CLI_DOCS_URL}
 """
 
     # Extract key sections from docs content
-    lines = docs_content.split('\n')
+    lines = docs_content.split("\n")
     key_sections = []
     current_section = []
 
@@ -190,14 +184,14 @@ Source: {RENDER_CLI_DOCS_URL}
         if line.strip():
             current_section.append(line.strip())
             if len(current_section) > 5:
-                key_sections.append(' '.join(current_section))
+                key_sections.append(" ".join(current_section))
                 current_section = []
 
     if current_section:
-        key_sections.append(' '.join(current_section))
+        key_sections.append(" ".join(current_section))
 
     # Add relevant excerpts (first 2000 chars of meaningful content)
-    content_excerpt = '\n'.join(key_sections)[:2000]
+    content_excerpt = "\n".join(key_sections)[:2000]
     report += f"{content_excerpt}\n\n"
 
     report += f"""## Update Check Configuration
@@ -228,16 +222,16 @@ def perform_update(force: bool = False) -> bool:
 
     if not force and not needs_update(last_check):
         days_since = 0
-        if last_check and last_check.get('last_check_date'):
+        if last_check and last_check.get("last_check_date"):
             try:
-                last_date = datetime.fromisoformat(last_check['last_check_date'])
+                last_date = datetime.fromisoformat(last_check["last_check_date"])
                 days_since = (datetime.now() - last_date).days
             except ValueError:
                 pass
 
         print(f"Last check was {days_since} days ago. No update needed.")
         print(f"Next update will be checked after {UPDATE_INTERVAL_DAYS - days_since} days.")
-        print(f"Use --force to update now.")
+        print("Use --force to update now.")
         return True
 
     print("Fetching latest Render CLI documentation...")
@@ -260,19 +254,19 @@ def perform_update(force: bool = False) -> bool:
 
     # Save report
     REFERENCES_DIR.mkdir(parents=True, exist_ok=True)
-    with open(UPDATES_FILE, 'w', encoding='utf-8') as f:
+    with open(UPDATES_FILE, "w", encoding="utf-8") as f:
         f.write(report)
 
     # Update last check file
     check_data = {
-        'last_check_date': datetime.now().isoformat(),
-        'docs_url': RENDER_CLI_DOCS_URL,
-        'latest_version': release_info.get('tag_name') if release_info else None,
-        'update_interval_days': UPDATE_INTERVAL_DAYS
+        "last_check_date": datetime.now().isoformat(),
+        "docs_url": RENDER_CLI_DOCS_URL,
+        "latest_version": release_info.get("tag_name") if release_info else None,
+        "update_interval_days": UPDATE_INTERVAL_DAYS,
     }
     save_last_check(check_data)
 
-    print(f"Update completed successfully!")
+    print("Update completed successfully!")
     print(f"Report saved to: {UPDATES_FILE}")
     if release_info:
         print(f"Latest version: {release_info.get('tag_name', 'Unknown')}")
@@ -290,7 +284,7 @@ def show_status() -> None:
         print("No previous check found. Run without --status to perform initial check.")
         return
 
-    last_date_str = last_check.get('last_check_date', 'Unknown')
+    last_date_str = last_check.get("last_check_date", "Unknown")
     try:
         last_date = datetime.fromisoformat(last_date_str)
         days_since = (datetime.now() - last_date).days
@@ -315,7 +309,7 @@ def show_status() -> None:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Render CLI Documentation Auto-Updater',
+        description="Render CLI Documentation Auto-Updater",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -323,26 +317,16 @@ Examples:
   python3 render_cli_updater.py --force   # Force update
   python3 render_cli_updater.py --status  # Show status
   python3 render_cli_updater.py --check   # Check only, no update
-        """
+        """,
     )
 
-    parser.add_argument(
-        '--force', '-f',
-        action='store_true',
-        help='Force update regardless of time since last check'
-    )
+    parser.add_argument("--force", "-f", action="store_true", help="Force update regardless of time since last check")
 
     parser.add_argument(
-        '--check', '-c',
-        action='store_true',
-        help='Only check if update is needed, do not perform update'
+        "--check", "-c", action="store_true", help="Only check if update is needed, do not perform update"
     )
 
-    parser.add_argument(
-        '--status', '-s',
-        action='store_true',
-        help='Show current status and last check information'
-    )
+    parser.add_argument("--status", "-s", action="store_true", help="Show current status and last check information")
 
     args = parser.parse_args()
 
@@ -363,5 +347,5 @@ Examples:
     return 0 if success else 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

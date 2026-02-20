@@ -7,7 +7,6 @@ import argparse
 import csv
 from pathlib import Path
 
-
 SCENARIOS = {
     "upside": {"growth_multiplier": 1.30, "cogs_multiplier": 0.95, "opex_multiplier": 1.00},
     "base": {"growth_multiplier": 1.00, "cogs_multiplier": 1.00, "opex_multiplier": 1.00},

@@ -47,6 +47,7 @@ CONTENT_WIDTH_MM = PAGE_WIDTH_MM - 2 * PAGE_MARGIN_MM  # 190mm
 # Frontmatter parsing
 # ============================================================
 
+
 def parse_frontmatter(text: str) -> Tuple[Dict[str, Any], str]:
     """Parse YAML frontmatter from Markdown text.
 
@@ -57,7 +58,7 @@ def parse_frontmatter(text: str) -> Tuple[Dict[str, Any], str]:
     if not match:
         return {}, text
     fm_str = match.group(1)
-    body = text[match.end():]
+    body = text[match.end() :]
     try:
         fm = yaml.safe_load(fm_str) or {}
     except yaml.YAMLError:
@@ -68,6 +69,7 @@ def parse_frontmatter(text: str) -> Tuple[Dict[str, Any], str]:
 # ============================================================
 # Markdown AST parsing via mistune 3.x
 # ============================================================
+
 
 def parse_markdown(text: str) -> List[Dict]:
     """Parse Markdown to AST tokens using mistune 3.x."""
@@ -101,10 +103,14 @@ def children_to_markdown(children: List[Dict]) -> str:
         if ctype == "text":
             parts.append(child.get("raw", child.get("children", "")))
         elif ctype == "strong":
-            inner = children_to_markdown(child["children"]) if isinstance(child["children"], list) else child["children"]
+            inner = (
+                children_to_markdown(child["children"]) if isinstance(child["children"], list) else child["children"]
+            )
             parts.append(f"**{inner}**")
         elif ctype == "emphasis":
-            inner = children_to_markdown(child["children"]) if isinstance(child["children"], list) else child["children"]
+            inner = (
+                children_to_markdown(child["children"]) if isinstance(child["children"], list) else child["children"]
+            )
             parts.append(f"__{inner}__")
         elif ctype == "codespan":
             raw = child.get("raw", child.get("children", ""))
@@ -127,11 +133,11 @@ def children_to_markdown(children: List[Dict]) -> str:
 # ProfessionalPDF class
 # ============================================================
 
+
 class ProfessionalPDF(FPDF):
     """FPDF subclass for professional document rendering with theme support."""
 
-    def __init__(self, theme: Theme, frontmatter: Optional[Dict] = None,
-                 font_regular: str = "", font_bold: str = ""):
+    def __init__(self, theme: Theme, frontmatter: Optional[Dict] = None, font_regular: str = "", font_bold: str = ""):
         super().__init__(orientation="P", unit="mm", format="A4")
         self.theme = theme
         self.frontmatter = frontmatter or {}
@@ -140,8 +146,8 @@ class ProfessionalPDF(FPDF):
         # Register fonts — all 4 styles to avoid 'Undefined font' on markdown=True
         self.add_font(FONT_FAMILY, "", font_regular)
         self.add_font(FONT_FAMILY, "B", font_bold)
-        self.add_font(FONT_FAMILY, "I", font_regular)   # Map italic to regular
-        self.add_font(FONT_FAMILY, "BI", font_bold)      # Map bold-italic to bold
+        self.add_font(FONT_FAMILY, "I", font_regular)  # Map italic to regular
+        self.add_font(FONT_FAMILY, "BI", font_bold)  # Map bold-italic to bold
 
         self.set_auto_page_break(auto=True, margin=25)
 
@@ -173,8 +179,7 @@ class ProfessionalPDF(FPDF):
             return
         self.set_y(-20)
         self.set_draw_color(*self.theme.primary)
-        self.line(PAGE_MARGIN_MM, self.get_y(),
-                  PAGE_WIDTH_MM - PAGE_MARGIN_MM, self.get_y())
+        self.line(PAGE_MARGIN_MM, self.get_y(), PAGE_WIDTH_MM - PAGE_MARGIN_MM, self.get_y())
         self.ln(2)
         self.set_font(FONT_FAMILY, "", 7)
         self.set_text_color(*self.theme.text_medium)
@@ -203,8 +208,7 @@ class ProfessionalPDF(FPDF):
         if fm.get("confidential"):
             self.set_font(FONT_FAMILY, "B", 11)
             self.set_text_color(*self.theme.accent_red)
-            self.cell(0, 8, "CONFIDENTIAL", align="C",
-                      new_x="LMARGIN", new_y="NEXT")
+            self.cell(0, 8, "CONFIDENTIAL", align="C", new_x="LMARGIN", new_y="NEXT")
             self.ln(3)
 
         # Title
@@ -262,8 +266,7 @@ class ProfessionalPDF(FPDF):
         self.set_text_color(*self.theme.primary)
         self.cell(0, 10, text, new_x="LMARGIN", new_y="NEXT")
         self.set_draw_color(*self.theme.primary)
-        self.line(PAGE_MARGIN_MM, self.get_y(),
-                  PAGE_WIDTH_MM - PAGE_MARGIN_MM, self.get_y())
+        self.line(PAGE_MARGIN_MM, self.get_y(), PAGE_WIDTH_MM - PAGE_MARGIN_MM, self.get_y())
         self.ln(5)
 
     def sub_title(self, text: str):
@@ -421,6 +424,7 @@ class ProfessionalPDF(FPDF):
 # Column width computation
 # ============================================================
 
+
 def _compute_col_widths(pdf: FPDF, headers: List[str], rows: List[List[str]]) -> List[float]:
     """Compute proportional column widths based on content."""
     num_cols = len(headers)
@@ -451,11 +455,11 @@ def _compute_col_widths(pdf: FPDF, headers: List[str], rows: List[List[str]]) ->
 # FPDFRenderer — walk mistune AST and call ProfessionalPDF methods
 # ============================================================
 
+
 class FPDFRenderer:
     """Renders mistune AST tokens to a ProfessionalPDF instance."""
 
-    def __init__(self, pdf: ProfessionalPDF, strict_mermaid: bool = True,
-                 debug_mermaid: bool = False):
+    def __init__(self, pdf: ProfessionalPDF, strict_mermaid: bool = True, debug_mermaid: bool = False):
         self.pdf = pdf
         self._next_table_style = "data"  # "data" or "info"
         self._strict_mermaid = strict_mermaid
@@ -613,6 +617,7 @@ class FPDFRenderer:
         """
         if self._mermaid_renderer is None:
             from mermaid_renderer import MermaidBackend, MermaidRenderer
+
             self._mermaid_renderer = MermaidRenderer(
                 backend=MermaidBackend.AUTO,
                 output_format="png",
@@ -634,6 +639,7 @@ class FPDFRenderer:
                 print(f"  Fix: {result.fix_suggestion}", file=sys.stderr)
             if self._strict_mermaid:
                 from mermaid_renderer import MermaidRenderError
+
                 raise MermaidRenderError(result)
             else:
                 self.pdf.code_block(code)
@@ -642,13 +648,13 @@ class FPDFRenderer:
         """Print Mermaid rendering statistics."""
         total = self._mermaid_success + self._mermaid_failure
         if total > 0:
-            print(f"Mermaid: {self._mermaid_success}/{total} succeeded, "
-                  f"{self._mermaid_failure}/{total} failed")
+            print(f"Mermaid: {self._mermaid_success}/{total} succeeded, {self._mermaid_failure}/{total} failed")
 
 
 # ============================================================
 # Public API
 # ============================================================
+
 
 def render_pdf(
     markdown_text: str,
@@ -697,8 +703,7 @@ def render_pdf(
     fr, fb = discover_fonts(font_regular, font_bold)
 
     # Create PDF
-    pdf = ProfessionalPDF(theme=theme, frontmatter=frontmatter,
-                          font_regular=fr, font_bold=fb)
+    pdf = ProfessionalPDF(theme=theme, frontmatter=frontmatter, font_regular=fr, font_bold=fb)
     pdf.alias_nb_pages()
 
     # Cover page
@@ -709,8 +714,7 @@ def render_pdf(
 
     # Parse and render
     tokens = parse_markdown(markdown_text)
-    renderer = FPDFRenderer(pdf, strict_mermaid=strict_mermaid,
-                            debug_mermaid=debug_mermaid)
+    renderer = FPDFRenderer(pdf, strict_mermaid=strict_mermaid, debug_mermaid=debug_mermaid)
     renderer.render(tokens)
 
     # Report Mermaid stats and cleanup cache
@@ -728,26 +732,24 @@ def render_pdf(
 # CLI
 # ============================================================
 
+
 def main():
-    parser = argparse.ArgumentParser(
-        description="Convert Markdown to Professional PDF (fpdf2)"
-    )
+    parser = argparse.ArgumentParser(description="Convert Markdown to Professional PDF (fpdf2)")
     parser.add_argument("input", help="Input Markdown file")
     parser.add_argument("output", help="Output PDF file")
-    parser.add_argument("--theme", choices=["navy", "gray"], default=None,
-                        help="Color theme (default: from frontmatter or navy)")
-    parser.add_argument("--confidential", action="store_true",
-                        help="Mark document as confidential")
-    parser.add_argument("--no-cover", action="store_true",
-                        help="Suppress cover page")
-    parser.add_argument("--font-regular", default=None,
-                        help="Path to regular weight CJK font (.ttc/.ttf/.otf)")
-    parser.add_argument("--font-bold", default=None,
-                        help="Path to bold weight CJK font (.ttc/.ttf/.otf)")
-    parser.add_argument("--no-strict-mermaid", action="store_true",
-                        help="Allow Mermaid fallback to code block on failure (default: strict)")
-    parser.add_argument("--debug-mermaid", action="store_true",
-                        help="Print detailed Mermaid conversion debug output")
+    parser.add_argument(
+        "--theme", choices=["navy", "gray"], default=None, help="Color theme (default: from frontmatter or navy)"
+    )
+    parser.add_argument("--confidential", action="store_true", help="Mark document as confidential")
+    parser.add_argument("--no-cover", action="store_true", help="Suppress cover page")
+    parser.add_argument("--font-regular", default=None, help="Path to regular weight CJK font (.ttc/.ttf/.otf)")
+    parser.add_argument("--font-bold", default=None, help="Path to bold weight CJK font (.ttc/.ttf/.otf)")
+    parser.add_argument(
+        "--no-strict-mermaid",
+        action="store_true",
+        help="Allow Mermaid fallback to code block on failure (default: strict)",
+    )
+    parser.add_argument("--debug-mermaid", action="store_true", help="Print detailed Mermaid conversion debug output")
 
     args = parser.parse_args()
 

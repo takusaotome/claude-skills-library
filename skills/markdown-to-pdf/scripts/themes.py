@@ -8,7 +8,7 @@ for use with fpdf2-based PDF rendering.
 
 import platform
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -80,10 +80,8 @@ def get_theme(name: str) -> Theme:
 
 # Font discovery paths per platform
 _MACOS_FONTS = [
-    ("/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc",
-     "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc"),
-    ("/System/Library/Fonts/Hiragino Sans GB W3.otf",
-     "/System/Library/Fonts/Hiragino Sans GB W6.otf"),
+    ("/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc", "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc"),
+    ("/System/Library/Fonts/Hiragino Sans GB W3.otf", "/System/Library/Fonts/Hiragino Sans GB W6.otf"),
 ]
 
 _WINDOWS_FONTS = [
@@ -93,12 +91,12 @@ _WINDOWS_FONTS = [
 ]
 
 _LINUX_FONTS = [
-    ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-     "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc"),
-    ("/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
-     "/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc"),
-    ("/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
-     "/usr/share/fonts/google-noto-cjk/NotoSansCJK-Bold.ttc"),
+    ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc", "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc"),
+    ("/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc", "/usr/share/fonts/noto-cjk/NotoSansCJK-Bold.ttc"),
+    (
+        "/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/google-noto-cjk/NotoSansCJK-Bold.ttc",
+    ),
 ]
 
 
@@ -125,8 +123,7 @@ def discover_fonts(
     # Explicit override
     if font_regular or font_bold:
         if not font_regular or not font_bold:
-            print("Error: Both --font-regular and --font-bold must be specified together.",
-                  file=sys.stderr)
+            print("Error: Both --font-regular and --font-bold must be specified together.", file=sys.stderr)
             sys.exit(1)
     if font_regular and font_bold:
         reg_path = Path(font_regular)

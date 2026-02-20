@@ -6,12 +6,12 @@ Hypothesis Tester
 探索的検証の自動化を支援する。
 """
 
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Any, Optional, Callable
 from dataclasses import dataclass
-from enum import Enum
 from datetime import datetime
+from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
+
+import pandas as pd
 
 
 class HypothesisStatus(Enum):
@@ -32,6 +32,7 @@ class Severity(Enum):
 @dataclass
 class Hypothesis:
     """仮説を表すデータクラス"""
+
     id: str
     perspective: str  # 🏢, 💻, 🔍, 📊
     description: str
@@ -52,6 +53,7 @@ class Hypothesis:
 @dataclass
 class TestResult:
     """検証結果を表すデータクラス"""
+
     hypothesis_id: str
     status: HypothesisStatus
     total_records: int
@@ -67,10 +69,11 @@ def normalize_id(id_val) -> Optional[str]:
     """ID値を正規化"""
     if pd.isna(id_val):
         return None
-    return str(id_val).replace('.0', '').strip()
+    return str(id_val).replace(".0", "").strip()
 
 
 # 汎用テスト関数群
+
 
 def test_null_rate(df: pd.DataFrame, column: str, threshold: float = 0.05) -> TestResult:
     """
@@ -102,7 +105,7 @@ def test_null_rate(df: pd.DataFrame, column: str, threshold: float = 0.05) -> Te
         issue_records=null_count,
         issue_rate=null_rate * 100,
         severity=severity,
-        evidence={"null_count": null_count, "threshold": threshold}
+        evidence={"null_count": null_count, "threshold": threshold},
     )
 
 
@@ -139,17 +142,13 @@ def test_uniqueness(df: pd.DataFrame, column: str, expected_unique: bool = True)
         severity=severity,
         evidence={
             "unique_count": unique_count,
-            "duplicate_groups": df[column].value_counts()[df[column].value_counts() > 1].to_dict()
-        }
+            "duplicate_groups": df[column].value_counts()[df[column].value_counts() > 1].to_dict(),
+        },
     )
 
 
 def test_reference_integrity(
-    detail_df: pd.DataFrame,
-    master_df: pd.DataFrame,
-    ref_col: str,
-    master_id_col: str,
-    tolerance: float = 0.01
+    detail_df: pd.DataFrame, master_df: pd.DataFrame, ref_col: str, master_id_col: str, tolerance: float = 0.01
 ) -> TestResult:
     """
     参照整合性のテスト
@@ -186,18 +185,11 @@ def test_reference_integrity(
         issue_records=orphan_count,
         issue_rate=orphan_rate * 100,
         severity=severity,
-        evidence={
-            "orphan_samples": list(orphans.head(10)),
-            "tolerance": tolerance
-        }
+        evidence={"orphan_samples": list(orphans.head(10)), "tolerance": tolerance},
     )
 
 
-def test_value_concentration(
-    df: pd.DataFrame,
-    column: str,
-    threshold: float = 0.5
-) -> TestResult:
+def test_value_concentration(df: pd.DataFrame, column: str, threshold: float = 0.5) -> TestResult:
     """
     値の集中度テスト
 
@@ -220,7 +212,7 @@ def test_value_concentration(
             issue_records=0,
             issue_rate=0,
             severity=None,
-            evidence={"message": "No values found"}
+            evidence={"message": "No values found"},
         )
 
     top_value = value_counts.index[0]
@@ -245,17 +237,13 @@ def test_value_concentration(
             "top_value": str(top_value),
             "top_count": top_count,
             "threshold": threshold,
-            "distribution": value_counts.head(5).to_dict()
-        }
+            "distribution": value_counts.head(5).to_dict(),
+        },
     )
 
 
 def test_consistency(
-    df: pd.DataFrame,
-    condition_col: str,
-    condition_value: Any,
-    required_col: str,
-    allow_null: bool = False
+    df: pd.DataFrame, condition_col: str, condition_value: Any, required_col: str, allow_null: bool = False
 ) -> TestResult:
     """
     条件付き必須フィールドの整合性テスト
@@ -276,7 +264,7 @@ def test_consistency(
     if allow_null:
         issues = subset[subset[required_col].isna()]
     else:
-        issues = subset[subset[required_col].isna() | (subset[required_col] == '')]
+        issues = subset[subset[required_col].isna() | (subset[required_col] == "")]
 
     issue_count = len(issues)
 
@@ -294,18 +282,12 @@ def test_consistency(
         issue_records=issue_count,
         issue_rate=issue_count / total * 100 if total > 0 else 0,
         severity=severity,
-        evidence={
-            "condition": f"{condition_col} == {condition_value}",
-            "required_field": required_col
-        }
+        evidence={"condition": f"{condition_col} == {condition_value}", "required_field": required_col},
     )
 
 
 def test_picklist_values(
-    df: pd.DataFrame,
-    column: str,
-    valid_values: List[str],
-    case_sensitive: bool = False
+    df: pd.DataFrame, column: str, valid_values: List[str], case_sensitive: bool = False
 ) -> TestResult:
     """
     Picklist値の妥当性テスト
@@ -325,9 +307,7 @@ def test_picklist_values(
         invalid = df[~df[column].isin(valid_values) & df[column].notna()]
     else:
         valid_lower = [v.lower() for v in valid_values]
-        invalid = df[
-            ~df[column].str.lower().isin(valid_lower) & df[column].notna()
-        ]
+        invalid = df[~df[column].str.lower().isin(valid_lower) & df[column].notna()]
 
     issue_count = len(invalid)
     invalid_values = invalid[column].value_counts().to_dict()
@@ -346,17 +326,11 @@ def test_picklist_values(
         issue_records=issue_count,
         issue_rate=issue_count / total * 100 if total > 0 else 0,
         severity=severity,
-        evidence={
-            "valid_values": valid_values,
-            "invalid_values": invalid_values
-        }
+        evidence={"valid_values": valid_values, "invalid_values": invalid_values},
     )
 
 
-def run_test_suite(
-    tests: List[Callable],
-    **kwargs
-) -> List[TestResult]:
+def run_test_suite(tests: List[Callable], **kwargs) -> List[TestResult]:
     """
     テストスイートを実行
 
@@ -374,15 +348,17 @@ def run_test_suite(
             results.append(result)
         except Exception as e:
             # エラー時もTestResultとして記録
-            results.append(TestResult(
-                hypothesis_id=test_func.__name__,
-                status=HypothesisStatus.PENDING,
-                total_records=0,
-                issue_records=0,
-                issue_rate=0,
-                severity=None,
-                evidence={"error": str(e)}
-            ))
+            results.append(
+                TestResult(
+                    hypothesis_id=test_func.__name__,
+                    status=HypothesisStatus.PENDING,
+                    total_records=0,
+                    issue_records=0,
+                    issue_rate=0,
+                    severity=None,
+                    evidence={"error": str(e)},
+                )
+            )
     return results
 
 
@@ -396,14 +372,7 @@ def generate_test_report(results: List[TestResult]) -> str:
     Returns:
         Markdownレポート文字列
     """
-    lines = [
-        "# Hypothesis Test Results",
-        "",
-        "## Summary",
-        "",
-        f"| Status | Count |",
-        f"|--------|------:|"
-    ]
+    lines = ["# Hypothesis Test Results", "", "## Summary", "", "| Status | Count |", "|--------|------:|"]
 
     status_counts = {}
     for r in results:
@@ -413,11 +382,7 @@ def generate_test_report(results: List[TestResult]) -> str:
     for status, count in status_counts.items():
         lines.append(f"| {status} | {count} |")
 
-    lines.extend([
-        "",
-        "## Issues Found",
-        ""
-    ])
+    lines.extend(["", "## Issues Found", ""])
 
     issues = [r for r in results if r.status == HypothesisStatus.ISSUE_FOUND]
     if issues:
@@ -431,11 +396,7 @@ def generate_test_report(results: List[TestResult]) -> str:
     else:
         lines.append("No issues found.")
 
-    lines.extend([
-        "",
-        "## Detailed Results",
-        ""
-    ])
+    lines.extend(["", "## Detailed Results", ""])
 
     for result in results:
         lines.append(f"### {result.hypothesis_id}")

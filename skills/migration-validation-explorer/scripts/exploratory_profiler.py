@@ -6,18 +6,18 @@ Exploratory Data Profiler
 探索的検証の出発点となる情報を収集する。
 """
 
-import pandas as pd
-import numpy as np
 from pathlib import Path
-from typing import Dict, List, Any, Optional
-import json
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import pandas as pd
 
 
 def normalize_id(id_val) -> Optional[str]:
     """ID値を正規化（float .0サフィックス対応）"""
     if pd.isna(id_val):
         return None
-    return str(id_val).replace('.0', '').strip()
+    return str(id_val).replace(".0", "").strip()
 
 
 def profile_dataframe(df: pd.DataFrame, name: str = "Dataset") -> Dict[str, Any]:
@@ -37,7 +37,7 @@ def profile_dataframe(df: pd.DataFrame, name: str = "Dataset") -> Dict[str, Any]
         "column_count": len(df.columns),
         "columns": {},
         "quality_metrics": {},
-        "potential_issues": []
+        "potential_issues": [],
     }
 
     # カラム別分析
@@ -72,13 +72,13 @@ def analyze_column(series: pd.Series, col_name: str) -> Dict[str, Any]:
         "null_count": series.isna().sum(),
         "null_percentage": series.isna().mean() * 100,
         "unique_count": series.nunique(),
-        "unique_percentage": series.nunique() / len(series) * 100 if len(series) > 0 else 0
+        "unique_percentage": series.nunique() / len(series) * 100 if len(series) > 0 else 0,
     }
 
     # 文字列型の追加分析
-    if series.dtype == 'object':
-        col_profile["empty_string_count"] = (series == '').sum()
-        col_profile["na_string_count"] = series.str.upper().isin(['N/A', 'NA', 'NULL', 'NONE', '']).sum()
+    if series.dtype == "object":
+        col_profile["empty_string_count"] = (series == "").sum()
+        col_profile["na_string_count"] = series.str.upper().isin(["N/A", "NA", "NULL", "NONE", ""]).sum()
 
         # 最頻値
         if series.notna().any():
@@ -119,31 +119,37 @@ def detect_column_issues(col_profile: Dict, col_name: str) -> List[Dict]:
 
     # 高いNULL率
     if col_profile["null_percentage"] > 50:
-        issues.append({
-            "column": col_name,
-            "issue": "HIGH_NULL_RATE",
-            "severity": "MEDIUM",
-            "detail": f"{col_profile['null_percentage']:.1f}% of values are NULL"
-        })
+        issues.append(
+            {
+                "column": col_name,
+                "issue": "HIGH_NULL_RATE",
+                "severity": "MEDIUM",
+                "detail": f"{col_profile['null_percentage']:.1f}% of values are NULL",
+            }
+        )
 
     # 極端な集中
     if "top_concentration" in col_profile and col_profile["top_concentration"] > 50:
-        issues.append({
-            "column": col_name,
-            "issue": "VALUE_CONCENTRATION",
-            "severity": "LOW",
-            "detail": f"Top value represents {col_profile['top_concentration']:.1f}% of records"
-        })
+        issues.append(
+            {
+                "column": col_name,
+                "issue": "VALUE_CONCENTRATION",
+                "severity": "LOW",
+                "detail": f"Top value represents {col_profile['top_concentration']:.1f}% of records",
+            }
+        )
 
     # 一意性の問題（ID列の疑い）
     if col_profile["unique_percentage"] > 95 and col_profile["unique_percentage"] < 100:
-        if any(keyword in col_name.lower() for keyword in ['id', 'key', 'code', 'external']):
-            issues.append({
-                "column": col_name,
-                "issue": "POTENTIAL_DUPLICATE_IDS",
-                "severity": "HIGH",
-                "detail": f"Column appears to be an ID but has {100 - col_profile['unique_percentage']:.2f}% duplicates"
-            })
+        if any(keyword in col_name.lower() for keyword in ["id", "key", "code", "external"]):
+            issues.append(
+                {
+                    "column": col_name,
+                    "issue": "POTENTIAL_DUPLICATE_IDS",
+                    "severity": "HIGH",
+                    "detail": f"Column appears to be an ID but has {100 - col_profile['unique_percentage']:.2f}% duplicates",
+                }
+            )
 
     return issues
 
@@ -166,7 +172,7 @@ def calculate_quality_metrics(df: pd.DataFrame, columns_profile: Dict) -> Dict[s
         "completeness": (1 - null_cells / total_cells) * 100 if total_cells > 0 else 0,
         "columns_with_nulls": sum(1 for c in columns_profile.values() if c["null_count"] > 0),
         "columns_all_null": sum(1 for c in columns_profile.values() if c["null_percentage"] == 100),
-        "columns_all_unique": sum(1 for c in columns_profile.values() if c["unique_percentage"] == 100)
+        "columns_all_unique": sum(1 for c in columns_profile.values() if c["unique_percentage"] == 100),
     }
 
     return metrics
@@ -178,7 +184,7 @@ def validate_reference_integrity(
     ref_col: str,
     master_id_col: str,
     detail_name: str = "Detail",
-    master_name: str = "Master"
+    master_name: str = "Master",
 ) -> Dict[str, Any]:
     """
     参照整合性を検証
@@ -208,7 +214,7 @@ def validate_reference_integrity(
         "valid_count": len(valid_refs),
         "orphan_count": len(orphan_refs),
         "validity_rate": len(valid_refs) / len(detail_refs) * 100 if len(detail_refs) > 0 else 100,
-        "orphan_samples": list(orphan_refs.head(10))
+        "orphan_samples": list(orphan_refs.head(10)),
     }
 
 
@@ -232,12 +238,9 @@ def analyze_distribution(df: pd.DataFrame, column: str, top_n: int = 10) -> Dict
     for val, count in value_counts.head(top_n).items():
         pct = count / total * 100
         cumulative += pct
-        distribution.append({
-            "value": str(val),
-            "count": int(count),
-            "percentage": round(pct, 2),
-            "cumulative": round(cumulative, 2)
-        })
+        distribution.append(
+            {"value": str(val), "count": int(count), "percentage": round(pct, 2), "cumulative": round(cumulative, 2)}
+        )
 
     return {
         "column": column,
@@ -246,7 +249,7 @@ def analyze_distribution(df: pd.DataFrame, column: str, top_n: int = 10) -> Dict
         "null_count": df[column].isna().sum(),
         "top_n": top_n,
         "distribution": distribution,
-        "concentration_top_3": value_counts.head(3).sum() / total * 100 if total > 0 else 0
+        "concentration_top_3": value_counts.head(3).sum() / total * 100 if total > 0 else 0,
     }
 
 
@@ -265,15 +268,15 @@ def generate_profile_report(profile: Dict[str, Any]) -> str:
         "",
         "## Overview",
         "",
-        f"| Metric | Value |",
-        f"|--------|-------|",
+        "| Metric | Value |",
+        "|--------|-------|",
         f"| Total Rows | {profile['row_count']:,} |",
         f"| Total Columns | {profile['column_count']} |",
         f"| Completeness | {profile['quality_metrics']['completeness']:.1f}% |",
         f"| Columns with NULLs | {profile['quality_metrics']['columns_with_nulls']} |",
         "",
         "## Potential Issues",
-        ""
+        "",
     ]
 
     if profile["potential_issues"]:
@@ -284,11 +287,7 @@ def generate_profile_report(profile: Dict[str, Any]) -> str:
     else:
         lines.append("No potential issues detected.")
 
-    lines.extend([
-        "",
-        "## Column Details",
-        ""
-    ])
+    lines.extend(["", "## Column Details", ""])
 
     for col_name, col_info in profile["columns"].items():
         lines.append(f"### {col_name}")

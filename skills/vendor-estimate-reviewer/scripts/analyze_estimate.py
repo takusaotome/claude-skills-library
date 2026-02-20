@@ -24,15 +24,16 @@ Examples:
 
 import argparse
 import json
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
-import re
+from typing import Dict, List, Optional
 
 # Optional imports with graceful fallback
 try:
     import pandas as pd
+
     HAS_PANDAS = True
 except ImportError:
     HAS_PANDAS = False
@@ -40,12 +41,14 @@ except ImportError:
 
 try:
     import openpyxl
+
     HAS_OPENPYXL = True
 except ImportError:
     HAS_OPENPYXL = False
 
 try:
     import PyPDF2
+
     HAS_PYPDF2 = True
 except ImportError:
     HAS_PYPDF2 = False
@@ -89,7 +92,7 @@ class EstimateAnalyzer:
     def load_rates_from_file(self, rates_file: Path):
         """Load market rate benchmarks from JSON file."""
         try:
-            with open(rates_file, 'r') as f:
+            with open(rates_file, "r") as f:
                 self.market_rates = json.load(f)
             self.log(f"Loaded market rates from {rates_file}")
         except Exception as e:
@@ -99,11 +102,11 @@ class EstimateAnalyzer:
         """Parse estimate file and extract structured data."""
         suffix = file_path.suffix.lower()
 
-        if suffix in ['.xlsx', '.xls'] and HAS_PANDAS:
+        if suffix in [".xlsx", ".xls"] and HAS_PANDAS:
             return self._parse_excel(file_path)
-        elif suffix == '.csv' and HAS_PANDAS:
+        elif suffix == ".csv" and HAS_PANDAS:
             return self._parse_csv(file_path)
-        elif suffix == '.pdf' and HAS_PYPDF2:
+        elif suffix == ".pdf" and HAS_PYPDF2:
             return self._parse_pdf(file_path)
         else:
             raise ValueError(f"Unsupported file format: {suffix}")
@@ -140,7 +143,7 @@ class EstimateAnalyzer:
         """Parse PDF file (basic text extraction)."""
         self.log(f"Parsing PDF file: {file_path}")
 
-        with open(file_path, 'rb') as f:
+        with open(file_path, "rb") as f:
             reader = PyPDF2.PdfReader(f)
             text = ""
             for page in reader.pages:
@@ -232,7 +235,9 @@ class EstimateAnalyzer:
 
         # Cost
         for col, col_lower in columns_lower.items():
-            if any(keyword in col_lower for keyword in ["cost", "amount", "total", "price"]) and col not in [col_mapping.get("rate")]:
+            if any(keyword in col_lower for keyword in ["cost", "amount", "total", "price"]) and col not in [
+                col_mapping.get("rate")
+            ]:
                 col_mapping["cost"] = col
                 break
 
@@ -253,17 +258,14 @@ class EstimateAnalyzer:
     def _extract_total_from_text(self, text: str) -> float:
         """Extract total cost from text using patterns."""
         # Look for patterns like "Total: $500,000" or "Grand Total: 500000"
-        patterns = [
-            r"(?:total|grand total|sum)[\s:$]*([0-9,]+(?:\.[0-9]{2})?)",
-            r"\$([0-9,]+(?:\.[0-9]{2})?)"
-        ]
+        patterns = [r"(?:total|grand total|sum)[\s:$]*([0-9,]+(?:\.[0-9]{2})?)", r"\$([0-9,]+(?:\.[0-9]{2})?)"]
 
         for pattern in patterns:
             matches = re.findall(pattern, text, re.IGNORECASE)
             if matches:
                 try:
                     # Take the largest number found
-                    amounts = [float(m.replace(',', '')) for m in matches]
+                    amounts = [float(m.replace(",", "")) for m in matches]
                     return max(amounts)
                 except ValueError:
                     continue
@@ -301,7 +303,7 @@ class EstimateAnalyzer:
                     "hours": data["hours"],
                     "cost": data["cost"],
                     "percentage": percentage * 100,
-                    "status": "unknown"
+                    "status": "unknown",
                 }
 
                 # Check against expected distribution
@@ -309,10 +311,14 @@ class EstimateAnalyzer:
                     if expected_phase.lower() in phase.lower():
                         if percentage < min_pct:
                             phase_analysis["status"] = "low"
-                            self.warnings.append(f"{phase} phase is {percentage*100:.1f}% (expected {min_pct*100}-{max_pct*100}%) - may be underestimated")
+                            self.warnings.append(
+                                f"{phase} phase is {percentage * 100:.1f}% (expected {min_pct * 100}-{max_pct * 100}%) - may be underestimated"
+                            )
                         elif percentage > max_pct:
                             phase_analysis["status"] = "high"
-                            self.warnings.append(f"{phase} phase is {percentage*100:.1f}% (expected {min_pct*100}-{max_pct*100}%) - may be overestimated")
+                            self.warnings.append(
+                                f"{phase} phase is {percentage * 100:.1f}% (expected {min_pct * 100}-{max_pct * 100}%) - may be overestimated"
+                            )
                         else:
                             phase_analysis["status"] = "normal"
                         break
@@ -358,48 +364,55 @@ class EstimateAnalyzer:
                 testing_pct += data["percentage"]
 
         if testing_pct < 15:
-            risks["high"].append({
-                "category": "Quality Assurance",
-                "risk": "Insufficient testing effort",
-                "detail": f"Testing is {testing_pct:.1f}% of total effort (recommended: 15-25%)",
-                "impact": "High defect rates, production issues",
-                "mitigation": "Increase testing allocation to 20% minimum"
-            })
+            risks["high"].append(
+                {
+                    "category": "Quality Assurance",
+                    "risk": "Insufficient testing effort",
+                    "detail": f"Testing is {testing_pct:.1f}% of total effort (recommended: 15-25%)",
+                    "impact": "High defect rates, production issues",
+                    "mitigation": "Increase testing allocation to 20% minimum",
+                }
+            )
 
         # Check for missing contingency
         if "contingency" not in str(estimate_data).lower() and "buffer" not in str(estimate_data).lower():
-            risks["medium"].append({
-                "category": "Risk Management",
-                "risk": "No contingency buffer identified",
-                "detail": "No explicit contingency or buffer in estimate",
-                "impact": "Cost overruns on unexpected issues",
-                "mitigation": "Add 15-20% contingency reserve"
-            })
+            risks["medium"].append(
+                {
+                    "category": "Risk Management",
+                    "risk": "No contingency buffer identified",
+                    "detail": "No explicit contingency or buffer in estimate",
+                    "impact": "Cost overruns on unexpected issues",
+                    "mitigation": "Add 15-20% contingency reserve",
+                }
+            )
 
         # Check for round numbers (suggests rough estimation)
-        round_number_count = sum(1 for item in estimate_data["items"]
-                                 if item["hours"] > 0 and item["hours"] % 10 == 0)
+        round_number_count = sum(1 for item in estimate_data["items"] if item["hours"] > 0 and item["hours"] % 10 == 0)
         if len(estimate_data["items"]) > 0:
             round_number_pct = round_number_count / len(estimate_data["items"])
             if round_number_pct > 0.7:
-                risks["medium"].append({
-                    "category": "Estimation Quality",
-                    "risk": "High proportion of round numbers",
-                    "detail": f"{round_number_pct*100:.0f}% of items are round numbers (10, 20, 50, 100, etc.)",
-                    "impact": "Estimates may be rough/unrefined",
-                    "mitigation": "Request detailed task breakdown"
-                })
+                risks["medium"].append(
+                    {
+                        "category": "Estimation Quality",
+                        "risk": "High proportion of round numbers",
+                        "detail": f"{round_number_pct * 100:.0f}% of items are round numbers (10, 20, 50, 100, etc.)",
+                        "impact": "Estimates may be rough/unrefined",
+                        "mitigation": "Request detailed task breakdown",
+                    }
+                )
 
         # Check for very large items (poor granularity)
         large_items = [item for item in estimate_data["items"] if item["hours"] > 200]
         if large_items:
-            risks["medium"].append({
-                "category": "Estimation Granularity",
-                "risk": "Large task items detected",
-                "detail": f"{len(large_items)} items exceed 200 hours",
-                "impact": "Difficult to track progress, hidden complexity",
-                "mitigation": "Break down large items into smaller tasks (< 80 hours each)"
-            })
+            risks["medium"].append(
+                {
+                    "category": "Estimation Granularity",
+                    "risk": "Large task items detected",
+                    "detail": f"{len(large_items)} items exceed 200 hours",
+                    "impact": "Difficult to track progress, hidden complexity",
+                    "mitigation": "Break down large items into smaller tasks (< 80 hours each)",
+                }
+            )
 
         return risks
 
@@ -411,9 +424,13 @@ class EstimateAnalyzer:
         if analysis["summary"].get("budget_variance"):
             variance = analysis["summary"]["budget_variance"]
             if variance > 10:
-                recommendations.append("**Budget**: Negotiate scope reduction or phased delivery to meet budget constraints")
+                recommendations.append(
+                    "**Budget**: Negotiate scope reduction or phased delivery to meet budget constraints"
+                )
             elif variance < -20:
-                recommendations.append("**Budget**: Validate with vendor - unusually low estimate may indicate missing scope")
+                recommendations.append(
+                    "**Budget**: Validate with vendor - unusually low estimate may indicate missing scope"
+                )
 
         # Phase recommendations
         for warning in self.warnings:
@@ -421,7 +438,9 @@ class EstimateAnalyzer:
                 recommendations.append(f"**Scope**: {warning}")
 
         # Quality recommendations
-        recommendations.append("**Quality**: Verify testing approach includes unit, integration, system, and UAT levels")
+        recommendations.append(
+            "**Quality**: Verify testing approach includes unit, integration, system, and UAT levels"
+        )
         recommendations.append("**Risk Management**: Request risk register with mitigation strategies")
 
         # Resource recommendations
@@ -445,7 +464,7 @@ class EstimateAnalyzer:
         output_file: Path,
         vendor: str = "Unknown Vendor",
         project: str = "Unknown Project",
-        template: str = "default"
+        template: str = "default",
     ):
         """Generate comprehensive Markdown review report."""
         self.log(f"Generating report: {output_file}")
@@ -453,144 +472,145 @@ class EstimateAnalyzer:
         report_lines = []
 
         # Header
-        report_lines.append(f"# Vendor Estimate Review Report")
-        report_lines.append(f"")
+        report_lines.append("# Vendor Estimate Review Report")
+        report_lines.append("")
         report_lines.append(f"**Project**: {project}")
         report_lines.append(f"**Vendor**: {vendor}")
         report_lines.append(f"**Review Date**: {datetime.now().strftime('%Y-%m-%d')}")
-        report_lines.append(f"**Reviewer**: Generated by Estimate Analyzer")
-        report_lines.append(f"")
-        report_lines.append(f"---")
-        report_lines.append(f"")
+        report_lines.append("**Reviewer**: Generated by Estimate Analyzer")
+        report_lines.append("")
+        report_lines.append("---")
+        report_lines.append("")
 
         # Executive Summary
-        report_lines.append(f"## Executive Summary")
-        report_lines.append(f"")
+        report_lines.append("## Executive Summary")
+        report_lines.append("")
 
         summary = analysis["summary"]
-        report_lines.append(f"| Metric | Value |")
-        report_lines.append(f"|--------|-------|")
+        report_lines.append("| Metric | Value |")
+        report_lines.append("|--------|-------|")
         report_lines.append(f"| **Total Estimated Cost** | ${summary['total_cost']:,.2f} |")
         report_lines.append(f"| **Total Estimated Hours** | {summary['total_hours']:,.0f} hours |")
-        report_lines.append(f"| **Average Rate** | ${summary['total_cost']/summary['total_hours'] if summary['total_hours'] > 0 else 0:.2f}/hour |")
+        report_lines.append(
+            f"| **Average Rate** | ${summary['total_cost'] / summary['total_hours'] if summary['total_hours'] > 0 else 0:.2f}/hour |"
+        )
         if summary.get("budget"):
             report_lines.append(f"| **Client Budget** | ${summary['budget']:,.2f} |")
             report_lines.append(f"| **Budget Variance** | {summary['budget_variance']:+.1f}% |")
         report_lines.append(f"| **Line Items** | {summary['item_count']} |")
         report_lines.append(f"| **Project Phases** | {summary['phase_count']} |")
-        report_lines.append(f"")
+        report_lines.append("")
 
         # Overall Assessment
-        report_lines.append(f"### Overall Assessment")
-        report_lines.append(f"")
+        report_lines.append("### Overall Assessment")
+        report_lines.append("")
 
         risk_count = sum(len(risks) for risks in analysis["risk_assessment"].values())
         if risk_count == 0:
-            report_lines.append(f"✅ **LOW RISK** - Estimate appears reasonable with no major concerns identified.")
+            report_lines.append("✅ **LOW RISK** - Estimate appears reasonable with no major concerns identified.")
         elif risk_count <= 3:
             report_lines.append(f"⚠️ **MEDIUM RISK** - {risk_count} concerns identified that should be addressed.")
         else:
-            report_lines.append(f"🚨 **HIGH RISK** - {risk_count} significant concerns require clarification and revision.")
-        report_lines.append(f"")
+            report_lines.append(
+                f"🚨 **HIGH RISK** - {risk_count} significant concerns require clarification and revision."
+            )
+        report_lines.append("")
 
         # Phase Distribution Analysis
         if analysis["phase_analysis"]:
-            report_lines.append(f"## Phase Distribution Analysis")
-            report_lines.append(f"")
-            report_lines.append(f"| Phase | Hours | Cost | % of Total | Status |")
-            report_lines.append(f"| ----- | ----- | ---- | ---------- | ------ |")
+            report_lines.append("## Phase Distribution Analysis")
+            report_lines.append("")
+            report_lines.append("| Phase | Hours | Cost | % of Total | Status |")
+            report_lines.append("| ----- | ----- | ---- | ---------- | ------ |")
 
             for phase, data in sorted(analysis["phase_analysis"].items(), key=lambda x: x[1]["hours"], reverse=True):
-                status_icon = {
-                    "normal": "✅",
-                    "low": "⚠️",
-                    "high": "⚠️",
-                    "unknown": "ℹ️"
-                }.get(data["status"], "")
+                status_icon = {"normal": "✅", "low": "⚠️", "high": "⚠️", "unknown": "ℹ️"}.get(data["status"], "")
 
                 report_lines.append(
                     f"| {phase} | {data['hours']:,.0f} | ${data['cost']:,.2f} | "
                     f"{data['percentage']:.1f}% | {status_icon} {data['status'].title()} |"
                 )
-            report_lines.append(f"")
-            report_lines.append(f"**Expected Phase Distribution** (Industry Standards):")
-            report_lines.append(f"")
+            report_lines.append("")
+            report_lines.append("**Expected Phase Distribution** (Industry Standards):")
+            report_lines.append("")
             for phase, (min_pct, max_pct) in self.expected_distribution.items():
-                report_lines.append(f"- {phase}: {min_pct*100:.0f}-{max_pct*100:.0f}%")
-            report_lines.append(f"")
+                report_lines.append(f"- {phase}: {min_pct * 100:.0f}-{max_pct * 100:.0f}%")
+            report_lines.append("")
 
         # Warnings and Concerns
         if self.warnings:
-            report_lines.append(f"## ⚠️ Warnings and Concerns")
-            report_lines.append(f"")
+            report_lines.append("## ⚠️ Warnings and Concerns")
+            report_lines.append("")
             for i, warning in enumerate(self.warnings, 1):
                 report_lines.append(f"{i}. {warning}")
-            report_lines.append(f"")
+            report_lines.append("")
 
         # Risk Assessment
-        report_lines.append(f"## Risk Assessment")
-        report_lines.append(f"")
+        report_lines.append("## Risk Assessment")
+        report_lines.append("")
 
         for risk_level in ["high", "medium", "low"]:
             risks = analysis["risk_assessment"].get(risk_level, [])
             if risks:
                 icon = {"high": "🚨", "medium": "⚠️", "low": "ℹ️"}[risk_level]
                 report_lines.append(f"### {icon} {risk_level.title()} Risk Items")
-                report_lines.append(f"")
+                report_lines.append("")
 
                 for risk in risks:
                     report_lines.append(f"**{risk['category']}: {risk['risk']}**")
-                    report_lines.append(f"")
+                    report_lines.append("")
                     report_lines.append(f"- **Detail**: {risk['detail']}")
                     report_lines.append(f"- **Impact**: {risk['impact']}")
                     report_lines.append(f"- **Mitigation**: {risk['mitigation']}")
-                    report_lines.append(f"")
+                    report_lines.append("")
 
         if not any(analysis["risk_assessment"].values()):
-            report_lines.append(f"✅ No significant risks identified in initial analysis.")
-            report_lines.append(f"")
+            report_lines.append("✅ No significant risks identified in initial analysis.")
+            report_lines.append("")
 
         # Recommendations
-        report_lines.append(f"## Recommendations")
-        report_lines.append(f"")
+        report_lines.append("## Recommendations")
+        report_lines.append("")
 
         for i, recommendation in enumerate(analysis["recommendations"], 1):
             report_lines.append(f"{i}. {recommendation}")
-        report_lines.append(f"")
+        report_lines.append("")
 
         # Detailed Line Items (if not too many)
         if template == "detailed" and len(estimate_data["items"]) <= 50:
-            report_lines.append(f"## Detailed Line Items")
-            report_lines.append(f"")
-            report_lines.append(f"| Description | Hours | Rate | Cost | Phase |")
-            report_lines.append(f"|-------------|-------|------|------|-------|")
+            report_lines.append("## Detailed Line Items")
+            report_lines.append("")
+            report_lines.append("| Description | Hours | Rate | Cost | Phase |")
+            report_lines.append("|-------------|-------|------|------|-------|")
 
             for item in estimate_data["items"]:
                 report_lines.append(
                     f"| {item['description'][:50]} | {item['hours']:.1f} | "
                     f"${item['rate']:.2f} | ${item['cost']:,.2f} | {item['phase']} |"
                 )
-            report_lines.append(f"")
+            report_lines.append("")
 
         # Next Steps
-        report_lines.append(f"## Next Steps")
-        report_lines.append(f"")
-        report_lines.append(f"1. **Review with Vendor**: Discuss identified concerns and request clarifications")
-        report_lines.append(f"2. **Request Revisions**: Ask vendor to address high-risk items and warnings")
-        report_lines.append(f"3. **Validate Assumptions**: Confirm all assumptions documented in estimate")
-        report_lines.append(f"4. **Negotiate Terms**: Focus on payment milestones, warranties, and change process")
-        report_lines.append(f"5. **Final Decision**: Make go/no-go decision based on revised estimate")
-        report_lines.append(f"")
+        report_lines.append("## Next Steps")
+        report_lines.append("")
+        report_lines.append("1. **Review with Vendor**: Discuss identified concerns and request clarifications")
+        report_lines.append("2. **Request Revisions**: Ask vendor to address high-risk items and warnings")
+        report_lines.append("3. **Validate Assumptions**: Confirm all assumptions documented in estimate")
+        report_lines.append("4. **Negotiate Terms**: Focus on payment milestones, warranties, and change process")
+        report_lines.append("5. **Final Decision**: Make go/no-go decision based on revised estimate")
+        report_lines.append("")
 
         # Footer
-        report_lines.append(f"---")
-        report_lines.append(f"")
-        report_lines.append(f"*This report was generated automatically by the Vendor Estimate Analyzer.*")
-        report_lines.append(f"*For comprehensive review, also consult the Review Checklist, Cost Estimation Standards, and Risk Factors references.*")
+        report_lines.append("---")
+        report_lines.append("")
+        report_lines.append("*This report was generated automatically by the Vendor Estimate Analyzer.*")
+        report_lines.append(
+            "*For comprehensive review, also consult the Review Checklist, Cost Estimation Standards, and Risk Factors references.*"
+        )
 
         # Write to file
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write('\n'.join(report_lines))
+        with open(output_file, "w", encoding="utf-8") as f:
+            f.write("\n".join(report_lines))
 
         print(f"✅ Review report generated: {output_file}")
 
@@ -599,17 +619,23 @@ def main():
     parser = argparse.ArgumentParser(
         description="Analyze vendor estimates and generate review reports",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__
+        epilog=__doc__,
     )
 
     parser.add_argument("input_file", type=Path, help="Input estimate file (Excel, CSV, or PDF)")
-    parser.add_argument("-o", "--output", type=Path, default=Path("estimate_review_report.md"),
-                       help="Output Markdown file (default: estimate_review_report.md)")
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=Path,
+        default=Path("estimate_review_report.md"),
+        help="Output Markdown file (default: estimate_review_report.md)",
+    )
     parser.add_argument("--vendor", default="Unknown Vendor", help="Vendor name")
     parser.add_argument("--project", default="Unknown Project", help="Project name")
     parser.add_argument("--budget", type=float, help="Client budget for comparison")
-    parser.add_argument("--template", choices=["default", "executive", "detailed"],
-                       default="default", help="Report template")
+    parser.add_argument(
+        "--template", choices=["default", "executive", "detailed"], default="default", help="Report template"
+    )
     parser.add_argument("--rates-file", type=Path, help="JSON file with market rate benchmarks")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
 
@@ -621,14 +647,15 @@ def main():
         return 1
 
     # Check dependencies
-    if not HAS_PANDAS and args.input_file.suffix.lower() in ['.xlsx', '.xls', '.csv']:
-        print("Error: pandas is required for Excel/CSV analysis. Install with: pip install pandas openpyxl",
-              file=sys.stderr)
+    if not HAS_PANDAS and args.input_file.suffix.lower() in [".xlsx", ".xls", ".csv"]:
+        print(
+            "Error: pandas is required for Excel/CSV analysis. Install with: pip install pandas openpyxl",
+            file=sys.stderr,
+        )
         return 1
 
-    if not HAS_PYPDF2 and args.input_file.suffix.lower() == '.pdf':
-        print("Error: PyPDF2 is required for PDF analysis. Install with: pip install PyPDF2",
-              file=sys.stderr)
+    if not HAS_PYPDF2 and args.input_file.suffix.lower() == ".pdf":
+        print("Error: PyPDF2 is required for PDF analysis. Install with: pip install PyPDF2", file=sys.stderr)
         return 1
 
     # Create analyzer
@@ -644,21 +671,21 @@ def main():
         estimate_data = analyzer.parse_estimate_file(args.input_file)
 
         # Analyze estimate
-        print(f"🔍 Analyzing estimate...")
+        print("🔍 Analyzing estimate...")
         analysis = analyzer.analyze_estimate(estimate_data, budget=args.budget)
 
         # Generate report
-        print(f"📝 Generating review report...")
+        print("📝 Generating review report...")
         analyzer.generate_markdown_report(
             estimate_data=estimate_data,
             analysis=analysis,
             output_file=args.output,
             vendor=args.vendor,
             project=args.project,
-            template=args.template
+            template=args.template,
         )
 
-        print(f"\n✅ Analysis complete!")
+        print("\n✅ Analysis complete!")
         print(f"📊 Total Cost: ${estimate_data['total_cost']:,.2f}")
         print(f"⏱️  Total Hours: {estimate_data['total_hours']:,.0f}")
         print(f"⚠️  Warnings: {len(analyzer.warnings)}")
@@ -669,6 +696,7 @@ def main():
         print(f"Error during analysis: {e}", file=sys.stderr)
         if args.verbose:
             import traceback
+
             traceback.print_exc()
         return 1
 

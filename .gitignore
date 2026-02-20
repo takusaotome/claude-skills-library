@@ -83,6 +83,10 @@ reviews/
 # Project plans (contains confidential budget information)
 project-plans/
 
+# Skill improvement loop
+logs/
+reports/
+
 # Environment files
 .env
-
+.envrc

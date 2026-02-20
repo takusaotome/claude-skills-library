@@ -18,8 +18,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import math
-import sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -95,7 +93,7 @@ def generate_dashboard(data: list[dict]) -> str:
 
     lines = [
         "# Demand Forecast Performance Dashboard",
-        f"",
+        "",
         f"**Generated**: {now}",
         f"**Data periods**: {len(data)} records across {len(by_category)} categories",
         "",
@@ -117,9 +115,7 @@ def generate_dashboard(data: list[dict]) -> str:
         avg_actual = sum(d["actuals"]) / len(d["actuals"])
         bias_pct_cat = (bias / avg_actual) * 100 if avg_actual != 0 else 0
         status = status_icon(mape)
-        lines.append(
-            f"| {cat} | {mape:.1f}% | {bias_pct_cat:+.1f}% | {ts:+.1f} | {status} |"
-        )
+        lines.append(f"| {cat} | {mape:.1f}% | {bias_pct_cat:+.1f}% | {ts:+.1f} | {status} |")
 
     lines.extend(
         [
@@ -134,9 +130,7 @@ def generate_dashboard(data: list[dict]) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Generate Demand Forecast KPI Dashboard"
-    )
+    parser = argparse.ArgumentParser(description="Generate Demand Forecast KPI Dashboard")
     parser.add_argument("input_file", help="CSV file with category,period,actual,forecast columns")
     parser.add_argument("-o", "--output", help="Output markdown file (default: stdout)")
     args = parser.parse_args()

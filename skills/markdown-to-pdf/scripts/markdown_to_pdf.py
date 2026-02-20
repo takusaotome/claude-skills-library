@@ -17,12 +17,11 @@ Usage:
 """
 
 import argparse
+import asyncio
 import re
 import sys
-import os
 import tempfile
 from pathlib import Path
-import asyncio
 
 # Ensure sibling imports work
 _SCRIPT_DIR = Path(__file__).parent
@@ -34,9 +33,9 @@ if str(_SCRIPT_DIR) not in sys.path:
 _renderer_cache = {}
 
 
-def _get_or_create_renderer(theme='default', background='white',
-                            output_format='png', width=3200, height=2400,
-                            debug=False):
+def _get_or_create_renderer(
+    theme="default", background="white", output_format="png", width=3200, height=2400, debug=False
+):
     """Get or create a shared MermaidRenderer instance."""
     from mermaid_renderer import MermaidBackend, MermaidRenderer
 
@@ -61,7 +60,7 @@ def extract_mermaid_blocks(markdown_content):
     Returns:
         List of tuples: (full_block, mermaid_code, block_id)
     """
-    pattern = r'```mermaid\s*\n(.*?)\n```'
+    pattern = r"```mermaid\s*\n(.*?)\n```"
     matches = re.finditer(pattern, markdown_content, re.DOTALL)
 
     blocks = []
@@ -74,9 +73,9 @@ def extract_mermaid_blocks(markdown_content):
     return blocks
 
 
-def convert_mermaid_to_image(mermaid_code, output_path, theme='default',
-                            background='white', format='png', width=3200,
-                            height=2400, debug=False):
+def convert_mermaid_to_image(
+    mermaid_code, output_path, theme="default", background="white", format="png", width=3200, height=2400, debug=False
+):
     """
     Convert Mermaid code to image using MermaidRenderer.
 
@@ -94,16 +93,25 @@ def convert_mermaid_to_image(mermaid_code, output_path, theme='default',
         MermaidResult with success status and diagnostics.
     """
     renderer = _get_or_create_renderer(
-        theme=theme, background=background,
-        output_format=format, width=width, height=height,
+        theme=theme,
+        background=background,
+        output_format=format,
+        width=width,
+        height=height,
         debug=debug,
     )
     return renderer.render(mermaid_code, output_path=str(output_path))
 
 
-def process_markdown_with_mermaid(markdown_content, temp_dir, theme='default',
-                                 background='white', image_format='png',
-                                 strict_mermaid=True, debug_mermaid=False):
+def process_markdown_with_mermaid(
+    markdown_content,
+    temp_dir,
+    theme="default",
+    background="white",
+    image_format="png",
+    strict_mermaid=True,
+    debug_mermaid=False,
+):
     """
     Process Markdown content and convert Mermaid blocks to images.
 
@@ -140,13 +148,17 @@ def process_markdown_with_mermaid(markdown_content, temp_dir, theme='default',
         # Convert Mermaid to image
         print(f"Converting {block_id}...")
         result = convert_mermaid_to_image(
-            mermaid_code, image_path, theme, background, image_format,
+            mermaid_code,
+            image_path,
+            theme,
+            background,
+            image_format,
             debug=debug_mermaid,
         )
 
         if result.success:
             # Replace Mermaid block with image reference
-            img_tag = f'![{block_id}]({image_filename})'
+            img_tag = f"![{block_id}]({image_filename})"
             modified_content = modified_content.replace(full_block, img_tag, 1)
             success_count += 1
         else:
@@ -159,9 +171,10 @@ def process_markdown_with_mermaid(markdown_content, temp_dir, theme='default',
                 print(f"  Fix: {result.fix_suggestion}", file=sys.stderr)
             if strict_mermaid:
                 from mermaid_renderer import MermaidRenderError
+
                 raise MermaidRenderError(result)
             # Keep the original code block as fallback
-            fallback = f'```\n{mermaid_code}\n```'
+            fallback = f"```\n{mermaid_code}\n```"
             modified_content = modified_content.replace(full_block, fallback, 1)
 
     print(f"Mermaid: {success_count}/{total} succeeded, {failure_count}/{total} failed")
@@ -182,15 +195,11 @@ def markdown_to_html(markdown_content, css_content=None):
     try:
         import markdown2
     except ImportError:
-        print("Error: markdown2 not installed. Install with: pip install markdown2",
-              file=sys.stderr)
+        print("Error: markdown2 not installed. Install with: pip install markdown2", file=sys.stderr)
         sys.exit(1)
 
     # Convert Markdown to HTML
-    html_body = markdown2.markdown(
-        markdown_content,
-        extras=['tables', 'fenced-code-blocks', 'break-on-newline']
-    )
+    html_body = markdown2.markdown(markdown_content, extras=["tables", "fenced-code-blocks", "break-on-newline"])
 
     # Default CSS if none provided
     if css_content is None:
@@ -337,26 +346,21 @@ async def html_to_pdf_async(html_content, output_path, base_dir=None):
             # Set HTML content
             if base_dir:
                 # Write HTML to temp file to resolve relative paths correctly
-                temp_html = Path(base_dir) / 'temp_output.html'
-                with open(temp_html, 'w', encoding='utf-8') as f:
+                temp_html = Path(base_dir) / "temp_output.html"
+                with open(temp_html, "w", encoding="utf-8") as f:
                     f.write(html_content)
-                await page.goto(f'file://{temp_html.absolute()}')
+                await page.goto(f"file://{temp_html.absolute()}")
             else:
-                await page.set_content(html_content, wait_until='networkidle')
+                await page.set_content(html_content, wait_until="networkidle")
 
             # Generate PDF with options for high quality
             await page.pdf(
                 path=str(output_path),
-                format='A4',
+                format="A4",
                 print_background=True,
-                margin={
-                    'top': '12mm',
-                    'right': '10mm',
-                    'bottom': '12mm',
-                    'left': '10mm'
-                },
+                margin={"top": "12mm", "right": "10mm", "bottom": "12mm", "left": "10mm"},
                 scale=1.0,  # Use 1:1 scale for best quality
-                prefer_css_page_size=False
+                prefer_css_page_size=False,
             )
 
             await browser.close()
@@ -383,24 +387,27 @@ def html_to_pdf(html_content, output_path, base_dir=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Convert Markdown with Mermaid diagrams to PDF'
+    parser = argparse.ArgumentParser(description="Convert Markdown with Mermaid diagrams to PDF")
+    parser.add_argument("input", help="Input Markdown file")
+    parser.add_argument("output", help="Output PDF file")
+    parser.add_argument(
+        "--theme",
+        choices=["default", "forest", "dark", "neutral"],
+        default="default",
+        help="Mermaid theme (default: default)",
     )
-    parser.add_argument('input', help='Input Markdown file')
-    parser.add_argument('output', help='Output PDF file')
-    parser.add_argument('--theme', choices=['default', 'forest', 'dark', 'neutral'],
-                       default='default', help='Mermaid theme (default: default)')
-    parser.add_argument('--background', default='white',
-                       help='Mermaid background color (default: white)')
-    parser.add_argument('--image-format', choices=['png', 'svg'], default='png',
-                       help='Image format for Mermaid diagrams (default: png)')
-    parser.add_argument('--css', help='Custom CSS file for styling')
-    parser.add_argument('--keep-temp', action='store_true',
-                       help='Keep temporary files for debugging')
-    parser.add_argument('--no-strict-mermaid', action='store_true',
-                       help='Allow Mermaid fallback to code block on failure (default: strict)')
-    parser.add_argument('--debug-mermaid', action='store_true',
-                       help='Print detailed Mermaid conversion debug output')
+    parser.add_argument("--background", default="white", help="Mermaid background color (default: white)")
+    parser.add_argument(
+        "--image-format", choices=["png", "svg"], default="png", help="Image format for Mermaid diagrams (default: png)"
+    )
+    parser.add_argument("--css", help="Custom CSS file for styling")
+    parser.add_argument("--keep-temp", action="store_true", help="Keep temporary files for debugging")
+    parser.add_argument(
+        "--no-strict-mermaid",
+        action="store_true",
+        help="Allow Mermaid fallback to code block on failure (default: strict)",
+    )
+    parser.add_argument("--debug-mermaid", action="store_true", help="Print detailed Mermaid conversion debug output")
 
     args = parser.parse_args()
 
@@ -415,11 +422,11 @@ def main():
 
     # Read Markdown content
     print(f"Reading {input_path}...")
-    with open(input_path, 'r', encoding='utf-8') as f:
+    with open(input_path, "r", encoding="utf-8") as f:
         markdown_content = f.read()
 
     # Create temporary directory
-    temp_dir = tempfile.mkdtemp(prefix='mermaid_pdf_')
+    temp_dir = tempfile.mkdtemp(prefix="mermaid_pdf_")
     print(f"Temporary directory: {temp_dir}")
 
     try:
@@ -440,7 +447,7 @@ def main():
         if args.css:
             css_path = Path(args.css)
             if css_path.exists():
-                with open(css_path, 'r', encoding='utf-8') as f:
+                with open(css_path, "r", encoding="utf-8") as f:
                     css_content = f.read()
             else:
                 print(f"Warning: CSS file not found: {css_path}", file=sys.stderr)
@@ -450,8 +457,8 @@ def main():
         html_content = markdown_to_html(processed_markdown, css_content)
 
         # Save HTML for debugging
-        html_path = Path(temp_dir) / 'output.html'
-        with open(html_path, 'w', encoding='utf-8') as f:
+        html_path = Path(temp_dir) / "output.html"
+        with open(html_path, "w", encoding="utf-8") as f:
             f.write(html_content)
 
         # Convert HTML to PDF
@@ -462,7 +469,7 @@ def main():
             print(f"Successfully created PDF: {output_path}")
             print(f"  File size: {output_path.stat().st_size / 1024:.1f} KB")
         else:
-            print(f"Failed to create PDF", file=sys.stderr)
+            print("Failed to create PDF", file=sys.stderr)
             sys.exit(1)
 
     except Exception as e:
@@ -481,11 +488,12 @@ def main():
         # Cleanup temp dir
         if not args.keep_temp:
             import shutil
+
             shutil.rmtree(temp_dir)
-            print(f"Cleaned up temporary files")
+            print("Cleaned up temporary files")
         else:
             print(f"Temporary files kept at: {temp_dir}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

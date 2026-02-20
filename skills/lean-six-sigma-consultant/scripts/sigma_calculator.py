@@ -12,8 +12,8 @@ Usage:
 """
 
 import argparse
-import math
-from typing import Tuple, Dict, Optional
+from typing import Dict
+
 from scipy import stats
 
 
@@ -241,17 +241,19 @@ def get_sigma_table() -> Dict[float, Dict[str, float]]:
     for sigma in sigma_levels:
         dpmo = dpmo_from_sigma(sigma)
         yield_pct = yield_from_dpmo(dpmo)
-        table[sigma] = {
-            'dpmo': round(dpmo, 1),
-            'yield': round(yield_pct, 4)
-        }
+        table[sigma] = {"dpmo": round(dpmo, 1), "yield": round(yield_pct, 4)}
 
     return table
 
 
-def get_full_report(defects: int = None, units: int = None,
-                    opportunities: int = 1, dpmo: float = None,
-                    sigma: float = None, yield_percent: float = None) -> Dict:
+def get_full_report(
+    defects: int = None,
+    units: int = None,
+    opportunities: int = 1,
+    dpmo: float = None,
+    sigma: float = None,
+    yield_percent: float = None,
+) -> Dict:
     """
     Generate comprehensive sigma metrics report.
 
@@ -266,21 +268,21 @@ def get_full_report(defects: int = None, units: int = None,
     if defects is not None and units is not None:
         dpmo = dpmo_from_defects(defects, units, opportunities)
         dpu = dpu_from_defects(defects, units)
-        result['input'] = {
-            'defects': defects,
-            'units': units,
-            'opportunities_per_unit': opportunities,
-            'total_opportunities': units * opportunities,
-            'dpu': round(dpu, 4)
+        result["input"] = {
+            "defects": defects,
+            "units": units,
+            "opportunities_per_unit": opportunities,
+            "total_opportunities": units * opportunities,
+            "dpu": round(dpu, 4),
         }
     elif dpmo is not None:
-        result['input'] = {'dpmo': dpmo}
+        result["input"] = {"dpmo": dpmo}
     elif sigma is not None:
         dpmo = dpmo_from_sigma(sigma)
-        result['input'] = {'sigma': sigma}
+        result["input"] = {"sigma": sigma}
     elif yield_percent is not None:
         dpmo = dpmo_from_yield(yield_percent)
-        result['input'] = {'yield_percent': yield_percent}
+        result["input"] = {"yield_percent": yield_percent}
     else:
         raise ValueError("Provide defects/units, dpmo, sigma, or yield_percent")
 
@@ -288,11 +290,11 @@ def get_full_report(defects: int = None, units: int = None,
     sigma_level = sigma_from_dpmo(dpmo)
     yield_pct = yield_from_dpmo(dpmo)
 
-    result['metrics'] = {
-        'dpmo': round(dpmo, 2),
-        'sigma_level': round(sigma_level, 2),
-        'yield_percent': round(yield_pct, 4),
-        'defect_rate_percent': round(100 - yield_pct, 4)
+    result["metrics"] = {
+        "dpmo": round(dpmo, 2),
+        "sigma_level": round(sigma_level, 2),
+        "yield_percent": round(yield_pct, 4),
+        "defect_rate_percent": round(100 - yield_pct, 4),
     }
 
     # Interpretation
@@ -309,10 +311,10 @@ def get_full_report(defects: int = None, units: int = None,
     else:
         quality = "Unacceptable"
 
-    result['interpretation'] = {
-        'quality_level': quality,
-        'defects_per_million': f"{dpmo:,.0f} defects per million opportunities",
-        'improvement_target': "Target: 6σ = 3.4 DPMO"
+    result["interpretation"] = {
+        "quality_level": quality,
+        "defects_per_million": f"{dpmo:,.0f} defects per million opportunities",
+        "improvement_target": "Target: 6σ = 3.4 DPMO",
     }
 
     return result
@@ -325,22 +327,22 @@ def print_report(report: Dict) -> None:
     print("=" * 60)
 
     print("\n📥 INPUT DATA:")
-    for key, value in report['input'].items():
+    for key, value in report["input"].items():
         print(f"   {key.replace('_', ' ').title()}: {value}")
 
     print("\n📊 CALCULATED METRICS:")
-    for key, value in report['metrics'].items():
-        if 'dpmo' in key.lower():
+    for key, value in report["metrics"].items():
+        if "dpmo" in key.lower():
             print(f"   DPMO: {value:,.2f}")
-        elif 'sigma' in key.lower():
+        elif "sigma" in key.lower():
             print(f"   Sigma Level: {value}σ")
-        elif 'yield' in key.lower():
+        elif "yield" in key.lower():
             print(f"   Yield: {value}%")
         else:
             print(f"   {key.replace('_', ' ').title()}: {value}")
 
     print("\n📈 INTERPRETATION:")
-    for key, value in report['interpretation'].items():
+    for key, value in report["interpretation"].items():
         print(f"   {value}")
 
     print("\n" + "=" * 60)
@@ -377,27 +379,18 @@ Examples:
 
   Show sigma table:
     python sigma_calculator.py --table
-        """
+        """,
     )
 
-    parser.add_argument('--defects', '-d', type=int,
-                        help='Number of defects observed')
-    parser.add_argument('--units', '-u', type=int,
-                        help='Number of units inspected')
-    parser.add_argument('--opportunities', '-o', type=int, default=1,
-                        help='Defect opportunities per unit (default: 1)')
-    parser.add_argument('--dpmo', type=float,
-                        help='Defects Per Million Opportunities')
-    parser.add_argument('--sigma', '-s', type=float,
-                        help='Sigma level')
-    parser.add_argument('--yield', dest='yield_pct', type=float,
-                        help='Yield percentage')
-    parser.add_argument('--shift', type=float, default=1.5,
-                        help='Sigma shift for long-term (default: 1.5)')
-    parser.add_argument('--table', '-t', action='store_true',
-                        help='Show sigma level reference table')
-    parser.add_argument('--rty', nargs='+', type=float,
-                        help='Calculate Rolled Throughput Yield from step yields')
+    parser.add_argument("--defects", "-d", type=int, help="Number of defects observed")
+    parser.add_argument("--units", "-u", type=int, help="Number of units inspected")
+    parser.add_argument("--opportunities", "-o", type=int, default=1, help="Defect opportunities per unit (default: 1)")
+    parser.add_argument("--dpmo", type=float, help="Defects Per Million Opportunities")
+    parser.add_argument("--sigma", "-s", type=float, help="Sigma level")
+    parser.add_argument("--yield", dest="yield_pct", type=float, help="Yield percentage")
+    parser.add_argument("--shift", type=float, default=1.5, help="Sigma shift for long-term (default: 1.5)")
+    parser.add_argument("--table", "-t", action="store_true", help="Show sigma level reference table")
+    parser.add_argument("--rty", nargs="+", type=float, help="Calculate Rolled Throughput Yield from step yields")
 
     args = parser.parse_args()
 
@@ -414,20 +407,16 @@ Examples:
 
     if args.rty:
         rty = rolled_throughput_yield(args.rty)
-        print(f"\n📊 ROLLED THROUGHPUT YIELD (RTY):")
+        print("\n📊 ROLLED THROUGHPUT YIELD (RTY):")
         print(f"   Step Yields: {args.rty}")
-        print(f"   RTY: {rty:.4f} ({rty*100:.2f}%)")
+        print(f"   RTY: {rty:.4f} ({rty * 100:.2f}%)")
         sigma = sigma_from_yield(rty * 100, args.shift)
         print(f"   Equivalent Sigma Level: {sigma:.2f}σ")
         return
 
     try:
         if args.defects is not None and args.units is not None:
-            report = get_full_report(
-                defects=args.defects,
-                units=args.units,
-                opportunities=args.opportunities
-            )
+            report = get_full_report(defects=args.defects, units=args.units, opportunities=args.opportunities)
         elif args.dpmo is not None:
             report = get_full_report(dpmo=args.dpmo)
         elif args.sigma is not None:

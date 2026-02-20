@@ -15,13 +15,14 @@ Example:
 import argparse
 import json
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 
 class ProjectHealthChecker:
     """Analyze project health based on key metrics"""
 
-    def __init__(self, metrics_file, output_dir='health_report'):
+    def __init__(self, metrics_file, output_dir="health_report"):
         """
         Initialize Project Health Checker
 
@@ -34,7 +35,7 @@ class ProjectHealthChecker:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         # Load metrics
-        with open(metrics_file, 'r') as f:
+        with open(metrics_file, "r") as f:
             self.metrics = json.load(f)
 
         self.health_score = 0
@@ -44,15 +45,15 @@ class ProjectHealthChecker:
 
     def analyze_schedule_performance(self):
         """Analyze schedule health using EVM metrics"""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("SCHEDULE PERFORMANCE ANALYSIS")
-        print("="*80)
+        print("=" * 80)
 
-        schedule = self.metrics.get('schedule', {})
+        schedule = self.metrics.get("schedule", {})
 
         # Calculate SPI
-        pv = schedule.get('planned_value', 0)
-        ev = schedule.get('earned_value', 0)
+        pv = schedule.get("planned_value", 0)
+        ev = schedule.get("earned_value", 0)
 
         if pv > 0:
             spi = ev / pv
@@ -76,16 +77,16 @@ class ProjectHealthChecker:
                 self.recommendations.append("URGENT: Review and update schedule, consider fast-tracking or crashing")
 
         # Milestone adherence
-        milestones = schedule.get('milestones', [])
+        milestones = schedule.get("milestones", [])
         if milestones:
-            completed = sum(1 for m in milestones if m.get('status') == 'completed')
+            completed = sum(1 for m in milestones if m.get("status") == "completed")
             total = len(milestones)
             completion_rate = (completed / total) * 100 if total > 0 else 0
 
             print(f"\nMilestone Completion: {completed}/{total} ({completion_rate:.1f}%)")
 
             # Check for delayed milestones
-            delayed = [m for m in milestones if m.get('status') == 'delayed']
+            delayed = [m for m in milestones if m.get("status") == "delayed"]
             if delayed:
                 print(f"  ⚠ Delayed Milestones: {len(delayed)}")
                 for m in delayed:
@@ -95,15 +96,15 @@ class ProjectHealthChecker:
 
     def analyze_cost_performance(self):
         """Analyze cost health using EVM metrics"""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("COST PERFORMANCE ANALYSIS")
-        print("="*80)
+        print("=" * 80)
 
-        cost = self.metrics.get('cost', {})
+        cost = self.metrics.get("cost", {})
 
         # Calculate CPI
-        ev = cost.get('earned_value', 0)
-        ac = cost.get('actual_cost', 0)
+        ev = cost.get("earned_value", 0)
+        ac = cost.get("actual_cost", 0)
 
         if ac > 0:
             cpi = ev / ac
@@ -124,10 +125,12 @@ class ProjectHealthChecker:
                 print("  ✗ Status: SIGNIFICANTLY OVER BUDGET")
                 self.health_score += 5
                 self.issues.append(f"Cost significantly over budget (CPI: {cpi:.2f})")
-                self.recommendations.append("URGENT: Review project budget, consider scope reduction or additional funding")
+                self.recommendations.append(
+                    "URGENT: Review project budget, consider scope reduction or additional funding"
+                )
 
             # Forecast EAC
-            bac = cost.get('budget_at_completion', 0)
+            bac = cost.get("budget_at_completion", 0)
             if bac > 0 and cpi > 0:
                 eac = bac / cpi
                 vac = bac - eac
@@ -141,22 +144,22 @@ class ProjectHealthChecker:
 
     def analyze_quality(self):
         """Analyze quality metrics"""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("QUALITY ANALYSIS")
-        print("="*80)
+        print("=" * 80)
 
-        quality = self.metrics.get('quality', {})
+        quality = self.metrics.get("quality", {})
 
         # Defect analysis
-        defects = quality.get('defects', {})
-        critical = defects.get('critical', 0)
-        high = defects.get('high', 0)
-        medium = defects.get('medium', 0)
-        low = defects.get('low', 0)
+        defects = quality.get("defects", {})
+        critical = defects.get("critical", 0)
+        high = defects.get("high", 0)
+        medium = defects.get("medium", 0)
+        low = defects.get("low", 0)
 
         total_defects = critical + high + medium + low
 
-        print(f"\nDefect Summary:")
+        print("\nDefect Summary:")
         print(f"  Critical: {critical}")
         print(f"  High: {high}")
         print(f"  Medium: {medium}")
@@ -178,7 +181,7 @@ class ProjectHealthChecker:
             self.health_score += 15
 
         # Test coverage
-        test_coverage = quality.get('test_coverage', 0)
+        test_coverage = quality.get("test_coverage", 0)
         print(f"\nTest Coverage: {test_coverage}%")
 
         if test_coverage >= 80:
@@ -197,20 +200,20 @@ class ProjectHealthChecker:
 
     def analyze_risks(self):
         """Analyze risk profile"""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("RISK ANALYSIS")
-        print("="*80)
+        print("=" * 80)
 
-        risks = self.metrics.get('risks', {})
+        risks = self.metrics.get("risks", {})
 
-        critical = risks.get('critical', 0)
-        high = risks.get('high', 0)
-        medium = risks.get('medium', 0)
-        low = risks.get('low', 0)
+        critical = risks.get("critical", 0)
+        high = risks.get("high", 0)
+        medium = risks.get("medium", 0)
+        low = risks.get("low", 0)
 
         total_risks = critical + high + medium + low
 
-        print(f"\nRisk Summary:")
+        print("\nRisk Summary:")
         print(f"  Critical: {critical}")
         print(f"  High: {high}")
         print(f"  Medium: {medium}")
@@ -236,7 +239,7 @@ class ProjectHealthChecker:
             self.health_score += 10
 
         # Risk mitigation effectiveness
-        mitigation_rate = risks.get('mitigation_effectiveness', 0)
+        mitigation_rate = risks.get("mitigation_effectiveness", 0)
         if mitigation_rate > 0:
             print(f"\nRisk Mitigation Effectiveness: {mitigation_rate}%")
             if mitigation_rate < 70:
@@ -245,13 +248,13 @@ class ProjectHealthChecker:
 
     def analyze_stakeholder_satisfaction(self):
         """Analyze stakeholder engagement and satisfaction"""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("STAKEHOLDER SATISFACTION ANALYSIS")
-        print("="*80)
+        print("=" * 80)
 
-        stakeholders = self.metrics.get('stakeholders', {})
+        stakeholders = self.metrics.get("stakeholders", {})
 
-        satisfaction = stakeholders.get('satisfaction_score', 0)
+        satisfaction = stakeholders.get("satisfaction_score", 0)
         print(f"\nStakeholder Satisfaction Score: {satisfaction}/10")
 
         if satisfaction >= 8.0:
@@ -269,8 +272,8 @@ class ProjectHealthChecker:
             self.health_score += 2
 
         # Engagement levels
-        engagement = stakeholders.get('engagement', {})
-        resistant = engagement.get('resistant', 0)
+        engagement = stakeholders.get("engagement", {})
+        resistant = engagement.get("resistant", 0)
         if resistant > 0:
             print(f"  ⚠ {resistant} resistant stakeholders")
             self.warnings.append(f"{resistant} resistant stakeholders")
@@ -278,13 +281,13 @@ class ProjectHealthChecker:
 
     def analyze_team_health(self):
         """Analyze team morale and productivity"""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("TEAM HEALTH ANALYSIS")
-        print("="*80)
+        print("=" * 80)
 
-        team = self.metrics.get('team', {})
+        team = self.metrics.get("team", {})
 
-        morale = team.get('morale_score', 0)
+        morale = team.get("morale_score", 0)
         print(f"\nTeam Morale Score: {morale}/10")
 
         if morale >= 7.5:
@@ -302,9 +305,9 @@ class ProjectHealthChecker:
             self.health_score += 2
 
         # Velocity (for Agile projects)
-        velocity = team.get('velocity', {})
-        current = velocity.get('current', 0)
-        target = velocity.get('target', 0)
+        velocity = team.get("velocity", {})
+        current = velocity.get("current", 0)
+        target = velocity.get("target", 0)
 
         if current > 0 and target > 0:
             velocity_pct = (current / target) * 100
@@ -318,9 +321,9 @@ class ProjectHealthChecker:
 
     def calculate_overall_health(self):
         """Calculate overall project health score"""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("OVERALL PROJECT HEALTH")
-        print("="*80)
+        print("=" * 80)
 
         # Normalize score to 100
         max_score = 100
@@ -345,10 +348,10 @@ class ProjectHealthChecker:
 
     def generate_report(self):
         """Generate comprehensive health report"""
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("PROJECT HEALTH CHECK REPORT")
         print(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        print("="*80)
+        print("=" * 80)
 
         # Run all analyses
         spi = self.analyze_schedule_performance()
@@ -362,11 +365,11 @@ class ProjectHealthChecker:
         score, status = self.calculate_overall_health()
 
         # Summary
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("SUMMARY")
-        print("="*80)
+        print("=" * 80)
 
-        print(f"\n📊 Key Metrics:")
+        print("\n📊 Key Metrics:")
         print(f"  Schedule Performance Index: {spi:.2f}")
         print(f"  Cost Performance Index: {cpi:.2f}")
         print(f"  Overall Health Score: {score}/100")
@@ -387,24 +390,24 @@ class ProjectHealthChecker:
                 print(f"  {i}. {rec}")
 
         # Save report
-        report_file = self.output_dir / 'health_report.txt'
+        report_file = self.output_dir / "health_report.txt"
         self._save_report(report_file, score, status, spi, cpi)
 
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"Report saved to: {report_file}")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
 
     def _save_report(self, file_path, score, status, spi, cpi):
         """Save report to file"""
-        with open(file_path, 'w') as f:
+        with open(file_path, "w") as f:
             f.write("PROJECT HEALTH CHECK REPORT\n")
-            f.write("="*80 + "\n")
+            f.write("=" * 80 + "\n")
             f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             f.write(f"Project: {self.metrics.get('project_name', 'Unknown')}\n")
-            f.write("="*80 + "\n\n")
+            f.write("=" * 80 + "\n\n")
 
             f.write("EXECUTIVE SUMMARY\n")
-            f.write("-"*80 + "\n")
+            f.write("-" * 80 + "\n")
             f.write(f"Overall Status: {status}\n")
             f.write(f"Health Score: {score}/100\n")
             f.write(f"Schedule Performance Index: {spi:.2f}\n")
@@ -412,28 +415,28 @@ class ProjectHealthChecker:
 
             if self.issues:
                 f.write(f"CRITICAL ISSUES ({len(self.issues)})\n")
-                f.write("-"*80 + "\n")
+                f.write("-" * 80 + "\n")
                 for i, issue in enumerate(self.issues, 1):
                     f.write(f"{i}. {issue}\n")
                 f.write("\n")
 
             if self.warnings:
                 f.write(f"WARNINGS ({len(self.warnings)})\n")
-                f.write("-"*80 + "\n")
+                f.write("-" * 80 + "\n")
                 for i, warning in enumerate(self.warnings, 1):
                     f.write(f"{i}. {warning}\n")
                 f.write("\n")
 
             if self.recommendations:
                 f.write(f"RECOMMENDATIONS ({len(self.recommendations)})\n")
-                f.write("-"*80 + "\n")
+                f.write("-" * 80 + "\n")
                 for i, rec in enumerate(self.recommendations, 1):
                     f.write(f"{i}. {rec}\n")
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Project Health Check Tool',
+        description="Project Health Check Tool",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Example metrics file format (JSON):
@@ -472,12 +475,11 @@ Example metrics file format (JSON):
     "velocity": {"current": 75, "target": 80}
   }
 }
-        """
+        """,
     )
 
-    parser.add_argument('metrics_file', help='Path to project metrics JSON file')
-    parser.add_argument('--output', '-o', default='health_report',
-                       help='Output directory for reports')
+    parser.add_argument("metrics_file", help="Path to project metrics JSON file")
+    parser.add_argument("--output", "-o", default="health_report", help="Output directory for reports")
 
     args = parser.parse_args()
 
@@ -491,5 +493,5 @@ Example metrics file format (JSON):
     checker.generate_report()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

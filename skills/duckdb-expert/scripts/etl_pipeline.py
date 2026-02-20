@@ -18,14 +18,13 @@ Examples:
 
 import argparse
 import json
-import os
 import shutil
 import sys
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 try:
     import duckdb
@@ -37,6 +36,7 @@ except ImportError:
 @dataclass
 class ETLConfig:
     """ETLパイプラインの設定"""
+
     source_path: str
     target_path: str
     source_format: str = "auto"  # auto, csv, parquet, json, ndjson
@@ -62,9 +62,7 @@ class ETLPipeline:
     """DuckDBを使用したETLパイプライン"""
 
     # 中間ビュー名のリスト（クリーンアップ用）
-    INTERMEDIATE_VIEWS = [
-        "_source_data", "_selected", "_filtered", "_transformed"
-    ]
+    INTERMEDIATE_VIEWS = ["_source_data", "_selected", "_filtered", "_transformed"]
 
     def __init__(self, config: ETLConfig):
         """
@@ -87,7 +85,7 @@ class ETLPipeline:
             "transformations_applied": [],
             "errors": [],
             "warnings": [],
-            "retries": 0
+            "retries": 0,
         }
 
     def run(self) -> Dict[str, Any]:
@@ -167,13 +165,13 @@ class ETLPipeline:
         # 自動検出
         if source_format == "auto":
             ext = Path(source_path.replace("*", "x")).suffix.lower()
-            if ext in ['.parquet', '.pq']:
+            if ext in [".parquet", ".pq"]:
                 source_format = "parquet"
-            elif ext == '.json':
+            elif ext == ".json":
                 source_format = "json"
-            elif ext in ['.ndjson', '.jsonl']:
+            elif ext in [".ndjson", ".jsonl"]:
                 source_format = "ndjson"
-            elif ext in ['.csv', '.tsv', '.txt']:
+            elif ext in [".csv", ".tsv", ".txt"]:
                 source_format = "csv"
             else:
                 source_format = "csv"  # デフォルト
@@ -181,31 +179,22 @@ class ETLPipeline:
         # 形式別の読み込み関数構築
         if source_format == "parquet":
             options = self.config.parquet_options or {}
-            opt_str = self._build_options_string(options, {
-                "union_by_name": "true",
-                "hive_partitioning": "true"
-            })
+            opt_str = self._build_options_string(options, {"union_by_name": "true", "hive_partitioning": "true"})
             return f"read_parquet('{source_path}'{opt_str})"
 
         elif source_format == "csv":
             options = self.config.csv_options or {}
-            opt_str = self._build_options_string(options, {
-                "auto_detect": "true"
-            })
+            opt_str = self._build_options_string(options, {"auto_detect": "true"})
             return f"read_csv('{source_path}'{opt_str})"
 
         elif source_format == "json":
             options = self.config.json_options or {}
-            opt_str = self._build_options_string(options, {
-                "auto_detect": "true"
-            })
+            opt_str = self._build_options_string(options, {"auto_detect": "true"})
             return f"read_json('{source_path}'{opt_str})"
 
         elif source_format == "ndjson":
             options = self.config.json_options or {}
-            opt_str = self._build_options_string(options, {
-                "format": "'newline_delimited'"
-            })
+            opt_str = self._build_options_string(options, {"format": "'newline_delimited'"})
             return f"read_json('{source_path}'{opt_str})"
 
         else:
@@ -289,9 +278,7 @@ class ETLPipeline:
                 WHERE {self.config.where_clause}
             """)
             current_view = "_filtered"
-            self.metrics["transformations_applied"].append(
-                f"Filter: {self.config.where_clause}"
-            )
+            self.metrics["transformations_applied"].append(f"Filter: {self.config.where_clause}")
             print(f"  Applied filter: {self.config.where_clause}")
 
         # カスタム変換
@@ -317,10 +304,10 @@ class ETLPipeline:
                 if view_name not in self.INTERMEDIATE_VIEWS:
                     self.INTERMEDIATE_VIEWS.append(view_name)
                 self.metrics["transformations_applied"].append(f"Custom: {transformation[:50]}...")
-                print(f"  Applied transformation {i+1}: {transformation[:50]}...")
+                print(f"  Applied transformation {i + 1}: {transformation[:50]}...")
             except Exception as e:
-                print(f"  Warning: Transformation {i+1} failed: {e}")
-                self.metrics["errors"].append(f"Transform {i+1}: {str(e)}")
+                print(f"  Warning: Transformation {i + 1} failed: {e}")
+                self.metrics["errors"].append(f"Transform {i + 1}: {str(e)}")
 
         # 最終ビューを作成
         self.con.execute(f"""
@@ -636,80 +623,39 @@ Examples:
     # With overwrite control
     python etl_pipeline.py --source data.csv --target output.parquet --overwrite
     python etl_pipeline.py --source data.csv --target output.parquet --if-exists fail
-        """
+        """,
     )
 
-    parser.add_argument(
-        "config_file",
-        nargs="?",
-        help="Configuration file (YAML or JSON)"
-    )
-    parser.add_argument(
-        "--source", "-s",
-        help="Source file path"
-    )
+    parser.add_argument("config_file", nargs="?", help="Configuration file (YAML or JSON)")
+    parser.add_argument("--source", "-s", help="Source file path")
     parser.add_argument(
         "--source-format",
         choices=["auto", "csv", "parquet", "json", "ndjson"],
         default="auto",
-        help="Source format (default: auto)"
+        help="Source format (default: auto)",
     )
+    parser.add_argument("--target", "-t", help="Target file path")
     parser.add_argument(
-        "--target", "-t",
-        help="Target file path"
-    )
-    parser.add_argument(
-        "--format", "-f",
+        "--format",
+        "-f",
         choices=["parquet", "csv", "json", "ndjson"],
         default="parquet",
-        help="Target format (default: parquet)"
+        help="Target format (default: parquet)",
     )
-    parser.add_argument(
-        "--select",
-        nargs="+",
-        help="Columns to select"
-    )
-    parser.add_argument(
-        "--where", "-w",
-        help="WHERE clause for filtering"
-    )
-    parser.add_argument(
-        "--partition",
-        nargs="+",
-        help="Partition by columns"
-    )
-    parser.add_argument(
-        "--compression",
-        default="zstd",
-        help="Compression (default: zstd)"
-    )
-    parser.add_argument(
-        "--memory",
-        default="4GB",
-        help="Memory limit (default: 4GB)"
-    )
-    parser.add_argument(
-        "--overwrite",
-        action="store_true",
-        help="Overwrite existing files"
-    )
+    parser.add_argument("--select", nargs="+", help="Columns to select")
+    parser.add_argument("--where", "-w", help="WHERE clause for filtering")
+    parser.add_argument("--partition", nargs="+", help="Partition by columns")
+    parser.add_argument("--compression", default="zstd", help="Compression (default: zstd)")
+    parser.add_argument("--memory", default="4GB", help="Memory limit (default: 4GB)")
+    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
     parser.add_argument(
         "--if-exists",
         choices=["replace", "append", "fail"],
         default="replace",
-        help="Action if target exists (default: replace)"
+        help="Action if target exists (default: replace)",
     )
-    parser.add_argument(
-        "--retry",
-        type=int,
-        default=3,
-        help="Number of retries on failure (default: 3)"
-    )
-    parser.add_argument(
-        "--no-validate",
-        action="store_true",
-        help="Skip validation"
-    )
+    parser.add_argument("--retry", type=int, default=3, help="Number of retries on failure (default: 3)")
+    parser.add_argument("--no-validate", action="store_true", help="Skip validation")
 
     args = parser.parse_args()
 
@@ -737,7 +683,7 @@ Examples:
             overwrite=args.overwrite,
             if_exists=args.if_exists,
             validate=not args.no_validate,
-            retry_count=args.retry
+            retry_count=args.retry,
         )
     else:
         parser.print_help()
@@ -764,14 +710,14 @@ Examples:
         print(f"Retries: {metrics['retries']}")
         print(f"Elapsed Time: {elapsed:.2f} seconds")
 
-        if metrics['warnings']:
+        if metrics["warnings"]:
             print(f"\nWarnings: {len(metrics['warnings'])}")
-            for warning in metrics['warnings']:
+            for warning in metrics["warnings"]:
                 print(f"  - {warning}")
 
-        if metrics['errors']:
+        if metrics["errors"]:
             print(f"\nErrors: {len(metrics['errors'])}")
-            for error in metrics['errors']:
+            for error in metrics["errors"]:
                 print(f"  - {error}")
 
     except Exception as e:

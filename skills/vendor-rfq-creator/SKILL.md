@@ -13,7 +13,7 @@ This skill transforms vague client requirements into comprehensive RFQ (Request 
 **Output format**: Markdown
 
 Use this skill when:
-- Clients provide vague or incomplete project requirements  
+- Clients provide vague or incomplete project requirements
 - You need to create formal RFQs to send to development vendors
 - You want to ensure all necessary information is included for accurate estimates
 - You need to standardize RFQ creation across your organization
@@ -21,7 +21,7 @@ Use this skill when:
 ## Core Workflows
 
 1. **Requirements Elicitation**: Extract and understand client needs through structured questioning
-2. **Requirements Structuring**: Transform vague requirements into clear specifications  
+2. **Requirements Structuring**: Transform vague requirements into clear specifications
 3. **RFQ Document Creation**: Generate professional, comprehensive RFQ documents
 4. **Quality Review**: Verify completeness before sending to vendors
 
@@ -56,11 +56,11 @@ Compare received information against `references/rfq_checklist_ja.md`:
 
 Generate structured questions using **5W1H framework**:
 
-**Who**: 誰がこのシステムを使用しますか？ユーザー数は？  
-**What**: どのような機能が必要ですか？優先順位は？  
-**Where**: どこで使用されますか？  
-**When**: いつまでに必要ですか？  
-**Why**: なぜこのシステムが必要ですか？  
+**Who**: 誰がこのシステムを使用しますか？ユーザー数は？
+**What**: どのような機能が必要ですか？優先順位は？
+**Where**: どこで使用されますか？
+**When**: いつまでに必要ですか？
+**Why**: なぜこのシステムが必要ですか？
 **How**: どのように実現しますか？
 
 ### Step 4: Conduct Client Interview
@@ -284,7 +284,7 @@ Get feedback from:
 **Structure**: 9 main sections
 1. プロジェクト概要
 2. 機能要件
-3. 非機能要件  
+3. 非機能要件
 4. 技術要件
 5. プロジェクト管理要件
 6. 契約・法務要件

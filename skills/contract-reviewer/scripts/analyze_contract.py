@@ -24,15 +24,12 @@ from pathlib import Path
 from typing import Optional
 
 # Import pattern definitions
-from pattern_definitions import (
-    RED_FLAG_PATTERNS,
-    CONTRACT_TYPE_PATTERNS,
-    CLAUSE_PATTERNS
-)
+from pattern_definitions import CLAUSE_PATTERNS, CONTRACT_TYPE_PATTERNS, RED_FLAG_PATTERNS
 
 # Optional PDF support
 try:
     import PyPDF2
+
     PDF_SUPPORT = True
 except ImportError:
     PDF_SUPPORT = False
@@ -41,6 +38,7 @@ except ImportError:
 @dataclass
 class RedFlag:
     """Represents a detected red flag in the contract."""
+
     pattern_id: str
     title: str
     severity: str  # Critical, High, Medium, Low
@@ -54,6 +52,7 @@ class RedFlag:
 @dataclass
 class ContractInfo:
     """Basic contract information extracted from the document."""
+
     contract_type: str = "Unknown"
     parties: list = field(default_factory=list)
     effective_date: str = ""
@@ -67,6 +66,7 @@ class ContractInfo:
 @dataclass
 class AnalysisResult:
     """Complete analysis result."""
+
     contract_info: ContractInfo
     red_flags: list
     risk_score: int
@@ -83,13 +83,13 @@ def read_file(filepath: Path) -> str:
         ValueError: If PDF is encrypted or contains no extractable text
         RuntimeError: If PDF parsing fails
     """
-    if filepath.suffix.lower() == '.pdf':
+    if filepath.suffix.lower() == ".pdf":
         if not PDF_SUPPORT:
             raise ImportError("PyPDF2 not installed. Install with: pip install PyPDF2")
 
         text_content = []
         try:
-            with open(filepath, 'rb') as f:
+            with open(filepath, "rb") as f:
                 reader = PyPDF2.PdfReader(f)
 
                 if reader.is_encrypted:
@@ -116,11 +116,11 @@ def read_file(filepath: Path) -> str:
     else:
         # CR-001: Proper encoding handling with fallback
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, "r", encoding="utf-8") as f:
                 return f.read()
         except UnicodeDecodeError:
             # Fallback to latin-1 (lossless for any byte sequence)
-            with open(filepath, 'r', encoding='latin-1') as f:
+            with open(filepath, "r", encoding="latin-1") as f:
                 return f.read()
 
 
@@ -157,7 +157,7 @@ def _has_negation_context(text: str, match_start: int, context_chars: int = 30) 
     """
     start = max(0, match_start - context_chars)
     context = text[start:match_start]
-    negation_words = ['not ', 'no ', 'never ', 'without ', "doesn't ", "does not ", "shall not "]
+    negation_words = ["not ", "no ", "never ", "without ", "doesn't ", "does not ", "shall not "]
     return any(neg in context for neg in negation_words)
 
 
@@ -176,7 +176,9 @@ def extract_contract_info(text: str) -> ContractInfo:
         info.parties = [party_match.group(1).strip(), party_match.group(2).strip()]
 
     # Effective date
-    date_pattern = r"(?:effective|dated?|as\s+of)\s+(?:the\s+)?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\w+\s+\d{1,2},?\s+\d{4})"
+    date_pattern = (
+        r"(?:effective|dated?|as\s+of)\s+(?:the\s+)?(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\w+\s+\d{1,2},?\s+\d{4})"
+    )
     date_match = re.search(date_pattern, text, re.IGNORECASE)
     if date_match:
         info.effective_date = date_match.group(1)
@@ -187,7 +189,9 @@ def extract_contract_info(text: str) -> ContractInfo:
         info.auto_renewal = True
 
     # Governing law
-    law_pattern = r"(?:governed\s+by|governing\s+law).{0,50}(?:laws?\s+of\s+(?:the\s+)?)?([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)"
+    law_pattern = (
+        r"(?:governed\s+by|governing\s+law).{0,50}(?:laws?\s+of\s+(?:the\s+)?)?([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)"
+    )
     law_match = re.search(law_pattern, text)
     if law_match:
         info.governing_law = law_match.group(1)
@@ -228,7 +232,7 @@ def detect_red_flags(text: str) -> list:
             context = text[start:end].strip()
 
             # Find approximate location
-            lines_before = text[:match.start()].count('\n') + 1
+            lines_before = text[: match.start()].count("\n") + 1
             location = f"Approx. line {lines_before}"
 
             red_flag = RedFlag(
@@ -239,7 +243,7 @@ def detect_red_flags(text: str) -> list:
                 clause_text=context,
                 location=location,
                 description=pattern_info["description"],
-                recommendation=pattern_info["recommendation"]
+                recommendation=pattern_info["recommendation"],
             )
             red_flags.append(red_flag)
 
@@ -259,12 +263,7 @@ def check_clause_coverage(text: str) -> dict:
 
 def calculate_risk_score(red_flags: list) -> tuple:
     """Calculate overall risk score based on red flags."""
-    severity_weights = {
-        "Critical": 20,
-        "High": 10,
-        "Medium": 5,
-        "Low": 2
-    }
+    severity_weights = {"Critical": 20, "High": 10, "Medium": 5, "Low": 2}
 
     total_score = 0
     for rf in red_flags:
@@ -295,21 +294,19 @@ def generate_recommendations(red_flags: list, clause_coverage: dict) -> list:
     sorted_flags = sorted(red_flags, key=lambda x: severity_order.get(x.severity, 4))
 
     for rf in sorted_flags[:5]:  # Top 5 recommendations
-        recommendations.append({
-            "priority": rf.severity,
-            "issue": rf.title,
-            "recommendation": rf.recommendation
-        })
+        recommendations.append({"priority": rf.severity, "issue": rf.title, "recommendation": rf.recommendation})
 
     # Missing clause recommendations
     critical_clauses = ["Liability", "Indemnification", "Termination", "Governing Law"]
     for clause in critical_clauses:
         if not clause_coverage.get(clause, False):
-            recommendations.append({
-                "priority": "High",
-                "issue": f"Missing {clause} clause",
-                "recommendation": f"Request addition of {clause} clause with standard protections"
-            })
+            recommendations.append(
+                {
+                    "priority": "High",
+                    "issue": f"Missing {clause} clause",
+                    "recommendation": f"Request addition of {clause} clause with standard protections",
+                }
+            )
 
     return recommendations
 
@@ -331,12 +328,12 @@ def generate_report(result: AnalysisResult, filepath: Path, party_name: str = ""
 | Field | Value |
 |-------|-------|
 | **Detected Type** | {result.contract_info.contract_type} |
-| **Parties** | {', '.join(result.contract_info.parties) if result.contract_info.parties else 'Not detected'} |
-| **Effective Date** | {result.contract_info.effective_date or 'Not detected'} |
-| **Governing Law** | {result.contract_info.governing_law or 'Not detected'} |
-| **Auto-Renewal** | {'Yes' if result.contract_info.auto_renewal else 'No'} |
-| **Liability Cap** | {result.contract_info.liability_cap or 'Not detected'} |
-| **Indemnification** | {result.contract_info.indemnification_type or 'Not detected'} |
+| **Parties** | {", ".join(result.contract_info.parties) if result.contract_info.parties else "Not detected"} |
+| **Effective Date** | {result.contract_info.effective_date or "Not detected"} |
+| **Governing Law** | {result.contract_info.governing_law or "Not detected"} |
+| **Auto-Renewal** | {"Yes" if result.contract_info.auto_renewal else "No"} |
+| **Liability Cap** | {result.contract_info.liability_cap or "Not detected"} |
+| **Indemnification** | {result.contract_info.indemnification_type or "Not detected"} |
 
 ---
 
@@ -436,8 +433,9 @@ workflow is recommended. Consult qualified legal counsel for binding decisions.
     return report
 
 
-def analyze_contract(filepath: Path, contract_type: Optional[str] = None,
-                     party_name: str = "", verbose: bool = False) -> AnalysisResult:
+def analyze_contract(
+    filepath: Path, contract_type: Optional[str] = None, party_name: str = "", verbose: bool = False
+) -> AnalysisResult:
     """Main analysis function."""
     if verbose:
         print(f"Reading file: {filepath}")
@@ -486,7 +484,7 @@ def analyze_contract(filepath: Path, contract_type: Optional[str] = None,
         risk_score=risk_score,
         risk_level=risk_level,
         clause_coverage=clause_coverage,
-        recommendations=recommendations
+        recommendations=recommendations,
     )
 
 
@@ -508,13 +506,14 @@ Examples:
   python analyze_contract.py contract.txt --output report.md
   python analyze_contract.py contract.pdf --type nda --output nda_report.md
   python analyze_contract.py contract.txt --party-name "Acme Corp" --verbose
-        """
+        """,
     )
 
     parser.add_argument("input_file", type=Path, help="Contract file to analyze (txt, md, pdf)")
     parser.add_argument("--output", "-o", type=Path, help="Output report file (Markdown)")
-    parser.add_argument("--type", "-t", choices=["nda", "msa", "sow", "sla", "license"],
-                        help="Override contract type detection")
+    parser.add_argument(
+        "--type", "-t", choices=["nda", "msa", "sow", "sla", "license"], help="Override contract type detection"
+    )
     parser.add_argument("--party-name", help="Your organization's name for context")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
 
@@ -528,10 +527,7 @@ Examples:
     # Run analysis with exception handling
     try:
         result = analyze_contract(
-            args.input_file,
-            contract_type=args.type,
-            party_name=args.party_name or "",
-            verbose=args.verbose
+            args.input_file, contract_type=args.type, party_name=args.party_name or "", verbose=args.verbose
         )
     except ImportError as e:
         print(f"Error: {e}")
@@ -548,7 +544,7 @@ Examples:
 
     # Output
     if args.output:
-        with open(args.output, 'w', encoding='utf-8') as f:
+        with open(args.output, "w", encoding="utf-8") as f:
             f.write(report)
         print(f"Report written to: {args.output}")
     else:

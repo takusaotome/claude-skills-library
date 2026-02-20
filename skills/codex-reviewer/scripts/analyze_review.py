@@ -12,18 +12,19 @@ Usage:
 """
 
 import argparse
+import json
 import re
 import sys
-from pathlib import Path
-from dataclasses import dataclass, field
-from typing import List, Dict, Optional
 from collections import Counter
-import json
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Dict, List
 
 
 @dataclass
 class ReviewIssue:
     """レビュー指摘事項"""
+
     severity: str  # Critical, High, Medium, Low
     category: str
     location: str
@@ -35,6 +36,7 @@ class ReviewIssue:
 @dataclass
 class ReviewAnalysis:
     """レビュー分析結果"""
+
     total_issues: int = 0
     issues_by_severity: Dict[str, int] = field(default_factory=dict)
     issues_by_category: Dict[str, int] = field(default_factory=dict)
@@ -80,17 +82,19 @@ def extract_issues(content: str) -> List[ReviewIssue]:
     # **推奨**: 改善案（複数行可）
     #
     # 各フィールドは次のフィールド開始または空行/リストアイテムまで非貪欲にマッチ
-    structured_pattern = r'\*\*重要度\*\*:\s*(.+?)\s*\n\s*\*\*カテゴリ\*\*:\s*(.+?)\s*\n\s*\*\*場所\*\*:\s*(.+?)\s*\n\s*\*\*問題\*\*:\s*(.+?)\s*\n\s*\*\*推奨\*\*:\s*(.+?)(?=\n\n|\n-\s*\*\*重要度|\Z)'
+    structured_pattern = r"\*\*重要度\*\*:\s*(.+?)\s*\n\s*\*\*カテゴリ\*\*:\s*(.+?)\s*\n\s*\*\*場所\*\*:\s*(.+?)\s*\n\s*\*\*問題\*\*:\s*(.+?)\s*\n\s*\*\*推奨\*\*:\s*(.+?)(?=\n\n|\n-\s*\*\*重要度|\Z)"
 
     for match in re.finditer(structured_pattern, content, re.MULTILINE | re.DOTALL):
-        issues.append(ReviewIssue(
-            severity=parse_severity(match.group(1)),
-            category=match.group(2).strip(),
-            location=match.group(3).strip(),
-            problem=match.group(4).strip(),
-            recommendation=match.group(5).strip(),
-            raw_text=match.group(0)
-        ))
+        issues.append(
+            ReviewIssue(
+                severity=parse_severity(match.group(1)),
+                category=match.group(2).strip(),
+                location=match.group(3).strip(),
+                problem=match.group(4).strip(),
+                recommendation=match.group(5).strip(),
+                raw_text=match.group(0),
+            )
+        )
 
     # パターン2: 英語形式（複数行対応）
     # **Severity**: Critical
@@ -98,45 +102,51 @@ def extract_issues(content: str) -> List[ReviewIssue]:
     # **Location**: file.py:10
     # **Problem**: description (multiline supported)
     # **Recommendation**: suggestion (multiline supported)
-    english_pattern = r'\*\*Severity\*\*:\s*(.+?)\s*\n\s*\*\*Category\*\*:\s*(.+?)\s*\n\s*\*\*Location\*\*:\s*(.+?)\s*\n\s*\*\*Problem\*\*:\s*(.+?)\s*\n\s*\*\*Recommendation\*\*:\s*(.+?)(?=\n\n|\n-\s*\*\*Severity|\Z)'
+    english_pattern = r"\*\*Severity\*\*:\s*(.+?)\s*\n\s*\*\*Category\*\*:\s*(.+?)\s*\n\s*\*\*Location\*\*:\s*(.+?)\s*\n\s*\*\*Problem\*\*:\s*(.+?)\s*\n\s*\*\*Recommendation\*\*:\s*(.+?)(?=\n\n|\n-\s*\*\*Severity|\Z)"
 
     for match in re.finditer(english_pattern, content, re.MULTILINE | re.IGNORECASE | re.DOTALL):
-        issues.append(ReviewIssue(
-            severity=parse_severity(match.group(1)),
-            category=match.group(2).strip(),
-            location=match.group(3).strip(),
-            problem=match.group(4).strip(),
-            recommendation=match.group(5).strip(),
-            raw_text=match.group(0)
-        ))
+        issues.append(
+            ReviewIssue(
+                severity=parse_severity(match.group(1)),
+                category=match.group(2).strip(),
+                location=match.group(3).strip(),
+                problem=match.group(4).strip(),
+                recommendation=match.group(5).strip(),
+                raw_text=match.group(0),
+            )
+        )
 
     # パターン3: リスト形式
     # - Critical: セキュリティ問題 (file.py:10) - 説明
-    list_pattern = r'-\s*(Critical|High|Medium|Low):\s*([^(]+)\s*\(([^)]+)\)\s*-\s*(.+)'
+    list_pattern = r"-\s*(Critical|High|Medium|Low):\s*([^(]+)\s*\(([^)]+)\)\s*-\s*(.+)"
 
     for match in re.finditer(list_pattern, content, re.MULTILINE | re.IGNORECASE):
-        issues.append(ReviewIssue(
-            severity=parse_severity(match.group(1)),
-            category=match.group(2).strip(),
-            location=match.group(3).strip(),
-            problem=match.group(4).strip(),
-            recommendation="",
-            raw_text=match.group(0)
-        ))
+        issues.append(
+            ReviewIssue(
+                severity=parse_severity(match.group(1)),
+                category=match.group(2).strip(),
+                location=match.group(3).strip(),
+                problem=match.group(4).strip(),
+                recommendation="",
+                raw_text=match.group(0),
+            )
+        )
 
     # パターン4: ヘッダーベース
     # ### Critical: タイトル
-    header_pattern = r'###\s*(Critical|High|Medium|Low)[:\s]+([^\n]+)'
+    header_pattern = r"###\s*(Critical|High|Medium|Low)[:\s]+([^\n]+)"
 
     for match in re.finditer(header_pattern, content, re.MULTILINE | re.IGNORECASE):
-        issues.append(ReviewIssue(
-            severity=parse_severity(match.group(1)),
-            category="General",
-            location="",
-            problem=match.group(2).strip(),
-            recommendation="",
-            raw_text=match.group(0)
-        ))
+        issues.append(
+            ReviewIssue(
+                severity=parse_severity(match.group(1)),
+                category="General",
+                location="",
+                problem=match.group(2).strip(),
+                recommendation="",
+                raw_text=match.group(0),
+            )
+        )
 
     return issues
 
@@ -148,20 +158,20 @@ def extract_action_items(content: str) -> List[str]:
     # パターン1: チェックリスト形式
     # - [ ] アクション
     # - [ ] TODO: アクション
-    checkbox_pattern = r'-\s*\[\s*\]\s*(?:TODO:?\s*)?(.+)'
+    checkbox_pattern = r"-\s*\[\s*\]\s*(?:TODO:?\s*)?(.+)"
     for match in re.finditer(checkbox_pattern, content, re.MULTILINE):
         action_items.append(match.group(1).strip())
 
     # パターン2: 推奨アクション
     # **推奨**: アクション
-    recommendation_pattern = r'\*\*(?:推奨|Recommendation|アクション|Action)\*\*:\s*(.+)'
+    recommendation_pattern = r"\*\*(?:推奨|Recommendation|アクション|Action)\*\*:\s*(.+)"
     for match in re.finditer(recommendation_pattern, content, re.MULTILINE | re.IGNORECASE):
         action_items.append(match.group(1).strip())
 
     # パターン3: アクションアイテムセクション
-    action_section_pattern = r'##\s*(?:アクションアイテム|Action Items|TODO)[^\n]*\n((?:[-*]\s*.+\n?)+)'
+    action_section_pattern = r"##\s*(?:アクションアイテム|Action Items|TODO)[^\n]*\n((?:[-*]\s*.+\n?)+)"
     for match in re.finditer(action_section_pattern, content, re.MULTILINE | re.IGNORECASE):
-        items = re.findall(r'[-*]\s*(.+)', match.group(1))
+        items = re.findall(r"[-*]\s*(.+)", match.group(1))
         action_items.extend([item.strip() for item in items])
 
     # 重複を除去
@@ -186,9 +196,14 @@ def analyze_review(content: str) -> ReviewAnalysis:
     if severity_counts:
         severity_str = ", ".join(
             f"{sev}: {count}件"
-            for sev, count in sorted(severity_counts.items(),
-                                     key=lambda x: ["Critical", "High", "Medium", "Low", "Unknown"].index(x[0])
-                                     if x[0] in ["Critical", "High", "Medium", "Low", "Unknown"] else 99)
+            for sev, count in sorted(
+                severity_counts.items(),
+                key=lambda x: (
+                    ["Critical", "High", "Medium", "Low", "Unknown"].index(x[0])
+                    if x[0] in ["Critical", "High", "Medium", "Low", "Unknown"]
+                    else 99
+                ),
+            )
         )
         summary_parts.append(f"重要度別: {severity_str}")
 
@@ -207,7 +222,7 @@ def analyze_review(content: str) -> ReviewAnalysis:
         issues=issues,
         action_items=action_items,
         summary="\n".join(summary_parts),
-        raw_content=content
+        raw_content=content,
     )
 
 
@@ -305,7 +320,7 @@ def format_json(analysis: ReviewAnalysis) -> str:
             "total_issues": analysis.total_issues,
             "issues_by_severity": analysis.issues_by_severity,
             "issues_by_category": analysis.issues_by_category,
-            "action_items_count": len(analysis.action_items)
+            "action_items_count": len(analysis.action_items),
         },
         "issues": [
             {
@@ -313,11 +328,11 @@ def format_json(analysis: ReviewAnalysis) -> str:
                 "category": i.category,
                 "location": i.location,
                 "problem": i.problem,
-                "recommendation": i.recommendation
+                "recommendation": i.recommendation,
             }
             for i in analysis.issues
         ],
-        "action_items": analysis.action_items
+        "action_items": analysis.action_items,
     }
     return json.dumps(data, ensure_ascii=False, indent=2)
 
@@ -353,26 +368,20 @@ def main():
 
   # 全形式で出力してファイルに保存
   python3 analyze_review.py --input ./reviews/code_review_xxx.md --format all --output analysis.md
-        """
+        """,
     )
 
-    parser.add_argument(
-        "--input", "-i",
-        required=True,
-        help="レビュー結果ファイルのパス"
-    )
+    parser.add_argument("--input", "-i", required=True, help="レビュー結果ファイルのパス")
 
     parser.add_argument(
-        "--format", "-f",
+        "--format",
+        "-f",
         choices=["summary", "issues", "actions", "json", "all"],
         default="summary",
-        help="出力形式（デフォルト: summary）"
+        help="出力形式（デフォルト: summary）",
     )
 
-    parser.add_argument(
-        "--output", "-o",
-        help="出力ファイルパス（指定しない場合は標準出力）"
-    )
+    parser.add_argument("--output", "-o", help="出力ファイルパス（指定しない場合は標準出力）")
 
     args = parser.parse_args()
 
@@ -389,7 +398,7 @@ def main():
             "issues": format_issues,
             "actions": format_actions,
             "json": format_json,
-            "all": format_all
+            "all": format_all,
         }
 
         result = formatters[args.format](analysis)

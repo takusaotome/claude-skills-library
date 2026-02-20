@@ -6,15 +6,16 @@ Perspective Combiner
 新しい検証観点を創出する。
 """
 
+import itertools
 import random
-from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum
-import itertools
+from typing import Dict, List, Optional, Tuple
 
 
 class PerspectiveCategory(Enum):
     """観点カテゴリ"""
+
     TEMPORAL = ("T", "時間的", "時系列、ライフサイクル")
     RELATIONAL = ("R", "関係的", "親子、兄弟、ネットワーク")
     QUANTITATIVE = ("Q", "数量的", "件数、比率、分布")
@@ -32,6 +33,7 @@ class PerspectiveCategory(Enum):
 
 class CombinationOperator(Enum):
     """組み合わせ演算子"""
+
     AND = ("AND", "両方の観点が一致する必要")
     XOR = ("XOR", "観点が異なるべき（不整合検出）")
     SEQUENCE = ("SEQ", "一方が他方に先行")
@@ -45,6 +47,7 @@ class CombinationOperator(Enum):
 @dataclass
 class CombinedPerspective:
     """組み合わせ観点"""
+
     perspective_a: PerspectiveCategory
     perspective_b: PerspectiveCategory
     operator: CombinationOperator
@@ -63,7 +66,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="クロスソース参照整合性",
         description="異なるソースからの参照が正しく解決されるか",
         validation_focus="Property参照、Account参照のソース横断検証",
-        example_query="source_a.property_id IN (SELECT id FROM source_b.properties)"
+        example_query="source_a.property_id IN (SELECT id FROM source_b.properties)",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.GEOGRAPHIC,
@@ -72,7 +75,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="地理-所有者整合性",
         description="地域と所有者の割当が矛盾していないか",
         validation_focus="CAの物件にNYマネージャーが割当されていないか",
-        example_query="property.state != owner.office_location"
+        example_query="property.state != owner.office_location",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.TEMPORAL,
@@ -81,7 +84,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="ライフサイクル状態遷移",
         description="ステータス変更が時系列で妥当か",
         validation_focus="Closed Wonに必要なフィールドが揃っているか",
-        example_query="stage = 'Closed Won' AND close_date IS NULL"
+        example_query="stage = 'Closed Won' AND close_date IS NULL",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.SOURCE,
@@ -90,7 +93,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="ソース-RecordType整合性",
         description="データソースとRecordTypeの組み合わせが妥当か",
         validation_focus="ExRentソースがExpat Housing以外になっていないか",
-        example_query="source = 'ExRent' AND record_type != 'Expat Housing'"
+        example_query="source = 'ExRent' AND record_type != 'Expat Housing'",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.ROLE,
@@ -99,7 +102,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="部門-エンティティ整合性",
         description="フォールバック所有者が正しい部門か",
         validation_focus="Commercialの物件にResidentialマネージャーが割当されていないか",
-        example_query="entity_type = 'Commercial' AND owner.department = 'Residential'"
+        example_query="entity_type = 'Commercial' AND owner.department = 'Residential'",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.RELATIONAL,
@@ -108,7 +111,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="Renewal連鎖完全性",
         description="更新Opportunityが親に正しくリンクされているか",
         validation_focus="Renewal Opportunityの親Opportunity存在確認",
-        example_query="is_renewal = TRUE AND parent_opportunity_id IS NULL"
+        example_query="is_renewal = TRUE AND parent_opportunity_id IS NULL",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.SEMANTIC,
@@ -117,7 +120,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="Contact RecordType-Deal整合性",
         description="ContactタイプとOpportunityタイプの組み合わせが妥当か",
         validation_focus="ExpatがIVP取引を持っていないか",
-        example_query="contact.record_type = 'Expat' AND opportunity.type = 'IVP'"
+        example_query="contact.record_type = 'Expat' AND opportunity.type = 'IVP'",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.QUANTITATIVE,
@@ -126,7 +129,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="クロスソース属性整合性",
         description="同一エンティティの属性がソース間で一致するか",
         validation_focus="同一物件の属性がソース間で一致するか",
-        example_query="source_a.property_name != source_b.property_name WHERE id = id"
+        example_query="source_a.property_name != source_b.property_name WHERE id = id",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.QUANTITATIVE,
@@ -135,7 +138,7 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="金額-ステージ相関",
         description="ステージに応じた金額の妥当性",
         validation_focus="Closed Wonに金額が設定されているか",
-        example_query="stage = 'Closed Won' AND (amount IS NULL OR amount = 0)"
+        example_query="stage = 'Closed Won' AND (amount IS NULL OR amount = 0)",
     ),
     CombinedPerspective(
         perspective_a=PerspectiveCategory.RELATIONAL,
@@ -144,8 +147,8 @@ KNOWN_COMBINATIONS: List[CombinedPerspective] = [
         name="カスケード参照整合性",
         description="多段階の参照が全て有効か",
         validation_focus="Opp→Account→Parent Accountが全て存在するか",
-        example_query="opportunity.account_id EXISTS AND account.parent_id EXISTS"
-    )
+        example_query="opportunity.account_id EXISTS AND account.parent_id EXISTS",
+    ),
 ]
 
 
@@ -187,9 +190,7 @@ REAL_ESTATE_PITFALLS = [
 ]
 
 
-def generate_new_perspective(
-    exclude_categories: Optional[List[PerspectiveCategory]] = None
-) -> CombinedPerspective:
+def generate_new_perspective(exclude_categories: Optional[List[PerspectiveCategory]] = None) -> CombinedPerspective:
     """
     ランダムに新しい観点の組み合わせを生成
 
@@ -215,7 +216,7 @@ def generate_new_perspective(
         operator=operator,
         name=f"{perspective_a.japanese}×{perspective_b.japanese}",
         description=f"{perspective_a.description}と{perspective_b.description}の組み合わせ検証",
-        validation_focus=f"要検討: {operator.description}の関係を持つケースを検証"
+        validation_focus=f"要検討: {operator.description}の関係を持つケースを検証",
     )
 
 
@@ -231,10 +232,7 @@ def select_pitfall_combination() -> Tuple[Tuple, Tuple]:
     return crm_pitfall, real_estate_pitfall
 
 
-def generate_perspective_from_pitfalls(
-    crm_pitfall: Tuple,
-    real_estate_pitfall: Tuple
-) -> Dict[str, str]:
+def generate_perspective_from_pitfalls(crm_pitfall: Tuple, real_estate_pitfall: Tuple) -> Dict[str, str]:
     """
     落とし穴の組み合わせから新しい検証観点を生成
 
@@ -255,8 +253,8 @@ def generate_perspective_from_pitfalls(
         """.strip(),
         "suggested_checks": [
             f"{crm_pitfall[1]}の観点から{real_estate_pitfall[1]}を検証",
-            f"{real_estate_pitfall[1]}のデータで{crm_pitfall[1]}の問題を探す"
-        ]
+            f"{real_estate_pitfall[1]}のデータで{crm_pitfall[1]}の問題を探す",
+        ],
     }
 
 
@@ -318,7 +316,7 @@ if __name__ == "__main__":
     # ランダムに新観点を生成
     for i in range(3):
         new_perspective = generate_new_perspective()
-        print(f"\n[New {i+1}] {new_perspective.name}")
+        print(f"\n[New {i + 1}] {new_perspective.name}")
         print(f"    演算子: {new_perspective.operator.symbol}")
         print(f"    説明: {new_perspective.description}")
 

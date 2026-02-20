@@ -7,12 +7,12 @@ import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 
 
 @dataclass
 class PatternMatch:
     """A single pattern match with location and context."""
+
     pattern_id: int
     pattern_name: str
     matched_text: str
@@ -23,6 +23,7 @@ class PatternMatch:
 @dataclass
 class PatternResult:
     """Result for a single pattern category."""
+
     pattern_id: int
     pattern_name: str
     score: float
@@ -34,6 +35,7 @@ class PatternResult:
 @dataclass
 class AnalysisResult:
     """Complete analysis result."""
+
     total_score: float
     level: str
     doc_type: str
@@ -214,13 +216,19 @@ class AIPatternDetector:
         # Em dash
         for i, line in enumerate(lines):
             for m in re.finditer(r"—", line):
-                matches.append(PatternMatch(1, "エムダッシュ", f"...{line[max(0,m.start()-10):m.end()+10]}...", i + 1, 2.0))
+                matches.append(
+                    PatternMatch(1, "エムダッシュ", f"...{line[max(0, m.start() - 10) : m.end() + 10]}...", i + 1, 2.0)
+                )
                 score += 2.0
 
         # Full-width slash
         for i, line in enumerate(lines):
             for m in re.finditer(r"／", line):
-                matches.append(PatternMatch(1, "全角スラッシュ", f"...{line[max(0,m.start()-10):m.end()+10]}...", i + 1, 2.0))
+                matches.append(
+                    PatternMatch(
+                        1, "全角スラッシュ", f"...{line[max(0, m.start() - 10) : m.end() + 10]}...", i + 1, 2.0
+                    )
+                )
                 score += 2.0
 
         # Excessive parentheses per paragraph
@@ -241,7 +249,15 @@ class AIPatternDetector:
         if not allow_structural_markdown:
             bullet_lines = sum(1 for line in lines if re.match(r"^\s*[-•]\s", line))
             if lines and bullet_lines / len(lines) > 0.3:
-                matches.append(PatternMatch(1, "箇条書き過多", f"箇条書き{bullet_lines}/{len(lines)}行 ({bullet_lines/len(lines)*100:.0f}%)", 0, 5.0))
+                matches.append(
+                    PatternMatch(
+                        1,
+                        "箇条書き過多",
+                        f"箇条書き{bullet_lines}/{len(lines)}行 ({bullet_lines / len(lines) * 100:.0f}%)",
+                        0,
+                        5.0,
+                    )
+                )
                 score += 5.0
 
         max_score = self.PATTERN_MAX_SCORES[1]
@@ -413,7 +429,7 @@ class AIPatternDetector:
             if avg_len > 0:
                 all_within = all(abs(l - avg_len) / avg_len < 0.15 for l in para_lengths)
                 if all_within:
-                    matches.append(PatternMatch(3, "セクション均等", f"段落長の偏差15%以内", 0, 3.0))
+                    matches.append(PatternMatch(3, "セクション均等", "段落長の偏差15%以内", 0, 3.0))
                     score += 3.0
 
         max_score = self.PATTERN_MAX_SCORES[3]
@@ -443,7 +459,7 @@ class AIPatternDetector:
         for i, line in enumerate(lines):
             for pat, name in hedge_patterns:
                 for m in re.finditer(pat, line):
-                    matches.append(PatternMatch(4, name, f"...{line[max(0,m.start()-15):m.end()]}...", i + 1, 3.0))
+                    matches.append(PatternMatch(4, name, f"...{line[max(0, m.start() - 15) : m.end()]}...", i + 1, 3.0))
                     score += 3.0
 
         # Forced neutrality (paragraph-based, counting occurrences not unique patterns)
@@ -514,8 +530,16 @@ class AIPatternDetector:
 
         # Hollow abstract words
         abstract_words = [
-            "本質的", "包括的", "体系的", "戦略的", "革新的",
-            "持続可能な", "多角的", "総合的", "抜本的", "画期的",
+            "本質的",
+            "包括的",
+            "体系的",
+            "戦略的",
+            "革新的",
+            "持続可能な",
+            "多角的",
+            "総合的",
+            "抜本的",
+            "画期的",
         ]
         for i, line in enumerate(lines):
             for word in abstract_words:
@@ -540,8 +564,12 @@ class AIPatternDetector:
 
         # Substanceless nouns
         hollow_nouns = [
-            "フレームワーク", "アプローチ", "ソリューション",
-            "エコシステム", "パラダイム", "メソドロジー",
+            "フレームワーク",
+            "アプローチ",
+            "ソリューション",
+            "エコシステム",
+            "パラダイム",
+            "メソドロジー",
         ]
         for i, line in enumerate(lines):
             for noun in hollow_nouns:
@@ -558,8 +586,15 @@ class AIPatternDetector:
                     score += 1.5
 
         # Buzzwords
-        buzzwords = ["シナジー", "レバレッジ", "スケーラブル", "アジャイル",
-                     "イニシアチブ", "コンセンサス", "プロアクティブ"]
+        buzzwords = [
+            "シナジー",
+            "レバレッジ",
+            "スケーラブル",
+            "アジャイル",
+            "イニシアチブ",
+            "コンセンサス",
+            "プロアクティブ",
+        ]
         for i, line in enumerate(lines):
             for word in buzzwords:
                 if word in line:
@@ -587,7 +622,10 @@ class AIPatternDetector:
             # Treat "設計書" as a stock metaphor only in metaphorical contexts.
             # Literal document titles like "在庫連携バッチ 設計書" should not be flagged.
             (r"青写真", "設計書/青写真"),
-            (r"(?:[^\s。、「」『』()（）]+の)?設計書(?:として機能(?:し|する|します)?|となる|となります|になる|になります)", "設計書/青写真"),
+            (
+                r"(?:[^\s。、「」『』()（）]+の)?設計書(?:として機能(?:し|する|します)?|となる|となります|になる|になります)",
+                "設計書/青写真",
+            ),
             (r"(?:企業|組織|チーム)の?DNA", "DNA"),
             (r"車の両輪", "車の両輪"),
             (r"潤滑油", "潤滑油"),
@@ -644,6 +682,7 @@ class AIPatternDetector:
 
 def format_report(result: AnalysisResult) -> str:
     """Format analysis result as Markdown report."""
+
     def code_span(text: str) -> str:
         normalized = re.sub(r"\s+", " ", str(text).replace("\r", " ").replace("\n", " ")).strip()
         if not normalized:
@@ -657,8 +696,8 @@ def format_report(result: AnalysisResult) -> str:
     lines = []
     lines.append("# AI臭検出レポート\n")
     lines.append("## 総合スコア\n")
-    lines.append(f"| Item | Value |")
-    lines.append(f"|------|-------|")
+    lines.append("| Item | Value |")
+    lines.append("|------|-------|")
     lines.append(f"| AI臭スコア | **{result.total_score}** / 100 |")
     lines.append(f"| 判定 | {result.level} |")
     lines.append(f"| 文書種別 | {result.doc_type} |")
@@ -730,8 +769,7 @@ def format_json(result: AnalysisResult) -> str:
             "details": pr.details,
             "match_count": len(pr.matches),
             "examples": [
-                {"type": m.pattern_name, "text": m.matched_text, "line": m.line_number}
-                for m in pr.matches[:5]
+                {"type": m.pattern_name, "text": m.matched_text, "line": m.line_number} for m in pr.matches[:5]
             ],
         }
         data["patterns"].append(pattern_data)
@@ -739,23 +777,24 @@ def format_json(result: AnalysisResult) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Detect AI writing patterns and calculate AI-smell score (0-100)"
-    )
+    parser = argparse.ArgumentParser(description="Detect AI writing patterns and calculate AI-smell score (0-100)")
     parser.add_argument("input_file", help="Input text file path")
     parser.add_argument(
-        "--output", "-o",
+        "--output",
+        "-o",
         help="Output report file path (default: stdout)",
         default=None,
     )
     parser.add_argument(
-        "--format", "-f",
+        "--format",
+        "-f",
         choices=["markdown", "json"],
         default="markdown",
         help="Output format (default: markdown)",
     )
     parser.add_argument(
-        "--encoding", "-e",
+        "--encoding",
+        "-e",
         default="utf-8",
         help="Input file encoding (default: utf-8)",
     )

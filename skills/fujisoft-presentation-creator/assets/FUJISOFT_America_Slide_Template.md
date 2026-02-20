@@ -6,7 +6,7 @@ class: lead
 style: |
   @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Bahnschrift:wght@400;600;700&display=swap');
-  
+
   :root {
     --cover-gradient: linear-gradient(135deg, #4a90a4 0%, #2b5797 25%, #1e3a8a 75%, #1a237e 100%);
     --cover-secondary: rgba(255,255,255,0.9);
@@ -27,7 +27,7 @@ style: |
     --error-bg: #fce4ec;
     --neutral-bg: #f5f5f5;
   }
-  
+
   /* Cover Page Class */
   section.cover {
     background: var(--cover-gradient) !important;
@@ -41,12 +41,12 @@ style: |
     position: relative;
     padding: 80px 60px;
   }
-  
+
   section.cover::before,
   section.cover::after {
     display: block !important;
   }
-  
+
   section.cover h1 {
     font-size: 1.7rem;
     font-weight: 300;
@@ -61,11 +61,11 @@ style: |
     hyphens: auto;
     overflow-wrap: break-word;
   }
-  
+
   section.cover h1 span {
     color: var(--cover-secondary) !important;
   }
-  
+
   section.cover h2 {
     font-size: 1.1rem;
     font-weight: 300;
@@ -76,7 +76,7 @@ style: |
     color: var(--cover-accent);
     line-height: 1.3;
   }
-  
+
   section.cover .company-info {
     position: absolute;
     bottom: 100px;
@@ -88,7 +88,7 @@ style: |
     color: var(--cover-secondary);
     letter-spacing: 1px;
   }
-  
+
   section.cover .confidential {
     position: absolute;
     bottom: 60px;
@@ -101,7 +101,7 @@ style: |
     letter-spacing: 2px;
     text-transform: uppercase;
   }
-  
+
   /* Content Page Class */
   section.content {
     background: white !important;
@@ -114,7 +114,7 @@ style: |
     position: relative;
     overflow: hidden;
   }
-  
+
   .content-main {
     flex-grow: 1;
     display: flex;
@@ -123,7 +123,7 @@ style: |
     padding-bottom: 1em;
     min-height: calc(100vh - 150px);
   }
-  
+
   /* Two-column layout for content pages */
   .two-column {
     display: grid;
@@ -131,24 +131,24 @@ style: |
     gap: 40px;
     margin-top: 1em;
   }
-  
+
   .column {
     padding: 0;
   }
-  
+
   .column h3 {
     margin-top: 0;
   }
-  
+
   /* Enhanced spacing for pages with fewer content */
   .content-main > * {
     margin-bottom: 1.5em;
   }
-  
+
   .content-main > *:last-child {
     margin-bottom: 0;
   }
-  
+
   /* Fixed Header for Content Pages */
   section.content > h2:first-of-type {
     position: absolute;
@@ -171,7 +171,7 @@ style: |
     text-align: left;
     border-bottom: 4px solid #8c9eff;
   }
-  
+
   section.content h1 {
     font-size: 2.1rem;
     font-weight: 600;
@@ -182,7 +182,7 @@ style: |
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
-  
+
   section.content h2 {
     font-size: 1.6rem;
     font-weight: 500;
@@ -193,7 +193,7 @@ style: |
     line-height: 1.3;
     overflow-wrap: break-word;
   }
-  
+
   section.content h3 {
     font-size: 1.3rem;
     font-weight: 500;
@@ -203,21 +203,21 @@ style: |
     line-height: 1.3;
     overflow-wrap: break-word;
   }
-  
+
   section.content p {
     margin-bottom: 0.8em;
     line-height: 1.6;
   }
-  
+
   section.content ul, section.content ol {
     padding-left: 1.5em;
     margin-bottom: 1em;
   }
-  
+
   section.content li {
     margin-bottom: 0.4em;
   }
-  
+
   section.content table {
     width: auto;
     border-collapse: collapse;
@@ -229,7 +229,7 @@ style: |
     border-radius: 6px;
     overflow: hidden;
   }
-  
+
   section.content th {
     background: linear-gradient(135deg, var(--round1-primary), var(--round1-secondary));
     color: white;
@@ -242,7 +242,7 @@ style: |
     border: none;
     position: relative;
   }
-  
+
   section.content td {
     padding: 0.7em 1em;
     border: none;
@@ -253,15 +253,15 @@ style: |
     font-size: 0.9em;
     vertical-align: top;
   }
-  
+
   section.content tr:nth-child(even) {
     background-color: #f9f9f9;
   }
-  
+
   section.content tr:last-child td {
     border-bottom: none;
   }
-  
+
   /* Common Footer Background and Styles for pages with footers */
   section.content::after,
   section.thankyou::after {
@@ -274,7 +274,7 @@ style: |
     background: var(--cover-gradient);
     display: block !important;
   }
-  
+
   /* Common Footer Styles for all pages with footers */
   section.content .footer-left,
   section.thankyou .footer-left {
@@ -287,7 +287,7 @@ style: |
     font-weight: 400;
     z-index: 10;
   }
-  
+
   section.content .footer-center,
   section.thankyou .footer-center {
     position: absolute;
@@ -300,7 +300,7 @@ style: |
     font-weight: 400;
     z-index: 10;
   }
-  
+
   section.content .footer-right,
   section.thankyou .footer-right {
     position: absolute;
@@ -314,7 +314,7 @@ style: |
     text-transform: uppercase;
     z-index: 10;
   }
-  
+
   /* Thank You Page Class */
   section.thankyou {
     background: white !important;
@@ -328,11 +328,11 @@ style: |
     position: relative;
     padding: 40px 60px 80px 60px;
   }
-  
+
   section.thankyou::before {
     display: block !important;
   }
-  
+
   section.thankyou h1 {
     font-size: 3.2rem;
     font-weight: 300;
@@ -340,14 +340,14 @@ style: |
     margin-bottom: 0.4em;
     letter-spacing: 2px;
   }
-  
+
   section.thankyou .blue-line {
     width: 150px;
     height: 3px;
     background: #1a237e;
     margin: 0 auto 1.5em auto;
   }
-  
+
   section.thankyou .company-logo {
     font-family: var(--body-font);
     font-size: 1.6rem;
@@ -359,7 +359,7 @@ style: |
     justify-content: center;
     gap: 10px;
   }
-  
+
   section.thankyou .address {
     font-family: var(--light-font);
     font-size: 1.1rem;
@@ -367,7 +367,7 @@ style: |
     line-height: 1.5;
     margin-bottom: 1.5em;
   }
-  
+
   section.thankyou .contact-info {
     display: flex;
     justify-content: center;
@@ -376,7 +376,7 @@ style: |
     margin-bottom: 1.8em;
     flex-wrap: wrap;
   }
-  
+
   section.thankyou .contact-item {
     display: flex;
     align-items: center;
@@ -385,12 +385,12 @@ style: |
     font-size: 1rem;
     color: #3949ab;
   }
-  
+
   section.thankyou .contact-item .icon {
     font-size: 1.1rem;
     color: #1a237e;
   }
-  
+
   /* Visual Design Elements */
   .info-box {
     background: var(--info-bg);
@@ -437,14 +437,14 @@ style: |
   .metric-card:hover {
     transform: translateY(-2px);
   }
-  
+
   .metric-value {
     font-size: 1.8em;
     font-weight: bold;
     margin: 0.2em 0;
     color: var(--round1-primary);
   }
-  
+
   .step-card {
     background: white;
     text-align: center;
@@ -463,19 +463,19 @@ style: |
     margin: 0;
     display: block;
   }
-  
+
   .step-card:nth-child(1) .step-number {
     background: #2b5797;
   }
-  
+
   .step-card:nth-child(2) .step-number {
     background: #4caf50;
   }
-  
+
   .step-card:nth-child(3) .step-number {
     background: #ff9800;
   }
-  
+
   .step-content {
     padding: 1.5em 1.2em;
     background: #e3f2fd;
@@ -484,30 +484,30 @@ style: |
     flex-direction: column;
     justify-content: center;
   }
-  
+
   .step-card:nth-child(1) .step-content {
     background: #e3f2fd;
   }
-  
+
   .step-card:nth-child(2) .step-content {
     background: #e8f5e9;
   }
-  
+
   .step-card:nth-child(3) .step-content {
     background: #fff3e0;
   }
-  
+
   .step-icon {
     font-size: 1.8em;
     margin-bottom: 0.3em;
   }
-  
+
   .highlight {
     background: linear-gradient(transparent 60%, #ffeb3b 60%);
     padding: 0 0.2em;
     font-weight: bold;
   }
-  
+
   .badge {
     background: var(--round1-accent);
     color: white;
@@ -518,7 +518,7 @@ style: |
     margin: 0.2em;
     display: inline-block;
   }
-  
+
   .success-badge {
     background: var(--success-color);
     color: white;
@@ -529,7 +529,7 @@ style: |
     margin: 0.2em;
     display: inline-block;
   }
-  
+
   .warning-badge {
     background: var(--warning-color);
     color: white;
@@ -540,7 +540,7 @@ style: |
     margin: 0.2em;
     display: inline-block;
   }
-  
+
   .timeline-item {
     display: flex;
     align-items: center;
@@ -549,7 +549,7 @@ style: |
     border-radius: 8px;
     background: rgba(26, 35, 126, 0.05);
   }
-  
+
   .timeline-badge {
     background: var(--round1-primary);
     color: white;
@@ -561,55 +561,55 @@ style: |
     margin-right: 1em;
     flex-shrink: 0;
   }
-  
+
   .icon-text {
     display: flex;
     align-items: flex-start;
     margin: 0.8em 0;
   }
-  
+
   .icon-text .icon {
     font-size: 1.5em;
     margin-right: 0.5em;
     flex-shrink: 0;
     margin-top: 0.1em;
   }
-  
+
   .grid-2 {
     display: flex;
     gap: 1.5em;
     margin: 1em 0;
   }
-  
+
   .grid-2 > * {
     flex: 1;
   }
-  
+
   .grid-3 {
     display: flex;
     gap: 1em;
     margin: 1em 0;
     justify-content: space-between;
   }
-  
+
   .grid-3 > * {
     flex: 1;
     max-width: calc(33.333% - 0.67em);
   }
-  
+
   .grid-4 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 1em;
     margin: 1em 0;
   }
-  
+
   @media (max-width: 768px) {
     .grid-2, .grid-3, .grid-4 {
       grid-template-columns: 1fr;
     }
   }
-  
+
   /* ROI and Summary Styles */
   .roi-box {
     background: var(--success-bg);
@@ -619,13 +619,13 @@ style: |
     text-align: center;
     border: 2px solid var(--success-color);
   }
-  
+
   .roi-highlight {
     font-size: 1.3em;
     color: var(--warning-color);
     font-weight: bold;
   }
-  
+
   .summary-box {
     background: linear-gradient(135deg, var(--round1-primary), var(--round1-secondary));
     color: white;
@@ -634,20 +634,20 @@ style: |
     text-align: center;
     margin: 1em 0;
   }
-  
+
   .summary-title {
     font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 0.3em;
   }
-  
+
   .metric-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1em;
     margin: 1.5em 0;
   }
-  
+
   .metric-box {
     background: white;
     border-radius: 8px;
@@ -655,72 +655,72 @@ style: |
     text-align: center;
     border: 2px solid #e0e0e0;
   }
-  
+
   .metric-box.metric-green {
     background: #e8f5e9;
     border: 2px solid #4caf50;
     border-left: 6px solid #4caf50;
   }
-  
+
   .metric-box.metric-blue {
     background: #e3f2fd;
     border: 2px solid #2196f3;
     border-left: 6px solid #2196f3;
   }
-  
+
   .metric-box.metric-orange {
     background: #fff3e0;
     border: 2px solid #ff9800;
     border-left: 6px solid #ff9800;
   }
-  
+
   .metric-box.metric-red {
     background: #fce4ec;
     border: 2px solid #f44336;
     border-left: 6px solid #f44336;
   }
-  
+
   .metric-icon {
     font-size: 1.5em;
     margin-bottom: 0.3em;
   }
-  
+
   .metric-label {
     font-size: 0.9em;
     font-weight: bold;
     margin-bottom: 0.3em;
   }
-  
+
   .metric-box.metric-green .metric-label {
     color: #4caf50;
   }
-  
+
   .metric-box.metric-blue .metric-label {
     color: #2196f3;
   }
-  
+
   .metric-box.metric-orange .metric-label {
     color: #ff9800;
   }
-  
+
   .metric-box.metric-red .metric-label {
     color: #f44336;
   }
-  
+
   .metric-number {
     font-size: 1.8em;
     font-weight: bold;
     color: #333;
     margin: 0.2em 0;
   }
-  
+
   .metric-description {
     font-size: 0.85em;
     color: #666;
     margin-top: 0.2em;
     line-height: 1.3;
   }
-  
+
   /* Gantt Chart Styles */
   .gantt-table {
     width: 100%;
@@ -728,7 +728,7 @@ style: |
     margin: 1em 0;
     font-size: 0.85em;
   }
-  
+
   .gantt-table th {
     background: var(--round1-primary);
     color: white;
@@ -737,17 +737,17 @@ style: |
     font-weight: 600;
     border: 1px solid var(--round1-primary);
   }
-  
+
   .gantt-table td {
     padding: 0.5em;
     border: 1px solid #ddd;
     vertical-align: middle;
   }
-  
+
   .gantt-table tr:nth-child(even) {
     background: #f9f9f9;
   }
-  
+
   .gantt-bar {
     background: var(--round1-primary) !important;
     color: var(--round1-primary) !important;
@@ -758,14 +758,14 @@ style: |
     font-family: monospace;
     font-weight: bold;
   }
-  
+
   .milestone-list {
     background: var(--info-bg);
     padding: 1em;
     border-radius: 8px;
     margin: 1em 0;
   }
-  
+
   .milestone-item {
     display: flex;
     align-items: center;
@@ -774,19 +774,19 @@ style: |
     background: white;
     border-radius: 4px;
   }
-  
+
   .milestone-date {
     font-weight: bold;
     color: var(--round1-primary);
     margin-right: 1em;
     min-width: 80px;
   }
-  
+
   .milestone-complete {
     color: var(--success-color);
     margin-left: auto;
   }
-  
+
   /* Large Step Cards */
   .step-large {
     background: white;
@@ -797,7 +797,7 @@ style: |
     position: relative;
     border-top: 4px solid var(--round1-primary);
   }
-  
+
   .step-large-number {
     background: var(--round1-primary);
     color: white;
@@ -807,19 +807,19 @@ style: |
     margin: 0;
     display: block;
   }
-  
+
   .step-large.step-blue .step-large-number {
     background: #2b5797;
   }
-  
+
   .step-large.step-green .step-large-number {
     background: #4caf50;
   }
-  
+
   .step-large.step-orange .step-large-number {
     background: #ff9800;
   }
-  
+
   .step-large-content {
     padding: 1.5em 1.2em;
     min-height: 120px;
@@ -827,36 +827,36 @@ style: |
     flex-direction: column;
     justify-content: center;
   }
-  
+
   .step-large.step-blue .step-large-content {
     background: #e3f2fd;
   }
-  
+
   .step-large.step-green .step-large-content {
     background: #e8f5e9;
   }
-  
+
   .step-large.step-orange .step-large-content {
     background: #fff3e0;
   }
-  
+
   .step-large-icon {
     font-size: 2em;
     margin-bottom: 0.5em;
   }
-  
+
   .step-large-title {
     font-size: 1em;
     font-weight: 400;
     color: #333;
     line-height: 1.4;
   }
-  
+
   .step-large-description {
     color: #666;
     line-height: 1.4;
   }
-  
+
   /* Color-coded Step Cards */
   .step-blue { background: var(--info-bg) !important; }
   .step-green { background: var(--success-bg) !important; }
@@ -945,7 +945,7 @@ style: |
 <div class="info-box">
 **標準サイズ（推奨）**
 - 見出し（h1）: 36-48pt
-- サブ見出し（h2）: 28-36pt  
+- サブ見出し（h2）: 28-36pt
 - 本文テキスト: 24-28pt
 - 注釈・キャプション: 20-22pt
 </div>
@@ -1121,7 +1121,7 @@ style: |
 ドライバーのスマホで<br>配送完了を記録
 </div>
 </div>
-<div class="step-card">  
+<div class="step-card">
 <div class="step-number">STEP 2</div>
 <div class="step-content">
 <div class="step-icon">📸</div>
@@ -1488,4 +1488,3 @@ San Mateo, CA 94402
 <div class="footer-left">FUJISOFT America, Inc.</div>
 <div class="footer-center">16</div>
 <div class="footer-right">CONFIDENTIAL</div>
-

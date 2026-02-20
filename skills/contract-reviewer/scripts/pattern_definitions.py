@@ -16,7 +16,7 @@ RED_FLAG_PATTERNS = [
         "severity": "Critical",
         "category": "Financial",
         "description": "Contract contains unlimited liability exposure",
-        "recommendation": "Negotiate liability cap (typically 12-24 months of fees)"
+        "recommendation": "Negotiate liability cap (typically 12-24 months of fees)",
     },
     {
         "id": "RF002",
@@ -25,7 +25,7 @@ RED_FLAG_PATTERNS = [
         "severity": "Critical",
         "category": "Financial",
         "description": "Indemnification flows only one direction",
-        "recommendation": "Request mutual indemnification clause"
+        "recommendation": "Request mutual indemnification clause",
     },
     {
         "id": "RF003",
@@ -34,7 +34,7 @@ RED_FLAG_PATTERNS = [
         "severity": "High",
         "category": "Operational",
         "description": "Auto-renewal with notice period exceeding 90 days",
-        "recommendation": "Negotiate notice period to 30-60 days"
+        "recommendation": "Negotiate notice period to 30-60 days",
     },
     {
         "id": "RF004",
@@ -43,7 +43,7 @@ RED_FLAG_PATTERNS = [
         "severity": "Critical",
         "category": "Legal",
         "description": "Other party can change terms without consent",
-        "recommendation": "Require mutual written consent for amendments"
+        "recommendation": "Require mutual written consent for amendments",
     },
     {
         "id": "RF005",
@@ -52,7 +52,7 @@ RED_FLAG_PATTERNS = [
         "severity": "High",
         "category": "Financial",
         "description": "No exclusion of consequential damages found",
-        "recommendation": "Add mutual exclusion of consequential damages"
+        "recommendation": "Add mutual exclusion of consequential damages",
     },
     {
         "id": "RF006",
@@ -61,7 +61,7 @@ RED_FLAG_PATTERNS = [
         "severity": "Critical",
         "category": "Strategic",
         "description": "Broad assignment of intellectual property rights",
-        "recommendation": "Limit IP assignment to specific deliverables"
+        "recommendation": "Limit IP assignment to specific deliverables",
     },
     {
         "id": "RF007",
@@ -70,7 +70,7 @@ RED_FLAG_PATTERNS = [
         "severity": "High",
         "category": "Operational",
         "description": "No termination for convenience right found",
-        "recommendation": "Add termination for convenience with reasonable notice"
+        "recommendation": "Add termination for convenience with reasonable notice",
     },
     {
         "id": "RF008",
@@ -79,7 +79,7 @@ RED_FLAG_PATTERNS = [
         "severity": "High",
         "category": "Financial",
         "description": "Termination penalty appears to be 100% of remaining fees",
-        "recommendation": "Negotiate declining penalty structure"
+        "recommendation": "Negotiate declining penalty structure",
     },
     {
         "id": "RF009",
@@ -88,7 +88,7 @@ RED_FLAG_PATTERNS = [
         "severity": "Critical",
         "category": "Strategic",
         "description": "Residual knowledge exception can negate confidentiality",
-        "recommendation": "Remove or significantly limit this clause"
+        "recommendation": "Remove or significantly limit this clause",
     },
     {
         "id": "RF010",
@@ -97,7 +97,7 @@ RED_FLAG_PATTERNS = [
         "severity": "High",
         "category": "Operational",
         "description": "SLA credits may be exclusive remedy with no termination right",
-        "recommendation": "Add termination right after repeated SLA failures"
+        "recommendation": "Add termination right after repeated SLA failures",
     },
 ]
 

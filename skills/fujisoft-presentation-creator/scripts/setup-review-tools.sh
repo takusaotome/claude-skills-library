@@ -45,7 +45,7 @@ if node visual-review.js --help &> /dev/null || node visual-review.js 2>&1 | gre
     echo ""
     echo "📊 The tool will generate:"
     echo "  - Screenshots of each slide"
-    echo "  - JSON report with detailed analysis"  
+    echo "  - JSON report with detailed analysis"
     echo "  - HTML report for easy viewing"
     echo ""
 else

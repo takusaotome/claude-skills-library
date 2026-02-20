@@ -13,11 +13,9 @@ Usage:
 import argparse
 import subprocess
 import sys
-import os
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, List
-
+from typing import List, Optional
 
 # レビュータイプ別のデフォルトプロンプト
 REVIEW_PROMPTS = {
@@ -40,7 +38,6 @@ REVIEW_PROMPTS = {
 - **推奨**: 改善案
 
 対象: {target}""",
-
     "document": """以下のドキュメントを詳細にレビューしてください。
 
 ## レビュー観点
@@ -60,7 +57,6 @@ REVIEW_PROMPTS = {
 - **推奨**: 改善案
 
 対象: {target}""",
-
     "design": """以下の設計ドキュメントを詳細にレビューしてください。
 
 ## レビュー観点
@@ -80,7 +76,6 @@ REVIEW_PROMPTS = {
 - **推奨**: 改善案
 
 対象: {target}""",
-
     "test": """以下のテストコード/テスト計画を詳細にレビューしてください。
 
 ## レビュー観点
@@ -99,7 +94,7 @@ REVIEW_PROMPTS = {
 - **問題**: 問題の説明
 - **推奨**: 改善案
 
-対象: {target}"""
+対象: {target}""",
 }
 
 # フォーカスエリア別の追加プロンプト
@@ -115,21 +110,13 @@ FOCUS_PROMPTS = {
     "patterns": "\n\n特にデザインパターンに重点を置いてレビューしてください。適切なパターンの使用、アンチパターンの回避を確認してください。",
     "coverage": "\n\n特にテストカバレッジに重点を置いてレビューしてください。ブランチカバレッジ、条件カバレッジ、パスカバレッジを評価してください。",
     "edge-cases": "\n\n特にエッジケースに重点を置いてレビューしてください。境界値、null/空値、異常入力のテストを確認してください。",
-    "quality": "\n\n特にテスト品質に重点を置いてレビューしてください。テストの信頼性、独立性、保守性を評価してください。"
+    "quality": "\n\n特にテスト品質に重点を置いてレビューしてください。テストの信頼性、独立性、保守性を評価してください。",
 }
 
 # プロファイル別のデフォルト設定
 PROFILES = {
-    "quick-review": {
-        "model": "gpt-5-codex",
-        "reasoning": "medium",
-        "description": "軽量レビュー（高速）"
-    },
-    "deep-review": {
-        "model": "gpt-5.3-codex",
-        "reasoning": "xhigh",
-        "description": "標準レビュー（推奨）"
-    }
+    "quick-review": {"model": "gpt-5-codex", "reasoning": "medium", "description": "軽量レビュー（高速）"},
+    "deep-review": {"model": "gpt-5.3-codex", "reasoning": "xhigh", "description": "標準レビュー（推奨）"},
 }
 
 # レビュータイプ別のデフォルトモデル設定
@@ -139,41 +126,34 @@ TYPE_MODEL_DEFAULTS = {
     "code": {
         "model": "gpt-5.3-codex",
         "reasoning": "xhigh",
-        "description": "コードレビュー向け（エージェント型コーディングモデル）"
+        "description": "コードレビュー向け（エージェント型コーディングモデル）",
     },
     "document": {
         "model": "gpt-5.3-thinking",
         "reasoning": "xhigh",
-        "description": "ドキュメントレビュー向け（深い推論モデル）"
+        "description": "ドキュメントレビュー向け（深い推論モデル）",
     },
-    "design": {
-        "model": "gpt-5.3-thinking",
-        "reasoning": "xhigh",
-        "description": "設計レビュー向け（深い推論モデル）"
-    },
+    "design": {"model": "gpt-5.3-thinking", "reasoning": "xhigh", "description": "設計レビュー向け（深い推論モデル）"},
     "test": {
         "model": "gpt-5.3-codex",
         "reasoning": "xhigh",
-        "description": "テストレビュー向け（エージェント型コーディングモデル）"
-    }
+        "description": "テストレビュー向け（エージェント型コーディングモデル）",
+    },
 }
 
 
 def check_codex_installed() -> bool:
     """Codex CLIがインストールされているか確認"""
     try:
-        result = subprocess.run(
-            ["codex", "--version"],
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(["codex", "--version"], capture_output=True, text=True)
         return result.returncode == 0
     except FileNotFoundError:
         return False
 
 
-def build_prompt(review_type: str, target: str, focus_areas: Optional[List[str]] = None,
-                 custom_prompt: Optional[str] = None) -> str:
+def build_prompt(
+    review_type: str, target: str, focus_areas: Optional[List[str]] = None, custom_prompt: Optional[str] = None
+) -> str:
     """レビュープロンプトを構築"""
     if custom_prompt:
         # str.replace() を使用して安全に置換（{} を含むコード片でもクラッシュしない）
@@ -208,7 +188,7 @@ def run_codex_review(
     working_dir: Optional[str] = None,
     model: Optional[str] = None,
     reasoning: Optional[str] = None,
-    verbose: bool = False
+    verbose: bool = False,
 ) -> tuple[bool, str]:
     """
     Codex CLIを使用してレビューを実行
@@ -281,7 +261,7 @@ def run_codex_review(
             cmd,
             capture_output=True,
             text=True,
-            timeout=600  # 10分タイムアウト
+            timeout=600,  # 10分タイムアウト
         )
 
         if result.returncode == 0:
@@ -326,66 +306,42 @@ def main():
 利用可能なプロファイル（--profileで明示指定時）:
   deep-review   : gpt-5.3-codex, xhigh（推奨）
   quick-review  : gpt-5-codex, medium（高速）
-        """
+        """,
     )
 
     parser.add_argument(
-        "--type", "-t",
-        choices=["code", "document", "design", "test"],
-        required=True,
-        help="レビュータイプ"
+        "--type", "-t", choices=["code", "document", "design", "test"], required=True, help="レビュータイプ"
+    )
+
+    parser.add_argument("--target", required=True, help="レビュー対象のファイルまたはディレクトリ")
+
+    parser.add_argument(
+        "--output", "-o", default="./reviews", help="レビュー結果の出力ディレクトリ（デフォルト: ./reviews）"
     )
 
     parser.add_argument(
-        "--target",
-        required=True,
-        help="レビュー対象のファイルまたはディレクトリ"
-    )
-
-    parser.add_argument(
-        "--output", "-o",
-        default="./reviews",
-        help="レビュー結果の出力ディレクトリ（デフォルト: ./reviews）"
-    )
-
-    parser.add_argument(
-        "--profile", "-p",
+        "--profile",
+        "-p",
         choices=list(PROFILES.keys()),
         default=None,
-        help="使用するプロファイル（未指定時はレビュータイプ別のデフォルトモデルを使用）"
+        help="使用するプロファイル（未指定時はレビュータイプ別のデフォルトモデルを使用）",
     )
 
     parser.add_argument(
-        "--focus", "-f",
-        help="重点を置くエリア（カンマ区切り: security,performance,maintainability等）"
+        "--focus", "-f", help="重点を置くエリア（カンマ区切り: security,performance,maintainability等）"
     )
 
-    parser.add_argument(
-        "--custom-prompt",
-        help="カスタムプロンプト（{target}がターゲットに置換される）"
-    )
+    parser.add_argument("--custom-prompt", help="カスタムプロンプト（{target}がターゲットに置換される）")
+
+    parser.add_argument("--working-dir", "-C", help="作業ディレクトリ")
+
+    parser.add_argument("--model", "-m", help="モデルをオーバーライド（例: gpt-5.3-codex）")
 
     parser.add_argument(
-        "--working-dir", "-C",
-        help="作業ディレクトリ"
+        "--reasoning", "-r", choices=["low", "medium", "high", "xhigh"], help="推論レベルをオーバーライド"
     )
 
-    parser.add_argument(
-        "--model", "-m",
-        help="モデルをオーバーライド（例: gpt-5.3-codex）"
-    )
-
-    parser.add_argument(
-        "--reasoning", "-r",
-        choices=["low", "medium", "high", "xhigh"],
-        help="推論レベルをオーバーライド"
-    )
-
-    parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="詳細出力を有効化"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="詳細出力を有効化")
 
     args = parser.parse_args()
 
@@ -422,7 +378,7 @@ def main():
         type_config = TYPE_MODEL_DEFAULTS.get(args.type, TYPE_MODEL_DEFAULTS["code"])
         use_reasoning = type_config["reasoning"]
 
-    print(f"レビュー開始:")
+    print("レビュー開始:")
     print(f"  タイプ: {args.type}")
     print(f"  対象: {args.target}")
     print(f"  モデル: {use_model}")
@@ -442,11 +398,11 @@ def main():
         working_dir=args.working_dir,
         model=args.model,
         reasoning=args.reasoning,
-        verbose=args.verbose
+        verbose=args.verbose,
     )
 
     if success:
-        print(f"レビュー完了!")
+        print("レビュー完了!")
         print(f"結果ファイル: {result}")
         sys.exit(0)
     else:

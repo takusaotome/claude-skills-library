@@ -9,10 +9,8 @@ All arguments are optional; defaults produce a generic agenda template.
 """
 
 import argparse
-from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
-
 
 DEFAULT_ATTENDEES = "CEO, CFO, COO, VP Sales, VP Marketing, VP Supply Chain"
 DEFAULT_TIME = "9:00 AM - 11:00 AM"

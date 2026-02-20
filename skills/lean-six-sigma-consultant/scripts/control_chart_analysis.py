@@ -12,14 +12,14 @@ Usage:
 
 import argparse
 import json
-import math
-from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 from enum import Enum
+from typing import Dict, List, Optional, Tuple
 
 try:
     import numpy as np
     from scipy import stats
+
     HAS_NUMPY = True
 except ImportError:
     HAS_NUMPY = False
@@ -27,51 +27,46 @@ except ImportError:
 
 class ChartType(Enum):
     """Types of control charts."""
-    I_MR = "i-mr"           # Individual and Moving Range
-    XBAR_R = "xbar-r"       # X-bar and Range
-    XBAR_S = "xbar-s"       # X-bar and Standard Deviation
-    P = "p"                 # Proportion defective
-    NP = "np"               # Number defective
-    C = "c"                 # Count of defects
-    U = "u"                 # Defects per unit
+
+    I_MR = "i-mr"  # Individual and Moving Range
+    XBAR_R = "xbar-r"  # X-bar and Range
+    XBAR_S = "xbar-s"  # X-bar and Standard Deviation
+    P = "p"  # Proportion defective
+    NP = "np"  # Number defective
+    C = "c"  # Count of defects
+    U = "u"  # Defects per unit
 
 
 # Control chart constants
 CONSTANTS = {
     # d2: For estimating sigma from average range
-    'd2': {2: 1.128, 3: 1.693, 4: 2.059, 5: 2.326, 6: 2.534,
-           7: 2.704, 8: 2.847, 9: 2.970, 10: 3.078},
+    "d2": {2: 1.128, 3: 1.693, 4: 2.059, 5: 2.326, 6: 2.534, 7: 2.704, 8: 2.847, 9: 2.970, 10: 3.078},
     # d3: For range chart control limits
-    'd3': {2: 0.853, 3: 0.888, 4: 0.880, 5: 0.864, 6: 0.848,
-           7: 0.833, 8: 0.820, 9: 0.808, 10: 0.797},
+    "d3": {2: 0.853, 3: 0.888, 4: 0.880, 5: 0.864, 6: 0.848, 7: 0.833, 8: 0.820, 9: 0.808, 10: 0.797},
     # D3: For lower control limit of R chart
-    'D3': {2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0.076, 8: 0.136, 9: 0.184, 10: 0.223},
+    "D3": {2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0.076, 8: 0.136, 9: 0.184, 10: 0.223},
     # D4: For upper control limit of R chart
-    'D4': {2: 3.267, 3: 2.574, 4: 2.282, 5: 2.114, 6: 2.004,
-           7: 1.924, 8: 1.864, 9: 1.816, 10: 1.777},
+    "D4": {2: 3.267, 3: 2.574, 4: 2.282, 5: 2.114, 6: 2.004, 7: 1.924, 8: 1.864, 9: 1.816, 10: 1.777},
     # A2: For X-bar chart control limits (using range)
-    'A2': {2: 1.880, 3: 1.023, 4: 0.729, 5: 0.577, 6: 0.483,
-           7: 0.419, 8: 0.373, 9: 0.337, 10: 0.308},
+    "A2": {2: 1.880, 3: 1.023, 4: 0.729, 5: 0.577, 6: 0.483, 7: 0.419, 8: 0.373, 9: 0.337, 10: 0.308},
     # c4: For estimating sigma from average standard deviation
-    'c4': {2: 0.7979, 3: 0.8862, 4: 0.9213, 5: 0.9400, 6: 0.9515,
-           7: 0.9594, 8: 0.9650, 9: 0.9693, 10: 0.9727},
+    "c4": {2: 0.7979, 3: 0.8862, 4: 0.9213, 5: 0.9400, 6: 0.9515, 7: 0.9594, 8: 0.9650, 9: 0.9693, 10: 0.9727},
     # A3: For X-bar chart control limits (using std dev)
-    'A3': {2: 2.659, 3: 1.954, 4: 1.628, 5: 1.427, 6: 1.287,
-           7: 1.182, 8: 1.099, 9: 1.032, 10: 0.975},
+    "A3": {2: 2.659, 3: 1.954, 4: 1.628, 5: 1.427, 6: 1.287, 7: 1.182, 8: 1.099, 9: 1.032, 10: 0.975},
     # B3: For lower control limit of S chart
-    'B3': {2: 0, 3: 0, 4: 0, 5: 0, 6: 0.030, 7: 0.118, 8: 0.185, 9: 0.239, 10: 0.284},
+    "B3": {2: 0, 3: 0, 4: 0, 5: 0, 6: 0.030, 7: 0.118, 8: 0.185, 9: 0.239, 10: 0.284},
     # B4: For upper control limit of S chart
-    'B4': {2: 3.267, 3: 2.568, 4: 2.266, 5: 2.089, 6: 1.970,
-           7: 1.882, 8: 1.815, 9: 1.761, 10: 1.716}
+    "B4": {2: 3.267, 3: 2.568, 4: 2.266, 5: 2.089, 6: 1.970, 7: 1.882, 8: 1.815, 9: 1.761, 10: 1.716},
 }
 
 
 @dataclass
 class ControlLimits:
     """Control limits for a control chart."""
-    ucl: float      # Upper Control Limit
-    cl: float       # Center Line
-    lcl: float      # Lower Control Limit
+
+    ucl: float  # Upper Control Limit
+    cl: float  # Center Line
+    lcl: float  # Lower Control Limit
     uwl: Optional[float] = None  # Upper Warning Limit (2σ)
     lwl: Optional[float] = None  # Lower Warning Limit (2σ)
 
@@ -88,6 +83,7 @@ class ControlLimits:
 @dataclass
 class OutOfControlPoint:
     """Represents an out-of-control point with violation details."""
+
     index: int
     value: float
     rule: str
@@ -114,31 +110,22 @@ def calculate_imr_limits(data: List[float]) -> Tuple[ControlLimits, ControlLimit
     avg_mr = np.mean(mr)
 
     # Estimate sigma from moving range
-    d2 = CONSTANTS['d2'][2]
+    d2 = CONSTANTS["d2"][2]
     sigma = avg_mr / d2
 
     # I chart limits
     x_bar = np.mean(data)
-    i_limits = ControlLimits(
-        ucl=x_bar + 3 * sigma,
-        cl=x_bar,
-        lcl=x_bar - 3 * sigma
-    )
+    i_limits = ControlLimits(ucl=x_bar + 3 * sigma, cl=x_bar, lcl=x_bar - 3 * sigma)
 
     # MR chart limits
-    D3 = CONSTANTS['D3'][2]
-    D4 = CONSTANTS['D4'][2]
-    mr_limits = ControlLimits(
-        ucl=D4 * avg_mr,
-        cl=avg_mr,
-        lcl=D3 * avg_mr
-    )
+    D3 = CONSTANTS["D3"][2]
+    D4 = CONSTANTS["D4"][2]
+    mr_limits = ControlLimits(ucl=D4 * avg_mr, cl=avg_mr, lcl=D3 * avg_mr)
 
     return i_limits, mr_limits
 
 
-def calculate_xbar_r_limits(data: List[float],
-                            subgroup_size: int) -> Tuple[ControlLimits, ControlLimits]:
+def calculate_xbar_r_limits(data: List[float], subgroup_size: int) -> Tuple[ControlLimits, ControlLimits]:
     """
     Calculate control limits for X-bar and R chart.
 
@@ -156,7 +143,7 @@ def calculate_xbar_r_limits(data: List[float],
     n_subgroups = len(data) // subgroup_size
 
     # Reshape into subgroups
-    subgroups = data[:n_subgroups * subgroup_size].reshape(n_subgroups, subgroup_size)
+    subgroups = data[: n_subgroups * subgroup_size].reshape(n_subgroups, subgroup_size)
 
     # Calculate subgroup statistics
     subgroup_means = np.mean(subgroups, axis=1)
@@ -167,29 +154,20 @@ def calculate_xbar_r_limits(data: List[float],
 
     # Get constants for subgroup size
     n = min(subgroup_size, 10)
-    A2 = CONSTANTS['A2'][n]
-    D3 = CONSTANTS['D3'][n]
-    D4 = CONSTANTS['D4'][n]
+    A2 = CONSTANTS["A2"][n]
+    D3 = CONSTANTS["D3"][n]
+    D4 = CONSTANTS["D4"][n]
 
     # X-bar chart limits
-    xbar_limits = ControlLimits(
-        ucl=x_double_bar + A2 * r_bar,
-        cl=x_double_bar,
-        lcl=x_double_bar - A2 * r_bar
-    )
+    xbar_limits = ControlLimits(ucl=x_double_bar + A2 * r_bar, cl=x_double_bar, lcl=x_double_bar - A2 * r_bar)
 
     # R chart limits
-    r_limits = ControlLimits(
-        ucl=D4 * r_bar,
-        cl=r_bar,
-        lcl=D3 * r_bar
-    )
+    r_limits = ControlLimits(ucl=D4 * r_bar, cl=r_bar, lcl=D3 * r_bar)
 
     return xbar_limits, r_limits
 
 
-def calculate_xbar_s_limits(data: List[float],
-                            subgroup_size: int) -> Tuple[ControlLimits, ControlLimits]:
+def calculate_xbar_s_limits(data: List[float], subgroup_size: int) -> Tuple[ControlLimits, ControlLimits]:
     """
     Calculate control limits for X-bar and S chart.
 
@@ -206,7 +184,7 @@ def calculate_xbar_s_limits(data: List[float],
     data = np.array(data)
     n_subgroups = len(data) // subgroup_size
 
-    subgroups = data[:n_subgroups * subgroup_size].reshape(n_subgroups, subgroup_size)
+    subgroups = data[: n_subgroups * subgroup_size].reshape(n_subgroups, subgroup_size)
 
     subgroup_means = np.mean(subgroups, axis=1)
     subgroup_stds = np.std(subgroups, axis=1, ddof=1)
@@ -215,27 +193,18 @@ def calculate_xbar_s_limits(data: List[float],
     s_bar = np.mean(subgroup_stds)
 
     n = min(subgroup_size, 10)
-    A3 = CONSTANTS['A3'][n]
-    B3 = CONSTANTS['B3'][n]
-    B4 = CONSTANTS['B4'][n]
+    A3 = CONSTANTS["A3"][n]
+    B3 = CONSTANTS["B3"][n]
+    B4 = CONSTANTS["B4"][n]
 
-    xbar_limits = ControlLimits(
-        ucl=x_double_bar + A3 * s_bar,
-        cl=x_double_bar,
-        lcl=x_double_bar - A3 * s_bar
-    )
+    xbar_limits = ControlLimits(ucl=x_double_bar + A3 * s_bar, cl=x_double_bar, lcl=x_double_bar - A3 * s_bar)
 
-    s_limits = ControlLimits(
-        ucl=B4 * s_bar,
-        cl=s_bar,
-        lcl=B3 * s_bar
-    )
+    s_limits = ControlLimits(ucl=B4 * s_bar, cl=s_bar, lcl=B3 * s_bar)
 
     return xbar_limits, s_limits
 
 
-def calculate_p_chart_limits(defectives: List[int],
-                             sample_sizes: List[int]) -> ControlLimits:
+def calculate_p_chart_limits(defectives: List[int], sample_sizes: List[int]) -> ControlLimits:
     """
     Calculate control limits for P chart (proportion defective).
 
@@ -257,11 +226,7 @@ def calculate_p_chart_limits(defectives: List[int],
 
     sigma_p = np.sqrt(p_bar * (1 - p_bar) / avg_n)
 
-    return ControlLimits(
-        ucl=min(p_bar + 3 * sigma_p, 1.0),
-        cl=p_bar,
-        lcl=max(p_bar - 3 * sigma_p, 0.0)
-    )
+    return ControlLimits(ucl=min(p_bar + 3 * sigma_p, 1.0), cl=p_bar, lcl=max(p_bar - 3 * sigma_p, 0.0))
 
 
 def calculate_c_chart_limits(defect_counts: List[int]) -> ControlLimits:
@@ -279,15 +244,10 @@ def calculate_c_chart_limits(defect_counts: List[int]) -> ControlLimits:
 
     c_bar = np.mean(defect_counts)
 
-    return ControlLimits(
-        ucl=c_bar + 3 * np.sqrt(c_bar),
-        cl=c_bar,
-        lcl=max(c_bar - 3 * np.sqrt(c_bar), 0.0)
-    )
+    return ControlLimits(ucl=c_bar + 3 * np.sqrt(c_bar), cl=c_bar, lcl=max(c_bar - 3 * np.sqrt(c_bar), 0.0))
 
 
-def detect_western_electric_rules(data: List[float],
-                                  limits: ControlLimits) -> List[OutOfControlPoint]:
+def detect_western_electric_rules(data: List[float], limits: ControlLimits) -> List[OutOfControlPoint]:
     """
     Detect out-of-control conditions using Western Electric Rules.
 
@@ -320,75 +280,80 @@ def detect_western_electric_rules(data: List[float],
     # Rule 1: Point beyond 3σ
     for i, value in enumerate(data):
         if value > limits.ucl or value < limits.lcl:
-            violations.append(OutOfControlPoint(
-                index=i,
-                value=value,
-                rule="Rule 1",
-                description="Point beyond 3σ control limit"
-            ))
+            violations.append(
+                OutOfControlPoint(index=i, value=value, rule="Rule 1", description="Point beyond 3σ control limit")
+            )
 
     # Rule 2: Two of three beyond 2σ
     for i in range(2, len(data)):
-        window = data[i-2:i+1]
+        window = data[i - 2 : i + 1]
         above_2sigma = np.sum(window > limits.cl + two_sigma)
         below_2sigma = np.sum(window < limits.cl - two_sigma)
 
         if above_2sigma >= 2:
-            violations.append(OutOfControlPoint(
-                index=i, value=data[i], rule="Rule 2",
-                description="Two of three consecutive points above 2σ"
-            ))
+            violations.append(
+                OutOfControlPoint(
+                    index=i, value=data[i], rule="Rule 2", description="Two of three consecutive points above 2σ"
+                )
+            )
         if below_2sigma >= 2:
-            violations.append(OutOfControlPoint(
-                index=i, value=data[i], rule="Rule 2",
-                description="Two of three consecutive points below 2σ"
-            ))
+            violations.append(
+                OutOfControlPoint(
+                    index=i, value=data[i], rule="Rule 2", description="Two of three consecutive points below 2σ"
+                )
+            )
 
     # Rule 3: Four of five beyond 1σ
     for i in range(4, len(data)):
-        window = data[i-4:i+1]
+        window = data[i - 4 : i + 1]
         above_1sigma = np.sum(window > limits.cl + one_sigma)
         below_1sigma = np.sum(window < limits.cl - one_sigma)
 
         if above_1sigma >= 4:
-            violations.append(OutOfControlPoint(
-                index=i, value=data[i], rule="Rule 3",
-                description="Four of five consecutive points above 1σ"
-            ))
+            violations.append(
+                OutOfControlPoint(
+                    index=i, value=data[i], rule="Rule 3", description="Four of five consecutive points above 1σ"
+                )
+            )
         if below_1sigma >= 4:
-            violations.append(OutOfControlPoint(
-                index=i, value=data[i], rule="Rule 3",
-                description="Four of five consecutive points below 1σ"
-            ))
+            violations.append(
+                OutOfControlPoint(
+                    index=i, value=data[i], rule="Rule 3", description="Four of five consecutive points below 1σ"
+                )
+            )
 
     # Rule 4: Eight consecutive on one side
     for i in range(7, len(data)):
-        window = data[i-7:i+1]
+        window = data[i - 7 : i + 1]
         if np.all(window > limits.cl):
-            violations.append(OutOfControlPoint(
-                index=i, value=data[i], rule="Rule 4",
-                description="Eight consecutive points above center line"
-            ))
+            violations.append(
+                OutOfControlPoint(
+                    index=i, value=data[i], rule="Rule 4", description="Eight consecutive points above center line"
+                )
+            )
         if np.all(window < limits.cl):
-            violations.append(OutOfControlPoint(
-                index=i, value=data[i], rule="Rule 4",
-                description="Eight consecutive points below center line"
-            ))
+            violations.append(
+                OutOfControlPoint(
+                    index=i, value=data[i], rule="Rule 4", description="Eight consecutive points below center line"
+                )
+            )
 
     # Rule 5: Six consecutive trending
     for i in range(5, len(data)):
-        window = data[i-5:i+1]
+        window = data[i - 5 : i + 1]
         diffs = np.diff(window)
         if np.all(diffs > 0):
-            violations.append(OutOfControlPoint(
-                index=i, value=data[i], rule="Rule 5",
-                description="Six consecutive points trending upward"
-            ))
+            violations.append(
+                OutOfControlPoint(
+                    index=i, value=data[i], rule="Rule 5", description="Six consecutive points trending upward"
+                )
+            )
         if np.all(diffs < 0):
-            violations.append(OutOfControlPoint(
-                index=i, value=data[i], rule="Rule 5",
-                description="Six consecutive points trending downward"
-            ))
+            violations.append(
+                OutOfControlPoint(
+                    index=i, value=data[i], rule="Rule 5", description="Six consecutive points trending downward"
+                )
+            )
 
     return violations
 
@@ -404,19 +369,19 @@ def recommend_chart_type(data_type: str, subgroup_size: int = 1) -> str:
     Returns:
         Recommended chart type
     """
-    if data_type == 'continuous':
+    if data_type == "continuous":
         if subgroup_size == 1:
             return "I-MR (Individuals and Moving Range)"
         elif subgroup_size <= 8:
             return "X-bar and R (Mean and Range)"
         else:
             return "X-bar and S (Mean and Std Dev)"
-    elif data_type == 'defectives':
+    elif data_type == "defectives":
         if subgroup_size == 1:
             return "NP chart (constant sample size) or P chart (variable)"
         else:
             return "P chart (Proportion Defective)"
-    elif data_type == 'defects':
+    elif data_type == "defects":
         if subgroup_size == 1:
             return "C chart (constant area) or U chart (variable)"
         else:
@@ -425,8 +390,7 @@ def recommend_chart_type(data_type: str, subgroup_size: int = 1) -> str:
         return "Unknown data type. Use continuous, defectives, or defects."
 
 
-def get_full_analysis(data: List[float], chart_type: str = 'auto',
-                      subgroup_size: int = 1) -> Dict:
+def get_full_analysis(data: List[float], chart_type: str = "auto", subgroup_size: int = 1) -> Dict:
     """
     Perform full control chart analysis.
 
@@ -444,35 +408,35 @@ def get_full_analysis(data: List[float], chart_type: str = 'auto',
     data = np.array(data)
 
     # Auto-detect chart type
-    if chart_type == 'auto':
+    if chart_type == "auto":
         if subgroup_size == 1:
-            chart_type = 'i-mr'
+            chart_type = "i-mr"
         elif subgroup_size <= 8:
-            chart_type = 'xbar-r'
+            chart_type = "xbar-r"
         else:
-            chart_type = 'xbar-s'
+            chart_type = "xbar-s"
 
     # Calculate control limits
-    if chart_type == 'i-mr':
+    if chart_type == "i-mr":
         primary_limits, secondary_limits = calculate_imr_limits(data)
         primary_name = "Individuals"
         secondary_name = "Moving Range"
         primary_data = data
         secondary_data = np.abs(np.diff(data))
-    elif chart_type == 'xbar-r':
+    elif chart_type == "xbar-r":
         primary_limits, secondary_limits = calculate_xbar_r_limits(data, subgroup_size)
         primary_name = "X-bar"
         secondary_name = "Range"
         n_subgroups = len(data) // subgroup_size
-        subgroups = data[:n_subgroups * subgroup_size].reshape(n_subgroups, subgroup_size)
+        subgroups = data[: n_subgroups * subgroup_size].reshape(n_subgroups, subgroup_size)
         primary_data = np.mean(subgroups, axis=1)
         secondary_data = np.ptp(subgroups, axis=1)
-    elif chart_type == 'xbar-s':
+    elif chart_type == "xbar-s":
         primary_limits, secondary_limits = calculate_xbar_s_limits(data, subgroup_size)
         primary_name = "X-bar"
         secondary_name = "Std Dev"
         n_subgroups = len(data) // subgroup_size
-        subgroups = data[:n_subgroups * subgroup_size].reshape(n_subgroups, subgroup_size)
+        subgroups = data[: n_subgroups * subgroup_size].reshape(n_subgroups, subgroup_size)
         primary_data = np.mean(subgroups, axis=1)
         secondary_data = np.std(subgroups, axis=1, ddof=1)
     else:
@@ -486,39 +450,37 @@ def get_full_analysis(data: List[float], chart_type: str = 'auto',
     in_control = len(primary_violations) == 0 and len(secondary_violations) == 0
 
     return {
-        'chart_type': chart_type.upper(),
-        'subgroup_size': subgroup_size,
-        'data_points': len(data),
-        'primary_chart': {
-            'name': primary_name,
-            'limits': {
-                'UCL': round(primary_limits.ucl, 4),
-                'CL': round(primary_limits.cl, 4),
-                'LCL': round(primary_limits.lcl, 4),
-                'UWL': round(primary_limits.uwl, 4),
-                'LWL': round(primary_limits.lwl, 4)
+        "chart_type": chart_type.upper(),
+        "subgroup_size": subgroup_size,
+        "data_points": len(data),
+        "primary_chart": {
+            "name": primary_name,
+            "limits": {
+                "UCL": round(primary_limits.ucl, 4),
+                "CL": round(primary_limits.cl, 4),
+                "LCL": round(primary_limits.lcl, 4),
+                "UWL": round(primary_limits.uwl, 4),
+                "LWL": round(primary_limits.lwl, 4),
             },
-            'violations': [
-                {'index': v.index, 'value': round(v.value, 4),
-                 'rule': v.rule, 'description': v.description}
+            "violations": [
+                {"index": v.index, "value": round(v.value, 4), "rule": v.rule, "description": v.description}
                 for v in primary_violations
-            ]
+            ],
         },
-        'secondary_chart': {
-            'name': secondary_name,
-            'limits': {
-                'UCL': round(secondary_limits.ucl, 4),
-                'CL': round(secondary_limits.cl, 4),
-                'LCL': round(secondary_limits.lcl, 4)
+        "secondary_chart": {
+            "name": secondary_name,
+            "limits": {
+                "UCL": round(secondary_limits.ucl, 4),
+                "CL": round(secondary_limits.cl, 4),
+                "LCL": round(secondary_limits.lcl, 4),
             },
-            'violations': [
-                {'index': v.index, 'value': round(v.value, 4),
-                 'rule': v.rule, 'description': v.description}
+            "violations": [
+                {"index": v.index, "value": round(v.value, 4), "rule": v.rule, "description": v.description}
                 for v in secondary_violations
-            ]
+            ],
         },
-        'process_status': 'IN CONTROL' if in_control else 'OUT OF CONTROL',
-        'total_violations': len(primary_violations) + len(secondary_violations)
+        "process_status": "IN CONTROL" if in_control else "OUT OF CONTROL",
+        "total_violations": len(primary_violations) + len(secondary_violations),
     }
 
 
@@ -533,22 +495,22 @@ def print_analysis(analysis: Dict) -> None:
     print(f"   Data Points: {analysis['data_points']}")
 
     # Primary chart
-    primary = analysis['primary_chart']
+    primary = analysis["primary_chart"]
     print(f"\n📈 {primary['name'].upper()} CHART:")
     print(f"   UCL: {primary['limits']['UCL']}")
     print(f"   CL:  {primary['limits']['CL']}")
     print(f"   LCL: {primary['limits']['LCL']}")
     print(f"   Violations: {len(primary['violations'])}")
 
-    if primary['violations']:
+    if primary["violations"]:
         print("\n   Out-of-Control Points:")
-        for v in primary['violations'][:5]:  # Show first 5
+        for v in primary["violations"][:5]:  # Show first 5
             print(f"   - Point {v['index']}: {v['value']} ({v['rule']} - {v['description']})")
-        if len(primary['violations']) > 5:
+        if len(primary["violations"]) > 5:
             print(f"   ... and {len(primary['violations']) - 5} more")
 
     # Secondary chart
-    secondary = analysis['secondary_chart']
+    secondary = analysis["secondary_chart"]
     print(f"\n📈 {secondary['name'].upper()} CHART:")
     print(f"   UCL: {secondary['limits']['UCL']}")
     print(f"   CL:  {secondary['limits']['CL']}")
@@ -556,7 +518,7 @@ def print_analysis(analysis: Dict) -> None:
     print(f"   Violations: {len(secondary['violations'])}")
 
     # Process status
-    status = analysis['process_status']
+    status = analysis["process_status"]
     status_symbol = "✅" if status == "IN CONTROL" else "❌"
     print(f"\n{status_symbol} PROCESS STATUS: {status}")
     print(f"   Total Violations: {analysis['total_violations']}")
@@ -613,31 +575,30 @@ Examples:
   Run demonstration:
     python control_chart_analysis.py --demo
     python control_chart_analysis.py --demo --out-of-control
-        """
+        """,
     )
 
-    parser.add_argument('--data', '-d',
-                        help='Path to CSV file with measurement data')
-    parser.add_argument('--chart-type', '-c', default='auto',
-                        choices=['auto', 'i-mr', 'xbar-r', 'xbar-s'],
-                        help='Control chart type (default: auto)')
-    parser.add_argument('--subgroup-size', '-n', type=int, default=1,
-                        help='Subgroup size (default: 1)')
-    parser.add_argument('--recommend', '-r',
-                        choices=['continuous', 'defectives', 'defects'],
-                        help='Recommend chart type for data type')
-    parser.add_argument('--json', action='store_true',
-                        help='Output as JSON')
-    parser.add_argument('--demo', action='store_true',
-                        help='Run demonstration with sample data')
-    parser.add_argument('--out-of-control', action='store_true',
-                        help='Use out-of-control sample data in demo')
+    parser.add_argument("--data", "-d", help="Path to CSV file with measurement data")
+    parser.add_argument(
+        "--chart-type",
+        "-c",
+        default="auto",
+        choices=["auto", "i-mr", "xbar-r", "xbar-s"],
+        help="Control chart type (default: auto)",
+    )
+    parser.add_argument("--subgroup-size", "-n", type=int, default=1, help="Subgroup size (default: 1)")
+    parser.add_argument(
+        "--recommend", "-r", choices=["continuous", "defectives", "defects"], help="Recommend chart type for data type"
+    )
+    parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--demo", action="store_true", help="Run demonstration with sample data")
+    parser.add_argument("--out-of-control", action="store_true", help="Use out-of-control sample data in demo")
 
     args = parser.parse_args()
 
     if args.recommend:
         recommendation = recommend_chart_type(args.recommend, args.subgroup_size)
-        print(f"\n📊 CHART RECOMMENDATION:")
+        print("\n📊 CHART RECOMMENDATION:")
         print(f"   Data Type: {args.recommend}")
         print(f"   Subgroup Size: {args.subgroup_size}")
         print(f"   Recommended Chart: {recommendation}")
@@ -649,11 +610,10 @@ Examples:
     elif args.data:
         try:
             if HAS_NUMPY:
-                data = list(np.loadtxt(args.data, delimiter=',').flatten())
+                data = list(np.loadtxt(args.data, delimiter=",").flatten())
             else:
-                with open(args.data, 'r') as f:
-                    data = [float(x.strip()) for line in f
-                            for x in line.split(',') if x.strip()]
+                with open(args.data, "r") as f:
+                    data = [float(x.strip()) for line in f for x in line.split(",") if x.strip()]
         except Exception as e:
             print(f"Error loading data: {e}")
             return 1
@@ -662,11 +622,7 @@ Examples:
         return
 
     try:
-        analysis = get_full_analysis(
-            data,
-            chart_type=args.chart_type,
-            subgroup_size=args.subgroup_size
-        )
+        analysis = get_full_analysis(data, chart_type=args.chart_type, subgroup_size=args.subgroup_size)
 
         if args.json:
             print(json.dumps(analysis, indent=2))

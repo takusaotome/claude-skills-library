@@ -13,18 +13,24 @@ Example:
 """
 
 import argparse
-import sys
-import subprocess
 import json
+import subprocess
+import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import List, Tuple
 
 
 class FlowDeployer:
     """Automated Flow deployment via sf CLI"""
 
-    def __init__(self, source_dir: str, target_org: str, validate_only: bool = False,
-                 test_level: str = 'NoTestRun', rollback_on_error: bool = False):
+    def __init__(
+        self,
+        source_dir: str,
+        target_org: str,
+        validate_only: bool = False,
+        test_level: str = "NoTestRun",
+        rollback_on_error: bool = False,
+    ):
         """
         Initialize Flow deployer
 
@@ -68,11 +74,7 @@ class FlowDeployer:
         print(f"🔄 {description}...")
         print(f"   Command: {' '.join(cmd)}")
 
-        result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         return result.returncode, result.stdout, result.stderr
 
@@ -86,10 +88,7 @@ class FlowDeployer:
         print(f"🔍 Validating connection to org: {self.target_org}")
 
         # Check sf CLI installed
-        returncode, stdout, stderr = self._run_command(
-            ['sf', '--version'],
-            'Checking sf CLI installation'
-        )
+        returncode, stdout, stderr = self._run_command(["sf", "--version"], "Checking sf CLI installation")
 
         if returncode != 0:
             print("❌ ERROR: sf CLI not installed or not in PATH")
@@ -100,8 +99,8 @@ class FlowDeployer:
 
         # Check org connection
         returncode, stdout, stderr = self._run_command(
-            ['sf', 'org', 'display', '--target-org', self.target_org, '--json'],
-            f'Checking connection to {self.target_org}'
+            ["sf", "org", "display", "--target-org", self.target_org, "--json"],
+            f"Checking connection to {self.target_org}",
         )
 
         if returncode != 0:
@@ -115,14 +114,14 @@ class FlowDeployer:
         # Parse org info
         try:
             org_info = json.loads(stdout)
-            result = org_info.get('result', {})
-            print(f"✅ Connected to org:")
+            result = org_info.get("result", {})
+            print("✅ Connected to org:")
             print(f"   Username: {result.get('username')}")
             print(f"   Org ID: {result.get('id')}")
             print(f"   Instance: {result.get('instanceUrl')}")
             return True
         except json.JSONDecodeError:
-            print(f"⚠️  Warning: Could not parse org info, but connection appears valid")
+            print("⚠️  Warning: Could not parse org info, but connection appears valid")
             return True
 
     def run_pre_deployment_checks(self) -> bool:
@@ -135,7 +134,7 @@ class FlowDeployer:
         print("\n🔍 Running pre-deployment validation...")
 
         # Find all Flow metadata files
-        flow_files = list(self.source_dir.glob('**/*.flow-meta.xml'))
+        flow_files = list(self.source_dir.glob("**/*.flow-meta.xml"))
 
         if not flow_files:
             print(f"⚠️  Warning: No Flow metadata files found in {self.source_dir}")
@@ -150,16 +149,15 @@ class FlowDeployer:
             print(f"\n   Validating: {flow_file.name}")
 
             # Check if validate_flow.py exists
-            validator_script = Path(__file__).parent / 'validate_flow.py'
+            validator_script = Path(__file__).parent / "validate_flow.py"
 
             if not validator_script.exists():
-                print(f"   ⚠️  Warning: validate_flow.py not found, skipping validation")
+                print("   ⚠️  Warning: validate_flow.py not found, skipping validation")
                 continue
 
             # Run validator
             returncode, stdout, stderr = self._run_command(
-                ['python3', str(validator_script), str(flow_file), '--format', 'text'],
-                f'Validating {flow_file.name}'
+                ["python3", str(validator_script), str(flow_file), "--format", "text"], f"Validating {flow_file.name}"
             )
 
             if returncode != 0:
@@ -183,20 +181,23 @@ class FlowDeployer:
 
         # Build sf deploy command
         cmd = [
-            'sf', 'project', 'deploy', 'start',
-            '--source-dir', str(self.source_dir),
-            '--target-org', self.target_org,
-            '--test-level', self.test_level
+            "sf",
+            "project",
+            "deploy",
+            "start",
+            "--source-dir",
+            str(self.source_dir),
+            "--target-org",
+            self.target_org,
+            "--test-level",
+            self.test_level,
         ]
 
         if self.validate_only:
-            cmd.extend(['--dry-run'])
+            cmd.extend(["--dry-run"])
 
         # Execute deployment
-        returncode, stdout, stderr = self._run_command(
-            cmd,
-            f'{mode} Flows'
-        )
+        returncode, stdout, stderr = self._run_command(cmd, f"{mode} Flows")
 
         # Parse results
         if returncode == 0:
@@ -223,30 +224,30 @@ class FlowDeployer:
 
         # Common error patterns
         error_patterns = {
-            'INVALID_TYPE_ON_FIELD_IN_RECORD': {
-                'description': 'Variable type doesn\'t match field type',
-                'fix': 'Check variable dataType matches target object field type'
+            "INVALID_TYPE_ON_FIELD_IN_RECORD": {
+                "description": "Variable type doesn't match field type",
+                "fix": "Check variable dataType matches target object field type",
             },
-            'INVALID_FIELD_OR_REFERENCE': {
-                'description': 'Field or variable not found',
-                'fix': 'Run validate_flow.py to find undeclared references'
+            "INVALID_FIELD_OR_REFERENCE": {
+                "description": "Field or variable not found",
+                "fix": "Run validate_flow.py to find undeclared references",
             },
-            'FLOW_ACTIVE_VERSION_NOT_FOUND': {
-                'description': 'No active Flow version',
-                'fix': 'Activate Flow after deployment: Setup → Flows → [Flow] → Activate'
+            "FLOW_ACTIVE_VERSION_NOT_FOUND": {
+                "description": "No active Flow version",
+                "fix": "Activate Flow after deployment: Setup → Flows → [Flow] → Activate",
             },
-            'REQUIRED_FIELD_MISSING': {
-                'description': 'Required field not populated',
-                'fix': 'Ensure all required fields are set in Create/Update elements'
+            "REQUIRED_FIELD_MISSING": {
+                "description": "Required field not populated",
+                "fix": "Ensure all required fields are set in Create/Update elements",
             },
-            'CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY': {
-                'description': 'Insufficient permissions',
-                'fix': 'Check user has object/field permissions and FLS access'
+            "CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY": {
+                "description": "Insufficient permissions",
+                "fix": "Check user has object/field permissions and FLS access",
             },
-            'FIELD_CUSTOM_VALIDATION_EXCEPTION': {
-                'description': 'Validation rule failure',
-                'fix': 'Review validation rules on target object'
-            }
+            "FIELD_CUSTOM_VALIDATION_EXCEPTION": {
+                "description": "Validation rule failure",
+                "fix": "Review validation rules on target object",
+            },
         }
 
         # Find matching error patterns
@@ -277,7 +278,7 @@ class FlowDeployer:
         """
         print("\n🔄 Attempting rollback...")
 
-        backup_dir = self.source_dir.parent / 'backups' / f'{self.source_dir.name}_backup'
+        backup_dir = self.source_dir.parent / "backups" / f"{self.source_dir.name}_backup"
 
         if not backup_dir.exists():
             print(f"❌ No backup found at {backup_dir}")
@@ -287,10 +288,8 @@ class FlowDeployer:
         print(f"   Restoring from: {backup_dir}")
 
         returncode, stdout, stderr = self._run_command(
-            ['sf', 'project', 'deploy', 'start',
-             '--source-dir', str(backup_dir),
-             '--target-org', self.target_org],
-            'Rolling back deployment'
+            ["sf", "project", "deploy", "start", "--source-dir", str(backup_dir), "--target-org", self.target_org],
+            "Rolling back deployment",
         )
 
         if returncode == 0:
@@ -304,7 +303,7 @@ class FlowDeployer:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Deploy Salesforce Flows via sf CLI',
+        description="Deploy Salesforce Flows via sf CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -319,20 +318,21 @@ Examples:
 
   # Deploy with auto-rollback on error
   python3 deploy_flow.py --source-dir flows/ --target-org sandbox --rollback-on-error
-        """
+        """,
     )
 
-    parser.add_argument('--source-dir', required=True,
-                       help='Directory containing Flow files')
-    parser.add_argument('--target-org', required=True,
-                       help='Target org alias (from sf org list)')
-    parser.add_argument('--validate-only', action='store_true',
-                       help='Validate deployment without deploying (dry run)')
-    parser.add_argument('--test-level', default='NoTestRun',
-                       choices=['NoTestRun', 'RunLocalTests', 'RunAllTestsInOrg'],
-                       help='Test level for deployment (default: NoTestRun)')
-    parser.add_argument('--rollback-on-error', action='store_true',
-                       help='Auto-rollback if deployment fails (requires backup)')
+    parser.add_argument("--source-dir", required=True, help="Directory containing Flow files")
+    parser.add_argument("--target-org", required=True, help="Target org alias (from sf org list)")
+    parser.add_argument("--validate-only", action="store_true", help="Validate deployment without deploying (dry run)")
+    parser.add_argument(
+        "--test-level",
+        default="NoTestRun",
+        choices=["NoTestRun", "RunLocalTests", "RunAllTestsInOrg"],
+        help="Test level for deployment (default: NoTestRun)",
+    )
+    parser.add_argument(
+        "--rollback-on-error", action="store_true", help="Auto-rollback if deployment fails (requires backup)"
+    )
 
     args = parser.parse_args()
 
@@ -342,7 +342,7 @@ Examples:
         target_org=args.target_org,
         validate_only=args.validate_only,
         test_level=args.test_level,
-        rollback_on_error=args.rollback_on_error
+        rollback_on_error=args.rollback_on_error,
     )
 
     # Step 1: Validate org connection
@@ -366,5 +366,5 @@ Examples:
     sys.exit(0 if success else 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

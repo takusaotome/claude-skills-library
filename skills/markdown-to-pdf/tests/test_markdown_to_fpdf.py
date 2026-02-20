@@ -15,11 +15,9 @@ Tests cover:
 - Mermaid fallback
 """
 
-import os
 import sys
-import tempfile
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import pytest
 
@@ -31,6 +29,7 @@ FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
 # ===== Fixtures =====
+
 
 @pytest.fixture
 def basic_md():
@@ -59,6 +58,7 @@ def tmp_pdf(tmp_path):
 
 # ===== Import helpers =====
 
+
 @pytest.fixture(autouse=True)
 def _import_module():
     """Import the module under test. Skip if dependencies missing."""
@@ -73,13 +73,14 @@ def _import_module():
 def _import_fpdf_module():
     """Import markdown_to_fpdf module."""
     import markdown_to_fpdf
+
     return markdown_to_fpdf
 
 
 # ===== Frontmatter Parsing Tests =====
 
-class TestParseFrontmatter:
 
+class TestParseFrontmatter:
     def test_parse_frontmatter_full(self, estimate_md):
         mod = _import_fpdf_module()
         fm, body = mod.parse_frontmatter(estimate_md)
@@ -108,8 +109,8 @@ class TestParseFrontmatter:
 
 # ===== AST Mapping Tests =====
 
-class TestASTHeadingMapping:
 
+class TestASTHeadingMapping:
     def test_heading_h1(self, basic_md):
         mod = _import_fpdf_module()
         tokens = mod.parse_markdown(basic_md)
@@ -128,8 +129,8 @@ class TestASTHeadingMapping:
 
 # ===== Inline Formatting Tests =====
 
-class TestInlineFormatting:
 
+class TestInlineFormatting:
     def test_extract_text_from_children(self):
         mod = _import_fpdf_module()
         children = [
@@ -145,8 +146,8 @@ class TestInlineFormatting:
 
 # ===== Table Rendering Tests =====
 
-class TestTableRendering:
 
+class TestTableRendering:
     def test_table_data_rendering(self, table_heavy_md, tmp_pdf):
         mod = _import_fpdf_module()
         fm, body = mod.parse_frontmatter(table_heavy_md)
@@ -172,14 +173,13 @@ class TestTableRendering:
 
 # ===== Pagebreak and Thematic Break Tests =====
 
-class TestPagebreakAndBreaks:
 
+class TestPagebreakAndBreaks:
     def test_pagebreak_comment(self, estimate_md, tmp_pdf):
         mod = _import_fpdf_module()
         fm, body = mod.parse_frontmatter(estimate_md)
         mod.render_pdf(body, str(tmp_pdf), frontmatter=fm)
         # Document has <!-- pagebreak --> so should have multiple pages
-        from fpdf import FPDF
         # Read back to check page count
         assert tmp_pdf.exists()
 
@@ -193,8 +193,8 @@ class TestPagebreakAndBreaks:
 
 # ===== Cover Page Tests =====
 
-class TestCoverPage:
 
+class TestCoverPage:
     def test_cover_page_generation(self, estimate_md, tmp_pdf):
         mod = _import_fpdf_module()
         fm, body = mod.parse_frontmatter(estimate_md)
@@ -214,32 +214,36 @@ class TestCoverPage:
 
 # ===== Theme Tests =====
 
-class TestThemes:
 
+class TestThemes:
     def test_theme_navy(self):
         from themes import get_theme
+
         theme = get_theme("navy")
         assert theme.primary == (0, 51, 102)
         assert theme.name == "navy"
 
     def test_theme_gray(self):
         from themes import get_theme
+
         theme = get_theme("gray")
         assert theme.primary == (60, 60, 60)
         assert theme.name == "gray"
 
     def test_theme_unknown(self):
         from themes import get_theme
+
         with pytest.raises(ValueError, match="Unknown theme"):
             get_theme("nonexistent")
 
 
 # ===== Font Discovery Tests =====
 
-class TestFontDiscovery:
 
+class TestFontDiscovery:
     def test_font_not_found_fail_fast(self):
         from themes import discover_fonts
+
         with patch("themes.platform") as mock_platform:
             mock_platform.system.return_value = "UnknownOS"
             with pytest.raises(SystemExit):
@@ -251,6 +255,7 @@ class TestFontDiscovery:
 
     def test_font_cli_override(self, tmp_path):
         from themes import discover_fonts
+
         # Create fake font files
         reg = tmp_path / "regular.ttc"
         bold = tmp_path / "bold.ttc"
@@ -262,14 +267,15 @@ class TestFontDiscovery:
 
     def test_font_cli_override_missing(self):
         from themes import discover_fonts
+
         with pytest.raises(SystemExit):
             discover_fonts("/nonexistent/font.ttc", "/nonexistent/bold.ttc")
 
 
 # ===== Italic Font Rendering Tests =====
 
-class TestItalicFontRendering:
 
+class TestItalicFontRendering:
     def test_italic_font_rendering(self, tmp_pdf):
         """Verify italic text does not crash with Undefined font error."""
         mod = _import_fpdf_module()
@@ -280,8 +286,8 @@ class TestItalicFontRendering:
 
 # ===== Mermaid Fallback Tests =====
 
-class TestMermaidFallback:
 
+class TestMermaidFallback:
     def test_mermaid_fallback_permissive(self, mermaid_md, tmp_pdf):
         """Mermaid blocks should fall back to code blocks in permissive mode."""
         mod = _import_fpdf_module()
@@ -293,8 +299,8 @@ class TestMermaidFallback:
 
 # ===== End-to-End Rendering Tests =====
 
-class TestEndToEnd:
 
+class TestEndToEnd:
     def test_basic_document_renders(self, basic_md, tmp_pdf):
         mod = _import_fpdf_module()
         mod.render_pdf(basic_md, str(tmp_pdf))
@@ -317,6 +323,7 @@ class TestEndToEnd:
 
 
 # ===== Table Content Verification Tests (Finding 3) =====
+
 
 class TestTableContentExtraction:
     """Verify table headers and rows are correctly extracted from mistune AST."""
@@ -378,11 +385,12 @@ class TestTableContentExtraction:
 
 # ===== Font One-Side Specification Tests (Finding 4) =====
 
-class TestFontOneSideSpecification:
 
+class TestFontOneSideSpecification:
     def test_font_regular_only_error(self, tmp_path):
         """Specifying only --font-regular (without --font-bold) must exit with error."""
         from themes import discover_fonts
+
         reg = tmp_path / "regular.ttc"
         reg.write_bytes(b"fake")
         with pytest.raises(SystemExit):
@@ -391,6 +399,7 @@ class TestFontOneSideSpecification:
     def test_font_bold_only_error(self, tmp_path):
         """Specifying only --font-bold (without --font-regular) must exit with error."""
         from themes import discover_fonts
+
         bold = tmp_path / "bold.ttc"
         bold.write_bytes(b"fake")
         with pytest.raises(SystemExit):
@@ -399,13 +408,16 @@ class TestFontOneSideSpecification:
 
 # ===== Mermaid Strict/Permissive Mode Tests =====
 
-class TestMermaidStrictMode:
 
+class TestMermaidStrictMode:
     def test_strict_mode_raises_on_failure(self, tmp_pdf):
         """strict_mermaid=True should raise MermaidRenderError when conversion fails."""
         mod = _import_fpdf_module()
         from mermaid_renderer import (
-            MermaidRenderError, MermaidRenderer, MermaidResult, MermaidErrorCategory,
+            MermaidErrorCategory,
+            MermaidRenderer,
+            MermaidRenderError,
+            MermaidResult,
         )
 
         md = "```mermaid\ngraph TD; A-->B\n```"
@@ -425,7 +437,9 @@ class TestMermaidStrictMode:
         """strict_mermaid=False should produce PDF with code block fallback."""
         mod = _import_fpdf_module()
         from mermaid_renderer import (
-            MermaidRenderer, MermaidResult, MermaidErrorCategory,
+            MermaidErrorCategory,
+            MermaidRenderer,
+            MermaidResult,
         )
 
         md = "```mermaid\ngraph TD; A-->B\n```"
@@ -445,14 +459,15 @@ class TestMermaidStrictMode:
         """render_pdf should default to strict_mermaid=True."""
         mod = _import_fpdf_module()
         import inspect
+
         sig = inspect.signature(mod.render_pdf)
         assert sig.parameters["strict_mermaid"].default is True
 
 
 # ===== PDF Content Verification Tests =====
 
-class TestPDFContentVerification:
 
+class TestPDFContentVerification:
     def test_table_content_produces_substantial_pdf(self, tmp_pdf):
         """PDF with table content should be substantially larger than empty PDF."""
         mod = _import_fpdf_module()
@@ -468,13 +483,13 @@ class TestPDFContentVerification:
 
         # Table PDF should be at least 20% larger than empty PDF
         assert table_size > empty_size * 1.2, (
-            f"Table PDF ({table_size}B) should be substantially larger than "
-            f"empty PDF ({empty_size}B)"
+            f"Table PDF ({table_size}B) should be substantially larger than empty PDF ({empty_size}B)"
         )
 
     def test_table_headers_in_decompressed_pdf(self, tmp_pdf):
         """Verify table header text exists in decompressed PDF streams."""
         import zlib
+
         mod = _import_fpdf_module()
         md = "| Name | Age |\n|------|-----|\n| Alice | 30 |\n| Bob | 25 |"
         mod.render_pdf(md, str(tmp_pdf))
@@ -483,6 +498,7 @@ class TestPDFContentVerification:
         # Extract and decompress all FlateDecode streams
         decompressed = b""
         import re as re_mod
+
         for match in re_mod.finditer(rb"stream\r?\n(.*?)\r?\nendstream", pdf_bytes, re_mod.DOTALL):
             try:
                 decompressed += zlib.decompress(match.group(1))
@@ -493,16 +509,15 @@ class TestPDFContentVerification:
         # Instead, verify that we have multiple text-showing operators (Tj/TJ)
         # which indicates table cells were rendered.
         text_ops = re_mod.findall(rb"\bT[jJ]\b", decompressed)
-        assert len(text_ops) >= 4, (
-            f"Expected at least 4 text operators for 2 headers + 2 rows, "
-            f"found {len(text_ops)}"
-        )
+        assert len(text_ops) >= 4, f"Expected at least 4 text operators for 2 headers + 2 rows, found {len(text_ops)}"
 
     def test_no_raw_mermaid_fence_in_pdf_permissive(self, tmp_pdf):
         """Permissive mode with failed Mermaid should not leave raw ```mermaid fence."""
         mod = _import_fpdf_module()
         from mermaid_renderer import (
-            MermaidRenderer, MermaidResult, MermaidErrorCategory,
+            MermaidErrorCategory,
+            MermaidRenderer,
+            MermaidResult,
         )
 
         md = "```mermaid\ngraph TD; A-->B\n```"

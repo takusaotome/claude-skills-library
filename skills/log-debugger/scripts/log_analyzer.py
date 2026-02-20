@@ -19,10 +19,11 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Pattern, Tuple
+from typing import Dict, List, Optional
 
 try:
     import yaml
+
     YAML_AVAILABLE = True
 except ImportError:
     YAML_AVAILABLE = False
@@ -32,9 +33,11 @@ except ImportError:
 # Data Classes
 # =============================================================================
 
+
 @dataclass
 class LogEntry:
     """Represents a single log entry."""
+
     line_number: int
     raw: str
     timestamp: Optional[datetime] = None
@@ -47,6 +50,7 @@ class LogEntry:
 @dataclass
 class TimelineEvent:
     """Represents an event in the timeline."""
+
     timestamp: datetime
     event: str
     source: str
@@ -57,6 +61,7 @@ class TimelineEvent:
 @dataclass
 class AnalysisResult:
     """Represents the result of log analysis."""
+
     total_lines: int
     error_count: int
     warning_count: int
@@ -69,41 +74,44 @@ class AnalysisResult:
 # Log Parsers
 # =============================================================================
 
+
 class LogParser:
     """Base class for log parsers."""
 
     # Common timestamp patterns
     TIMESTAMP_PATTERNS = [
         # ISO 8601: 2025-01-15T10:30:45.123Z
-        (r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?)',
-         '%Y-%m-%dT%H:%M:%S'),
+        (r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?)", "%Y-%m-%dT%H:%M:%S"),
         # Common: 2025-01-15 10:30:45
-        (r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})', '%Y-%m-%d %H:%M:%S'),
+        (r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})", "%Y-%m-%d %H:%M:%S"),
         # Syslog: Jan 15 10:30:45
-        (r'([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})', '%b %d %H:%M:%S'),
+        (r"([A-Z][a-z]{2}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2})", "%b %d %H:%M:%S"),
         # Unix timestamp: 1705312245
-        (r'\b(\d{10})\b', 'unix'),
+        (r"\b(\d{10})\b", "unix"),
         # With milliseconds: 2025-01-15 10:30:45,123
-        (r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3})', '%Y-%m-%d %H:%M:%S,%f'),
+        (r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3})", "%Y-%m-%d %H:%M:%S,%f"),
     ]
 
     # Common log level patterns
     LEVEL_PATTERNS = [
-        r'\b(FATAL|CRITICAL)\b',
-        r'\b(ERROR|ERR)\b',
-        r'\b(WARN(?:ING)?)\b',
-        r'\b(INFO)\b',
-        r'\b(DEBUG)\b',
-        r'\b(TRACE)\b',
+        r"\b(FATAL|CRITICAL)\b",
+        r"\b(ERROR|ERR)\b",
+        r"\b(WARN(?:ING)?)\b",
+        r"\b(INFO)\b",
+        r"\b(DEBUG)\b",
+        r"\b(TRACE)\b",
     ]
 
     LEVEL_PRIORITY = {
-        'FATAL': 0, 'CRITICAL': 0,
-        'ERROR': 1, 'ERR': 1,
-        'WARNING': 2, 'WARN': 2,
-        'INFO': 3,
-        'DEBUG': 4,
-        'TRACE': 5,
+        "FATAL": 0,
+        "CRITICAL": 0,
+        "ERROR": 1,
+        "ERR": 1,
+        "WARNING": 2,
+        "WARN": 2,
+        "INFO": 3,
+        "DEBUG": 4,
+        "TRACE": 5,
     }
 
     def parse_line(self, line: str, line_number: int) -> LogEntry:
@@ -125,15 +133,15 @@ class LogParser:
             if match:
                 ts_str = match.group(1)
                 try:
-                    if fmt == 'unix':
+                    if fmt == "unix":
                         return datetime.fromtimestamp(int(ts_str))
                     # Handle ISO format with timezone
-                    if 'T' in ts_str and (ts_str.endswith('Z') or '+' in ts_str or '-' in ts_str[-6:]):
-                        ts_str = ts_str.replace('Z', '+00:00')
-                        if '.' in ts_str:
-                            return datetime.fromisoformat(ts_str.split('.')[0])
+                    if "T" in ts_str and (ts_str.endswith("Z") or "+" in ts_str or "-" in ts_str[-6:]):
+                        ts_str = ts_str.replace("Z", "+00:00")
+                        if "." in ts_str:
+                            return datetime.fromisoformat(ts_str.split(".")[0])
                         return datetime.fromisoformat(ts_str)
-                    return datetime.strptime(ts_str.split('.')[0].split(',')[0], fmt.split('.')[0].split(',')[0])
+                    return datetime.strptime(ts_str.split(".")[0].split(",")[0], fmt.split(".")[0].split(",")[0])
                 except (ValueError, OSError):
                     continue
         return None
@@ -159,7 +167,7 @@ class JSONLogParser(LogParser):
             entry.extra = data
 
             # Extract common fields
-            for ts_field in ['timestamp', 'time', '@timestamp', 'ts', 'datetime']:
+            for ts_field in ["timestamp", "time", "@timestamp", "ts", "datetime"]:
                 if ts_field in data:
                     ts_val = data[ts_field]
                     if isinstance(ts_val, (int, float)):
@@ -168,12 +176,12 @@ class JSONLogParser(LogParser):
                         entry.timestamp = self._extract_timestamp(ts_val)
                     break
 
-            for level_field in ['level', 'severity', 'log_level', 'loglevel']:
+            for level_field in ["level", "severity", "log_level", "loglevel"]:
                 if level_field in data:
                     entry.level = str(data[level_field]).upper()
                     break
 
-            for msg_field in ['message', 'msg', 'text', 'log']:
+            for msg_field in ["message", "msg", "text", "log"]:
                 if msg_field in data:
                     entry.message = str(data[msg_field])
                     break
@@ -190,18 +198,41 @@ class JSONLogParser(LogParser):
 # Log Analyzer
 # =============================================================================
 
+
 class LogAnalyzer:
     """Main log analyzer class."""
 
     DEFAULT_ERROR_KEYWORDS = [
-        'error', 'exception', 'failed', 'failure', 'fatal', 'critical',
-        'crash', 'panic', 'abort', 'timeout', 'refused', 'denied',
-        'traceback', 'stacktrace', 'segfault', 'oom', 'killed'
+        "error",
+        "exception",
+        "failed",
+        "failure",
+        "fatal",
+        "critical",
+        "crash",
+        "panic",
+        "abort",
+        "timeout",
+        "refused",
+        "denied",
+        "traceback",
+        "stacktrace",
+        "segfault",
+        "oom",
+        "killed",
     ]
 
     DEFAULT_WARNING_KEYWORDS = [
-        'warn', 'warning', 'deprecated', 'slow', 'retry', 'skip',
-        'invalid', 'missing', 'not found', 'unavailable'
+        "warn",
+        "warning",
+        "deprecated",
+        "slow",
+        "retry",
+        "skip",
+        "invalid",
+        "missing",
+        "not found",
+        "unavailable",
     ]
 
     def __init__(self, config: Optional[Dict] = None):
@@ -212,8 +243,8 @@ class LogAnalyzer:
         self.source_name = ""
 
         # Load custom keywords from config
-        self.error_keywords = self.config.get('error_keywords', self.DEFAULT_ERROR_KEYWORDS)
-        self.warning_keywords = self.config.get('warning_keywords', self.DEFAULT_WARNING_KEYWORDS)
+        self.error_keywords = self.config.get("error_keywords", self.DEFAULT_ERROR_KEYWORDS)
+        self.warning_keywords = self.config.get("warning_keywords", self.DEFAULT_WARNING_KEYWORDS)
 
     def load_file(self, file_path: str) -> None:
         """Load and parse a log file."""
@@ -221,9 +252,9 @@ class LogAnalyzer:
         self.source_name = path.name
 
         # Auto-detect JSON format
-        with open(path, 'r', encoding='utf-8', errors='replace') as f:
+        with open(path, "r", encoding="utf-8", errors="replace") as f:
             first_line = f.readline().strip()
-            if first_line.startswith('{'):
+            if first_line.startswith("{"):
                 self.parser = JSONLogParser()
             f.seek(0)
 
@@ -238,7 +269,7 @@ class LogAnalyzer:
         self.source_name = "stdin"
         lines = sys.stdin.readlines()
 
-        if lines and lines[0].strip().startswith('{'):
+        if lines and lines[0].strip().startswith("{"):
             self.parser = JSONLogParser()
 
         for line_number, line in enumerate(lines, 1):
@@ -250,12 +281,12 @@ class LogAnalyzer:
     def detect_errors(self, keywords: Optional[List[str]] = None) -> List[LogEntry]:
         """Detect error entries based on keywords and log level."""
         keywords = keywords or self.error_keywords
-        pattern = re.compile('|'.join(keywords), re.IGNORECASE)
+        pattern = re.compile("|".join(keywords), re.IGNORECASE)
 
         errors = []
         for entry in self.entries:
             # Check log level
-            if entry.level in ('FATAL', 'CRITICAL', 'ERROR', 'ERR'):
+            if entry.level in ("FATAL", "CRITICAL", "ERROR", "ERR"):
                 errors.append(entry)
             # Check keywords in message
             elif pattern.search(entry.message) or pattern.search(entry.raw):
@@ -266,11 +297,11 @@ class LogAnalyzer:
     def detect_warnings(self, keywords: Optional[List[str]] = None) -> List[LogEntry]:
         """Detect warning entries."""
         keywords = keywords or self.warning_keywords
-        pattern = re.compile('|'.join(keywords), re.IGNORECASE)
+        pattern = re.compile("|".join(keywords), re.IGNORECASE)
 
         warnings = []
         for entry in self.entries:
-            if entry.level in ('WARNING', 'WARN'):
+            if entry.level in ("WARNING", "WARN"):
                 warnings.append(entry)
             elif pattern.search(entry.message) or pattern.search(entry.raw):
                 if entry not in self.detect_errors():
@@ -287,7 +318,7 @@ class LogAnalyzer:
 
     def search_keywords(self, keywords: List[str], case_insensitive: bool = True) -> List[LogEntry]:
         """Search for entries containing any of the keywords."""
-        pattern = '|'.join(re.escape(kw) for kw in keywords)
+        pattern = "|".join(re.escape(kw) for kw in keywords)
         return self.search_pattern(pattern, case_insensitive)
 
     def get_context(self, entry: LogEntry, before: int = 5, after: int = 5) -> List[LogEntry]:
@@ -312,8 +343,8 @@ class LogAnalyzer:
 
         for entry in self.detect_errors():
             # Remove timestamps, numbers for grouping
-            normalized = re.sub(r'\d+', 'N', entry.message)
-            normalized = re.sub(r'0x[a-fA-F0-9]+', 'ADDR', normalized)
+            normalized = re.sub(r"\d+", "N", entry.message)
+            normalized = re.sub(r"0x[a-fA-F0-9]+", "ADDR", normalized)
             normalized = normalized[:200]  # Truncate for grouping
             counter[normalized] += 1
 
@@ -325,14 +356,14 @@ class LogAnalyzer:
 
         for entry in self.detect_errors():
             if entry.timestamp:
-                hour_key = entry.timestamp.strftime('%Y-%m-%d %H:00')
+                hour_key = entry.timestamp.strftime("%Y-%m-%d %H:00")
                 distribution[hour_key] += 1
 
         return dict(sorted(distribution.items()))
 
-    def generate_timeline(self,
-                         from_time: Optional[datetime] = None,
-                         to_time: Optional[datetime] = None) -> List[TimelineEvent]:
+    def generate_timeline(
+        self, from_time: Optional[datetime] = None, to_time: Optional[datetime] = None
+    ) -> List[TimelineEvent]:
         """Generate a timeline of significant events."""
         events = []
 
@@ -346,14 +377,16 @@ class LogAnalyzer:
                 continue
 
             # Only include errors and warnings in timeline
-            if entry.level in ('FATAL', 'CRITICAL', 'ERROR', 'ERR', 'WARNING', 'WARN'):
-                events.append(TimelineEvent(
-                    timestamp=entry.timestamp,
-                    event=entry.message[:200],
-                    source=entry.source,
-                    level=entry.level or 'UNKNOWN',
-                    line_number=entry.line_number
-                ))
+            if entry.level in ("FATAL", "CRITICAL", "ERROR", "ERR", "WARNING", "WARN"):
+                events.append(
+                    TimelineEvent(
+                        timestamp=entry.timestamp,
+                        event=entry.message[:200],
+                        source=entry.source,
+                        level=entry.level or "UNKNOWN",
+                        line_number=entry.line_number,
+                    )
+                )
 
         return sorted(events, key=lambda e: e.timestamp)
 
@@ -368,7 +401,7 @@ class LogAnalyzer:
             warning_count=len(warnings),
             entries=errors,
             frequency=self.analyze_frequency(),
-            time_distribution=self.analyze_time_distribution()
+            time_distribution=self.analyze_time_distribution(),
         )
 
     def generate_report(self, format: str = "markdown") -> str:
@@ -389,8 +422,8 @@ class LogAnalyzer:
             "",
             "## Summary",
             "",
-            f"| Metric | Value |",
-            f"|--------|-------|",
+            "| Metric | Value |",
+            "|--------|-------|",
             f"| Total Lines | {result.total_lines:,} |",
             f"| Errors | {result.error_count:,} |",
             f"| Warnings | {result.warning_count:,} |",
@@ -399,46 +432,54 @@ class LogAnalyzer:
         ]
 
         if result.frequency:
-            lines.extend([
-                "## Top Error Patterns",
-                "",
-                "| Count | Pattern |",
-                "|-------|---------|",
-            ])
+            lines.extend(
+                [
+                    "## Top Error Patterns",
+                    "",
+                    "| Count | Pattern |",
+                    "|-------|---------|",
+                ]
+            )
             for pattern, count in list(result.frequency.items())[:10]:
                 # Escape pipe characters for markdown
-                safe_pattern = pattern.replace('|', '\\|')[:100]
+                safe_pattern = pattern.replace("|", "\\|")[:100]
                 lines.append(f"| {count} | {safe_pattern} |")
             lines.append("")
 
         if result.time_distribution:
-            lines.extend([
-                "## Error Distribution by Hour",
-                "",
-                "| Time | Count |",
-                "|------|-------|",
-            ])
+            lines.extend(
+                [
+                    "## Error Distribution by Hour",
+                    "",
+                    "| Time | Count |",
+                    "|------|-------|",
+                ]
+            )
             for hour, count in list(result.time_distribution.items())[:24]:
                 lines.append(f"| {hour} | {count} |")
             lines.append("")
 
         if result.entries:
-            lines.extend([
-                "## Sample Errors",
-                "",
-            ])
+            lines.extend(
+                [
+                    "## Sample Errors",
+                    "",
+                ]
+            )
             for entry in result.entries[:10]:
-                ts = entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') if entry.timestamp else 'N/A'
-                lines.extend([
-                    f"### Line {entry.line_number} ({ts})",
-                    "",
-                    "```",
-                    entry.raw[:500],
-                    "```",
-                    "",
-                ])
+                ts = entry.timestamp.strftime("%Y-%m-%d %H:%M:%S") if entry.timestamp else "N/A"
+                lines.extend(
+                    [
+                        f"### Line {entry.line_number} ({ts})",
+                        "",
+                        "```",
+                        entry.raw[:500],
+                        "```",
+                        "",
+                    ]
+                )
 
-        return '\n'.join(lines)
+        return "\n".join(lines)
 
     def _generate_json_report(self, result: AnalysisResult) -> str:
         """Generate JSON format report."""
@@ -449,7 +490,7 @@ class LogAnalyzer:
                 "total_lines": result.total_lines,
                 "error_count": result.error_count,
                 "warning_count": result.warning_count,
-                "error_rate": result.error_count / max(result.total_lines, 1)
+                "error_rate": result.error_count / max(result.total_lines, 1),
             },
             "top_patterns": result.frequency,
             "time_distribution": result.time_distribution,
@@ -458,10 +499,10 @@ class LogAnalyzer:
                     "line_number": e.line_number,
                     "timestamp": e.timestamp.isoformat() if e.timestamp else None,
                     "level": e.level,
-                    "message": e.message[:500]
+                    "message": e.message[:500],
                 }
                 for e in result.entries[:20]
-            ]
+            ],
         }
         return json.dumps(data, indent=2, ensure_ascii=False)
 
@@ -469,6 +510,7 @@ class LogAnalyzer:
 # =============================================================================
 # Multi-Log Correlator
 # =============================================================================
+
 
 class LogCorrelator:
     """Correlate events across multiple log files."""
@@ -489,15 +531,17 @@ class LogCorrelator:
         for analyzer in self.analyzers:
             for entry in analyzer.detect_errors():
                 if entry.timestamp:
-                    all_events.append({
-                        'timestamp': entry.timestamp,
-                        'source': entry.source,
-                        'message': entry.message,
-                        'line_number': entry.line_number
-                    })
+                    all_events.append(
+                        {
+                            "timestamp": entry.timestamp,
+                            "source": entry.source,
+                            "message": entry.message,
+                            "line_number": entry.line_number,
+                        }
+                    )
 
         # Sort by timestamp
-        all_events.sort(key=lambda e: e['timestamp'])
+        all_events.sort(key=lambda e: e["timestamp"])
 
         # Find clusters within time window
         correlations = []
@@ -507,7 +551,7 @@ class LogCorrelator:
             j = i + 1
 
             while j < len(all_events):
-                delta = (all_events[j]['timestamp'] - cluster[0]['timestamp']).total_seconds()
+                delta = (all_events[j]["timestamp"] - cluster[0]["timestamp"]).total_seconds()
                 if delta <= time_window_seconds:
                     cluster.append(all_events[j])
                     j += 1
@@ -515,15 +559,17 @@ class LogCorrelator:
                     break
 
             # Only report clusters with events from multiple sources
-            sources = set(e['source'] for e in cluster)
+            sources = set(e["source"] for e in cluster)
             if len(sources) > 1:
-                correlations.append({
-                    'start_time': cluster[0]['timestamp'].isoformat(),
-                    'end_time': cluster[-1]['timestamp'].isoformat(),
-                    'sources': list(sources),
-                    'event_count': len(cluster),
-                    'events': cluster
-                })
+                correlations.append(
+                    {
+                        "start_time": cluster[0]["timestamp"].isoformat(),
+                        "end_time": cluster[-1]["timestamp"].isoformat(),
+                        "sources": list(sources),
+                        "event_count": len(cluster),
+                        "events": cluster,
+                    }
+                )
 
             i = j if j > i + 1 else i + 1
 
@@ -543,6 +589,7 @@ class LogCorrelator:
 # CLI Interface
 # =============================================================================
 
+
 def load_config(config_path: str) -> Dict:
     """Load configuration from YAML file."""
     if not YAML_AVAILABLE:
@@ -553,7 +600,7 @@ def load_config(config_path: str) -> Dict:
     if not path.exists():
         return {}
 
-    with open(path, 'r') as f:
+    with open(path, "r") as f:
         return yaml.safe_load(f) or {}
 
 
@@ -562,7 +609,7 @@ def cmd_analyze(args):
     config = load_config(args.config) if args.config else {}
     analyzer = LogAnalyzer(config)
 
-    if args.logfile == '-':
+    if args.logfile == "-":
         analyzer.load_stdin()
     else:
         analyzer.load_file(args.logfile)
@@ -576,7 +623,7 @@ def cmd_analyze(args):
     else:
         errors = analyzer.detect_errors()
         for entry in errors:
-            ts = entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') if entry.timestamp else 'N/A'
+            ts = entry.timestamp.strftime("%Y-%m-%d %H:%M:%S") if entry.timestamp else "N/A"
             print(f"[{ts}] Line {entry.line_number}: {entry.message[:200]}")
 
 
@@ -585,13 +632,13 @@ def cmd_search(args):
     config = load_config(args.config) if args.config else {}
     analyzer = LogAnalyzer(config)
 
-    if args.logfile == '-':
+    if args.logfile == "-":
         analyzer.load_stdin()
     else:
         analyzer.load_file(args.logfile)
 
     if args.keywords:
-        keywords = [k.strip() for k in args.keywords.split(',')]
+        keywords = [k.strip() for k in args.keywords.split(",")]
         results = analyzer.search_keywords(keywords)
     elif args.pattern:
         results = analyzer.search_pattern(args.pattern)
@@ -608,7 +655,7 @@ def cmd_search(args):
                 print(f"{marker} {ctx_entry.line_number}: {ctx_entry.raw}")
             print()
         else:
-            ts = entry.timestamp.strftime('%Y-%m-%d %H:%M:%S') if entry.timestamp else 'N/A'
+            ts = entry.timestamp.strftime("%Y-%m-%d %H:%M:%S") if entry.timestamp else "N/A"
             print(f"[{ts}] Line {entry.line_number}: {entry.raw[:200]}")
 
 
@@ -622,17 +669,17 @@ def cmd_timeline(args):
     to_time = None
 
     if args.from_time:
-        from_time = datetime.strptime(args.from_time, '%Y-%m-%d %H:%M')
+        from_time = datetime.strptime(args.from_time, "%Y-%m-%d %H:%M")
     if args.to_time:
-        to_time = datetime.strptime(args.to_time, '%Y-%m-%d %H:%M')
+        to_time = datetime.strptime(args.to_time, "%Y-%m-%d %H:%M")
 
     events = analyzer.generate_timeline(from_time, to_time)
 
     print("| Timestamp | Level | Source | Event |")
     print("|-----------|-------|--------|-------|")
     for event in events:
-        ts = event.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-        msg = event.event[:80].replace('|', '\\|')
+        ts = event.timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        msg = event.event[:80].replace("|", "\\|")
         print(f"| {ts} | {event.level} | {event.source} | {msg} |")
 
 
@@ -641,7 +688,7 @@ def cmd_report(args):
     config = load_config(args.config) if args.config else {}
     analyzer = LogAnalyzer(config)
 
-    if args.logfile == '-':
+    if args.logfile == "-":
         analyzer.load_stdin()
     else:
         analyzer.load_file(args.logfile)
@@ -649,7 +696,7 @@ def cmd_report(args):
     report = analyzer.generate_report(format=args.format)
 
     if args.output:
-        with open(args.output, 'w') as f:
+        with open(args.output, "w") as f:
             f.write(report)
         print(f"Report saved to: {args.output}")
     else:
@@ -665,7 +712,7 @@ def cmd_correlate(args):
 
     correlations = correlator.find_correlations(time_window_seconds=args.window)
 
-    if args.format == 'json':
+    if args.format == "json":
         print(json.dumps(correlations, indent=2, ensure_ascii=False))
     else:
         print("# Correlation Analysis\n")
@@ -678,16 +725,16 @@ def cmd_correlate(args):
                 print(f"- Sources: {', '.join(corr['sources'])}")
                 print(f"- Events: {corr['event_count']}")
                 print()
-                for event in corr['events'][:5]:
+                for event in corr["events"][:5]:
                     print(f"  - [{event['source']}] {event['message'][:100]}")
-                if len(corr['events']) > 5:
+                if len(corr["events"]) > 5:
                     print(f"  ... and {len(corr['events']) - 5} more")
                 print()
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Log Analyzer - Analyze system logs and find root causes',
+        description="Log Analyzer - Analyze system logs and find root causes",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -697,44 +744,44 @@ Examples:
   %(prog)s timeline app.log --from "2025-01-01 10:00" --to "2025-01-01 12:00"
   %(prog)s report app.log --output report.md
   %(prog)s correlate app.log nginx.log db.log --window 60
-        """
+        """,
     )
 
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # analyze command
-    p_analyze = subparsers.add_parser('analyze', help='Analyze log file for errors')
-    p_analyze.add_argument('logfile', help='Log file to analyze (use - for stdin)')
-    p_analyze.add_argument('--config', '-c', help='Configuration file (YAML)')
-    p_analyze.add_argument('--summary', '-s', action='store_true', help='Show summary only')
+    p_analyze = subparsers.add_parser("analyze", help="Analyze log file for errors")
+    p_analyze.add_argument("logfile", help="Log file to analyze (use - for stdin)")
+    p_analyze.add_argument("--config", "-c", help="Configuration file (YAML)")
+    p_analyze.add_argument("--summary", "-s", action="store_true", help="Show summary only")
 
     # search command
-    p_search = subparsers.add_parser('search', help='Search for patterns in log')
-    p_search.add_argument('logfile', help='Log file to search')
-    p_search.add_argument('--keywords', '-k', help='Comma-separated keywords to search')
-    p_search.add_argument('--pattern', '-p', help='Regex pattern to search')
-    p_search.add_argument('--context', '-C', type=int, default=0, help='Lines of context')
-    p_search.add_argument('--config', '-c', help='Configuration file (YAML)')
+    p_search = subparsers.add_parser("search", help="Search for patterns in log")
+    p_search.add_argument("logfile", help="Log file to search")
+    p_search.add_argument("--keywords", "-k", help="Comma-separated keywords to search")
+    p_search.add_argument("--pattern", "-p", help="Regex pattern to search")
+    p_search.add_argument("--context", "-C", type=int, default=0, help="Lines of context")
+    p_search.add_argument("--config", "-c", help="Configuration file (YAML)")
 
     # timeline command
-    p_timeline = subparsers.add_parser('timeline', help='Generate event timeline')
-    p_timeline.add_argument('logfile', help='Log file to analyze')
-    p_timeline.add_argument('--from', dest='from_time', help='Start time (YYYY-MM-DD HH:MM)')
-    p_timeline.add_argument('--to', dest='to_time', help='End time (YYYY-MM-DD HH:MM)')
-    p_timeline.add_argument('--config', '-c', help='Configuration file (YAML)')
+    p_timeline = subparsers.add_parser("timeline", help="Generate event timeline")
+    p_timeline.add_argument("logfile", help="Log file to analyze")
+    p_timeline.add_argument("--from", dest="from_time", help="Start time (YYYY-MM-DD HH:MM)")
+    p_timeline.add_argument("--to", dest="to_time", help="End time (YYYY-MM-DD HH:MM)")
+    p_timeline.add_argument("--config", "-c", help="Configuration file (YAML)")
 
     # report command
-    p_report = subparsers.add_parser('report', help='Generate analysis report')
-    p_report.add_argument('logfile', help='Log file to analyze (use - for stdin)')
-    p_report.add_argument('--output', '-o', help='Output file')
-    p_report.add_argument('--format', '-f', choices=['md', 'json'], default='md', help='Output format')
-    p_report.add_argument('--config', '-c', help='Configuration file (YAML)')
+    p_report = subparsers.add_parser("report", help="Generate analysis report")
+    p_report.add_argument("logfile", help="Log file to analyze (use - for stdin)")
+    p_report.add_argument("--output", "-o", help="Output file")
+    p_report.add_argument("--format", "-f", choices=["md", "json"], default="md", help="Output format")
+    p_report.add_argument("--config", "-c", help="Configuration file (YAML)")
 
     # correlate command
-    p_correlate = subparsers.add_parser('correlate', help='Correlate events across multiple logs')
-    p_correlate.add_argument('logfiles', nargs='+', help='Log files to correlate')
-    p_correlate.add_argument('--window', '-w', type=int, default=60, help='Time window in seconds')
-    p_correlate.add_argument('--format', '-f', choices=['md', 'json'], default='md', help='Output format')
+    p_correlate = subparsers.add_parser("correlate", help="Correlate events across multiple logs")
+    p_correlate.add_argument("logfiles", nargs="+", help="Log files to correlate")
+    p_correlate.add_argument("--window", "-w", type=int, default=60, help="Time window in seconds")
+    p_correlate.add_argument("--format", "-f", choices=["md", "json"], default="md", help="Output format")
 
     args = parser.parse_args()
 
@@ -743,15 +790,15 @@ Examples:
         sys.exit(1)
 
     commands = {
-        'analyze': cmd_analyze,
-        'search': cmd_search,
-        'timeline': cmd_timeline,
-        'report': cmd_report,
-        'correlate': cmd_correlate,
+        "analyze": cmd_analyze,
+        "search": cmd_search,
+        "timeline": cmd_timeline,
+        "report": cmd_report,
+        "correlate": cmd_correlate,
     }
 
     commands[args.command](args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

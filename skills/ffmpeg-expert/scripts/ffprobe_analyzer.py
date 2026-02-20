@@ -41,14 +41,7 @@ class MediaAnalyzer:
         if self._probe_data is not None:
             return self._probe_data
 
-        cmd = [
-            "ffprobe",
-            "-v", "quiet",
-            "-print_format", "json",
-            "-show_format",
-            "-show_streams",
-            self.file_path
-        ]
+        cmd = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", "-show_streams", self.file_path]
 
         try:
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
@@ -98,24 +91,26 @@ class MediaAnalyzer:
             except (ValueError, ZeroDivisionError):
                 frame_rate = 0
 
-            streams.append({
-                "index": stream.get("index"),
-                "codec_name": stream.get("codec_name", ""),
-                "codec_long_name": stream.get("codec_long_name", ""),
-                "profile": stream.get("profile", ""),
-                "width": stream.get("width", 0),
-                "height": stream.get("height", 0),
-                "resolution": f"{stream.get('width', 0)}x{stream.get('height', 0)}",
-                "pix_fmt": stream.get("pix_fmt", ""),
-                "frame_rate": frame_rate,
-                "frame_rate_str": frame_rate_str,
-                "bit_rate": int(stream.get("bit_rate", 0)),
-                "bit_rate_formatted": self._format_bitrate(int(stream.get("bit_rate", 0))),
-                "color_space": stream.get("color_space", ""),
-                "color_transfer": stream.get("color_transfer", ""),
-                "color_primaries": stream.get("color_primaries", ""),
-                "nb_frames": stream.get("nb_frames", "N/A"),
-            })
+            streams.append(
+                {
+                    "index": stream.get("index"),
+                    "codec_name": stream.get("codec_name", ""),
+                    "codec_long_name": stream.get("codec_long_name", ""),
+                    "profile": stream.get("profile", ""),
+                    "width": stream.get("width", 0),
+                    "height": stream.get("height", 0),
+                    "resolution": f"{stream.get('width', 0)}x{stream.get('height', 0)}",
+                    "pix_fmt": stream.get("pix_fmt", ""),
+                    "frame_rate": frame_rate,
+                    "frame_rate_str": frame_rate_str,
+                    "bit_rate": int(stream.get("bit_rate", 0)),
+                    "bit_rate_formatted": self._format_bitrate(int(stream.get("bit_rate", 0))),
+                    "color_space": stream.get("color_space", ""),
+                    "color_transfer": stream.get("color_transfer", ""),
+                    "color_primaries": stream.get("color_primaries", ""),
+                    "nb_frames": stream.get("nb_frames", "N/A"),
+                }
+            )
 
         return streams
 
@@ -128,18 +123,20 @@ class MediaAnalyzer:
             if stream.get("codec_type") != "audio":
                 continue
 
-            streams.append({
-                "index": stream.get("index"),
-                "codec_name": stream.get("codec_name", ""),
-                "codec_long_name": stream.get("codec_long_name", ""),
-                "profile": stream.get("profile", ""),
-                "sample_rate": int(stream.get("sample_rate", 0)),
-                "channels": stream.get("channels", 0),
-                "channel_layout": stream.get("channel_layout", ""),
-                "bit_rate": int(stream.get("bit_rate", 0)),
-                "bit_rate_formatted": self._format_bitrate(int(stream.get("bit_rate", 0))),
-                "bits_per_sample": stream.get("bits_per_sample", 0),
-            })
+            streams.append(
+                {
+                    "index": stream.get("index"),
+                    "codec_name": stream.get("codec_name", ""),
+                    "codec_long_name": stream.get("codec_long_name", ""),
+                    "profile": stream.get("profile", ""),
+                    "sample_rate": int(stream.get("sample_rate", 0)),
+                    "channels": stream.get("channels", 0),
+                    "channel_layout": stream.get("channel_layout", ""),
+                    "bit_rate": int(stream.get("bit_rate", 0)),
+                    "bit_rate_formatted": self._format_bitrate(int(stream.get("bit_rate", 0))),
+                    "bits_per_sample": stream.get("bits_per_sample", 0),
+                }
+            )
 
         return streams
 
@@ -152,12 +149,14 @@ class MediaAnalyzer:
             if stream.get("codec_type") != "subtitle":
                 continue
 
-            streams.append({
-                "index": stream.get("index"),
-                "codec_name": stream.get("codec_name", ""),
-                "codec_long_name": stream.get("codec_long_name", ""),
-                "language": stream.get("tags", {}).get("language", ""),
-            })
+            streams.append(
+                {
+                    "index": stream.get("index"),
+                    "codec_name": stream.get("codec_name", ""),
+                    "codec_long_name": stream.get("codec_long_name", ""),
+                    "language": stream.get("tags", {}).get("language", ""),
+                }
+            )
 
         return streams
 
@@ -220,45 +219,51 @@ class CompatibilityChecker:
         for vs in video_streams:
             codec = vs["codec_name"].lower()
             if codec not in self.BROWSER_COMPATIBLE_VIDEO:
-                issues.append({
-                    "severity": "error",
-                    "message": f"Video codec '{codec}' is not browser compatible",
-                    "recommendation": "Re-encode to H.264 or VP9 for browser playback"
-                })
+                issues.append(
+                    {
+                        "severity": "error",
+                        "message": f"Video codec '{codec}' is not browser compatible",
+                        "recommendation": "Re-encode to H.264 or VP9 for browser playback",
+                    }
+                )
             elif codec == "h264":
                 profile = vs.get("profile", "").lower()
                 if "high 4:4:4" in profile or "high 10" in profile:
-                    issues.append({
-                        "severity": "warning",
-                        "message": f"H.264 profile '{profile}' may not be supported in all browsers",
-                        "recommendation": "Use High, Main, or Baseline profile"
-                    })
+                    issues.append(
+                        {
+                            "severity": "warning",
+                            "message": f"H.264 profile '{profile}' may not be supported in all browsers",
+                            "recommendation": "Use High, Main, or Baseline profile",
+                        }
+                    )
 
         for aus in audio_streams:
             codec = aus["codec_name"].lower()
             if codec not in self.BROWSER_COMPATIBLE_AUDIO:
-                issues.append({
-                    "severity": "error",
-                    "message": f"Audio codec '{codec}' is not browser compatible",
-                    "recommendation": "Re-encode to AAC or MP3"
-                })
+                issues.append(
+                    {
+                        "severity": "error",
+                        "message": f"Audio codec '{codec}' is not browser compatible",
+                        "recommendation": "Re-encode to AAC or MP3",
+                    }
+                )
 
         # faststart チェック
         fmt = self.analyzer.get_format_info()
         if "mp4" in fmt["format_name"].lower() or "mov" in fmt["format_name"].lower():
             # Note: ffprobe doesn't directly report moov position
-            issues.append({
-                "severity": "info",
-                "message": "Ensure -movflags +faststart is used for streaming optimization",
-                "recommendation": "Add -movflags +faststart when encoding"
-            })
+            issues.append(
+                {
+                    "severity": "info",
+                    "message": "Ensure -movflags +faststart is used for streaming optimization",
+                    "recommendation": "Add -movflags +faststart when encoding",
+                }
+            )
 
         if not issues:
-            issues.append({
-                "severity": "ok",
-                "message": "File appears to be browser compatible",
-                "recommendation": None
-            })
+            issues.append(
+                {"severity": "ok", "message": "File appears to be browser compatible", "recommendation": None}
+            )
 
         return issues
 
@@ -271,37 +276,39 @@ class CompatibilityChecker:
         for vs in video_streams:
             codec = vs["codec_name"].lower()
             if codec not in self.MOBILE_COMPATIBLE_VIDEO:
-                issues.append({
-                    "severity": "error",
-                    "message": f"Video codec '{codec}' may not play on mobile devices",
-                    "recommendation": "Re-encode to H.264 for maximum compatibility"
-                })
+                issues.append(
+                    {
+                        "severity": "error",
+                        "message": f"Video codec '{codec}' may not play on mobile devices",
+                        "recommendation": "Re-encode to H.264 for maximum compatibility",
+                    }
+                )
 
             # 解像度チェック
             width = vs.get("width", 0)
             height = vs.get("height", 0)
             if width > 3840 or height > 2160:
-                issues.append({
-                    "severity": "warning",
-                    "message": f"Resolution {width}x{height} may be too high for some devices",
-                    "recommendation": "Consider providing lower resolution versions"
-                })
+                issues.append(
+                    {
+                        "severity": "warning",
+                        "message": f"Resolution {width}x{height} may be too high for some devices",
+                        "recommendation": "Consider providing lower resolution versions",
+                    }
+                )
 
         for aus in audio_streams:
             codec = aus["codec_name"].lower()
             if codec not in self.MOBILE_COMPATIBLE_AUDIO:
-                issues.append({
-                    "severity": "warning",
-                    "message": f"Audio codec '{codec}' may not play on some mobile devices",
-                    "recommendation": "Re-encode to AAC for maximum compatibility"
-                })
+                issues.append(
+                    {
+                        "severity": "warning",
+                        "message": f"Audio codec '{codec}' may not play on some mobile devices",
+                        "recommendation": "Re-encode to AAC for maximum compatibility",
+                    }
+                )
 
         if not issues:
-            issues.append({
-                "severity": "ok",
-                "message": "File appears to be mobile compatible",
-                "recommendation": None
-            })
+            issues.append({"severity": "ok", "message": "File appears to be mobile compatible", "recommendation": None})
 
         return issues
 
@@ -345,8 +352,8 @@ class EncodingRecommender:
             "notes": [
                 "faststart有効でストリーミング開始が高速",
                 "yuv420pで最大互換性",
-                "CRF 23は品質とサイズのバランス"
-            ]
+                "CRF 23は品質とサイズのバランス",
+            ],
         }
 
     def recommend_for_mobile(self) -> Dict[str, Any]:
@@ -369,11 +376,7 @@ class EncodingRecommender:
             "description": "モバイル用最適化（720p + 低ビットレート）",
             "command": command,
             "estimated_size": MediaAnalyzer._format_size(estimated_size),
-            "notes": [
-                "720p解像度でデータ通信量削減",
-                "CRF 26で高圧縮",
-                "音声96kbpsでモバイル品質十分"
-            ]
+            "notes": ["720p解像度でデータ通信量削減", "CRF 26で高圧縮", "音声96kbpsでモバイル品質十分"],
         }
 
     def recommend_for_archive(self) -> Dict[str, Any]:
@@ -394,11 +397,7 @@ class EncodingRecommender:
             "description": "アーカイブ用高品質（H.265 + FLAC）",
             "command": command,
             "estimated_size": MediaAnalyzer._format_size(estimated_size),
-            "notes": [
-                "H.265で高圧縮・高品質",
-                "FLACでロスレス音声",
-                "slowプリセットで最高圧縮効率"
-            ]
+            "notes": ["H.265で高圧縮・高品質", "FLACでロスレス音声", "slowプリセットで最高圧縮効率"],
         }
 
     def recommend_for_streaming(self) -> Dict[str, Any]:
@@ -419,13 +418,12 @@ class EncodingRecommender:
             "notes": [
                 "10秒セグメント",
                 "全セグメントをプレイリストに含む",
-                "アダプティブビットレートには別途設定が必要"
-            ]
+                "アダプティブビットレートには別途設定が必要",
+            ],
         }
 
 
-def generate_report(analyzer: MediaAnalyzer, use_case: Optional[str] = None,
-                    suggest_commands: bool = False) -> str:
+def generate_report(analyzer: MediaAnalyzer, use_case: Optional[str] = None, suggest_commands: bool = False) -> str:
     """Markdownレポートを生成"""
     md = []
 
@@ -460,13 +458,13 @@ def generate_report(analyzer: MediaAnalyzer, use_case: Optional[str] = None,
             md.append("| Property | Value |")
             md.append("|----------|-------|")
             md.append(f"| Codec | {vs['codec_name']} ({vs['codec_long_name']}) |")
-            if vs['profile']:
+            if vs["profile"]:
                 md.append(f"| Profile | {vs['profile']} |")
             md.append(f"| Resolution | {vs['resolution']} |")
             md.append(f"| Frame Rate | {vs['frame_rate']} fps |")
             md.append(f"| Bitrate | {vs['bit_rate_formatted']} |")
             md.append(f"| Pixel Format | {vs['pix_fmt']} |")
-            if vs['color_space']:
+            if vs["color_space"]:
                 md.append(f"| Color Space | {vs['color_space']} |")
             md.append("")
 
@@ -504,8 +502,7 @@ def generate_report(analyzer: MediaAnalyzer, use_case: Optional[str] = None,
     md.append("### Browser Compatibility")
     md.append("")
     for issue in checker.check_browser_compatibility():
-        icon = {"ok": "[OK]", "info": "[INFO]", "warning": "[WARN]", "error": "[ERR]"}.get(
-            issue["severity"], "[?]")
+        icon = {"ok": "[OK]", "info": "[INFO]", "warning": "[WARN]", "error": "[ERR]"}.get(issue["severity"], "[?]")
         md.append(f"- {icon} {issue['message']}")
         if issue["recommendation"]:
             md.append(f"  - Recommendation: {issue['recommendation']}")
@@ -514,8 +511,7 @@ def generate_report(analyzer: MediaAnalyzer, use_case: Optional[str] = None,
     md.append("### Mobile Compatibility")
     md.append("")
     for issue in checker.check_mobile_compatibility():
-        icon = {"ok": "[OK]", "info": "[INFO]", "warning": "[WARN]", "error": "[ERR]"}.get(
-            issue["severity"], "[?]")
+        icon = {"ok": "[OK]", "info": "[INFO]", "warning": "[WARN]", "error": "[ERR]"}.get(issue["severity"], "[?]")
         md.append(f"- {icon} {issue['message']}")
         if issue["recommendation"]:
             md.append(f"  - Recommendation: {issue['recommendation']}")
@@ -549,14 +545,14 @@ def generate_report(analyzer: MediaAnalyzer, use_case: Optional[str] = None,
             md.append(f"### {rec['description']}")
             md.append("")
             md.append("```bash")
-            md.append(rec['command'])
+            md.append(rec["command"])
             md.append("```")
             md.append("")
             md.append(f"**Estimated Size:** {rec['estimated_size']}")
             md.append("")
-            if rec['notes']:
+            if rec["notes"]:
                 md.append("**Notes:**")
-                for note in rec['notes']:
+                for note in rec["notes"]:
                     md.append(f"- {note}")
                 md.append("")
 
@@ -573,33 +569,21 @@ Examples:
     python ffprobe_analyzer.py video.mp4 --use-case web --suggest-commands
     python ffprobe_analyzer.py video.mp4 --output report.md
     python ffprobe_analyzer.py video.mp4 --format json
-        """
+        """,
     )
 
+    parser.add_argument("input_file", help="Input media file path")
+    parser.add_argument("--output", "-o", help="Output file path (default: stdout)")
     parser.add_argument(
-        "input_file",
-        help="Input media file path"
+        "--format", "-f", choices=["markdown", "json"], default="markdown", help="Output format (default: markdown)"
     )
     parser.add_argument(
-        "--output", "-o",
-        help="Output file path (default: stdout)"
-    )
-    parser.add_argument(
-        "--format", "-f",
-        choices=["markdown", "json"],
-        default="markdown",
-        help="Output format (default: markdown)"
-    )
-    parser.add_argument(
-        "--use-case", "-u",
+        "--use-case",
+        "-u",
         choices=["web", "mobile", "archive", "streaming"],
-        help="Specific use case for recommendations"
+        help="Specific use case for recommendations",
     )
-    parser.add_argument(
-        "--suggest-commands", "-s",
-        action="store_true",
-        help="Include encoding command suggestions"
-    )
+    parser.add_argument("--suggest-commands", "-s", action="store_true", help="Include encoding command suggestions")
 
     args = parser.parse_args()
 
@@ -622,11 +606,7 @@ Examples:
             }
             output = json.dumps(result, indent=2, ensure_ascii=False)
         else:
-            output = generate_report(
-                analyzer,
-                use_case=args.use_case,
-                suggest_commands=args.suggest_commands
-            )
+            output = generate_report(analyzer, use_case=args.use_case, suggest_commands=args.suggest_commands)
 
         if args.output:
             with open(args.output, "w", encoding="utf-8") as f:

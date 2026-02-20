@@ -13,7 +13,6 @@ Example:
 """
 
 import argparse
-import sys
 import json
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -32,21 +31,21 @@ class FlowExtractor:
     def extract_variables(self) -> List[Dict]:
         """Extract all variables"""
         variables = []
-        for var in self.root.findall('.//variables'):
-            name_elem = var.find('name')
+        for var in self.root.findall(".//variables"):
+            name_elem = var.find("name")
             if name_elem is None:
                 continue
 
             var_info = {
-                'name': name_elem.text,
-                'dataType': self._get_elem_text(var, 'dataType', 'String'),
-                'isInput': self._get_elem_text(var, 'isInput', 'false') == 'true',
-                'isOutput': self._get_elem_text(var, 'isOutput', 'false') == 'true',
-                'isCollection': self._get_elem_text(var, 'isCollection', 'false') == 'true',
+                "name": name_elem.text,
+                "dataType": self._get_elem_text(var, "dataType", "String"),
+                "isInput": self._get_elem_text(var, "isInput", "false") == "true",
+                "isOutput": self._get_elem_text(var, "isOutput", "false") == "true",
+                "isCollection": self._get_elem_text(var, "isCollection", "false") == "true",
             }
 
-            if var_info['dataType'] == 'SObject':
-                var_info['objectType'] = self._get_elem_text(var, 'objectType', '')
+            if var_info["dataType"] == "SObject":
+                var_info["objectType"] = self._get_elem_text(var, "objectType", "")
 
             variables.append(var_info)
 
@@ -55,21 +54,21 @@ class FlowExtractor:
     def extract_elements(self) -> Dict[str, List[str]]:
         """Extract all Flow elements by type"""
         element_types = {
-            'screens': [],
-            'assignments': [],
-            'decisions': [],
-            'recordCreates': [],
-            'recordUpdates': [],
-            'recordDeletes': [],
-            'recordLookups': [],
-            'loops': [],
-            'subflows': [],
-            'actionCalls': [],
+            "screens": [],
+            "assignments": [],
+            "decisions": [],
+            "recordCreates": [],
+            "recordUpdates": [],
+            "recordDeletes": [],
+            "recordLookups": [],
+            "loops": [],
+            "subflows": [],
+            "actionCalls": [],
         }
 
         for elem_type in element_types.keys():
-            for elem in self.root.findall(f'.//{elem_type}'):
-                name_elem = elem.find('name')
+            for elem in self.root.findall(f".//{elem_type}"):
+                name_elem = elem.find("name")
                 if name_elem is not None and name_elem.text:
                     element_types[elem_type].append(name_elem.text)
 
@@ -79,57 +78,51 @@ class FlowExtractor:
         """Extract connections between elements"""
         connections = []
 
-        for elem in self.root.findall('.//*'):
-            elem_name = self._get_elem_text(elem, 'name')
+        for elem in self.root.findall(".//*"):
+            elem_name = self._get_elem_text(elem, "name")
             if not elem_name:
                 continue
 
             # Find connectors
-            for connector in elem.findall('.//connector'):
-                target = self._get_elem_text(connector, 'targetReference')
+            for connector in elem.findall(".//connector"):
+                target = self._get_elem_text(connector, "targetReference")
                 if target:
-                    connections.append({
-                        'from': elem_name,
-                        'to': target
-                    })
+                    connections.append({"from": elem_name, "to": target})
 
             # Find targetReference (in choices, etc.)
-            for target_ref in elem.findall('.//targetReference'):
+            for target_ref in elem.findall(".//targetReference"):
                 if target_ref.text and target_ref.text.strip():
-                    connections.append({
-                        'from': elem_name,
-                        'to': target_ref.text
-                    })
+                    connections.append({"from": elem_name, "to": target_ref.text})
 
         return connections
 
-    def _get_elem_text(self, parent: ET.Element, tag: str, default: str = '') -> str:
+    def _get_elem_text(self, parent: ET.Element, tag: str, default: str = "") -> str:
         """Get text from child element"""
         elem = parent.find(tag)
         return elem.text if elem is not None and elem.text else default
 
-    def export(self, format: str = 'json') -> str:
+    def export(self, format: str = "json") -> str:
         """Export Flow structure in specified format"""
         variables = self.extract_variables()
         elements = self.extract_elements()
         connections = self.extract_connections()
 
         data = {
-            'flowFile': str(self.flow_file.name),
-            'variables': variables,
-            'elements': elements,
-            'connections': connections,
-            'summary': {
-                'totalVariables': len(variables),
-                'totalElements': sum(len(elems) for elems in elements.values()),
-                'totalConnections': len(connections)
-            }
+            "flowFile": str(self.flow_file.name),
+            "variables": variables,
+            "elements": elements,
+            "connections": connections,
+            "summary": {
+                "totalVariables": len(variables),
+                "totalElements": sum(len(elems) for elems in elements.values()),
+                "totalConnections": len(connections),
+            },
         }
 
-        if format == 'json':
+        if format == "json":
             return json.dumps(data, indent=2)
 
-        elif format == 'yaml':
+        elif format == "yaml":
             # Simple YAML-like format
             lines = []
             lines.append(f"flowFile: {data['flowFile']}")
@@ -147,13 +140,13 @@ class FlowExtractor:
                     for elem_name in elem_list:
                         lines.append(f"    - {elem_name}")
             lines.append("")
-            lines.append(f"summary:")
+            lines.append("summary:")
             lines.append(f"  totalVariables: {data['summary']['totalVariables']}")
             lines.append(f"  totalElements: {data['summary']['totalElements']}")
             lines.append(f"  totalConnections: {data['summary']['totalConnections']}")
-            return '\n'.join(lines)
+            return "\n".join(lines)
 
-        elif format == 'markdown':
+        elif format == "markdown":
             lines = []
             lines.append(f"# Flow Structure: {data['flowFile']}")
             lines.append("")
@@ -173,7 +166,9 @@ class FlowExtractor:
                 lines.append("| Name | Type | Collection | Input | Output |")
                 lines.append("|------|------|------------|-------|--------|")
                 for var in variables:
-                    lines.append(f"| {var['name']} | {var['dataType']} | {var['isCollection']} | {var['isInput']} | {var['isOutput']} |")
+                    lines.append(
+                        f"| {var['name']} | {var['dataType']} | {var['isCollection']} | {var['isInput']} | {var['isOutput']} |"
+                    )
                 lines.append("")
 
             # Elements
@@ -196,11 +191,11 @@ class FlowExtractor:
                 for conn in connections[:50]:  # Limit to first 50
                     lines.append(f"| {conn['from']} | {conn['to']} |")
                 if len(connections) > 50:
-                    lines.append(f"| ... | ... |")
+                    lines.append("| ... | ... |")
                     lines.append(f"| *({len(connections) - 50} more connections)* | |")
                 lines.append("")
 
-            return '\n'.join(lines)
+            return "\n".join(lines)
 
         else:
             return json.dumps(data, indent=2)
@@ -208,7 +203,7 @@ class FlowExtractor:
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Extract and analyze Flow structure',
+        description="Extract and analyze Flow structure",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -220,12 +215,13 @@ Examples:
 
   # Save to file
   python3 extract_flow_elements.py MyFlow.flow-meta.xml --output-format markdown > flow_doc.md
-        """
+        """,
     )
 
-    parser.add_argument('flow_file', help='Path to Flow XML file')
-    parser.add_argument('--output-format', choices=['json', 'yaml', 'markdown'],
-                       default='json', help='Output format (default: json)')
+    parser.add_argument("flow_file", help="Path to Flow XML file")
+    parser.add_argument(
+        "--output-format", choices=["json", "yaml", "markdown"], default="json", help="Output format (default: json)"
+    )
 
     args = parser.parse_args()
 
@@ -236,5 +232,5 @@ Examples:
     print(output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -180,4 +180,3 @@ https://crmcog.com/sfdx-soql-export-file/
 [13] [14] [15] Manipulate Data with the Salesforce CLI | Salesforce Developers Blog
 
 https://developer.salesforce.com/blogs/2024/02/manipulate-data-with-the-salesforce-cli
-

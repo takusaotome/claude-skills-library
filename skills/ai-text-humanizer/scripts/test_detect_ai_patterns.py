@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Tests for AI pattern detector — TDD RED/GREEN approach."""
 
-import unittest
-import sys
 import os
+import sys
+import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -165,10 +165,7 @@ class TestPattern3ExhaustiveListing(unittest.TestCase):
         self.detector = AIPatternDetector()
 
     def test_exhaustive_listing_detected(self):
-        text = (
-            "戦略的な計画、組織的な実行、継続的な改善が必要です。\n\n"
-            "品質管理、コスト削減、納期短縮を実現しました。"
-        )
+        text = "戦略的な計画、組織的な実行、継続的な改善が必要です。\n\n品質管理、コスト削減、納期短縮を実現しました。"
         result = self.detector.detect_all(text)
         p3 = result.pattern_results[2]
         self.assertTrue(

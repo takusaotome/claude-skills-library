@@ -7,7 +7,7 @@ class SlideVisualReviewer {
     this.htmlFilePath = path.resolve(htmlFilePath);
     this.outputDir = path.resolve(outputDir);
     this.issues = [];
-    
+
     // 重要なレイアウトエリア定義
     this.reviewAreas = {
       footerZone: { y: 620, height: 100 },   // フッター部分（底部100px）
@@ -15,7 +15,7 @@ class SlideVisualReviewer {
       headerZone: { y: 0, height: 50 },      // ヘッダーエリア
       safeZone: { y: 50, height: 520 }       // フッターから安全な距離を保ったエリア（100px確保）
     };
-    
+
     // Puppeteer設定
     this.puppeteerConfig = {
       viewport: { width: 1280, height: 720 },
@@ -29,7 +29,7 @@ class SlideVisualReviewer {
     if (!fs.existsSync(this.outputDir)) {
       fs.mkdirSync(this.outputDir, { recursive: true });
     }
-    
+
     // HTMLファイル存在確認
     if (!fs.existsSync(this.htmlFilePath)) {
       throw new Error(`HTML file not found: ${this.htmlFilePath}`);
@@ -38,46 +38,46 @@ class SlideVisualReviewer {
 
   async reviewSlides() {
     await this.initialize();
-    
+
     const browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox', '--disable-dev-shm-usage']
     });
-    
+
     try {
       const page = await browser.newPage();
       await page.setViewport(this.puppeteerConfig.viewport);
-      
+
       // HTMLファイルを開く
       const fileUrl = `file://${this.htmlFilePath}`;
       await page.goto(fileUrl, { waitUntil: 'networkidle0' });
-      
+
       // スライド数を取得
       const slideCount = await page.evaluate(() => {
         const slides = document.querySelectorAll('section');
         return slides.length;
       });
-      
+
       console.log(`Found ${slideCount} slides to review`);
-      
+
       // 各スライドをレビュー
       for (let i = 0; i < slideCount; i++) {
         await this.reviewSlide(page, i + 1);
       }
-      
+
       // レビューレポート生成
       await this.generateReport();
-      
+
     } finally {
       await browser.close();
     }
-    
+
     return this.issues;
   }
-  
+
   async reviewSlide(page, slideNumber) {
     console.log(`Reviewing slide ${slideNumber}...`);
-    
+
     // スライドに移動（MARPのナビゲーション）
     if (slideNumber > 1) {
       for (let i = 1; i < slideNumber; i++) {
@@ -85,25 +85,25 @@ class SlideVisualReviewer {
         await page.waitForTimeout(500);
       }
     }
-    
+
     // スクリーンショット撮影
     const screenshotPath = path.join(this.outputDir, `slide-${slideNumber}.png`);
     await page.screenshot({
       path: screenshotPath,
       clip: { x: 0, y: 0, width: 1280, height: 720 }
     });
-    
+
     // DOM要素分析
     const analysis = await page.evaluate((areas) => {
       const elements = Array.from(document.querySelectorAll('section.active *'));
       const footerOverlaps = [];
       const contentOverflows = [];
-      
+
       elements.forEach((el, index) => {
         const rect = el.getBoundingClientRect();
         const tagName = el.tagName.toLowerCase();
         const content = el.textContent ? el.textContent.trim().substring(0, 50) : '';
-        
+
         // フッターエリア（底部80px）との重複チェック
         if (rect.bottom > areas.footerZone.y && rect.top < areas.footerZone.y + areas.footerZone.height) {
           footerOverlaps.push({
@@ -118,7 +118,7 @@ class SlideVisualReviewer {
             overlapHeight: Math.round(rect.bottom - areas.footerZone.y)
           });
         }
-        
+
         // コンテンツがスライド境界を超えているかチェック
         if (rect.right > 1280 || rect.bottom > 720 || rect.left < 0 || rect.top < 0) {
           contentOverflows.push({
@@ -133,10 +133,10 @@ class SlideVisualReviewer {
           });
         }
       });
-      
+
       return { footerOverlaps, contentOverflows };
     }, this.reviewAreas);
-    
+
     // 問題を記録
     if (analysis.footerOverlaps.length > 0) {
       this.issues.push({
@@ -148,7 +148,7 @@ class SlideVisualReviewer {
         screenshot: screenshotPath
       });
     }
-    
+
     if (analysis.contentOverflows.length > 0) {
       this.issues.push({
         slide: slideNumber,
@@ -159,30 +159,30 @@ class SlideVisualReviewer {
         screenshot: screenshotPath
       });
     }
-    
+
     // スライド品質スコア計算
     const qualityScore = this.calculateQualityScore(analysis);
     console.log(`Slide ${slideNumber} quality score: ${qualityScore}/100`);
-    
+
     return analysis;
   }
-  
+
   calculateQualityScore(analysis) {
     let score = 100;
-    
+
     // フッター重複: -20点 per overlap
     score -= analysis.footerOverlaps.length * 20;
-    
+
     // コンテンツオーバーフロー: -10点 per overflow
     score -= analysis.contentOverflows.length * 10;
-    
+
     return Math.max(0, score);
   }
-  
+
   async generateReport() {
     const reportPath = path.join(this.outputDir, 'review-report.json');
     const htmlReportPath = path.join(this.outputDir, 'review-report.html');
-    
+
     // JSON レポート
     const report = {
       timestamp: new Date().toISOString(),
@@ -191,18 +191,18 @@ class SlideVisualReviewer {
       issuesByType: this.groupIssuesByType(),
       issues: this.issues
     };
-    
+
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    
+
     // HTML レポート生成
     const htmlReport = this.generateHtmlReport(report);
     fs.writeFileSync(htmlReportPath, htmlReport);
-    
+
     console.log(`\nReview completed!`);
     console.log(`- Total issues found: ${this.issues.length}`);
     console.log(`- Report saved to: ${reportPath}`);
     console.log(`- HTML report: ${htmlReportPath}`);
-    
+
     if (this.issues.length > 0) {
       console.log(`\nIssues by type:`);
       Object.entries(this.groupIssuesByType()).forEach(([type, count]) => {
@@ -210,14 +210,14 @@ class SlideVisualReviewer {
       });
     }
   }
-  
+
   groupIssuesByType() {
     return this.issues.reduce((acc, issue) => {
       acc[issue.type] = (acc[issue.type] || 0) + 1;
       return acc;
     }, {});
   }
-  
+
   generateHtmlReport(report) {
     return `
 <!DOCTYPE html>
@@ -245,20 +245,20 @@ class SlideVisualReviewer {
         <p><strong>File:</strong> ${report.htmlFile}</p>
         <p><strong>Generated:</strong> ${new Date(report.timestamp).toLocaleString()}</p>
     </div>
-    
+
     <div class="summary">
         <h2>📊 Summary</h2>
         <p><strong>Total Issues:</strong> ${report.totalIssues}</p>
         <ul>
-            ${Object.entries(report.issuesByType).map(([type, count]) => 
+            ${Object.entries(report.issuesByType).map(([type, count]) =>
               `<li><strong>${type}:</strong> ${count}</li>`
             ).join('')}
         </ul>
     </div>
-    
+
     <div class="issues">
         <h2>🚨 Issues Found</h2>
-        ${report.issues.length === 0 ? '<p>✅ No issues found! Great job!</p>' : 
+        ${report.issues.length === 0 ? '<p>✅ No issues found! Great job!</p>' :
           report.issues.map(issue => `
             <div class="issue ${issue.severity}">
                 <h3>Slide ${issue.slide}: ${issue.description}</h3>
@@ -280,7 +280,7 @@ class SlideVisualReviewer {
 // コマンドライン実行
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0) {
     console.log(`
 Usage: node visual-review.js <html-file-path> [output-directory]
@@ -291,14 +291,14 @@ Examples:
     `);
     process.exit(1);
   }
-  
+
   const htmlFile = args[0];
   const outputDir = args[1] || './review-output';
-  
+
   try {
     const reviewer = new SlideVisualReviewer(htmlFile, outputDir);
     const issues = await reviewer.reviewSlides();
-    
+
     process.exit(issues.length > 0 ? 1 : 0);
   } catch (error) {
     console.error('Error during visual review:', error);

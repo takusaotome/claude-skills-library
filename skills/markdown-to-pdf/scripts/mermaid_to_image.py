@@ -17,7 +17,6 @@ Usage:
 """
 
 import argparse
-import os
 import sys
 from pathlib import Path
 
@@ -30,14 +29,10 @@ from mermaid_renderer import MermaidBackend, MermaidRenderer
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Convert Mermaid diagrams to high-quality images"
-    )
+    parser = argparse.ArgumentParser(description="Convert Mermaid diagrams to high-quality images")
     parser.add_argument("input", nargs="?", help="Input Mermaid file (.mmd)")
     parser.add_argument("output", help="Output image file")
-    parser.add_argument(
-        "--code", help="Mermaid code string (alternative to input file)"
-    )
+    parser.add_argument("--code", help="Mermaid code string (alternative to input file)")
     parser.add_argument(
         "--format",
         choices=["png", "svg"],
@@ -50,9 +45,7 @@ def main():
         default="default",
         help="Mermaid theme",
     )
-    parser.add_argument(
-        "--background", default="white", help="Background color (default: white)"
-    )
+    parser.add_argument("--background", default="white", help="Background color (default: white)")
     parser.add_argument(
         "--width",
         type=int,
@@ -124,7 +117,7 @@ def main():
         print(f"  Backend: {result.backend_used}")
         sys.exit(0)
     else:
-        print(f"Failed to convert Mermaid diagram", file=sys.stderr)
+        print("Failed to convert Mermaid diagram", file=sys.stderr)
         if result.error_message:
             print(f"  Error: {result.error_message}", file=sys.stderr)
         if result.fix_suggestion:

@@ -9,10 +9,11 @@ Usage:
     4. Run with: streamlit run app.py
 """
 
-import streamlit as st
 from datetime import datetime
 from typing import Optional
+
 import pandas as pd
+import streamlit as st
 
 # ============================================================================
 # Configuration
@@ -215,14 +216,10 @@ def show_dashboard_page():
         col1, col2 = st.columns(2)
 
         with col1:
-            date_range = st.date_input(
-                "Date Range", value=(datetime(2024, 1, 1), datetime(2024, 12, 31))
-            )
+            date_range = st.date_input("Date Range", value=(datetime(2024, 1, 1), datetime(2024, 12, 31)))
 
         with col2:
-            categories = st.multiselect(
-                "Categories", options=["A", "B", "C", "D"], default=["A", "B"]
-            )
+            categories = st.multiselect("Categories", options=["A", "B", "C", "D"], default=["A", "B"])
 
     # Load data
     df = load_data("main_data")
@@ -258,9 +255,7 @@ def show_settings_page():
         theme = st.selectbox(
             "Theme",
             options=["auto", "light", "dark"],
-            index=["auto", "light", "dark"].index(
-                st.session_state.user_preferences["theme"]
-            ),
+            index=["auto", "light", "dark"].index(st.session_state.user_preferences["theme"]),
         )
 
         page_size = st.number_input(

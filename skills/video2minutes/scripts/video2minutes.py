@@ -76,6 +76,7 @@ PROMPT_TEMPLATE = """##### ① ロール定義（変更不要）
 <<Transcript>>
 """
 
+
 # ---------------------------------------------------------------------------
 # ユーティリティ関数
 # ---------------------------------------------------------------------------
@@ -179,7 +180,7 @@ def strip_code_fence(md: str) -> str:
 
 def is_reasoning_model(model: str) -> bool:
     """Check if model is a reasoning model (o1/o3/o4 series)."""
-    return model.startswith('o1') or model.startswith('o3') or model.startswith('o4')
+    return model.startswith("o1") or model.startswith("o3") or model.startswith("o4")
 
 
 def call_chat_completion(prompt: str, prefer_model: str) -> str:
@@ -237,7 +238,7 @@ def generate_minutes(
         context_section=context_section,
         transcript=transcript_text.strip(),
     )
-    
+
     minutes_md = strip_code_fence(call_chat_completion(prompt, model))
     minutes_out.write_text(minutes_md, encoding="utf-8")
     print(f"✓ Minutes saved → {minutes_out}")
@@ -247,24 +248,27 @@ def generate_minutes(
 # CLI
 # ---------------------------------------------------------------------------
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(
-        description="Extract audio, transcribe, and generate meeting minutes from video"
-    )
-    
+    p = argparse.ArgumentParser(description="Extract audio, transcribe, and generate meeting minutes from video")
+
     # 入力ファイル
     p.add_argument("-i", "--input", type=Path, required=True, help="Input video/audio file")
-    
+
     # 会議情報
     p.add_argument("--meeting-name", help="Meeting title (default: input filename)")
     p.add_argument("--date", required=True, help="Meeting date (YYYY-MM-DD)")
     p.add_argument("--attendees", required=True, help="Comma/semicolon-separated attendee list")
-    
+
     # 出力設定
-    p.add_argument("--transcript-dir", type=Path, default=Path("transcript"),
-                   help="Directory for transcript output (default: transcript)")
-    p.add_argument("--minutes-dir", type=Path, default=Path("minutes"),
-                   help="Directory for minutes output (default: minutes)")
-    
+    p.add_argument(
+        "--transcript-dir",
+        type=Path,
+        default=Path("transcript"),
+        help="Directory for transcript output (default: transcript)",
+    )
+    p.add_argument(
+        "--minutes-dir", type=Path, default=Path("minutes"), help="Directory for minutes output (default: minutes)"
+    )
+
     # オプション設定
     p.add_argument("--language", default="ja", help="ISO 639-1 language code (default: ja)")
     p.add_argument("--bitrate", type=int, default=30, help="MP3 bitrate kbps (default: 30)")
@@ -281,29 +285,29 @@ def parse_args() -> argparse.Namespace:
 # ---------------------------------------------------------------------------
 def main() -> None:
     args = parse_args()
-    
+
     # 入力ファイルの確認
     video_path = args.input.expanduser().resolve()
     if not video_path.exists():
         sys.exit(f"Input not found: {video_path}")
-    
+
     # 会議名の決定
     meeting_name = args.meeting_name or video_path.stem
     safe_name = sanitize_filename(meeting_name)
-    
+
     # 出力ディレクトリの作成
     ensure_dir(args.transcript_dir)
     ensure_dir(args.minutes_dir)
-    
+
     # 出力ファイルパスの決定
     audio_out = derive_name(video_path, f"{args.bitrate}k", ".mp3")
     transcript_out = args.transcript_dir / f"{safe_name}_transcript.txt"
     minutes_out = args.minutes_dir / f"{safe_name}.md"
-    
+
     try:
         print("=== Step 1/3: 音声抽出 (FFmpeg) ===")
         extract_audio(video_path, audio_out, bitrate_kbps=args.bitrate)
-        
+
         print("\n=== Step 2/3: 文字起こし (Whisper API) ===")
         transcribe_api(
             audio_out,
@@ -312,7 +316,7 @@ def main() -> None:
             response_format="text",
             api_key=args.api_key,
         )
-        
+
         print("\n=== Step 3/3: 議事録生成 (Chat API) ===")
         transcript_text = transcript_out.read_text(encoding="utf-8")
         generate_minutes(
@@ -324,11 +328,11 @@ def main() -> None:
             context=args.context,
             model=args.model,
         )
-        
+
         print("\n✓ 処理完了!")
         print(f"  - 文字起こし: {transcript_out}")
         print(f"  - 議事録: {minutes_out}")
-        
+
     finally:
         # 中間ファイルの削除（オプション）
         if not args.keep_audio and audio_out.exists():

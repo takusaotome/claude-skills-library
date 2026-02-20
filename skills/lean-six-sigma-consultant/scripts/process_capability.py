@@ -10,15 +10,16 @@ Usage:
 """
 
 import argparse
-import math
 import json
-from typing import List, Dict, Tuple, Optional
-from dataclasses import dataclass
+import math
 import sys
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
 
 try:
     import numpy as np
     from scipy import stats
+
     HAS_NUMPY = True
 except ImportError:
     HAS_NUMPY = False
@@ -27,6 +28,7 @@ except ImportError:
 @dataclass
 class SpecificationLimits:
     """Specification limits for process capability."""
+
     usl: float  # Upper Specification Limit
     lsl: float  # Lower Specification Limit
     target: Optional[float] = None  # Target value (defaults to midpoint)
@@ -49,8 +51,7 @@ class ProcessCapabilityAnalyzer:
     - Cpm (Taguchi capability index)
     """
 
-    def __init__(self, data: List[float], specs: SpecificationLimits,
-                 subgroup_size: int = 1):
+    def __init__(self, data: List[float], specs: SpecificationLimits, subgroup_size: int = 1):
         """
         Initialize analyzer with data and specifications.
 
@@ -99,8 +100,7 @@ class ProcessCapabilityAnalyzer:
             avg_range = np.mean(ranges)
 
             # d2 constants for different subgroup sizes
-            d2_table = {2: 1.128, 3: 1.693, 4: 2.059, 5: 2.326,
-                        6: 2.534, 7: 2.704, 8: 2.847, 9: 2.970, 10: 3.078}
+            d2_table = {2: 1.128, 3: 1.693, 4: 2.059, 5: 2.326, 6: 2.534, 7: 2.704, 8: 2.847, 9: 2.970, 10: 3.078}
             d2 = d2_table.get(self.subgroup_size, 3.078)
 
             return avg_range / d2
@@ -163,7 +163,7 @@ class ProcessCapabilityAnalyzer:
         """
         cp = self.calculate_cp()
         deviation_ratio = (self.mean - self.specs.target) / self.std_within
-        return cp / math.sqrt(1 + deviation_ratio ** 2)
+        return cp / math.sqrt(1 + deviation_ratio**2)
 
     def calculate_sigma_level(self) -> float:
         """
@@ -211,45 +211,45 @@ class ProcessCapabilityAnalyzer:
         """
         if cpk >= 2.0:
             return {
-                'rating': 'Excellent (World Class)',
-                'description': 'Process is highly capable with excellent control',
-                'recommendation': 'Maintain current controls, consider reducing inspection',
-                'color': 'GREEN'
+                "rating": "Excellent (World Class)",
+                "description": "Process is highly capable with excellent control",
+                "recommendation": "Maintain current controls, consider reducing inspection",
+                "color": "GREEN",
             }
         elif cpk >= 1.67:
             return {
-                'rating': 'Good',
-                'description': 'Process meets Six Sigma requirements',
-                'recommendation': 'Continue monitoring, look for optimization opportunities',
-                'color': 'GREEN'
+                "rating": "Good",
+                "description": "Process meets Six Sigma requirements",
+                "recommendation": "Continue monitoring, look for optimization opportunities",
+                "color": "GREEN",
             }
         elif cpk >= 1.33:
             return {
-                'rating': 'Acceptable',
-                'description': 'Process is capable but has room for improvement',
-                'recommendation': 'Monitor closely, implement improvements when possible',
-                'color': 'YELLOW'
+                "rating": "Acceptable",
+                "description": "Process is capable but has room for improvement",
+                "recommendation": "Monitor closely, implement improvements when possible",
+                "color": "YELLOW",
             }
         elif cpk >= 1.0:
             return {
-                'rating': 'Marginal',
-                'description': 'Process barely meets minimum capability',
-                'recommendation': 'Improvement required, increase monitoring',
-                'color': 'YELLOW'
+                "rating": "Marginal",
+                "description": "Process barely meets minimum capability",
+                "recommendation": "Improvement required, increase monitoring",
+                "color": "YELLOW",
             }
         elif cpk >= 0.67:
             return {
-                'rating': 'Poor',
-                'description': 'Process not capable, significant defects expected',
-                'recommendation': 'Immediate improvement required, 100% inspection needed',
-                'color': 'RED'
+                "rating": "Poor",
+                "description": "Process not capable, significant defects expected",
+                "recommendation": "Immediate improvement required, 100% inspection needed",
+                "color": "RED",
             }
         else:
             return {
-                'rating': 'Unacceptable',
-                'description': 'Process is not capable at all',
-                'recommendation': 'Stop production, fundamental process redesign needed',
-                'color': 'RED'
+                "rating": "Unacceptable",
+                "description": "Process is not capable at all",
+                "recommendation": "Stop production, fundamental process redesign needed",
+                "color": "RED",
             }
 
     def get_full_report(self) -> Dict:
@@ -268,40 +268,40 @@ class ProcessCapabilityAnalyzer:
         interp = self.get_interpretation(cpk)
 
         return {
-            'specifications': {
-                'USL': self.specs.usl,
-                'LSL': self.specs.lsl,
-                'Target': self.specs.target,
-                'Tolerance': self.specs.usl - self.specs.lsl
+            "specifications": {
+                "USL": self.specs.usl,
+                "LSL": self.specs.lsl,
+                "Target": self.specs.target,
+                "Tolerance": self.specs.usl - self.specs.lsl,
             },
-            'process_statistics': {
-                'Sample_Size': self.n,
-                'Mean': round(self.mean, 4),
-                'Std_Dev_Within': round(self.std_within, 4),
-                'Std_Dev_Overall': round(self.std_overall, 4),
-                'Min': round(float(np.min(self.data)), 4),
-                'Max': round(float(np.max(self.data)), 4)
+            "process_statistics": {
+                "Sample_Size": self.n,
+                "Mean": round(self.mean, 4),
+                "Std_Dev_Within": round(self.std_within, 4),
+                "Std_Dev_Overall": round(self.std_overall, 4),
+                "Min": round(float(np.min(self.data)), 4),
+                "Max": round(float(np.max(self.data)), 4),
             },
-            'capability_indices': {
-                'Cp': round(cp, 3),
-                'Cpk': round(cpk, 3),
-                'Pp': round(pp, 3),
-                'Ppk': round(ppk, 3),
-                'Cpm': round(cpm, 3)
+            "capability_indices": {
+                "Cp": round(cp, 3),
+                "Cpk": round(cpk, 3),
+                "Pp": round(pp, 3),
+                "Ppk": round(ppk, 3),
+                "Cpm": round(cpm, 3),
             },
-            'performance': {
-                'Sigma_Level': round(sigma, 2),
-                'DPMO_Estimated': round(dpmo, 0),
-                'Yield_Percent': round(100 - (dpmo / 10000), 4),
-                'Percent_Below_LSL': round(below_lsl, 4),
-                'Percent_Above_USL': round(above_usl, 4),
-                'Percent_Out_of_Spec': round(total_oos, 4)
+            "performance": {
+                "Sigma_Level": round(sigma, 2),
+                "DPMO_Estimated": round(dpmo, 0),
+                "Yield_Percent": round(100 - (dpmo / 10000), 4),
+                "Percent_Below_LSL": round(below_lsl, 4),
+                "Percent_Above_USL": round(above_usl, 4),
+                "Percent_Out_of_Spec": round(total_oos, 4),
             },
-            'interpretation': interp,
-            'comparison': {
-                'Cp_vs_Cpk': 'Centered' if abs(cp - cpk) < 0.1 else 'Off-center',
-                'Short_vs_Long_Term': 'Stable' if abs(cpk - ppk) < 0.2 else 'Special causes present'
-            }
+            "interpretation": interp,
+            "comparison": {
+                "Cp_vs_Cpk": "Centered" if abs(cp - cpk) < 0.1 else "Off-center",
+                "Short_vs_Long_Term": "Stable" if abs(cpk - ppk) < 0.2 else "Special causes present",
+            },
         }
 
 
@@ -312,15 +312,15 @@ def print_report(report: Dict) -> None:
     print("=" * 70)
 
     print("\n📐 SPECIFICATION LIMITS:")
-    for key, value in report['specifications'].items():
+    for key, value in report["specifications"].items():
         print(f"   {key}: {value}")
 
     print("\n📊 PROCESS STATISTICS:")
-    for key, value in report['process_statistics'].items():
+    for key, value in report["process_statistics"].items():
         print(f"   {key.replace('_', ' ')}: {value}")
 
     print("\n📈 CAPABILITY INDICES:")
-    indices = report['capability_indices']
+    indices = report["capability_indices"]
     print(f"   {'Index':<8} {'Value':>8}  {'Interpretation'}")
     print("   " + "-" * 50)
     print(f"   {'Cp':<8} {indices['Cp']:>8.3f}  Potential (if centered)")
@@ -330,7 +330,7 @@ def print_report(report: Dict) -> None:
     print(f"   {'Cpm':<8} {indices['Cpm']:>8.3f}  Taguchi (target-based)")
 
     print("\n⚡ PERFORMANCE METRICS:")
-    perf = report['performance']
+    perf = report["performance"]
     print(f"   Sigma Level: {perf['Sigma_Level']}σ")
     print(f"   Estimated DPMO: {perf['DPMO_Estimated']:,.0f}")
     print(f"   Expected Yield: {perf['Yield_Percent']:.4f}%")
@@ -338,14 +338,14 @@ def print_report(report: Dict) -> None:
     print(f"   % Above USL: {perf['Percent_Above_USL']:.4f}%")
     print(f"   % Total Out of Spec: {perf['Percent_Out_of_Spec']:.4f}%")
 
-    interp = report['interpretation']
+    interp = report["interpretation"]
     print(f"\n🎯 INTERPRETATION: [{interp['color']}]")
     print(f"   Rating: {interp['rating']}")
     print(f"   {interp['description']}")
     print(f"   Recommendation: {interp['recommendation']}")
 
     print("\n🔍 ANALYSIS:")
-    comp = report['comparison']
+    comp = report["comparison"]
     print(f"   Process Centering: {comp['Cp_vs_Cpk']}")
     print(f"   Process Stability: {comp['Short_vs_Long_Term']}")
 
@@ -364,8 +364,7 @@ def print_report(report: Dict) -> None:
     print("-" * 50)
 
 
-def generate_sample_data(n: int = 100, mean: float = 10.0,
-                         std: float = 0.1, seed: int = 42) -> List[float]:
+def generate_sample_data(n: int = 100, mean: float = 10.0, std: float = 0.1, seed: int = 42) -> List[float]:
     """Generate sample process data for demonstration."""
     if not HAS_NUMPY:
         raise ImportError("numpy required for sample data generation")
@@ -391,29 +390,19 @@ Examples:
 
   Generate sample report:
     python process_capability.py --demo
-        """
+        """,
     )
 
-    parser.add_argument('--data', '-d',
-                        help='Path to CSV file with measurement data')
-    parser.add_argument('--mean', '-m', type=float,
-                        help='Process mean (if no data file)')
-    parser.add_argument('--std', '-s', type=float,
-                        help='Process standard deviation (if no data file)')
-    parser.add_argument('--n', type=int, default=100,
-                        help='Sample size for simulation (default: 100)')
-    parser.add_argument('--lsl', type=float, required='--demo' not in sys.argv,
-                        help='Lower Specification Limit')
-    parser.add_argument('--usl', type=float, required='--demo' not in sys.argv,
-                        help='Upper Specification Limit')
-    parser.add_argument('--target', '-t', type=float,
-                        help='Target value (default: midpoint of specs)')
-    parser.add_argument('--subgroup', type=int, default=1,
-                        help='Subgroup size for within variation (default: 1)')
-    parser.add_argument('--json', action='store_true',
-                        help='Output as JSON')
-    parser.add_argument('--demo', action='store_true',
-                        help='Run demonstration with sample data')
+    parser.add_argument("--data", "-d", help="Path to CSV file with measurement data")
+    parser.add_argument("--mean", "-m", type=float, help="Process mean (if no data file)")
+    parser.add_argument("--std", "-s", type=float, help="Process standard deviation (if no data file)")
+    parser.add_argument("--n", type=int, default=100, help="Sample size for simulation (default: 100)")
+    parser.add_argument("--lsl", type=float, required="--demo" not in sys.argv, help="Lower Specification Limit")
+    parser.add_argument("--usl", type=float, required="--demo" not in sys.argv, help="Upper Specification Limit")
+    parser.add_argument("--target", "-t", type=float, help="Target value (default: midpoint of specs)")
+    parser.add_argument("--subgroup", type=int, default=1, help="Subgroup size for within variation (default: 1)")
+    parser.add_argument("--json", action="store_true", help="Output as JSON")
+    parser.add_argument("--demo", action="store_true", help="Run demonstration with sample data")
 
     args = parser.parse_args()
 
@@ -425,11 +414,10 @@ Examples:
         # Load data from file
         try:
             if HAS_NUMPY:
-                data = list(np.loadtxt(args.data, delimiter=',').flatten())
+                data = list(np.loadtxt(args.data, delimiter=",").flatten())
             else:
-                with open(args.data, 'r') as f:
-                    data = [float(x.strip()) for line in f
-                            for x in line.split(',') if x.strip()]
+                with open(args.data, "r") as f:
+                    data = [float(x.strip()) for line in f for x in line.split(",") if x.strip()]
         except Exception as e:
             print(f"Error loading data: {e}")
             return 1

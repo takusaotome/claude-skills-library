@@ -1,6 +1,6 @@
 ---
 name: project-plan-creator
-description: This skill should be used when creating comprehensive project plans for system development or implementation projects. Use this skill when you need to create Project Charters, Project Plans, WBS, Gantt Charts, RACI matrices, Risk analysis, or other PMBOK-aligned project management artifacts. Outputs are in Markdown format with Mermaid diagrams for visualizations. Leverages comprehensive PM knowledge base in references/ directory including PMBOK standards, Software/SaaS best practices, IT industry guidance, and specialized PM methodologies.
+description: This skill should be used when creating comprehensive project plans for system development or implementation projects. Use this skill when you need to create Project Charters, Project Plans, WBS, Gantt Charts, RACI matrices, Risk analysis, or other PMBOK-aligned project management artifacts. Outputs are in Markdown format with Mermaid diagrams for visualizations. Leverages comprehensive PM knowledge base in references/ directory (544KB, 11 files) including PMBOK standards, Software/SaaS best practices, IT industry guidance, and specialized PM methodologies.
 ---
 
 # Project Plan Creator（プロジェクト計画作成）
@@ -89,11 +89,11 @@ Use `references/project_charter_guide.md` Section 4:
 ```
 
 **プロジェクトマイルストーン**:
-- M1: 要件定義完了（2025-05-15）
-- M2: 基本設計完了（2025-06-30）
-- M3: 実装完了（2025-09-15）
-- M4: テスト完了（2025-10-30）
-- M5: 本番稼働（2025-11-15）
+- M1: 要件定義完了（YYYY-MM-DD）
+- M2: 基本設計完了（YYYY-MM-DD）
+- M3: 実装完了（YYYY-MM-DD）
+- M4: テスト完了（YYYY-MM-DD）
+- M5: 本番稼働（YYYY-MM-DD）
 
 ### Step 5: Estimate Budget and Resources
 
@@ -133,7 +133,7 @@ Use `references/project_charter_guide.md` Section 11:
 
 **成功基準**:
 1. **スコープ**: すべての機能要件が実装され受け入れられる
-2. **スケジュール**: 2025年11月15日までに本番稼働
+2. **スケジュール**: YYYY年MM月DD日までに本番稼働
 3. **予算**: 予算100,000,000円±10%以内
 4. **品質**: 重大バグゼロ、ユーザー満足度80%以上
 5. **ビジネス成果**: 稼働後6ヶ月で業務効率30%改善
@@ -301,6 +301,8 @@ PERT推定値 = (15 + 4×20 + 30) / 6 = 20.83日 ≈ 21日
 ### Step 4: Create Gantt Chart with Mermaid
 
 Use `assets/project_plan_template.md` Section 5 structure:
+
+> **Note**: 以下は EC サイト構築プロジェクトのサンプルスケジュール。日付は実際のプロジェクトに合わせて変更すること。
 
 ```mermaid
 gantt
@@ -719,160 +721,15 @@ Once approved:
 
 ## Leveraging PM Knowledge Base
 
-This skill has access to a comprehensive PM knowledge base in the `references/` directory (612KB, 9 files) covering PMBOK standards, Software/SaaS best practices, IT industry guidance, and specialized PM methodologies.
+This skill includes a comprehensive PM knowledge base in `references/` (544KB, 11 files) covering:
+- PMBOK standards (6th/7th/8th edition comparison, PMI companion guides)
+- Software & SaaS PM best practices (32 Q&A scenarios)
+- IT industry PM resources (US IT industry, scheduling & risk management)
+- Cross-framework mapping (PMBOK vs PRINCE2, ITIL 4, ISO 21502)
+- Modern PM trends (AI, hybrid work, ESG impacts)
+- Certification guidance (PMP/PgMP exam outlines)
 
-### Knowledge Base Resources
-
-#### 1. Software & SaaS PM Best Practices Q&A (156KB)
-**File**: `20250703-Software & SaaS 業界のPMベストプラクティスQ&A-ppxYLyVn.md`
-
-**32 comprehensive Q&A scenarios** covering:
-- **DevOps/CI/CD** (Q1-7, 19, 26-27): DevOps adoption, MVP strategy, silo elimination, CI/CD prioritization, automated testing, DevSecOps, canary releases
-- **Backlog Management** (Q8-14): Refinement frequency, backlog bloat prevention, visualization, cross-team sharing, collaborative change management
-- **Remote Development** (Q15-18): Communication rules, outcome-based accountability, digital-optimized Agile practices, async workflows
-- **Requirements & Change** (Q20-21): Scope creep handling, technical debt repayment strategies
-- **Stakeholder Communication** (Q22-25): Feedback cycles, sprint reviews, lightweight documentation, wiki maintenance
-- **Team Collaboration** (Q23-24, 29-32): Bottleneck removal, inter-team dependencies, velocity stability, QA integration, tool selection
-
-**Use when**: Cloud migration projects, SaaS product development, DevOps transformation, remote team management, Agile/Scrum adoption
-
-#### 2. IT PM Resources for US IT Industry (66KB)
-**File**: `20250703-IT Project Management Resources for the US IT Industry-tcccN2I2.md`
-
-US IT industry-specific PM resources, regulatory considerations, and industry best practices.
-
-**Use when**: Projects for US-based clients, compliance with US IT standards, understanding US market PM practices
-
-#### 3. PMI Companion Standards for IT (48KB)
-**File**: `20250703-PMIコンパニオン標準と拡張ガイド（IT業界向け）-bwKcIXZS.md`
-
-PMI companion standards and extension guides tailored for IT industry projects.
-
-**Use when**: Need to align project plans with PMI IT-specific standards, software development project planning
-
-#### 4. Project Scheduling and Risk Management Deep Dive (36KB)
-**File**: `20250703-プロジェクトスケジューリングとリスク管理に関する詳細調査-TmSqtqVJ.md`
-
-Detailed methodologies for:
-- Critical path method (CPM)
-- Schedule network analysis
-- Risk identification and quantification
-- Risk response strategies
-- Monte Carlo simulation
-
-**Use when**: Complex schedule development, high-risk projects, need for quantitative risk analysis
-
-#### 5. PMBOK Edition Comparison (6th/7th/8th) (35KB)
-**File**: `20250703-PMBOK®ガイド第6版・第7版・第8版の構造・概念の比較調査-5Szb5Q8O.md`
-
-Structural and conceptual comparison across PMBOK editions, helping understand evolution of PM standards.
-
-**Use when**: Transitioning between PMBOK versions, understanding modern vs. traditional PM approaches
-
-#### 6. Framework Mapping: PMBOK vs. PRINCE2, ITIL 4, ISO 21502 (108KB)
-**File**: `20250703-PMBOK第6版・第7版とPRINCE2・ITIL 4・ISO 21502のマッピング比較-iUp9j_kf.md`
-
-Cross-framework mapping showing alignment and differences between:
-- PMBOK 6th/7th Edition
-- PRINCE2
-- ITIL 4
-- ISO 21502
-
-**Use when**: Working in multi-framework environments, need to bridge PMBOK with ITIL/PRINCE2, international project standards compliance
-
-#### 7. PMBOK-GPT Knowledge Base Design (21KB)
-**File**: `20250703-PMBOK-GPT Knowledge Base Design-PXgrdjZb.md`
-
-Knowledge base architecture patterns for PM tools and AI-assisted project management systems.
-
-**Use when**: Designing PM knowledge management systems, structuring project documentation repositories
-
-#### 8. PMP/PgMP Exam Outlines and Learning Roadmap (17KB)
-**File**: `20250703-PMPPgMP等の試験アウトラインと学習ロードマップ  -oTfpatOa.md`
-
-PMP (Project Management Professional) and PgMP (Program Management Professional) certification guidance.
-
-**Use when**: Team capability development, PM training programs, certification preparation
-
-#### 9. AI, Hybrid Work, and ESG Impacts on PM (16KB)
-**File**: `20250703-Impacts of AI, Hybrid Work, and ESG on Project Management-oTIu7R8E.md`
-
-Modern PM trends and adaptations:
-- AI integration in project management
-- Hybrid work model considerations
-- ESG (Environmental, Social, Governance) factors in project planning
-
-**Use when**: Contemporary projects involving AI tools, distributed teams, sustainability requirements
-
-### Progressive Disclosure Pattern
-
-**Level 1 - SKILL.md**: Core workflows and common scenarios (always loaded)
-**Level 2 - References**: Detailed methodologies loaded on-demand when specific expertise needed
-**Level 3 - Generated Output**: Customized artifacts incorporating knowledge base insights
-
-### Usage Examples
-
-#### Example 1: Cloud Migration Project
-
-**Scenario**: Planning AWS cloud migration for enterprise application
-
-**Knowledge base usage**:
-1. Start with **Software & SaaS Q&A** → Q1-7 for DevOps adoption strategy
-2. Reference **IT PM Resources** for US regulatory considerations (if applicable)
-3. Use **Scheduling & Risk Management** for migration risk quantification
-4. Apply **Framework Mapping** if client requires ITIL 4 alignment
-
-**Workflow**:
-- Create Project Charter with DevOps principles (Q1: small-scale pilot approach)
-- Build WBS incorporating CI/CD pipeline setup (Q6: prioritize automation goals)
-- Develop risk register for cloud migration risks (Reference #4)
-- Create RACI matrix with cross-functional DevOps team structure (Q3: eliminate silos)
-
-#### Example 2: SaaS Product Development
-
-**Scenario**: New SaaS product MVP launch
-
-**Knowledge base usage**:
-1. **Software & SaaS Q&A** → Q2 (MVP strategy), Q8-14 (backlog management)
-2. **AI/Hybrid Work/ESG** for modern development practices
-3. **PMI IT Standards** for software development lifecycle alignment
-
-**Workflow**:
-- Project Charter emphasizing iterative MVP releases (Q2)
-- Scope management with backlog refinement schedule (Q8: frequent reviews)
-- Sprint planning with remote team considerations (Q15-18)
-- Quality management integrating continuous testing (Q32: QA in development cycle)
-
-### PMBOK Knowledge Area Coverage
-
-All 10 PMBOK knowledge areas are supported through references:
-
-| Knowledge Area | Primary Resources |
-|----------------|-------------------|
-| Integration | Framework Mapping (#6), PMBOK Comparison (#5) |
-| Scope | Software & SaaS Q&A (#1: Q8-14 backlog management) |
-| Schedule | Scheduling & Risk Deep Dive (#4) |
-| Cost | IT PM Resources (#2), Exam Guides (#8) |
-| Quality | Software & SaaS Q&A (#1: Q19, Q32) |
-| Resource | Software & SaaS Q&A (#1: Q15-18 remote teams, Q23 productivity) |
-| Communications | Software & SaaS Q&A (#1: Q22, Q16) |
-| Risk | Scheduling & Risk Deep Dive (#4), Software & SaaS Q&A (#1: Q28) |
-| Procurement | PMI Companion Standards (#3) |
-| Stakeholder | Software & SaaS Q&A (#1: Q22, Q25) |
-
-### When to Load Specific References
-
-**During Charter Creation**: Load #1 (Q&A) for team structure and #6 (Framework Mapping) for organizational standards alignment
-
-**During Scope Planning**: Load #1 (Q8-14) for backlog management best practices
-
-**During Schedule Development**: Load #4 (Scheduling & Risk) for detailed network analysis and CPM
-
-**During Risk Planning**: Load #4 (Scheduling & Risk) for quantitative methods and #1 (Q28) for Agile risk management
-
-**For IT/Software Projects**: Always load #1 (Software & SaaS Q&A) as primary reference
-
-**For Multi-Framework Environments**: Load #6 (Framework Mapping) to bridge PMBOK with PRINCE2/ITIL/ISO
+For detailed resource catalog and usage examples, see `references/knowledge_base_guide.md`.
 
 ---
 
@@ -885,6 +742,19 @@ All 10 PMBOK knowledge areas are supported through references:
 - Examples for system development projects
 - Best practices and common pitfalls
 - PMBOK alignment notes
+
+**`knowledge_base_guide.md`**: PM knowledge base catalog and usage guide
+- 11 reference files (544KB) directory and descriptions
+- Usage examples for cloud migration and SaaS projects
+- PMBOK knowledge area coverage mapping
+
+### scripts/
+
+**`generate_project_charter.py`**: Generate project charter Markdown skeleton
+- Example: `python3 scripts/generate_project_charter.py --project "ECサイト構築" --pm "鈴木花子" --start-date 2026-04-01 --end-date 2026-11-30 --budget 100000000 --output /tmp/charter.md`
+
+**`generate_wbs.py`**: Generate WBS template in Markdown with Mermaid diagram
+- Example: `python3 scripts/generate_wbs.py --project "ECサイト構築" --phases "要件定義,基本設計,詳細設計,実装,テスト,デプロイ" --output /tmp/wbs.md`
 
 ### assets/
 
