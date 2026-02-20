@@ -10,15 +10,27 @@ description: This skill should be used when creating bug/defect reports during s
 This skill transforms bug discoveries into comprehensive, professional bug tickets through interactive dialogue. It guides testers through systematic questioning to gather reproduction steps, environment details, severity assessment, and all necessary information, then generates a complete bug report in Markdown format.
 
 **Primary language**: Japanese (default) with English support
-**Output format**: Markdown (.md file)
 **Use case**: Software testing, QA, bug reporting
 
-Use this skill when:
+## When to Use
+
 - You discovered a bug during testing and need to create a bug ticket
 - You want to ensure all necessary information is captured in the bug report
 - You need help organizing reproduction steps systematically
 - You want to determine appropriate severity and priority
 - You need a professional, standardized bug report format
+
+## Prerequisites
+
+- Access to the system under test (to verify reproduction steps and environment details)
+- Basic information about the bug (what happened, where, when)
+- No special tools or dependencies required
+
+## Output
+
+- A complete bug ticket as a Markdown file (`.md`)
+- File name format: `BUG-[NUMBER]_[short-description]_[YYYY-MM-DD].md`
+- Generated using templates from `skills/bug-ticket-creator/assets/`
 
 ## Core Workflows
 
@@ -56,7 +68,7 @@ Start with a friendly greeting and ask about the bug discovery:
 
 ### Step 2: Categorize the Bug Type
 
-Based on the user's description, identify the bug type using `references/defect_classification_guide.md`:
+Based on the user's description, identify the bug type using `skills/bug-ticket-creator/references/defect_classification_guide.md`:
 
 Ask clarifying questions to determine:
 - **機能不具合（Functional Defect）**: 機能が動作しない、誤動作する
@@ -104,7 +116,7 @@ Make a preliminary severity assessment (to be refined later):
 ## Workflow 2: Reproduction Steps Collection
 
 ### Purpose
-Systematically gather detailed reproduction steps following the CLEAR principles from `references/reproduction_steps_guide.md`.
+Systematically gather detailed reproduction steps following the CLEAR principles from `skills/bug-ticket-creator/references/reproduction_steps_guide.md`.
 
 ### Step 1: Establish Preconditions
 
@@ -301,7 +313,7 @@ Verify if the bug is environment-specific:
 ## Workflow 5: Severity and Priority Assessment
 
 ### Purpose
-Determine appropriate severity and priority using `references/severity_priority_guide.md`.
+Determine appropriate severity and priority using `skills/bug-ticket-creator/references/severity_priority_guide.md`.
 
 ### Step 1: Assess Severity (Technical Impact)
 
@@ -419,8 +431,8 @@ Determine language preference:
 ```
 
 Based on selection:
-- 日本語: Use `assets/bug_ticket_template_ja.md`
-- English: Use `assets/bug_ticket_template_en.md`
+- 日本語: Use `skills/bug-ticket-creator/assets/bug_ticket_template_ja.md`
+- English: Use `skills/bug-ticket-creator/assets/bug_ticket_template_en.md`
 
 ### Step 3: Populate Template
 
@@ -539,18 +551,18 @@ This skill integrates comprehensive reference guides for accurate bug classifica
 
 ### When to Reference
 
-**`defect_classification_guide.md`**:
+**`skills/bug-ticket-creator/references/defect_classification_guide.md`**:
 - During bug type identification (Workflow 1)
 - To understand sub-categories
 - For examples of each defect type
 
-**`severity_priority_guide.md`**:
+**`skills/bug-ticket-creator/references/severity_priority_guide.md`**:
 - During severity assessment (Workflow 5, Step 1)
 - During priority assessment (Workflow 5, Step 2)
 - To explain severity/priority combinations
 - For edge case decisions
 
-**`reproduction_steps_guide.md`**:
+**`skills/bug-ticket-creator/references/reproduction_steps_guide.md`**:
 - During reproduction steps collection (Workflow 2)
 - To ensure CLEAR principles are followed
 - For examples of good vs bad steps
@@ -558,19 +570,19 @@ This skill integrates comprehensive reference guides for accurate bug classifica
 
 ### Key Principles from References
 
-**CLEAR Principles** (from reproduction_steps_guide.md):
+**CLEAR Principles** (from `skills/bug-ticket-creator/references/reproduction_steps_guide.md`):
 - **C**omplete: すべての必要な情報が含まれている
 - **L**ogical: 手順が論理的な順序
 - **E**xplicit: 曖昧な表現がなく具体的
 - **A**ctionable: 誰でも同じ手順を実行できる
 - **R**eproducible: 何度でも同じ結果になる
 
-**Severity vs Priority** (from severity_priority_guide.md):
+**Severity vs Priority** (from `skills/bug-ticket-creator/references/severity_priority_guide.md`):
 - Severity = Technical impact (QA判定)
 - Priority = Business urgency (PO/PM判定)
 - High severity ≠ High priority (always)
 
-**Defect Classification** (from defect_classification_guide.md):
+**Defect Classification** (from `skills/bug-ticket-creator/references/defect_classification_guide.md`):
 - 7 major defect types with sub-categories
 - Clear examples for each type
 - Impact scope assessment
@@ -641,19 +653,19 @@ This skill integrates comprehensive reference guides for accurate bug classifica
 
 ### references/
 
-**`defect_classification_guide.md`**: 不具合分類ガイド
+**`skills/bug-ticket-creator/references/defect_classification_guide.md`**: 不具合分類ガイド
 - 7つの不具合タイプ分類（機能、UI/UX、パフォーマンス、データ、セキュリティ、統合、環境依存）
 - サブカテゴリと具体例
 - 発生フェーズ分類、原因分類、影響範囲分類
 - 分類選択ガイドとベストプラクティス
 
-**`severity_priority_guide.md`**: 重要度・優先度判定ガイド
+**`skills/bug-ticket-creator/references/severity_priority_guide.md`**: 重要度・優先度判定ガイド
 - 重要度（Severity）4段階: Critical, High, Medium, Low
 - 優先度（Priority）4段階: P0, P1, P2, P3
 - 判定基準、判定フローチャート、マトリックス
 - 実際の判定例、特殊ケース、よくある判定ミス
 
-**`reproduction_steps_guide.md`**: 再現手順の書き方ガイド
+**`skills/bug-ticket-creator/references/reproduction_steps_guide.md`**: 再現手順の書き方ガイド
 - CLEAR原則（Complete, Logical, Explicit, Actionable, Reproducible）
 - 事前条件、再現手順、期待結果、実際結果、環境情報の書き方
 - 良い例と悪い例の比較
@@ -661,12 +673,12 @@ This skill integrates comprehensive reference guides for accurate bug classifica
 
 ### assets/
 
-**`bug_ticket_template_ja.md`**: 日本語不具合チケットテンプレート
+**`skills/bug-ticket-creator/assets/bug_ticket_template_ja.md`**: 日本語不具合チケットテンプレート
 - 完全な12セクション構成
 - ヘッダー、分類、再現手順、期待結果、実際結果、環境情報、添付ファイル、影響分析、推奨対応、更新履歴、チェックリスト
 - プロフェッショナルなフォーマット
 
-**`bug_ticket_template_en.md`**: English bug ticket template
+**`skills/bug-ticket-creator/assets/bug_ticket_template_en.md`**: English bug ticket template
 - Complete 12-section structure
 - Header, classification, reproduction steps, expected/actual results, environment, attachments, impact analysis, recommended action, update history, quality checklist
 - Professional format
