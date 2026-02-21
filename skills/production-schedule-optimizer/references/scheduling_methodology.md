@@ -106,13 +106,13 @@ When multiple rooms can accommodate a task, selection follows:
 
 ### Day Distribution Determinism
 
-Day assignment uses integer arithmetic only:
+Day assignment uses evenly-spaced index selection:
 ```
-day_interval = 7 // production_count
-assigned_days = [i * day_interval for i in range(production_count)]
+step = len(available_days) / production_count
+assigned_days = [available_days[int(i * step)] for i in range(production_count)]
 ```
 
-This avoids floating-point variability and ensures the same day assignment across platforms.
+This distributes production days as evenly as possible across the available days.
 
 ### Edge Cases
 

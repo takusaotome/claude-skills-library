@@ -24,7 +24,7 @@ import csv
 import math
 import sys
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 # =============================================================================
 # Data Models (plain dataclasses, no pydantic)
@@ -215,7 +215,15 @@ def validate_inputs(
             )
 
     for d in demand:
-        if d.qty <= 0:
+        if math.isnan(d.qty):
+            alerts.append(
+                ScheduleAlert(
+                    level="WARNING",
+                    code="PSO-W002",
+                    message=f"Demand for {d.product_code}: qty is NaN/missing, skipping",
+                )
+            )
+        elif d.qty <= 0:
             alerts.append(
                 ScheduleAlert(
                     level="WARNING",
@@ -316,6 +324,17 @@ def generate_schedule(
     for d in demand:
         product = product_map.get(d.product_code)
         if product is None:
+            continue
+
+        # Check for NaN/missing demand
+        if math.isnan(d.qty):
+            alerts.append(
+                ScheduleAlert(
+                    level="WARNING",
+                    code="PSO-W002",
+                    message=f"Demand for {d.product_code}: qty is NaN/missing, skipping",
+                )
+            )
             continue
 
         # Check for zero/negative demand
@@ -529,17 +548,37 @@ def parse_demand(filepath: str) -> List[DemandItem]:
     return items
 
 
-def parse_staff(filepath: str) -> List[StaffAllocation]:
-    """Parse staff.csv file."""
-    allocs = []
+def parse_staff(filepath: str) -> Tuple[List[StaffAllocation], List[ScheduleAlert]]:
+    """Parse staff.csv file.
+
+    Returns:
+        Tuple of (allocations, alerts).  Alerts contain PSO-W003 warnings
+        for rows where staff_count was missing or invalid (clamped to 0).
+    """
+    allocs: List[StaffAllocation] = []
+    alerts: List[ScheduleAlert] = []
     with open(filepath, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             staff_str = row.get("staff_count", "").strip()
+            clamped = False
             try:
                 staff_count = int(staff_str) if staff_str else 0
+                if not staff_str:
+                    clamped = True
             except ValueError:
                 staff_count = 0
+                clamped = True
+            if clamped:
+                day = row["day"].strip().upper()
+                rc = row["room_code"].strip()
+                alerts.append(
+                    ScheduleAlert(
+                        level="WARNING",
+                        code="PSO-W003",
+                        message=f"Staff ({day}, {rc}): staff_count missing/invalid, clamped to 0",
+                    )
+                )
             allocs.append(
                 StaffAllocation(
                     day=row["day"].strip().upper(),
@@ -548,7 +587,7 @@ def parse_staff(filepath: str) -> List[StaffAllocation]:
                     shift_hours=float(row["shift_hours"]),
                 )
             )
-    return allocs
+    return allocs, alerts
 
 
 # =============================================================================
@@ -596,7 +635,6 @@ def render_markdown(result: ScheduleResult) -> str:
         lines.append("## Alerts")
         lines.append("")
         for a in result.alerts:
-            icon = "!!!" if a.level == "ERROR" else "!"
             lines.append(f"- [{a.level}] {a.code}: {a.message}")
         lines.append("")
 
@@ -638,14 +676,14 @@ def main() -> None:
     products = parse_products(args.products)
     rooms = parse_rooms(args.rooms)
     demand = parse_demand(args.demand)
-    staff_allocs = parse_staff(args.staff)
+    staff_allocs, staff_parse_alerts = parse_staff(args.staff)
 
     # Parse time ranges
     work_start, work_end = _parse_time_range(args.work_hours)
     lunch_start, lunch_end = _parse_time_range(args.lunch_break)
 
     # Validate inputs
-    validation_alerts = validate_inputs(products, rooms, demand, staff_allocs)
+    validation_alerts = staff_parse_alerts + validate_inputs(products, rooms, demand, staff_allocs)
     errors = [a for a in validation_alerts if a.level == "ERROR"]
     if errors:
         print("Validation errors:", file=sys.stderr)

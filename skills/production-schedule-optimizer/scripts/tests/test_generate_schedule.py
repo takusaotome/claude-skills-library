@@ -18,6 +18,7 @@ from generate_schedule import (
     calc_production_count,
     distribute_production_days,
     generate_schedule,
+    parse_staff,
     validate_inputs,
 )
 
@@ -422,8 +423,47 @@ def test_lunch_break_skip():
 
 
 def test_day_room_override():
-    """Currently a placeholder (pass)."""
-    pass
+    """Weekend staff only in MEAT -> entries only in MEAT room on SAT/SUN."""
+    products = [
+        Product(
+            product_code="P001",
+            name="Meat Product",
+            prep_time_min=60,
+            base_qty=10,
+            required_staff=2,
+            shelf_life_days=1,  # daily -> all 7 days
+            room_codes=["MEAT", "COLD"],
+        ),
+    ]
+    rooms = [
+        Room(room_code="MEAT", name="Meat Room", max_staff=5),
+        Room(room_code="COLD", name="Cold Room", max_staff=3),
+    ]
+    demand = [DemandItem(product_code="P001", qty=70)]
+    # Weekdays: both rooms staffed; Weekends: only MEAT staffed
+    staff = []
+    for d in ["MON", "TUE", "WED", "THU", "FRI"]:
+        staff.append(StaffAllocation(day=d, room_code="MEAT", staff_count=3, shift_hours=8.0))
+        staff.append(StaffAllocation(day=d, room_code="COLD", staff_count=3, shift_hours=8.0))
+    for d in ["SAT", "SUN"]:
+        staff.append(StaffAllocation(day=d, room_code="MEAT", staff_count=2, shift_hours=6.0))
+        staff.append(StaffAllocation(day=d, room_code="COLD", staff_count=0, shift_hours=6.0))
+
+    result = generate_schedule(
+        products=products,
+        rooms=rooms,
+        demand=demand,
+        staff=staff,
+        work_start=8.0,
+        work_end=22.0,
+        lunch_start=12.0,
+        lunch_end=13.0,
+    )
+
+    # Weekend entries should only be in MEAT (COLD has 0 staff)
+    weekend_entries = [e for e in result.entries if e.day in ("SAT", "SUN")]
+    for e in weekend_entries:
+        assert e.room_code == "MEAT", f"Weekend entry in {e.room_code}, expected MEAT"
 
 
 # ===========================================================================
@@ -451,3 +491,81 @@ def test_invalid_room_code_rejects():
     alerts = validate_inputs(products, rooms, demand, staff)
     error_codes = [a.code for a in alerts if a.level == "ERROR"]
     assert "PSO-E006" in error_codes
+
+
+# ===========================================================================
+# Test 12: NaN demand qty -> PSO-W002 warning (no crash)
+# ===========================================================================
+
+
+def test_nan_demand_skips_with_warning():
+    """qty=NaN -> skip + PSO-W002 warning, no crash."""
+    products = [
+        Product(
+            product_code="P001",
+            name="Alpha",
+            prep_time_min=60,
+            base_qty=10,
+            required_staff=2,
+            shelf_life_days=3,
+            room_codes=["R1"],
+        ),
+    ]
+    rooms = [Room(room_code="R1", name="Room One", max_staff=4)]
+    demand = [DemandItem(product_code="P001", qty=float("nan"))]
+    staff = _make_staff()
+
+    # validate_inputs should detect NaN
+    alerts = validate_inputs(products, rooms, demand, staff)
+    warning_codes = [a.code for a in alerts if a.level == "WARNING"]
+    assert "PSO-W002" in warning_codes
+
+    # generate_schedule should not crash
+    result = generate_schedule(
+        products=products,
+        rooms=rooms,
+        demand=demand,
+        staff=staff,
+        work_start=8.0,
+        work_end=22.0,
+        lunch_start=12.0,
+        lunch_end=13.0,
+    )
+
+    assert len(result.entries) == 0
+    warning_codes = [a.code for a in result.alerts if a.level == "WARNING"]
+    assert "PSO-W002" in warning_codes
+
+
+# ===========================================================================
+# Test 13: parse_staff missing staff_count -> PSO-W003
+# ===========================================================================
+
+
+def test_parse_staff_w003(tmp_path):
+    """Missing staff_count in CSV -> PSO-W003 warning, clamped to 0."""
+    csv_file = tmp_path / "staff.csv"
+    csv_file.write_text(
+        "day,room_code,staff_count,shift_hours\n"
+        "MON,R1,3,8.0\n"
+        "MON,R2,,8.0\n"  # missing staff_count
+        "TUE,R1,abc,8.0\n"  # invalid staff_count
+    )
+
+    allocs, alerts = parse_staff(str(csv_file))
+
+    # Should have 3 allocations
+    assert len(allocs) == 3
+
+    # First row: valid -> staff_count=3
+    assert allocs[0].staff_count == 3
+
+    # Second row: missing -> clamped to 0
+    assert allocs[1].staff_count == 0
+
+    # Third row: invalid -> clamped to 0
+    assert allocs[2].staff_count == 0
+
+    # Should have 2 PSO-W003 warnings (missing + invalid)
+    w003_alerts = [a for a in alerts if a.code == "PSO-W003"]
+    assert len(w003_alerts) == 2

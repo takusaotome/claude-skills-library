@@ -19,13 +19,33 @@ description: |
 **Frameworks**: Greedy Bin-Packing (Largest-First Decreasing), FEFO, HACCP-aware room assignment
 **Output format**: Weekly schedule (Markdown table), staff reports, shift plans, alert summaries
 
-Use this skill when:
+---
+
+## When to Use
+
 - セントラルキッチンや食品工場の週次製造スケジュールを作成したい
 - 賞味期限ベースの製造頻度を自動計算したい
 - 作業室の容量と人員制約を考慮した最適タイムテーブルが必要
 - 人員要件を見積もり、シフト計画を立てたい
 - 既存スケジュールのボトルネック特定と改善をしたい
 - 複数作業室間の負荷バランスを最適化したい
+
+## Prerequisites
+
+- Python 3.9+
+- 外部依存なし（標準ライブラリのみ）
+- 入力CSVはUTF-8エンコーディング
+- 4種類のCSVファイル（products, demand, rooms, staff）を事前準備
+
+## Output
+
+### generate_schedule.py
+- **形式**: Markdown テーブル（曜日別タイムテーブル + アラートセクション）
+- **内容**: 曜日×作業室×製品ごとの開始時刻、終了時刻、数量、人員、所要時間
+
+### estimate_staff.py
+- **形式**: Markdown テーブル（曜日別人員要件）
+- **内容**: 作業室×曜日ごとの必要人時、ピーク人員、最小人員、推奨人員、タスク数
 
 ---
 
@@ -75,7 +95,7 @@ SAUCE-001,Tomato Sauce,90,80,2,5,SAUCE;BROTH
 | staff_count | int | 配置人数 |
 | shift_hours | float | シフト時間（時間） |
 
-> **Sample files**: `assets/sample_products.csv`, `assets/sample_demand.csv`, `assets/sample_rooms.csv`, `assets/sample_staff.csv`
+> **Sample files**: `skills/production-schedule-optimizer/assets/sample_products.csv`, `skills/production-schedule-optimizer/assets/sample_demand.csv`, `skills/production-schedule-optimizer/assets/sample_rooms.csv`, `skills/production-schedule-optimizer/assets/sample_staff.csv`
 
 ---
 
@@ -122,7 +142,7 @@ total_staff_hours = staff_hours * production_count
 **production_count 早見表:**
 - shelf_life=1 -> 7回/週, shelf_life=2 -> 4回, shelf_life=3 -> 3回, shelf_life=7 -> 1回
 
-> **Detail**: Load `references/food_production_guide.md` for FEFO integration and HACCP considerations.
+> **Detail**: Load `skills/production-schedule-optimizer/references/food_production_guide.md` for FEFO integration and HACCP considerations.
 
 ---
 
@@ -171,8 +191,8 @@ tasks.sort(key=lambda t: (-t.staff_hours, t.shelf_life_days, t.product_code))
 製造間隔を考慮した曜日割当（MON=0, ..., SUN=6）:
 
 ```
-day_interval = floor(7 / production_count)
-assigned_days = [i * day_interval for i in range(production_count)]
+step = len(available_days) / production_count
+assigned_days = [available_days[int(i * step)] for i in range(production_count)]
 ```
 
 Examples: count=7 -> 毎日, count=3 -> [0,2,4](MON/WED/FRI), count=1 -> [0](MON)
@@ -203,8 +223,8 @@ end_time = start_time + duration_minutes
 room_day_next_available[room][day] = end_time
 ```
 
-> **Detail**: Load `references/scheduling_methodology.md` for improvement techniques and constraint patterns.
-> **Template**: Use `assets/schedule_template.md` for output formatting.
+> **Detail**: Load `skills/production-schedule-optimizer/references/scheduling_methodology.md` for improvement techniques and constraint patterns.
+> **Template**: Use `skills/production-schedule-optimizer/assets/schedule_template.md` for output formatting.
 
 ---
 
@@ -245,11 +265,13 @@ gap = recommended_staff - current_staff  # >0:不足, 0:適正, <0:余剰
 | BAKERY | MON | 3 | 2 | 2 | 3 | 0 | OK |
 | BROTH | MON | 2 | 3 | 3 | 4 | +2 | SHORTAGE |
 
-> **Detail**: Load `references/staff_planning_guide.md` for shift patterns and labor constraints.
+> **Detail**: Load `skills/production-schedule-optimizer/references/staff_planning_guide.md` for shift patterns and labor constraints.
 
 ---
 
 ## Workflow 4: Shift Planning & Coverage Verification
+
+> **Note**: This workflow provides guidance for manual implementation. No automated script is provided. Use the output from Workflow 3 as input for shift design.
 
 **Purpose**: 推奨人員に基づくシフト自動生成と時間帯別カバレッジ検証。
 
@@ -384,10 +406,12 @@ remaining_capacity_min = (staff_count * shift_hours * 60) - assigned_minutes
 ### generate_schedule.py
 
 ```bash
-python3 scripts/generate_schedule.py \
+python3 skills/production-schedule-optimizer/scripts/generate_schedule.py \
   --products products.csv --demand demand.csv \
   --rooms rooms.csv --staff staff.csv \
-  --output schedule.md --week-start 2026-02-23
+  --week-start 2026-02-23 \
+  --work-hours 8:00-22:00 --lunch-break 12:00-13:00 \
+  --output schedule.md
 ```
 
 | Flag | Required | Default | Description |
@@ -396,28 +420,27 @@ python3 scripts/generate_schedule.py \
 | --demand | Yes | - | 週次需要CSV |
 | --rooms | Yes | - | 作業室マスタCSV |
 | --staff | Yes | - | 人員配置CSV |
+| --week-start | Yes | - | 週開始日（YYYY-MM-DD） |
+| --work-hours | No | 8:00-22:00 | 稼働時間帯（HH:MM-HH:MM） |
+| --lunch-break | No | 12:00-13:00 | 休憩時間帯（HH:MM-HH:MM） |
 | --output | No | stdout | 出力先（Markdown） |
-| --week-start | No | Next Monday | 週開始日（YYYY-MM-DD） |
-| --buffer | No | 1.1 | バッファ係数 |
-| --start-hour | No | 8 | 開始時刻 |
-| --format | No | markdown | 出力形式（markdown/csv/json） |
 
 ### estimate_staff.py
 
 ```bash
-python3 scripts/estimate_staff.py \
-  --schedule schedule.json --rooms rooms.csv \
-  --staff staff.csv --output staff_report.md
+python3 skills/production-schedule-optimizer/scripts/estimate_staff.py \
+  --products products.csv --demand demand.csv \
+  --rooms rooms.csv --shift-hours 8 \
+  --output staff_report.md
 ```
 
 | Flag | Required | Default | Description |
 |------|----------|---------|-------------|
-| --schedule | Yes | - | スケジュール出力（JSON） |
+| --products | Yes | - | 製品マスタCSV |
+| --demand | Yes | - | 週次需要CSV |
 | --rooms | Yes | - | 作業室マスタCSV |
-| --staff | Yes | - | 人員配置CSV |
-| --output | No | stdout | 出力先 |
-| --buffer | No | 1.1 | バッファ係数 |
-| --shifts | No | default | シフトパターン（JSON） |
+| --shift-hours | No | 8 | 1人あたりシフト時間 |
+| --output | No | stdout | 出力先（Markdown） |
 
 ---
 
@@ -427,19 +450,19 @@ python3 scripts/estimate_staff.py \
 
 | File | Description | When to Load |
 |------|-------------|--------------|
-| scheduling_methodology.md | Bin-Packing詳細、ソート仕様、改善手法 | アルゴリズム改善検討時 |
-| food_production_guide.md | 製造頻度、FEFO、HACCP考慮事項 | 食品製造制約検討時 |
-| staff_planning_guide.md | 人員計算、シフト設計、カバレッジ検証 | 人員計画・シフト設計時 |
+| `skills/production-schedule-optimizer/references/scheduling_methodology.md` | Bin-Packing詳細、ソート仕様、改善手法 | アルゴリズム改善検討時 |
+| `skills/production-schedule-optimizer/references/food_production_guide.md` | 製造頻度、FEFO、HACCP考慮事項 | 食品製造制約検討時 |
+| `skills/production-schedule-optimizer/references/staff_planning_guide.md` | 人員計算、シフト設計、カバレッジ検証 | 人員計画・シフト設計時 |
 
 ### assets/
 
 | File | Description |
 |------|-------------|
-| schedule_template.md | 週次スケジュール出力テンプレート |
-| sample_products.csv | 製品マスタサンプル（10製品） |
-| sample_demand.csv | 週次需要サンプル |
-| sample_rooms.csv | 作業室マスタサンプル（5室） |
-| sample_staff.csv | 人員配置サンプル（7日x5室） |
+| `skills/production-schedule-optimizer/assets/schedule_template.md` | 週次スケジュール出力テンプレート |
+| `skills/production-schedule-optimizer/assets/sample_products.csv` | 製品マスタサンプル（10製品） |
+| `skills/production-schedule-optimizer/assets/sample_demand.csv` | 週次需要サンプル |
+| `skills/production-schedule-optimizer/assets/sample_rooms.csv` | 作業室マスタサンプル（5室） |
+| `skills/production-schedule-optimizer/assets/sample_staff.csv` | 人員配置サンプル（7日x5室） |
 
 ---
 
