@@ -326,26 +326,8 @@ def generate_schedule(
         if product is None:
             continue
 
-        # Check for NaN/missing demand
-        if math.isnan(d.qty):
-            alerts.append(
-                ScheduleAlert(
-                    level="WARNING",
-                    code="PSO-W002",
-                    message=f"Demand for {d.product_code}: qty is NaN/missing, skipping",
-                )
-            )
-            continue
-
-        # Check for zero/negative demand
-        if d.qty <= 0:
-            alerts.append(
-                ScheduleAlert(
-                    level="WARNING",
-                    code="PSO-W001",
-                    message=f"Demand for {d.product_code}: qty <= 0 (got {d.qty}), skipping",
-                )
-            )
+        # Skip invalid demand (alerts are emitted by validate_inputs)
+        if math.isnan(d.qty) or d.qty <= 0:
             continue
 
         # Determine production days

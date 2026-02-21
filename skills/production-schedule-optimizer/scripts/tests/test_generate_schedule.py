@@ -221,7 +221,7 @@ def test_base_qty_zero_rejects():
 
 
 def test_demand_zero_skips():
-    """qty=0 -> skip + PSO-W001 warning."""
+    """qty=0 -> skip + PSO-W001 warning from validate_inputs."""
     products = [
         Product(
             product_code="P001",
@@ -237,6 +237,12 @@ def test_demand_zero_skips():
     demand = [DemandItem(product_code="P001", qty=0)]
     staff = _make_staff()
 
+    # validate_inputs emits PSO-W001
+    alerts = validate_inputs(products, rooms, demand, staff)
+    warning_codes = [a.code for a in alerts if a.level == "WARNING"]
+    assert "PSO-W001" in warning_codes
+
+    # generate_schedule silently skips zero demand
     result = generate_schedule(
         products=products,
         rooms=rooms,
@@ -247,12 +253,7 @@ def test_demand_zero_skips():
         lunch_start=12.0,
         lunch_end=13.0,
     )
-
-    # No entries for zero-demand products
     assert len(result.entries) == 0
-    # Should have a PSO-W001 warning
-    warning_codes = [a.code for a in result.alerts if a.level == "WARNING"]
-    assert "PSO-W001" in warning_codes
 
 
 # ===========================================================================
@@ -520,7 +521,7 @@ def test_nan_demand_skips_with_warning():
     warning_codes = [a.code for a in alerts if a.level == "WARNING"]
     assert "PSO-W002" in warning_codes
 
-    # generate_schedule should not crash
+    # generate_schedule should not crash and silently skips NaN
     result = generate_schedule(
         products=products,
         rooms=rooms,
@@ -531,10 +532,7 @@ def test_nan_demand_skips_with_warning():
         lunch_start=12.0,
         lunch_end=13.0,
     )
-
     assert len(result.entries) == 0
-    warning_codes = [a.code for a in result.alerts if a.level == "WARNING"]
-    assert "PSO-W002" in warning_codes
 
 
 # ===========================================================================
@@ -569,3 +567,44 @@ def test_parse_staff_w003(tmp_path):
     # Should have 2 PSO-W003 warnings (missing + invalid)
     w003_alerts = [a for a in alerts if a.code == "PSO-W003"]
     assert len(w003_alerts) == 2
+
+
+# ===========================================================================
+# Test 14: PSO-W002 appears exactly once in final output (no duplication)
+# ===========================================================================
+
+
+def test_nan_demand_no_duplicate_w002():
+    """PSO-W002 must appear exactly once, not duplicated by validate + generate."""
+    products = [
+        Product(
+            product_code="P001",
+            name="Alpha",
+            prep_time_min=60,
+            base_qty=10,
+            required_staff=2,
+            shelf_life_days=3,
+            room_codes=["R1"],
+        ),
+    ]
+    rooms = [Room(room_code="R1", name="Room One", max_staff=4)]
+    demand = [DemandItem(product_code="P001", qty=float("nan"))]
+    staff = _make_staff()
+
+    # Simulate the same flow as main(): validate then generate then merge
+    validation_alerts = validate_inputs(products, rooms, demand, staff)
+    result = generate_schedule(
+        products=products,
+        rooms=rooms,
+        demand=demand,
+        staff=staff,
+        work_start=8.0,
+        work_end=22.0,
+        lunch_start=12.0,
+        lunch_end=13.0,
+    )
+    warnings = [a for a in validation_alerts if a.level == "WARNING"]
+    combined_alerts = warnings + result.alerts
+
+    w002_count = sum(1 for a in combined_alerts if a.code == "PSO-W002")
+    assert w002_count == 1, f"Expected exactly 1 PSO-W002, got {w002_count}"
