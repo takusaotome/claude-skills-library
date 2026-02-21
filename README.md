@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (57 skills)
+├── skills/                 # All Claude Code skills (58 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (64 Skills)
+## Skill Catalog (65 Skills)
 
 ### Business Strategy & Consulting (12 skills)
 
@@ -175,11 +175,12 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | change-management-consultant | 組織変革マネジメント、チェンジ管理 | Kotter 8-Step, Stakeholder Engagement |
 | talent-acquisition-specialist | JD作成、採用計画、面接評価 | JD Templates, Interview Evaluation |
 
-### Operations & Supply Chain (1 skill)
+### Operations & Supply Chain (2 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | supply-chain-consultant | サプライチェーン最適化、在庫管理 | Supply Chain Modeling, Optimization |
+| production-schedule-optimizer | 製造施設の週次生産スケジュール最適化 | Greedy Bin-Packing, Staff Estimation, Shift Planning |
 
 ---
 
@@ -3043,6 +3044,31 @@ Legend: R=Responsible, A=Accountable, C=Consulted, I=Informed
   - Duplicate account reduction: 85%
   - Annual savings: ¥3.2M
 
+### 🏭 Production Schedule Optimizer
+
+**File:** `skill-packages/production-schedule-optimizer.skill`
+
+Optimizes weekly production schedules for manufacturing facilities (central kitchens, food factories, production lines).
+
+**When to use:**
+- Creating weekly production schedules for central kitchens or food factories
+- Auto-calculating production frequency based on shelf life
+- Optimizing room capacity and staff allocation
+- Estimating staff requirements and designing shift plans
+- Identifying bottlenecks and improving schedule balance
+
+**Key Features:**
+- Greedy Bin-Packing scheduling with deterministic sort/tie-break
+- 4-CSV input system (products, demand, rooms, staff)
+- Shelf-life based production frequency calculation
+- Staff requirement estimation with buffer coefficient
+- PSO-E/W alert system for validation and quality monitoring
+- Markdown timetable output
+
+**Scripts:**
+- `generate_schedule.py` - Weekly schedule generation CLI
+- `estimate_staff.py` - Staff requirement estimation CLI
+
 ---
 
 ## Roadmap
@@ -3059,6 +3085,16 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### production-schedule-optimizer v1.0 (2026-02-21)
+- Weekly production schedule optimization for manufacturing facilities
+- Greedy Bin-Packing algorithm with deterministic sort/tie-break
+- 4-CSV input system (products, demand, rooms, staff)
+- Shelf-life based production frequency (min(ceil(7/shelf_life), 7))
+- Staff requirement estimation with 1.1x buffer coefficient
+- PSO-E001~E006 error alerts, PSO-W001~W006 warning alerts
+- Lunch break skip (12:00-13:00) handling
+- 14 test cases (11 scheduler + 3 staff estimation)
 
 ### dual-axis-skill-reviewer v1.0 (2026-02-20)
 - Dual-axis skill quality review (Auto + LLM scoring)

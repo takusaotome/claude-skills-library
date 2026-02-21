@@ -1,0 +1,11 @@
+product_code,name,prep_time_min,base_qty,required_staff,shelf_life_days,room_codes
+BREAD-001,Sandwich Bread,120,50,2,2,BAKERY
+SOUP-001,Chicken Broth,180,100,3,3,BROTH
+SAUCE-001,Tomato Sauce,90,80,2,5,SAUCE;BROTH
+MEAT-001,Grilled Chicken,60,40,2,1,MEAT
+SALAD-001,Caesar Salad,30,30,1,1,COLD
+PASTA-001,Fresh Pasta,45,60,2,3,BAKERY;COLD
+DRESSING-001,House Dressing,20,50,1,7,SAUCE
+CAKE-001,Cheesecake,150,20,2,4,BAKERY
+STOCK-001,Vegetable Stock,120,100,2,5,BROTH
+CURRY-001,Curry Base,90,60,2,4,SAUCE

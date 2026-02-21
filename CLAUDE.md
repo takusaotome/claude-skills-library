@@ -91,6 +91,7 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 | business-plan-creator | 1.0 | Business Planning | 5-Phase Workflow, Financial Modeling, Industry Templates, frameworks.md, financial-modeling.md |
 | network-diagnostics | 1.0 | Network Quality Assessment | network_diagnostics.py, network_quality_thresholds.md, deep_dive_procedures.md, network_report_template.md |
 | office-script-expert | 1.0 | Office Scripts (Excel Online) | excel_api_patterns.md, common_bug_patterns.md, platform_limitations.md, testing_strategy.md, implementation_checklist.md |
+| production-schedule-optimizer | 1.0 | Manufacturing Scheduling | generate_schedule.py, estimate_staff.py, Greedy Bin-Packing, PSO alerts, 4-CSV input |
 | dual-axis-skill-reviewer | 1.0 | Skill Quality Review | run_dual_axis_review.py, scoring_rubric.md, llm_review_schema.md, 5-dimension auto scoring, LLM merge |
 
 ## Skill Development Workflow

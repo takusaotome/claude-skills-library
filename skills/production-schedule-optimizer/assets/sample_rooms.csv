@@ -1,0 +1,6 @@
+room_code,name,max_staff
+BAKERY,Bakery Room,4
+BROTH,Broth Room,3
+SAUCE,Sauce Room,3
+MEAT,Meat Room,4
+COLD,Cold Room,2
