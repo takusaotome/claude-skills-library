@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pin ruff version to match .pre-commit-config.yaml (v0.15.0)
+      - name: Install linters
+        run: pip install "ruff==0.15.0"
+
+      - name: Ruff check
+        run: ruff check skills/ scripts/
+
+      - name: Ruff format check
+        run: ruff format --check skills/ scripts/
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      # Run each skill's tests in isolation to avoid module name collisions
+      - name: Test dual-axis-skill-reviewer
+        run: >
+          python -m pytest skills/dual-axis-skill-reviewer/scripts/tests/ -v
+          --cov=skills/dual-axis-skill-reviewer/scripts
+          --cov-report=term-missing
+
+      - name: Test production-schedule-optimizer
+        run: >
+          python -m pytest skills/production-schedule-optimizer/scripts/tests/ -v
+          --cov=skills/production-schedule-optimizer/scripts
+          --cov-report=term-missing
+          --cov-append
+
+      - name: Test repo-level scripts
+        run: >
+          python -m pytest scripts/tests/ -v
+          --cov=scripts
+          --cov-report=term-missing
+          --cov-append
+
+      - name: Coverage summary
+        if: always()
+        run: python -m coverage report
+
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install security tools
+        run: pip install "bandit[toml]>=1.9.0"
+
+      - name: Bandit SAST scan
+        run: bandit -r skills/ scripts/ --exclude "*/tests/*" -ll
