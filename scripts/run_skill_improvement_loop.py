@@ -224,6 +224,32 @@ def run_llm_review(project_root: Path, skill_name: str, prompt_file: str) -> dic
 
     prompt_text = prompt_path.read_text(encoding="utf-8")
 
+    # JSON Schema to force structured output from Claude CLI
+    review_schema = json.dumps(
+        {
+            "type": "object",
+            "properties": {
+                "score": {"type": "integer", "minimum": 0, "maximum": 100},
+                "summary": {"type": "string"},
+                "findings": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "severity": {"type": "string", "enum": ["high", "medium", "low"]},
+                            "path": {"type": "string"},
+                            "line": {"type": "integer"},
+                            "message": {"type": "string"},
+                            "improvement": {"type": "string"},
+                        },
+                        "required": ["severity", "message", "improvement"],
+                    },
+                },
+            },
+            "required": ["score", "summary", "findings"],
+        }
+    )
+
     for attempt in range(CLAUDE_RETRIES + 1):
         try:
             result = subprocess.run(
@@ -232,6 +258,8 @@ def run_llm_review(project_root: Path, skill_name: str, prompt_file: str) -> dic
                     "-p",
                     "--output-format",
                     "json",
+                    "--json-schema",
+                    review_schema,
                     "--max-turns",
                     "1",
                     f"--max-budget-usd={CLAUDE_BUDGET_REVIEW}",
