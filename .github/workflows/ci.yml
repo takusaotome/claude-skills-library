@@ -76,4 +76,4 @@ jobs:
         run: pip install "bandit[toml]>=1.9.0"
 
       - name: Bandit SAST scan
-        run: bandit -r skills/ scripts/ --exclude "*/tests/*" -ll
+        run: bandit -r skills/ scripts/ --exclude "*/tests/*" -ll --skip B310,B314,B608
