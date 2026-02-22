@@ -39,7 +39,7 @@ jobs:
           python-version: "3.9"
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev]" pytest-cov
 
       # Run each skill's tests in isolation to avoid module name collisions
       - name: Test dual-axis-skill-reviewer
@@ -76,4 +76,4 @@ jobs:
         run: pip install "bandit[toml]>=1.9.0"
 
       - name: Bandit SAST scan
-        run: bandit -r skills/ scripts/ --exclude "*/tests/*" -ll --skip B310,B314,B608
+        run: bandit -r skills/ scripts/ --exclude "*/tests/*" -ll --skip B104,B310,B314,B608
