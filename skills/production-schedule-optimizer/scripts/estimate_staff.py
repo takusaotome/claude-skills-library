@@ -103,7 +103,9 @@ def estimate_staff(
         product = product_map.get(d.product_code)
         if product is None:
             continue
-        if d.qty <= 0:
+        if math.isnan(d.qty) or d.qty <= 0:
+            continue
+        if product.base_qty <= 0:
             continue
 
         # Distribute production days
