@@ -17,6 +17,10 @@ This skill transforms you into an expert change management consultant capable of
 **Frameworks**: ADKAR, Kotter 8-Step, Prosci Methodology
 **Output format**: Change management plans, stakeholder analysis, communication strategies, training plans
 
+---
+
+## When to Use
+
 Use this skill when:
 - Planning system implementations (ERP, CRM, new technology)
 - Managing organizational restructuring or M&A integration
@@ -24,6 +28,106 @@ Use this skill when:
 - Improving user adoption rates for new processes or systems
 - Addressing resistance to change
 - Developing change readiness and capability
+
+**Example triggers**:
+- "Help me create a change management plan for our new CRM rollout"
+- "How do I handle resistance from middle managers during this transformation?"
+- "Create a stakeholder engagement strategy for our ERP implementation"
+- "Assess our organization's readiness for digital transformation"
+
+---
+
+## Prerequisites
+
+- **Stakeholder information**: List of key stakeholders, their roles, and departments
+- **Project scope**: Clear understanding of what is changing (system, process, structure)
+- **Timeline**: Project milestones and target go-live date
+- **Organizational context**: Company culture, past change history, current challenges
+- **Executive sponsorship**: Identified project sponsor with authority
+
+**Optional but helpful**:
+- Organization chart
+- Previous change initiative outcomes
+- Employee survey data
+- Current training infrastructure
+
+---
+
+## Workflow
+
+This skill provides 6 core workflows that can be executed individually or combined:
+
+| # | Workflow | Purpose | Key Output |
+|---|----------|---------|------------|
+| 1 | Change Readiness Assessment | Evaluate organization's preparedness | Readiness score (0-10), mitigation plan |
+| 2 | Stakeholder Analysis | Identify and analyze stakeholders | Stakeholder map, engagement strategies |
+| 3 | Communication Planning | Develop communication strategy | Communication calendar, key messages |
+| 4 | Resistance Management | Address opposition to change | Resistance analysis, conversion tactics |
+| 5 | Training & Capability Building | Ensure skills for new state | Training needs matrix, training plan |
+| 6 | Change Metrics & Measurement | Track progress and success | Dashboard, KPIs, adoption tracking |
+
+**Typical execution flow**:
+```
+1. Readiness Assessment → 2. Stakeholder Analysis → 3. Communication Planning
+                                    ↓
+                         4. Resistance Management
+                                    ↓
+                    5. Training & Capability Building
+                                    ↓
+                      6. Metrics & Measurement
+```
+
+---
+
+## Output
+
+This skill produces the following deliverables:
+
+| Deliverable | Format | Description |
+|-------------|--------|-------------|
+| Change Management Plan | Markdown | Comprehensive plan covering all aspects of change |
+| Stakeholder Engagement Plan | Markdown table | Power/Interest mapping with engagement strategies |
+| Communication Calendar | Markdown table | Timeline of communications with audience and channel |
+| ADKAR Assessment | Markdown | Individual/group assessment against ADKAR model |
+| Training Needs Matrix | Markdown table | Gap analysis with training recommendations |
+| Change Dashboard | Markdown | Progress metrics and status indicators |
+| Resistance Management Plan | Markdown | Resistance sources and mitigation strategies |
+
+**Example command execution**:
+
+```bash
+# Generate ADKAR assessment for a stakeholder group
+python3 skills/change-management-consultant/scripts/adkar_assessment.py \
+  --stakeholder "Sales Team" \
+  --awareness 8 --desire 4 --knowledge 2 --ability 0 --reinforcement 0
+
+# Calculate change readiness score
+python3 skills/change-management-consultant/scripts/readiness_calculator.py \
+  --leadership 8 --culture 6 --capacity 5 --history 7 --resources 9
+# Or use short flags: -l 8 -c 6 -a 5 -y 7 -r 9
+
+# Generate stakeholder analysis from CSV
+python3 skills/change-management-consultant/scripts/stakeholder_analyzer.py \
+  --input stakeholders.csv --output stakeholder_analysis.md
+```
+
+---
+
+## Resources
+
+### References (loaded on-demand)
+- `references/adkar_framework.md` - Detailed ADKAR model guidance
+- `references/kotter_8_step.md` - Kotter's 8-Step Process reference
+- `references/resistance_patterns.md` - Common resistance patterns and responses
+
+### Scripts (executable automation)
+- `scripts/adkar_assessment.py` - ADKAR scoring and gap analysis
+- `scripts/readiness_calculator.py` - Change readiness score calculation
+- `scripts/stakeholder_analyzer.py` - Stakeholder analysis from CSV input
+
+### Assets (templates for output)
+- `assets/change_plan_template.md` - Change management plan template
+- `assets/communication_calendar_template.md` - Communication calendar template
 
 ---
 
