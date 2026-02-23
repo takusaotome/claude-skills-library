@@ -85,13 +85,13 @@ OpenAI Codex CLIを活用して、コードやドキュメントの専門的な�
 **スクリプトを使用したレビュー（推奨）:**
 ```bash
 # コードレビュー
-python3 scripts/run_codex_review.py \
+python3 skills/codex-reviewer/scripts/run_codex_review.py \
   --type code \
   --target src/ \
   --output ./reviews
 
 # ドキュメントレビュー
-python3 scripts/run_codex_review.py \
+python3 skills/codex-reviewer/scripts/run_codex_review.py \
   --type document \
   --target docs/spec.md \
   --output ./reviews
@@ -136,7 +136,7 @@ codex exec --profile deep-review \
 
 ```bash
 # 自動的にgpt-5.3-codex + xhighを使用
-python3 scripts/run_codex_review.py \
+python3 skills/codex-reviewer/scripts/run_codex_review.py \
   --type code \
   --target src/ \
   --output ./reviews \
@@ -155,7 +155,7 @@ python3 scripts/run_codex_review.py \
 
 ```bash
 # 自動的にgpt-5.3-thinking + xhighを使用（深い推論）
-python3 scripts/run_codex_review.py \
+python3 skills/codex-reviewer/scripts/run_codex_review.py \
   --type document \
   --target docs/specification.md \
   --output ./reviews \
@@ -173,7 +173,7 @@ python3 scripts/run_codex_review.py \
 
 ```bash
 # 自動的にgpt-5.3-thinking + xhighを使用（深い推論）
-python3 scripts/run_codex_review.py \
+python3 skills/codex-reviewer/scripts/run_codex_review.py \
   --type design \
   --target docs/design/ \
   --output ./reviews \
@@ -190,7 +190,7 @@ python3 scripts/run_codex_review.py \
 ### 4. テスト計画レビュー
 
 ```bash
-python3 scripts/run_codex_review.py \
+python3 skills/codex-reviewer/scripts/run_codex_review.py \
   --type test \
   --target tests/ \
   --output ./reviews \
@@ -209,7 +209,7 @@ python3 scripts/run_codex_review.py \
 レビュー結果を確認・分析するには:
 
 ```bash
-python3 scripts/analyze_review.py \
+python3 skills/codex-reviewer/scripts/analyze_review.py \
   --input ./reviews/code_review_20251130_120000.md \
   --format summary
 ```
@@ -243,16 +243,16 @@ python3 scripts/analyze_review.py \
 **使用例:**
 ```bash
 # コードレビュー（自動的にgpt-5.3-codex + xhighを使用）
-python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews
+python3 skills/codex-reviewer/scripts/run_codex_review.py --type code --target src/ --output ./reviews
 
 # ドキュメントレビュー（自動的にgpt-5.3-thinking + xhighを使用）
-python3 scripts/run_codex_review.py --type document --target docs/ --output ./reviews
+python3 skills/codex-reviewer/scripts/run_codex_review.py --type document --target docs/ --output ./reviews
 
 # 軽量レビュー（高速）
-python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --profile quick-review
+python3 skills/codex-reviewer/scripts/run_codex_review.py --type code --target src/ --output ./reviews --profile quick-review
 
 # モデルと推論レベルを直接指定（オーバーライド）
-python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --model gpt-5-codex --reasoning medium
+python3 skills/codex-reviewer/scripts/run_codex_review.py --type code --target src/ --output ./reviews --model gpt-5-codex --reasoning medium
 ```
 
 ### Codex CLI直接使用時のプロファイル例
@@ -280,15 +280,53 @@ model_reasoning_effort = "medium"
 approval_policy = "never"
 ```
 
+## Output
+
+レビュー実行後、以下のファイルが生成されます:
+
+| 出力ファイル | 形式 | 説明 |
+|------------|------|------|
+| `<type>_review_<target>_<timestamp>.md` | Markdown | Codexによるレビュー結果（重要度別・カテゴリ別の指摘事項） |
+
+**出力例:**
+```
+reviews/
+├── code_review_main_20251130_120000.md
+├── document_review_spec_20251130_121500.md
+└── design_review_architecture_20251130_123000.md
+```
+
+**レビュー結果の構造:**
+```markdown
+## レビュー結果
+
+### Critical
+- **重要度**: Critical
+- **カテゴリ**: セキュリティ
+- **場所**: src/auth.py:45
+- **問題**: SQLインジェクションの脆弱性
+- **推奨**: パラメータ化クエリを使用
+
+### High
+...
+```
+
+**分析結果の形式:**
+- `summary`: 要約レポート（重要度別分布、カテゴリ別分布、要対応事項）
+- `issues`: 問題点リスト（重要度順に整理）
+- `actions`: アクションアイテムリスト（チェックリスト形式）
+- `json`: JSON形式（プログラム連携用）
+- `all`: 全形式を統合
+
 ## Resources
 
 ### scripts/
-- `run_codex_review.py`: Codex CLIを呼び出してレビューを実行するメインスクリプト
-- `analyze_review.py`: レビュー結果を分析・要約するスクリプト
+- `skills/codex-reviewer/scripts/run_codex_review.py`: Codex CLIを呼び出してレビューを実行するメインスクリプト
+- `skills/codex-reviewer/scripts/analyze_review.py`: レビュー結果を分析・要約するスクリプト
 
 ### references/
-- `review_prompts.md`: レビュータイプ別のプロンプトテンプレート
-- `codex_config_guide.md`: Codex CLI設定ガイド
+- `skills/codex-reviewer/references/review_prompts.md`: レビュータイプ別のプロンプトテンプレート
+- `skills/codex-reviewer/references/codex_config_guide.md`: Codex CLI設定ガイド
 
 ### assets/
-- `review_report_template.md`: レビュー結果レポートのテンプレート
+- `skills/codex-reviewer/assets/review_report_template.md`: レビュー結果レポートのテンプレート
