@@ -252,6 +252,78 @@ def test_extract_json_from_claude_greedy_fix(loop_module):
     assert result["score"] == 90
 
 
+def test_extract_json_from_claude_nested_findings(loop_module):
+    """JSON with nested objects in findings array is correctly extracted."""
+    text = json.dumps(
+        {
+            "score": 65,
+            "summary": "needs work",
+            "findings": [
+                {"severity": "high", "message": "missing {tests}", "improvement": "add tests"},
+                {"severity": "low", "message": "ok", "improvement": "none"},
+            ],
+        }
+    )
+    result = loop_module._extract_json_from_claude(text)
+    assert result is not None
+    assert result["score"] == 65
+    assert len(result["findings"]) == 2
+
+
+def test_extract_json_from_claude_nested_in_prose(loop_module):
+    """JSON embedded in prose text is correctly extracted."""
+    text = (
+        "Here is my review of the skill:\n\n"
+        + json.dumps(
+            {
+                "score": 78,
+                "summary": "decent",
+                "findings": [
+                    {"severity": "medium", "message": "refactor", "improvement": "split"},
+                ],
+            }
+        )
+        + "\n\nLet me know if you need more details."
+    )
+    result = loop_module._extract_json_from_claude(text)
+    assert result is not None
+    assert result["score"] == 78
+
+
+def test_extract_json_from_claude_braces_in_string(loop_module):
+    """Braces within string values don't break parsing."""
+    text = json.dumps(
+        {
+            "score": 55,
+            "summary": "missing {tests} in code",
+            "findings": [
+                {
+                    "severity": "high",
+                    "message": "no {unit} tests found",
+                    "improvement": "add {pytest} tests",
+                },
+            ],
+        }
+    )
+    result = loop_module._extract_json_from_claude(text)
+    assert result is not None
+    assert result["score"] == 55
+    assert "{tests}" in result["summary"]
+
+
+def test_extract_json_from_claude_no_score(loop_module):
+    """JSON without 'score' key returns None."""
+    text = '{"summary": "review", "findings": []}'
+    result = loop_module._extract_json_from_claude(text)
+    assert result is None
+
+
+def test_extract_json_from_claude_empty_input(loop_module):
+    """Empty input returns None."""
+    result = loop_module._extract_json_from_claude("")
+    assert result is None
+
+
 # ── Log rotation tests ──
 
 
@@ -438,3 +510,190 @@ def test_run_auto_score_fallback_on_uv_failure(loop_module, tmp_path: Path, monk
     assert len(call_log) == 2
     assert call_log[0][0] == "uv"
     assert call_log[1][0] == sys.executable
+
+
+# ── CalledProcessError and pre-commit integration tests ──
+
+
+def test_apply_improvement_logs_stderr_on_commit_failure(
+    loop_module,
+    tmp_path: Path,
+    monkeypatch,
+    caplog,
+):
+    """CalledProcessError with stderr is logged and triggers rollback."""
+    import logging
+    import subprocess as sp
+
+    re_report = {
+        "auto_review": {"score": 85},
+        "final_review": {"score": 85, "findings": [], "improvement_items": []},
+    }
+
+    def fake_run(cmd, **kwargs):
+        cmd_list = list(cmd)
+        check = kwargs.get("check", False)
+        # Raise CalledProcessError on git add with check=True (staging step)
+        if cmd_list[:2] == ["git", "add"] and check:
+            raise sp.CalledProcessError(
+                1,
+                cmd,
+                output=b"",
+                stderr=b"fatal: pathspec error",
+            )
+        return sp.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(loop_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(loop_module.shutil, "which", lambda name: f"/usr/bin/{name}")
+    monkeypatch.setattr(loop_module, "check_existing_pr", lambda *a, **kw: False)
+    monkeypatch.setattr(loop_module, "run_auto_score", lambda *a, **kw: re_report)
+
+    report = {
+        "auto_review": {"score": 70},
+        "final_review": {"score": 70, "improvement_items": ["fix X"], "findings": []},
+    }
+    with caplog.at_level(logging.ERROR, logger="skill_improvement"):
+        result = loop_module.apply_improvement(tmp_path, "test-skill", report, dry_run=False)
+
+    assert result is None
+    assert any("fatal: pathspec error" in rec.message for rec in caplog.records)
+
+
+def test_apply_improvement_runs_precommit_before_commit(
+    loop_module,
+    tmp_path: Path,
+    monkeypatch,
+):
+    """pre-commit runs before commit; auto-fixed files are re-staged."""
+    re_report = {
+        "auto_review": {"score": 85},
+        "final_review": {"score": 85, "findings": [], "improvement_items": []},
+    }
+
+    call_log = []
+    pre_commit_count = [0]
+
+    def fake_run(cmd, **kwargs):
+        from subprocess import CompletedProcess
+
+        cmd_list = list(cmd)
+        call_log.append(cmd_list)
+
+        # git diff --cached --name-only returns staged files
+        if cmd_list[:3] == ["git", "diff", "--cached"]:
+            return CompletedProcess(cmd, 0, "skills/test-skill/SKILL.md\n", "")
+        # pre-commit: first run fails (auto-fix), second run succeeds
+        if cmd_list[0] == "pre-commit":
+            pre_commit_count[0] += 1
+            if pre_commit_count[0] == 1:
+                return CompletedProcess(cmd, 1, "Fixing trailing whitespace...Fixed\n", "")
+            return CompletedProcess(cmd, 0, "all passed\n", "")
+        return CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(loop_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(loop_module.shutil, "which", lambda name: f"/usr/bin/{name}")
+    monkeypatch.setattr(loop_module, "check_existing_pr", lambda *a, **kw: False)
+    monkeypatch.setattr(loop_module, "run_auto_score", lambda *a, **kw: re_report)
+
+    report = {
+        "auto_review": {"score": 70},
+        "final_review": {"score": 70, "improvement_items": ["fix X"], "findings": []},
+    }
+    result = loop_module.apply_improvement(tmp_path, "test-skill", report, dry_run=False)
+
+    assert result is not None
+    # Verify pre-commit was called twice (auto-fix + verify)
+    pre_commit_calls = [c for c in call_log if c[0] == "pre-commit"]
+    assert len(pre_commit_calls) == 2
+    # Verify git add was called at least twice (initial + re-stage after pre-commit)
+    git_add_calls = [c for c in call_log if c[:2] == ["git", "add"]]
+    assert len(git_add_calls) >= 2
+
+
+def test_apply_improvement_precommit_not_installed(
+    loop_module,
+    tmp_path: Path,
+    monkeypatch,
+):
+    """When pre-commit is not installed, commit proceeds without it."""
+    re_report = {
+        "auto_review": {"score": 85},
+        "final_review": {"score": 85, "findings": [], "improvement_items": []},
+    }
+
+    call_log = []
+
+    def fake_run(cmd, **kwargs):
+        from subprocess import CompletedProcess
+
+        call_log.append(list(cmd))
+        return CompletedProcess(cmd, 0, "", "")
+
+    def fake_which(name):
+        if name == "pre-commit":
+            return None
+        return f"/usr/bin/{name}"
+
+    monkeypatch.setattr(loop_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(loop_module.shutil, "which", fake_which)
+    monkeypatch.setattr(loop_module, "check_existing_pr", lambda *a, **kw: False)
+    monkeypatch.setattr(loop_module, "run_auto_score", lambda *a, **kw: re_report)
+
+    report = {
+        "auto_review": {"score": 70},
+        "final_review": {"score": 70, "improvement_items": ["fix X"], "findings": []},
+    }
+    result = loop_module.apply_improvement(tmp_path, "test-skill", report, dry_run=False)
+
+    assert result is not None
+    # Verify pre-commit was never called
+    pre_commit_calls = [c for c in call_log if c[0] == "pre-commit"]
+    assert len(pre_commit_calls) == 0
+    # Verify git commit was still called
+    commit_calls = [c for c in call_log if c[:2] == ["git", "commit"]]
+    assert len(commit_calls) == 1
+
+
+def test_apply_improvement_precommit_unfixable_failure(
+    loop_module,
+    tmp_path: Path,
+    monkeypatch,
+):
+    """When pre-commit fails on 2nd pass, rollback occurs."""
+    re_report = {
+        "auto_review": {"score": 85},
+        "final_review": {"score": 85, "findings": [], "improvement_items": []},
+    }
+
+    call_log = []
+
+    def fake_run(cmd, **kwargs):
+        from subprocess import CompletedProcess
+
+        cmd_list = list(cmd)
+        call_log.append(cmd_list)
+
+        # git diff --cached returns staged files
+        if cmd_list[:3] == ["git", "diff", "--cached"]:
+            return CompletedProcess(cmd, 0, "skills/test-skill/SKILL.md\n", "")
+        # pre-commit always fails
+        if cmd_list[0] == "pre-commit":
+            return CompletedProcess(cmd, 1, "ERROR: unfixable\n", "")
+        return CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(loop_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(loop_module.shutil, "which", lambda name: f"/usr/bin/{name}")
+    monkeypatch.setattr(loop_module, "check_existing_pr", lambda *a, **kw: False)
+    monkeypatch.setattr(loop_module, "run_auto_score", lambda *a, **kw: re_report)
+
+    report = {
+        "auto_review": {"score": 70},
+        "final_review": {"score": 70, "improvement_items": ["fix X"], "findings": []},
+    }
+    result = loop_module.apply_improvement(tmp_path, "test-skill", report, dry_run=False)
+
+    # Should return None due to rollback
+    assert result is None
+    # Verify no commit was made
+    commit_calls = [c for c in call_log if c[:2] == ["git", "commit"]]
+    assert len(commit_calls) == 0

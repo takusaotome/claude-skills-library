@@ -12,7 +12,6 @@ import argparse
 import json
 import logging
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -310,13 +309,20 @@ def _extract_json_from_claude(output: str) -> dict | None:
     except json.JSONDecodeError:
         text = output
 
-    # Find JSON block in text
-    match = re.search(r"\{[\s\S]*?\"score\"\s*:\s*\d+[\s\S]*?\}", text)
-    if match:
+    # Find JSON block using raw_decode (handles nested objects and braces in strings)
+    decoder = json.JSONDecoder()
+    idx = 0
+    while idx < len(text):
+        pos = text.find("{", idx)
+        if pos == -1:
+            break
         try:
-            return json.loads(match.group(0))
+            obj, end_idx = decoder.raw_decode(text, pos)
+            if isinstance(obj, dict) and "score" in obj:
+                return obj
+            idx = pos + 1
         except json.JSONDecodeError:
-            pass
+            idx = pos + 1
     return None
 
 
@@ -452,7 +458,7 @@ def apply_improvement(
                 check=False,
             )
 
-        # Commit, push, create PR
+        # Stage files for commit
         subprocess.run(
             ["git", "add", f"skills/{skill_name}/"],
             cwd=project_root,
@@ -460,13 +466,56 @@ def apply_improvement(
             capture_output=True,
         )
 
+        # Run pre-commit hooks to auto-fix whitespace/EOF issues
+        if shutil.which("pre-commit"):
+            staged = _get_staged_files(project_root, skill_name)
+            if staged:
+                pc_result = subprocess.run(
+                    ["pre-commit", "run", "--files"] + staged,
+                    cwd=project_root,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                if pc_result.returncode != 0:
+                    logger.info("pre-commit auto-fixed files; re-staging.")
+                    subprocess.run(
+                        ["git", "add", f"skills/{skill_name}/"],
+                        cwd=project_root,
+                        check=True,
+                        capture_output=True,
+                    )
+                    # 2nd pass: verify auto-fixes resolved all issues
+                    staged2 = _get_staged_files(project_root, skill_name)
+                    if staged2:
+                        pc2 = subprocess.run(
+                            ["pre-commit", "run", "--files"] + staged2,
+                            cwd=project_root,
+                            capture_output=True,
+                            text=True,
+                            check=False,
+                        )
+                        if pc2.returncode != 0:
+                            logger.error(
+                                "pre-commit still failing after auto-fix; rolling back.\nstdout: %s\nstderr: %s",
+                                pc2.stdout.strip()[:500],
+                                pc2.stderr.strip()[:500] if pc2.stderr else "(empty)",
+                            )
+                            _rollback(project_root, skill_name, branch_name)
+                            return None
+
         commit_msg = f"Improve {skill_name} skill (score {pre_score} -> {re_score})"
-        subprocess.run(
+        commit = subprocess.run(
             ["git", "commit", "-m", commit_msg],
             cwd=project_root,
-            check=True,
             capture_output=True,
+            text=True,
+            check=False,
         )
+        if commit.returncode != 0:
+            logger.error("git commit failed: %s", commit.stderr.strip()[:500])
+            _rollback(project_root, skill_name, branch_name)
+            return None
 
         push = subprocess.run(
             ["git", "push", "-u", "origin", branch_name],
@@ -507,6 +556,17 @@ def apply_improvement(
 
         return re_report
 
+    except subprocess.CalledProcessError as e:
+        stderr_text = e.stderr
+        if isinstance(stderr_text, bytes):
+            stderr_text = stderr_text.decode("utf-8", errors="replace")
+        logger.error(
+            "Subprocess failed during improvement: %s\nstderr: %s",
+            e,
+            stderr_text.strip()[:500] if stderr_text else "(empty)",
+        )
+        _rollback(project_root, skill_name, branch_name)
+        return None
     except Exception:
         logger.exception("Unexpected error during improvement.")
         _rollback(project_root, skill_name, branch_name)
@@ -554,6 +614,20 @@ def _rollback(project_root: Path, skill_name: str, branch_name: str) -> None:
         capture_output=True,
         check=False,
     )
+
+
+def _get_staged_files(project_root: Path, skill_name: str) -> list[str]:
+    """Return list of staged files under the skill directory."""
+    result = subprocess.run(
+        ["git", "diff", "--cached", "--name-only", "--", f"skills/{skill_name}/"],
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0 or not result.stdout.strip():
+        return []
+    return [f.strip() for f in result.stdout.strip().splitlines() if f.strip()]
 
 
 # ── Summary ──
