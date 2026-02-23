@@ -236,6 +236,26 @@ fpdf2 professional PDF styling guide — frontmatter fields, theme options, tabl
 
 Sample YAML frontmatter templates for estimates, internal documents, and simple reports.
 
+## Important: CJK Font Rendering in PDF Preview
+
+**CRITICAL — Do NOT misdiagnose font issues in fpdf2 mode.**
+
+When using fpdf2 mode with CJK fonts (Hiragino on macOS, Yu Gothic on Windows, Noto Sans CJK on Linux), the generated PDF renders correctly in standard PDF viewers (Preview.app, Adobe Acrobat, Chrome, etc.). However, **Claude Code's Read tool PDF preview may display CJK characters as garbled/corrupted glyphs**. This is a limitation of the preview rendering, NOT an actual font embedding problem.
+
+**Rules:**
+- After generating a PDF with fpdf2, verify correctness by checking the **text extraction layer** (shown as plain text in the Read tool output), NOT the rendered image preview.
+- If the text extraction shows correct CJK text, the PDF is correct. **Do NOT switch to Playwright mode** as a workaround.
+- The `fsSelection bit 5 (bold)` warning during generation is cosmetic and does not affect output quality.
+- Only investigate font issues if the **text extraction** itself shows garbled characters, or if the user explicitly reports rendering problems in their PDF viewer.
+
+## Markdown Limitations for fpdf2 Mode
+
+**Tables inside list items are NOT supported.** The mistune parser cannot recognize Markdown tables that are indented inside list items (`- item` followed by indented `| table |`). Tables must be placed at the top level (no leading spaces/indentation) to be parsed and rendered correctly.
+
+**Before conversion, check for and fix:**
+- Tables indented under `- ` list items → Move to top level
+- Tables indented under `>` blockquotes → Move to top level
+
 ## Troubleshooting
 
 ### fpdf2 mode: Font not found
