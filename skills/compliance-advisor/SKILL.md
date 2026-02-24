@@ -39,6 +39,23 @@ This skill provides comprehensive support for compliance, internal controls, and
 - **Japanese (日本語)**: Templates for domestic compliance
 - **English**: Templates for global/US compliance
 
+## Prerequisites
+
+- Understanding of the organization's business processes and control environment
+- Access to relevant process documentation, policies, and prior audit reports
+- Knowledge of applicable regulatory requirements (J-SOX, SOX, etc.)
+
+## Output
+
+This skill provides **conversational guidance and advisory support**. It does not generate standalone files automatically. Outputs include:
+
+- Compliance assessment recommendations and gap analyses
+- Risk Control Matrix structures and content guidance
+- Internal audit planning frameworks and procedures
+- Regulatory response strategies and remediation advice
+
+Templates in `skills/compliance-advisor/assets/` can be used as starting points when formal documentation is needed.
+
 ## When to Use This Skill
 
 ### Trigger Scenarios
@@ -210,7 +227,7 @@ Classify identified deficiencies:
 | Significant Deficiency | 開示すべき重要な不備 | Significant Deficiency | Less severe than material weakness |
 | Material Weakness | 重要な欠陥 | Material Weakness | Reasonable possibility of material misstatement |
 
-Use template: `assets/jsox_sox_checklist_ja.md` or `assets/jsox_sox_checklist_en.md`
+Use template: `skills/compliance-advisor/assets/jsox_sox_checklist_ja.md` or `skills/compliance-advisor/assets/jsox_sox_checklist_en.md`
 
 ---
 
@@ -302,7 +319,7 @@ Evaluate whether controls adequately mitigate risks:
 | Medium (8-14) | Effective | Low |
 | Low (1-7) | Any | Low |
 
-Use template: `assets/risk_control_matrix_ja.md` or `assets/risk_control_matrix_en.md`
+Use template: `skills/compliance-advisor/assets/risk_control_matrix_ja.md` or `skills/compliance-advisor/assets/risk_control_matrix_en.md`
 
 ---
 
@@ -414,7 +431,7 @@ Create detailed audit procedures:
    - Scope and methodology
    - Testing details
 
-Use template: `assets/internal_audit_plan_ja.md` or `assets/internal_audit_plan_en.md`
+Use template: `skills/compliance-advisor/assets/internal_audit_plan_ja.md` or `skills/compliance-advisor/assets/internal_audit_plan_en.md`
 
 ---
 
@@ -535,24 +552,24 @@ Create sustainable compliance:
 
 ## Resources
 
-### Templates (assets/)
+### Templates (skills/compliance-advisor/assets/)
 
 | Template | Language | Use For |
 |----------|----------|---------|
-| `jsox_sox_checklist_ja.md` | Japanese | J-SOX compliance evaluation |
-| `jsox_sox_checklist_en.md` | English | SOX compliance evaluation |
-| `risk_control_matrix_ja.md` | Japanese | RCM development (domestic) |
-| `risk_control_matrix_en.md` | English | RCM development (global) |
-| `internal_audit_plan_ja.md` | Japanese | Audit planning (domestic) |
-| `internal_audit_plan_en.md` | English | Audit planning (global) |
+| `skills/compliance-advisor/assets/jsox_sox_checklist_ja.md` | Japanese | J-SOX compliance evaluation |
+| `skills/compliance-advisor/assets/jsox_sox_checklist_en.md` | English | SOX compliance evaluation |
+| `skills/compliance-advisor/assets/risk_control_matrix_ja.md` | Japanese | RCM development (domestic) |
+| `skills/compliance-advisor/assets/risk_control_matrix_en.md` | English | RCM development (global) |
+| `skills/compliance-advisor/assets/internal_audit_plan_ja.md` | Japanese | Audit planning (domestic) |
+| `skills/compliance-advisor/assets/internal_audit_plan_en.md` | English | Audit planning (global) |
 
-### Reference Guides (references/)
+### Reference Guides (skills/compliance-advisor/references/)
 
 | Guide | Content |
 |-------|---------|
-| `jsox_sox_framework.md` | J-SOX and SOX requirements comparison |
-| `internal_control_methodology.md` | COSO framework, 3 Lines of Defense |
-| `risk_assessment_guide.md` | Risk evaluation methodology |
+| `skills/compliance-advisor/references/jsox_sox_framework.md` | J-SOX and SOX requirements comparison |
+| `skills/compliance-advisor/references/internal_control_methodology.md` | COSO framework, 3 Lines of Defense |
+| `skills/compliance-advisor/references/risk_assessment_guide.md` | Risk evaluation methodology |
 
 ---
 
