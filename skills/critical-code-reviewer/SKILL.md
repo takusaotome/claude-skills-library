@@ -12,6 +12,25 @@ description: |
 
 # Critical Code Reviewer
 
+## When to Use
+
+このスキルは以下の場合に使用します：
+
+- **コードレビュー依頼時**: 「このコードをレビューして」「コードの品質をチェックして」
+- **PRレビュー時**: マージ前の包括的なコード品質評価
+- **リファクタリング前**: 既存コードの問題点を特定したい場合
+- **バグ探索時**: 「このコードにバグがないか確認して」「本番で問題が起きそうな箇所を探して」
+- **設計評価時**: コードの設計品質、保守性を評価したい場合
+
+**トリガーワード**: "critical code review", "multi-persona code review", "expert code review",
+"code quality assessment", "find bugs", "コードレビュー", "品質チェック"
+
+## Prerequisites
+
+- **Task tool**: 4つのサブエージェントを並列起動するために必要
+- **Read tool**: レビュー対象ファイルの読み込み
+- **Grep/Glob tools**: 依存関係の事前チェック（関数内import検出等）
+
 ## Overview
 
 このスキルは、ソースコードを4人の異なる専門家の視点から批判的にレビューします：
@@ -240,11 +259,20 @@ Claude:
 3. [Phase 3] 結果を統合し、レビューレポートを生成。
 ```
 
-## Files
+## Resources
 
-- `references/persona_definitions.md` - 4ペルソナの詳細定義
-- `references/code_smell_patterns.md` - コードスメル・アンチパターン集
-- `references/review_framework.md` - 批判的コード分析フレームワーク
-- `references/language_specific_checks.md` - Python/JavaScript固有チェック
-- `references/severity_criteria.md` - 重大度判定基準
-- `assets/code_review_report_template.md` - レビューレポートテンプレート
+### References（参照ドキュメント）
+
+| File | Purpose |
+|------|---------|
+| `references/persona_definitions.md` | 4ペルソナの詳細定義・レビュー観点 |
+| `references/code_smell_patterns.md` | コードスメル・アンチパターン集 |
+| `references/review_framework.md` | 批判的コード分析フレームワーク |
+| `references/language_specific_checks.md` | Python/JavaScript固有チェック |
+| `references/severity_criteria.md` | 重大度判定基準 |
+
+### Assets（出力テンプレート）
+
+| File | Purpose |
+|------|---------|
+| `assets/code_review_report_template.md` | レビューレポートテンプレート |
