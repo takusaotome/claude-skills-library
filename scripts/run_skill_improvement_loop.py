@@ -326,6 +326,12 @@ def _extract_json_from_claude(output: str) -> dict | None:
     return None
 
 
+def _is_nothing_to_commit_output(output: str) -> bool:
+    """Return True when git commit output indicates no staged changes."""
+    text = output.lower()
+    return "nothing to commit" in text or "no changes added to commit" in text or "nothing added to commit" in text
+
+
 # ── Improvement ──
 
 
@@ -360,7 +366,11 @@ def apply_improvement(
     Returns the post-improvement report dict on success, or None on failure/dry-run.
     """
     if dry_run:
-        logger.info("[dry-run] Would improve skill '%s' (score=%d).", skill_name, report["final_review"]["score"])
+        logger.info(
+            "[dry-run] Would improve skill '%s' (score=%d).",
+            skill_name,
+            report["final_review"]["score"],
+        )
         return None
 
     if not shutil.which("claude"):
@@ -513,7 +523,15 @@ def apply_improvement(
             check=False,
         )
         if commit.returncode != 0:
-            logger.error("git commit failed: %s", commit.stderr.strip()[:500])
+            commit_output = ((commit.stderr or "") + "\n" + (commit.stdout or "")).strip()
+            if _is_nothing_to_commit_output(commit_output):
+                logger.info(
+                    "No staged changes to commit for %s; rolling back no-op improvement branch.",
+                    skill_name,
+                )
+                _rollback(project_root, skill_name, branch_name)
+                return None
+            logger.error("git commit failed: %s", commit_output[:500] if commit_output else "(empty)")
             _rollback(project_root, skill_name, branch_name)
             return None
 
@@ -541,6 +559,8 @@ def apply_improvement(
                 "gh",
                 "pr",
                 "create",
+                "--head",
+                branch_name,
                 "--title",
                 f"Improve {skill_name} skill (score {pre_score} -> {re_score})",
                 "--body",
@@ -804,7 +824,11 @@ def run(project_root: Path, dry_run: bool = False) -> int:
                 final_score = report.get("auto_review", {}).get("score", final_score)
                 improved = True
         else:
-            logger.info("Auto score meets threshold (%d >= %d); no improvement needed.", final_score, SCORE_THRESHOLD)
+            logger.info(
+                "Auto score meets threshold (%d >= %d); no improvement needed.",
+                final_score,
+                SCORE_THRESHOLD,
+            )
 
         # Summary
         write_daily_summary(project_root, skill_name, report, improved)
