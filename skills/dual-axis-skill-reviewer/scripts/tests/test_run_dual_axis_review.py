@@ -176,7 +176,7 @@ def test_score_skill_counts_tests_in_root_tests_dir(reviewer_module, tmp_path: P
                 "## Output",
                 "x",
                 "## Resources",
-                "- `skills/sample-skill/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),
@@ -255,7 +255,13 @@ def test_to_markdown_contains_combined_sections(reviewer_module):
             "score": 75,
             "weights": {"auto_weight": 0.5, "llm_weight": 0.5},
             "findings": [
-                {"axis": "auto", "severity": "medium", "path": "skills/x-skill/SKILL.md", "line": 3, "message": "m"}
+                {
+                    "axis": "auto",
+                    "severity": "medium",
+                    "path": "skills/x-skill/SKILL.md",
+                    "line": 3,
+                    "message": "m",
+                }
             ],
             "improvements_required": True,
             "improvement_items": ["m -> fix"],
@@ -296,7 +302,7 @@ def test_execution_safety_max_25(reviewer_module, tmp_path: Path):
                 "## Output",
                 "x",
                 "## Resources",
-                "- `skills/perfect-skill/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),
@@ -336,7 +342,7 @@ def test_api_key_score_exempt_with_frontmatter_flag(reviewer_module, tmp_path: P
                 "## Output",
                 "x",
                 "## Resources",
-                "- `skills/no-api-skill/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),
@@ -375,7 +381,7 @@ def test_api_key_score_exempt_when_no_api_reference(reviewer_module, tmp_path: P
                 "## Output",
                 "x",
                 "## Resources",
-                "- `skills/chart-skill/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),
@@ -408,7 +414,7 @@ def test_domain_specific_workflow_and_reference_headings_are_recognized(reviewer
                 "## Backtesting Workflow",
                 "x",
                 "## Available Reference Documentation",
-                "- `skills/knowledge-workflow/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),
@@ -444,7 +450,7 @@ def test_knowledge_only_skill_not_penalized_for_no_scripts_or_tests(reviewer_mod
                 "## Output",
                 "Conversational guidance only",
                 "## Available Reference Documentation",
-                "- `skills/knowledge-only/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),
@@ -497,7 +503,7 @@ def test_main_e2e_generates_report_files(tmp_path: Path):
                 "## Output",
                 "x",
                 "## Resources",
-                "- `skills/e2e-skill/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),
@@ -551,7 +557,7 @@ def test_api_key_detected_from_scripts(reviewer_module, tmp_path: Path):
                 "## Output",
                 "x",
                 "## Resources",
-                "- `skills/api-in-scripts/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),
@@ -588,7 +594,7 @@ def test_api_key_detected_from_scripts(reviewer_module, tmp_path: Path):
                 "## Output",
                 "x",
                 "## Resources",
-                "- `skills/no-api-skill2/references/ref.md`",
+                "- `references/ref.md`",
                 "",
             ]
         ),

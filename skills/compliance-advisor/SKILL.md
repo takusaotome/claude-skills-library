@@ -563,13 +563,13 @@ Create sustainable compliance:
 | `skills/compliance-advisor/assets/internal_audit_plan_ja.md` | Japanese | Audit planning (domestic) |
 | `skills/compliance-advisor/assets/internal_audit_plan_en.md` | English | Audit planning (global) |
 
-### Reference Guides (skills/compliance-advisor/references/)
+### Reference Guides (references/)
 
 | Guide | Content |
 |-------|---------|
-| `skills/compliance-advisor/references/jsox_sox_framework.md` | J-SOX and SOX requirements comparison |
-| `skills/compliance-advisor/references/internal_control_methodology.md` | COSO framework, 3 Lines of Defense |
-| `skills/compliance-advisor/references/risk_assessment_guide.md` | Risk evaluation methodology |
+| `references/jsox_sox_framework.md` | J-SOX and SOX requirements comparison |
+| `references/internal_control_methodology.md` | COSO framework, 3 Lines of Defense |
+| `references/risk_assessment_guide.md` | Risk evaluation methodology |
 
 ---
 

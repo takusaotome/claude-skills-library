@@ -68,7 +68,7 @@ Start with a friendly greeting and ask about the bug discovery:
 
 ### Step 2: Categorize the Bug Type
 
-Based on the user's description, identify the bug type using `skills/bug-ticket-creator/references/defect_classification_guide.md`:
+Based on the user's description, identify the bug type using `references/defect_classification_guide.md`:
 
 Ask clarifying questions to determine:
 - **機能不具合（Functional Defect）**: 機能が動作しない、誤動作する
@@ -116,7 +116,7 @@ Make a preliminary severity assessment (to be refined later):
 ## Workflow 2: Reproduction Steps Collection
 
 ### Purpose
-Systematically gather detailed reproduction steps following the CLEAR principles from `skills/bug-ticket-creator/references/reproduction_steps_guide.md`.
+Systematically gather detailed reproduction steps following the CLEAR principles from `references/reproduction_steps_guide.md`.
 
 ### Step 1: Establish Preconditions
 
@@ -313,7 +313,7 @@ Verify if the bug is environment-specific:
 ## Workflow 5: Severity and Priority Assessment
 
 ### Purpose
-Determine appropriate severity and priority using `skills/bug-ticket-creator/references/severity_priority_guide.md`.
+Determine appropriate severity and priority using `references/severity_priority_guide.md`.
 
 ### Step 1: Assess Severity (Technical Impact)
 
@@ -551,18 +551,18 @@ This skill integrates comprehensive reference guides for accurate bug classifica
 
 ### When to Reference
 
-**`skills/bug-ticket-creator/references/defect_classification_guide.md`**:
+**`references/defect_classification_guide.md`**:
 - During bug type identification (Workflow 1)
 - To understand sub-categories
 - For examples of each defect type
 
-**`skills/bug-ticket-creator/references/severity_priority_guide.md`**:
+**`references/severity_priority_guide.md`**:
 - During severity assessment (Workflow 5, Step 1)
 - During priority assessment (Workflow 5, Step 2)
 - To explain severity/priority combinations
 - For edge case decisions
 
-**`skills/bug-ticket-creator/references/reproduction_steps_guide.md`**:
+**`references/reproduction_steps_guide.md`**:
 - During reproduction steps collection (Workflow 2)
 - To ensure CLEAR principles are followed
 - For examples of good vs bad steps
@@ -570,19 +570,19 @@ This skill integrates comprehensive reference guides for accurate bug classifica
 
 ### Key Principles from References
 
-**CLEAR Principles** (from `skills/bug-ticket-creator/references/reproduction_steps_guide.md`):
+**CLEAR Principles** (from `references/reproduction_steps_guide.md`):
 - **C**omplete: すべての必要な情報が含まれている
 - **L**ogical: 手順が論理的な順序
 - **E**xplicit: 曖昧な表現がなく具体的
 - **A**ctionable: 誰でも同じ手順を実行できる
 - **R**eproducible: 何度でも同じ結果になる
 
-**Severity vs Priority** (from `skills/bug-ticket-creator/references/severity_priority_guide.md`):
+**Severity vs Priority** (from `references/severity_priority_guide.md`):
 - Severity = Technical impact (QA判定)
 - Priority = Business urgency (PO/PM判定)
 - High severity ≠ High priority (always)
 
-**Defect Classification** (from `skills/bug-ticket-creator/references/defect_classification_guide.md`):
+**Defect Classification** (from `references/defect_classification_guide.md`):
 - 7 major defect types with sub-categories
 - Clear examples for each type
 - Impact scope assessment
@@ -653,19 +653,19 @@ This skill integrates comprehensive reference guides for accurate bug classifica
 
 ### references/
 
-**`skills/bug-ticket-creator/references/defect_classification_guide.md`**: 不具合分類ガイド
+**`references/defect_classification_guide.md`**: 不具合分類ガイド
 - 7つの不具合タイプ分類（機能、UI/UX、パフォーマンス、データ、セキュリティ、統合、環境依存）
 - サブカテゴリと具体例
 - 発生フェーズ分類、原因分類、影響範囲分類
 - 分類選択ガイドとベストプラクティス
 
-**`skills/bug-ticket-creator/references/severity_priority_guide.md`**: 重要度・優先度判定ガイド
+**`references/severity_priority_guide.md`**: 重要度・優先度判定ガイド
 - 重要度（Severity）4段階: Critical, High, Medium, Low
 - 優先度（Priority）4段階: P0, P1, P2, P3
 - 判定基準、判定フローチャート、マトリックス
 - 実際の判定例、特殊ケース、よくある判定ミス
 
-**`skills/bug-ticket-creator/references/reproduction_steps_guide.md`**: 再現手順の書き方ガイド
+**`references/reproduction_steps_guide.md`**: 再現手順の書き方ガイド
 - CLEAR原則（Complete, Logical, Explicit, Actionable, Reproducible）
 - 事前条件、再現手順、期待結果、実際結果、環境情報の書き方
 - 良い例と悪い例の比較

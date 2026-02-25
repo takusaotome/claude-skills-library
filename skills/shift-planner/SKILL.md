@@ -148,7 +148,7 @@ production-schedule-optimizer の出力（人員要件）を活用可能だが�
 - 従業員別: 実労働時間, 契約時間差分, 勤務日数, 週末シフト数, 回避曜日違反数
 - 全体: 週末シフト標準偏差 → SFT-W009 (>1.0)
 
-> **Detail**: Load `skills/shift-planner/references/shift_planning_methodology.md` for algorithm details.
+> **Detail**: Load `references/shift_planning_methodology.md` for algorithm details.
 
 ---
 
@@ -184,7 +184,7 @@ production-schedule-optimizer の出力（人員要件）を活用可能だが�
 | SFT-W009 | 週末シフト標準偏差 > 1.0 | 週末不公平 |
 | SFT-W010 | max_hours_week 到達 | 時間上限で未充足 |
 
-> **Detail**: Load `skills/shift-planner/references/labor_constraints_guide.md` for labor law considerations.
+> **Detail**: Load `references/labor_constraints_guide.md` for labor law considerations.
 
 ---
 

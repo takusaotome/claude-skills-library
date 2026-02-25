@@ -120,8 +120,8 @@ Output template: `skills/ma-cvp-break-even/assets/cvp_analysis_template_ja.md` (
 
 ### References (load into context for guidance)
 
-- `skills/ma-cvp-break-even/references/第09回_損益分岐点って要は元を取るライン_20251005.md` - Break-even analysis fundamentals with practical bakery business examples, margin of safety concepts
-- `skills/ma-cvp-break-even/references/第10回_差額原価収益分析_20251104.md` - Differential cost-revenue analysis for make-or-buy and special order decisions
+- `references/第09回_損益分岐点って要は元を取るライン_20251005.md` - Break-even analysis fundamentals with practical bakery business examples, margin of safety concepts
+- `references/第10回_差額原価収益分析_20251104.md` - Differential cost-revenue analysis for make-or-buy and special order decisions
 
 ### Assets (templates for output generation)
 

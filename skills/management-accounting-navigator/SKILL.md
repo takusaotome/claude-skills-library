@@ -55,18 +55,18 @@ Use this skill in the following scenarios:
 
 | # | Domain | Description | Routing Target |
 |---|--------|-------------|----------------|
-| 1 | Budget Planning & Management | Budget creation, zero-based budgeting, budget cycle | Reference: `skills/management-accounting-navigator/references/第05回_その予算って根拠あるの_20250507.md` |
+| 1 | Budget Planning & Management | Budget creation, zero-based budgeting, budget cycle | Reference: `references/第05回_その予算って根拠あるの_20250507.md` |
 | 2 | Budget-Actual Variance Analysis | Variance calculation, favorable/unfavorable assessment | Skill: `ma-budget-actual-variance` |
-| 3 | Cost Accounting (Standard, ABC) | Standard costing, ABC, cost allocation methods | Skill: `ma-standard-cost-variance`, Reference: `skills/management-accounting-navigator/references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` |
+| 3 | Cost Accounting (Standard, ABC) | Standard costing, ABC, cost allocation methods | Skill: `ma-standard-cost-variance`, Reference: `references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` |
 | 4 | CVP / Break-Even Analysis | Break-even point, contribution margin, what-if | Skill: `ma-cvp-break-even` |
-| 5 | KPI Design & Performance Measurement | KPI framework, BSC, OKR, dashboard design | Reference: `skills/management-accounting-navigator/references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md` |
-| 6 | Monthly Close Acceleration | Closing process optimization, early warning systems | Reference: `skills/management-accounting-navigator/references/第07回_まだ先月分締まってないの_20250720.md` |
-| 7 | Make-or-Buy / Outsourcing Analysis | Differential cost-revenue analysis, outsourcing evaluation | Reference: `skills/management-accounting-navigator/references/第10回_差額原価収益分析_20251104.md` |
+| 5 | KPI Design & Performance Measurement | KPI framework, BSC, OKR, dashboard design | Reference: `references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md` |
+| 6 | Monthly Close Acceleration | Closing process optimization, early warning systems | Reference: `references/第07回_まだ先月分締まってないの_20250720.md` |
+| 7 | Make-or-Buy / Outsourcing Analysis | Differential cost-revenue analysis, outsourcing evaluation | Reference: `references/第10回_差額原価収益分析_20251104.md` |
 | 8 | Transfer Pricing | Inter-division pricing, arm's length principle | General guidance |
 | 9 | Investment Appraisal (NPV/IRR) | Capital budgeting, DCF, payback analysis | Skill: `financial-analyst` |
-| 10 | Segment / Division Reporting | Segment P&L, profitability by division/store | Reference: `skills/management-accounting-navigator/references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` |
+| 10 | Segment / Division Reporting | Segment P&L, profitability by division/store | Reference: `references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` |
 | 11 | Cash Flow Management | Cash conversion cycle, working capital optimization | General guidance |
-| 12 | Forecasting & Rolling Forecast | Rolling forecast, predictive analytics | Reference: `skills/management-accounting-navigator/references/第03回_データドリブン経営とは_20250307.md` |
+| 12 | Forecasting & Rolling Forecast | Rolling forecast, predictive analytics | Reference: `references/第03回_データドリブン経営とは_20250307.md` |
 
 ## Workflow 2: Analysis Routing
 
@@ -109,18 +109,18 @@ Output template: `skills/management-accounting-navigator/assets/domain_classific
 
 ### References (load into context for domain-specific guidance)
 
-- `skills/management-accounting-navigator/references/第01回_決算で一喜一憂しないために_20241224.md` - Introduction to management accounting vs. financial accounting
-- `skills/management-accounting-navigator/references/第02回_経営改善の強い味方〜その①管理会計_20250128.md` - Management accounting as a tool for business improvement
-- `skills/management-accounting-navigator/references/第03回_データドリブン経営とは_20250307.md` - Data-driven management and forecasting fundamentals
-- `skills/management-accounting-navigator/references/第04回_分析_20250408.md` - Analysis methodology foundations
-- `skills/management-accounting-navigator/references/第05回_その予算って根拠あるの_20250507.md` - Evidence-based budgeting approaches
-- `skills/management-accounting-navigator/references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md` - KPI design principles and employee engagement
-- `skills/management-accounting-navigator/references/第07回_まだ先月分締まってないの_20250720.md` - Monthly close acceleration techniques
-- `skills/management-accounting-navigator/references/第08回_予算実績差異分析_20250820.md` - Budget-actual variance analysis methodology
-- `skills/management-accounting-navigator/references/第09回_損益分岐点って要は元を取るライン_20251005.md` - Break-even analysis fundamentals
-- `skills/management-accounting-navigator/references/第10回_差額原価収益分析_20251104.md` - Differential cost-revenue analysis for make-or-buy decisions
-- `skills/management-accounting-navigator/references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` - Activity-Based Costing and store-level profitability
-- `skills/management-accounting-navigator/references/第12回_予定原価という考え方_20260122.md` - Standard cost (planned cost) concepts and variance analysis
+- `references/第01回_決算で一喜一憂しないために_20241224.md` - Introduction to management accounting vs. financial accounting
+- `references/第02回_経営改善の強い味方〜その①管理会計_20250128.md` - Management accounting as a tool for business improvement
+- `references/第03回_データドリブン経営とは_20250307.md` - Data-driven management and forecasting fundamentals
+- `references/第04回_分析_20250408.md` - Analysis methodology foundations
+- `references/第05回_その予算って根拠あるの_20250507.md` - Evidence-based budgeting approaches
+- `references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md` - KPI design principles and employee engagement
+- `references/第07回_まだ先月分締まってないの_20250720.md` - Monthly close acceleration techniques
+- `references/第08回_予算実績差異分析_20250820.md` - Budget-actual variance analysis methodology
+- `references/第09回_損益分岐点って要は元を取るライン_20251005.md` - Break-even analysis fundamentals
+- `references/第10回_差額原価収益分析_20251104.md` - Differential cost-revenue analysis for make-or-buy decisions
+- `references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` - Activity-Based Costing and store-level profitability
+- `references/第12回_予定原価という考え方_20260122.md` - Standard cost (planned cost) concepts and variance analysis
 
 ### Related Skills (route to for specialized analysis)
 
@@ -165,7 +165,7 @@ Output template: `skills/management-accounting-navigator/assets/domain_classific
 
 **Classification**:
 - Domain: #5 KPI Design & Performance Measurement (Confidence: High)
-- Routing: Reference `skills/management-accounting-navigator/references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md`
+- Routing: Reference `references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md`
 
 **Response**:
 - Load reference material on KPI design principles

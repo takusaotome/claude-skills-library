@@ -106,8 +106,8 @@ Output template: `skills/ma-budget-actual-variance/assets/variance_report_templa
 
 ### References (load into context for guidance)
 
-- `skills/ma-budget-actual-variance/references/第08回_予算実績差異分析_20250820.md` - Comprehensive guide on budget-actual variance analysis methodology with practical bakery business examples
-- `skills/ma-budget-actual-variance/references/第05回_その予算って根拠あるの_20250507.md` - Budget planning fundamentals and evidence-based budgeting approaches
+- `references/第08回_予算実績差異分析_20250820.md` - Comprehensive guide on budget-actual variance analysis methodology with practical bakery business examples
+- `references/第05回_その予算って根拠あるの_20250507.md` - Budget planning fundamentals and evidence-based budgeting approaches
 
 ### Assets (templates for output generation)
 

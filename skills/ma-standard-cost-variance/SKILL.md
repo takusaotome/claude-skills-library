@@ -134,8 +134,8 @@ Output template: `skills/ma-standard-cost-variance/assets/cost_variance_report_t
 
 ### References (load into context for guidance)
 
-- `skills/ma-standard-cost-variance/references/第12回_予定原価という考え方_20260122.md` - Standard cost (planned cost) concepts, bakery business case study with price/quantity variance decomposition
-- `skills/ma-standard-cost-variance/references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` - Activity-Based Costing methodology for store-level cost allocation and profitability analysis
+- `references/第12回_予定原価という考え方_20260122.md` - Standard cost (planned cost) concepts, bakery business case study with price/quantity variance decomposition
+- `references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` - Activity-Based Costing methodology for store-level cost allocation and profitability analysis
 
 ### Assets (templates for output generation)
 

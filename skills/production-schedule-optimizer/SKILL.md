@@ -142,7 +142,7 @@ total_staff_hours = staff_hours * production_count
 **production_count 早見表:**
 - shelf_life=1 -> 7回/週, shelf_life=2 -> 4回, shelf_life=3 -> 3回, shelf_life=7 -> 1回
 
-> **Detail**: Load `skills/production-schedule-optimizer/references/food_production_guide.md` for FEFO integration and HACCP considerations.
+> **Detail**: Load `references/food_production_guide.md` for FEFO integration and HACCP considerations.
 
 ---
 
@@ -223,7 +223,7 @@ end_time = start_time + duration_minutes
 room_day_next_available[room][day] = end_time
 ```
 
-> **Detail**: Load `skills/production-schedule-optimizer/references/scheduling_methodology.md` for improvement techniques and constraint patterns.
+> **Detail**: Load `references/scheduling_methodology.md` for improvement techniques and constraint patterns.
 > **Template**: Use `skills/production-schedule-optimizer/assets/schedule_template.md` for output formatting.
 
 ---
@@ -265,7 +265,7 @@ gap = recommended_staff - current_staff  # >0:不足, 0:適正, <0:余剰
 | BAKERY | MON | 3 | 2 | 2 | 3 | 0 | OK |
 | BROTH | MON | 2 | 3 | 3 | 4 | +2 | SHORTAGE |
 
-> **Detail**: Load `skills/production-schedule-optimizer/references/staff_planning_guide.md` for shift patterns and labor constraints.
+> **Detail**: Load `references/staff_planning_guide.md` for shift patterns and labor constraints.
 
 ---
 
@@ -450,9 +450,9 @@ python3 skills/production-schedule-optimizer/scripts/estimate_staff.py \
 
 | File | Description | When to Load |
 |------|-------------|--------------|
-| `skills/production-schedule-optimizer/references/scheduling_methodology.md` | Bin-Packing詳細、ソート仕様、改善手法 | アルゴリズム改善検討時 |
-| `skills/production-schedule-optimizer/references/food_production_guide.md` | 製造頻度、FEFO、HACCP考慮事項 | 食品製造制約検討時 |
-| `skills/production-schedule-optimizer/references/staff_planning_guide.md` | 人員計算、シフト設計、カバレッジ検証 | 人員計画・シフト設計時 |
+| `references/scheduling_methodology.md` | Bin-Packing詳細、ソート仕様、改善手法 | アルゴリズム改善検討時 |
+| `references/food_production_guide.md` | 製造頻度、FEFO、HACCP考慮事項 | 食品製造制約検討時 |
+| `references/staff_planning_guide.md` | 人員計算、シフト設計、カバレッジ検証 | 人員計画・シフト設計時 |
 
 ### assets/
 

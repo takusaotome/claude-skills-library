@@ -640,8 +640,11 @@ def score_skill(
     if not ref_paths:
         exec_score += 3
     else:
-        fully_qualified = [p for p in ref_paths if p.startswith(f"skills/{skill_name}/references/")]
-        if len(fully_qualified) == len(ref_paths):
+        # Relative paths (e.g. `references/foo.md`) are preferred because SKILL.md
+        # is read in the context of the skill directory.  Full paths like
+        # `skills/{skill}/references/...` are redundant and break portability.
+        relative_paths = [p for p in ref_paths if p.startswith("references/")]
+        if len(relative_paths) == len(ref_paths):
             exec_score += 5
         else:
             exec_score += 2
@@ -650,9 +653,11 @@ def score_skill(
                     severity="low",
                     path=rel_skill_file,
                     line=find_line(lines, r"references/"),
-                    message="Reference paths are mostly relative and may be ambiguous from project root.",
+                    message="Reference paths use full project paths instead of relative paths.",
                     improvement=(
-                        f"Prefer explicit paths like `skills/{skill_name}/references/...` in operator instructions."
+                        "Use relative paths like `references/...` instead of "
+                        f"`skills/{skill_name}/references/...` — SKILL.md is loaded "
+                        "in the skill directory context."
                     ),
                 )
             )
@@ -1011,7 +1016,11 @@ def _run_all(
     now = datetime.now()
     summary_path = output_dir / f"skill_review_all_{now.strftime('%Y-%m-%d_%H%M%S')}.json"
     summary_path.write_text(
-        json.dumps({"generated_at": now.strftime("%Y-%m-%d %H:%M:%S"), "results": rows}, ensure_ascii=False, indent=2),
+        json.dumps(
+            {"generated_at": now.strftime("%Y-%m-%d %H:%M:%S"), "results": rows},
+            ensure_ascii=False,
+            indent=2,
+        ),
         encoding="utf-8",
     )
     print(f"Summary JSON: {summary_path}")
