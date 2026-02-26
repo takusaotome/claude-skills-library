@@ -22,6 +22,13 @@ This skill provides a structured methodology for reviewing business contracts fr
 - Assessing renewal terms and conditions
 - Conducting due diligence on partner agreements
 
+## Prerequisites
+
+- **Python 3.8+**: Required for running analysis scripts
+- **PyPDF2** (optional): Install with `pip install PyPDF2` for PDF document support
+- **Contract Document**: Text file (.txt, .md) or PDF file (.pdf) containing the contract
+- **No Legal Advice**: This skill provides business analysis; always consult legal counsel for binding decisions
+
 ## Supported Contract Types
 
 | Type | Abbreviation | Primary Focus |
@@ -157,11 +164,11 @@ Review each clause category systematically. For each clause, assess:
 
 #### 2.2.5 Contract Type-Specific Clauses
 
-**For NDAs**: Refer to `clause_analysis_guide.md` Section 5.1
-**For MSAs**: Refer to `clause_analysis_guide.md` Section 5.2
-**For SOWs**: Refer to `clause_analysis_guide.md` Section 5.3
-**For SLAs**: Refer to `clause_analysis_guide.md` Section 5.4
-**For License Agreements**: Refer to `clause_analysis_guide.md` Section 5.5
+**For NDAs**: Refer to `references/clause_analysis_guide.md` Section 5.1
+**For MSAs**: Refer to `references/clause_analysis_guide.md` Section 5.2
+**For SOWs**: Refer to `references/clause_analysis_guide.md` Section 5.3
+**For SLAs**: Refer to `references/clause_analysis_guide.md` Section 5.4
+**For License Agreements**: Refer to `references/clause_analysis_guide.md` Section 5.5
 
 ### Step 2.3: Document Findings
 
@@ -328,7 +335,7 @@ For each negotiation item, prepare:
 2. **Alternative language** - Acceptable compromise
 3. **Minimum position** - Lowest acceptable terms
 
-Reference `negotiation_strategies.md` for clause-specific alternatives.
+Reference `references/negotiation_strategies.md` for clause-specific alternatives.
 
 ### Step 4.4: Identify Leverage Points
 
@@ -439,17 +446,17 @@ Define clear next actions:
 
 ## Automation Support
 
-Use `scripts/analyze_contract.py` for automated preliminary analysis:
+Use the analysis script for automated preliminary analysis:
 
 ```bash
 # Basic analysis
-python analyze_contract.py contract.pdf --output report.md
+python scripts/analyze_contract.py contract.pdf --output report.md
 
 # With contract type specification
-python analyze_contract.py contract.pdf --type nda --output nda_review.md
+python scripts/analyze_contract.py contract.pdf --type nda --output nda_review.md
 
 # Full analysis with all options
-python analyze_contract.py contract.pdf \
+python scripts/analyze_contract.py contract.pdf \
   --type msa \
   --party-name "Our Company Inc." \
   --output detailed_review.md \
@@ -467,12 +474,49 @@ The script performs:
 
 ---
 
-## Related Resources
+## Output
 
-- `references/clause_analysis_guide.md` - Detailed clause analysis criteria
-- `references/red_flag_patterns.md` - Comprehensive red flag catalog
-- `references/risk_assessment_framework.md` - Risk scoring methodology
-- `references/contract_review_methodology.md` - Process deep dive
-- `references/negotiation_strategies.md` - Alternative clause library
-- `assets/review_report_template.md` - Report output template
-- `assets/clause_checklist.md` - Interactive review checklist
+This skill produces the following outputs:
+
+| Output | Format | Description |
+|--------|--------|-------------|
+| **Analysis Report** | Markdown (.md) | Comprehensive contract review report with risk assessment |
+| **Risk Score** | 0-100 integer | Quantified overall contract risk level |
+| **Red Flag List** | Table | Prioritized list of identified issues with recommendations |
+| **Clause Coverage** | Checklist | Summary of present/missing standard clauses |
+| **Negotiation Summary** | Structured list | Deal breakers, high priority items, and acceptable terms |
+
+**Report Sections**:
+1. Contract Overview (type, parties, term, key terms)
+2. Risk Assessment (score, level, red flags)
+3. Clause Coverage (present/missing analysis)
+4. Recommendations (prioritized action items)
+5. Negotiation Guidance (alternative language, talking points)
+
+---
+
+## Resources
+
+### Scripts
+
+| Script | Path | Purpose |
+|--------|------|---------|
+| `analyze_contract.py` | `scripts/analyze_contract.py` | Automated preliminary contract analysis |
+| `pattern_definitions.py` | `scripts/pattern_definitions.py` | Red flag patterns and clause detection rules |
+
+### References
+
+| Reference | Path | Purpose |
+|-----------|------|---------|
+| Clause Analysis Guide | `references/clause_analysis_guide.md` | Detailed clause-specific analysis criteria |
+| Red Flag Patterns | `references/red_flag_patterns.md` | Comprehensive red flag catalog |
+| Risk Assessment Framework | `references/risk_assessment_framework.md` | Risk scoring methodology |
+| Contract Review Methodology | `references/contract_review_methodology.md` | Process deep dive |
+| Negotiation Strategies | `references/negotiation_strategies.md` | Alternative clause library |
+
+### Assets
+
+| Asset | Path | Purpose |
+|-------|------|---------|
+| Review Report Template | `assets/review_report_template.md` | Report output template |
+| Clause Checklist | `assets/clause_checklist.md` | Interactive review checklist |
