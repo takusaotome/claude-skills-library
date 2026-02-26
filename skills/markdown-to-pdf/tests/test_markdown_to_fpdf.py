@@ -17,7 +17,7 @@ Tests cover:
 
 import sys
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -533,3 +533,206 @@ class TestPDFContentVerification:
             pdf_bytes = tmp_pdf.read_bytes()
             # Should NOT contain the raw Mermaid fence marker
             assert b"```mermaid" not in pdf_bytes
+
+
+# ===== TrueType Outline Detection Tests =====
+
+
+class TestHasTrueTypeOutlines:
+    """Tests for _has_truetype_outlines() helper."""
+
+    def test_glyf_present_returns_true(self):
+        from themes import _has_truetype_outlines
+
+        mock_font = MagicMock()
+        mock_font.__contains__ = lambda self, key: key == "glyf"
+        mock_font.close = MagicMock()
+
+        with patch("fontTools.ttLib.TTFont", return_value=mock_font):
+            result = _has_truetype_outlines("/fake/font.ttf")
+            assert result is True
+
+    def test_cff_present_returns_false(self):
+        from themes import _has_truetype_outlines
+
+        mock_font = MagicMock()
+        mock_font.__contains__ = lambda self, key: key in ("CFF ",)
+        mock_font.close = MagicMock()
+
+        with patch("fontTools.ttLib.TTFont", return_value=mock_font):
+            result = _has_truetype_outlines("/fake/font.ttc")
+            assert result is False
+
+    def test_parse_error_returns_none(self):
+        from themes import _has_truetype_outlines
+
+        with patch("fontTools.ttLib.TTFont", side_effect=Exception("parse error")):
+            result = _has_truetype_outlines("/fake/font.ttf")
+            assert result is None
+
+    def test_fonttools_import_error_returns_none(self):
+        """When fontTools is not installed, should return None."""
+        from themes import _has_truetype_outlines
+
+        original_import = __builtins__["__import__"] if isinstance(__builtins__, dict) else __builtins__.__import__
+
+        def mock_import(name, *args, **kwargs):
+            if "fontTools" in name:
+                raise ImportError("No module named 'fontTools'")
+            return original_import(name, *args, **kwargs)
+
+        with patch("builtins.__import__", side_effect=mock_import):
+            result = _has_truetype_outlines("/fake/font.ttf")
+            assert result is None
+
+
+# ===== TrueType Font Preference Tests =====
+
+
+class TestFontTrueTypePreferred:
+    """Tests for TrueType preference in discover_fonts()."""
+
+    def test_truetype_preferred_over_cff(self):
+        """When both CFF and TrueType candidates exist, TrueType should be chosen."""
+        from themes import discover_fonts
+
+        cff_reg, cff_bold = "/fonts/cff_reg.ttc", "/fonts/cff_bold.ttc"
+        tt_reg, tt_bold = "/fonts/tt_reg.ttf", "/fonts/tt_bold.ttf"
+
+        existing_files = {cff_reg, cff_bold, tt_reg, tt_bold}
+
+        def mock_exists(self):
+            return str(self) in existing_files
+
+        def mock_has_tt(path):
+            if path in (cff_reg, cff_bold):
+                return False  # CFF
+            if path in (tt_reg, tt_bold):
+                return True  # TrueType
+            return None
+
+        with (
+            patch("themes.platform") as mock_platform,
+            patch.object(Path, "exists", mock_exists),
+            patch("themes._has_truetype_outlines", side_effect=mock_has_tt),
+        ):
+            mock_platform.system.return_value = "Darwin"
+            # Override candidates: CFF first, then TrueType
+            with patch("themes._MACOS_FONTS", [(cff_reg, cff_bold), (tt_reg, tt_bold)]):
+                r, b = discover_fonts()
+                assert r == tt_reg
+                assert b == tt_bold
+
+    def test_cff_fallback_with_warning(self, capsys):
+        """When only CFF candidates exist, should use them with warning."""
+        from themes import discover_fonts
+
+        cff_reg, cff_bold = "/fonts/cff_reg.ttc", "/fonts/cff_bold.ttc"
+        existing_files = {cff_reg, cff_bold}
+
+        def mock_exists(self):
+            return str(self) in existing_files
+
+        def mock_has_tt(path):
+            return False  # All CFF
+
+        with (
+            patch("themes.platform") as mock_platform,
+            patch.object(Path, "exists", mock_exists),
+            patch("themes._has_truetype_outlines", side_effect=mock_has_tt),
+        ):
+            mock_platform.system.return_value = "Darwin"
+            with patch("themes._MACOS_FONTS", [(cff_reg, cff_bold)]):
+                r, b = discover_fonts()
+                assert r == cff_reg
+                assert b == cff_bold
+                captured = capsys.readouterr()
+                assert "CFF" in captured.err
+                assert "Warning" in captured.err
+
+    def test_both_regular_and_bold_checked(self):
+        """If regular is TrueType but bold is CFF, should treat as CFF fallback."""
+        from themes import discover_fonts
+
+        reg, bold = "/fonts/reg.ttf", "/fonts/bold.ttc"
+        existing_files = {reg, bold}
+
+        def mock_exists(self):
+            return str(self) in existing_files
+
+        def mock_has_tt(path):
+            if path == reg:
+                return True  # TrueType
+            return False  # CFF
+
+        with (
+            patch("themes.platform") as mock_platform,
+            patch.object(Path, "exists", mock_exists),
+            patch("themes._has_truetype_outlines", side_effect=mock_has_tt),
+        ):
+            mock_platform.system.return_value = "Darwin"
+            with patch("themes._MACOS_FONTS", [(reg, bold)]):
+                r, b = discover_fonts()
+                # Should still return it (as CFF fallback), not reject
+                assert r == reg
+                assert b == bold
+
+    def test_cli_explicit_cff_accepted_with_warning(self, tmp_path, capsys):
+        """CLI-specified CFF font should be accepted with warning."""
+        from themes import discover_fonts
+
+        reg = tmp_path / "regular.ttc"
+        bold = tmp_path / "bold.ttc"
+        reg.write_bytes(b"fake")
+        bold.write_bytes(b"fake")
+
+        with patch("themes._has_truetype_outlines", return_value=False):
+            r, b = discover_fonts(str(reg), str(bold))
+            assert r == str(reg)
+            assert b == str(bold)
+            captured = capsys.readouterr()
+            assert "CFF" in captured.err
+            assert "Warning" in captured.err
+
+    def test_cli_explicit_truetype_no_warning(self, tmp_path, capsys):
+        """CLI-specified TrueType font should be accepted without warning."""
+        from themes import discover_fonts
+
+        reg = tmp_path / "regular.ttf"
+        bold = tmp_path / "bold.ttf"
+        reg.write_bytes(b"fake")
+        bold.write_bytes(b"fake")
+
+        with patch("themes._has_truetype_outlines", return_value=True):
+            r, b = discover_fonts(str(reg), str(bold))
+            assert r == str(reg)
+            assert b == str(bold)
+            captured = capsys.readouterr()
+            assert "Warning" not in captured.err
+
+    def test_unknown_fallback_with_warning(self, capsys):
+        """When outline type cannot be determined, should use font with warning."""
+        from themes import discover_fonts
+
+        unk_reg, unk_bold = "/fonts/unk_reg.ttf", "/fonts/unk_bold.ttf"
+        existing_files = {unk_reg, unk_bold}
+
+        def mock_exists(self):
+            return str(self) in existing_files
+
+        def mock_has_tt(path):
+            return None  # Cannot determine outline type
+
+        with (
+            patch("themes.platform") as mock_platform,
+            patch.object(Path, "exists", mock_exists),
+            patch("themes._has_truetype_outlines", side_effect=mock_has_tt),
+        ):
+            mock_platform.system.return_value = "Darwin"
+            with patch("themes._MACOS_FONTS", [(unk_reg, unk_bold)]):
+                r, b = discover_fonts()
+                assert r == unk_reg
+                assert b == unk_bold
+                captured = capsys.readouterr()
+                assert "Could not verify" in captured.err
+                assert "Warning" in captured.err

@@ -195,12 +195,17 @@ python scripts/markdown_to_fpdf.py input.md output.pdf [options]
 
 ### Font Requirements
 
-Fonts are auto-discovered per platform:
-- **macOS:** Hiragino Kaku Gothic W3/W6
-- **Windows:** Yu Gothic Regular/Bold
+Fonts are auto-discovered per platform with **TrueType outline preference** (best fpdf2 compatibility):
+
+- **macOS:** UDEVGothic or Noto Sans JP (TTF) — install to `~/Library/Fonts/`
+  - Hiragino Kaku Gothic (CFF outlines) is used as fallback but may cause garbled CJK text
+  - Recommended: `brew install --cask font-udev-gothic` or download [Noto Sans JP TTF](https://fonts.google.com/noto/specimen/Noto+Sans+JP)
+- **Windows:** Yu Gothic Regular/Bold (usually TrueType, pre-installed)
 - **Linux:** Noto Sans CJK (`sudo apt install fonts-noto-cjk`)
 
 Manual override: `--font-regular /path/to/font.ttc --font-bold /path/to/bold.ttc`
+
+**CFF compatibility note:** Fonts with CFF outlines (e.g., Hiragino Sans on macOS) may produce garbled CJK text in fpdf2-generated PDFs. The tool warns on stderr when CFF fonts are detected. Install a TrueType CJK font to resolve.
 
 ## Resources
 
@@ -236,17 +241,24 @@ fpdf2 professional PDF styling guide — frontmatter fields, theme options, tabl
 
 Sample YAML frontmatter templates for estimates, internal documents, and simple reports.
 
-## Important: CJK Font Rendering in PDF Preview
+## Important: CJK Font Rendering Issues
 
-**CRITICAL — Do NOT misdiagnose font issues in fpdf2 mode.**
+**Key fact:** CFF-outline fonts can produce PDFs where **text extraction is correct but visual rendering is garbled**. Do NOT rely on text extraction alone to judge PDF correctness.
 
-When using fpdf2 mode with CJK fonts (Hiragino on macOS, Yu Gothic on Windows, Noto Sans CJK on Linux), the generated PDF renders correctly in standard PDF viewers (Preview.app, Adobe Acrobat, Chrome, etc.). However, **Claude Code's Read tool PDF preview may display CJK characters as garbled/corrupted glyphs**. This is a limitation of the preview rendering, NOT an actual font embedding problem.
+### Diagnosis Flow
 
-**Rules:**
-- After generating a PDF with fpdf2, verify correctness by checking the **text extraction layer** (shown as plain text in the Read tool output), NOT the rendered image preview.
-- If the text extraction shows correct CJK text, the PDF is correct. **Do NOT switch to Playwright mode** as a workaround.
-- The `fsSelection bit 5 (bold)` warning during generation is cosmetic and does not affect output quality.
-- Only investigate font issues if the **text extraction** itself shows garbled characters, or if the user explicitly reports rendering problems in their PDF viewer.
+1. **Check stderr** for `Warning: Using CFF-outline font` or `Warning: CFF outlines detected`.
+2. **If CFF warning is present** → the PDF likely has garbled CJK rendering, even if text extraction looks correct. This is a real compatibility issue between CFF outlines and fpdf2.
+   - **Fix:** Install a TrueType CJK font (with `glyf` table):
+     - macOS: UDEVGothic (`brew install --cask font-udev-gothic`) or Noto Sans JP TTF
+     - Linux: `sudo apt install fonts-noto-cjk` (if CFF variant, use Noto Sans JP TTF instead)
+     - Windows: Yu Gothic is usually TrueType (pre-installed)
+   - Re-run PDF generation after installing. Confirm no CFF warning appears.
+3. **If no CFF warning was emitted** → the font is TrueType and CJK rendering is correct in the actual PDF.
+   - Claude Code's Read tool preview may still show garbled glyphs — this is a **preview rendering limitation only**, not a PDF defect.
+   - **Do NOT switch to Playwright mode** as a workaround.
+   - The `fsSelection bit 5 (bold)` warning is cosmetic and does not affect output.
+   - Only investigate further if the user reports rendering problems in a standard PDF viewer (Preview.app, Adobe Acrobat, Chrome).
 
 ## Markdown Limitations for fpdf2 Mode
 

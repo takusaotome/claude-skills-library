@@ -107,15 +107,20 @@ The standard Markdown `---` (thematic break) renders as a horizontal rule, not a
 
 ## Font Requirements
 
+**Important:** fpdf2 works best with **TrueType outline** fonts (`glyf` table). Fonts with CFF outlines may produce garbled CJK text. The tool automatically prefers TrueType fonts and warns when CFF fonts are used.
+
 ### macOS
-- **Hiragino Kaku Gothic W3** (regular) — pre-installed
-- **Hiragino Kaku Gothic W6** (bold) — pre-installed
+- **Recommended:** UDEVGothic or Noto Sans JP (TTF) — install to `~/Library/Fonts/`
+  - `brew install --cask font-udev-gothic`
+  - Or download [Noto Sans JP TTF](https://fonts.google.com/noto/specimen/Noto+Sans+JP)
+- **Fallback:** Hiragino Kaku Gothic W3/W6 — pre-installed but uses CFF outlines (may cause garbled CJK text)
 
 ### Windows
-- **Yu Gothic Regular/Bold** — pre-installed on Windows 10+
+- **Yu Gothic Regular/Bold** — pre-installed on Windows 10+ (usually TrueType)
 
 ### Linux
 - **Noto Sans CJK** — install via `sudo apt install fonts-noto-cjk`
+- If the installed version uses CFF outlines, download Noto Sans JP TTF instead
 
 ### Manual Override
 
@@ -126,6 +131,8 @@ python markdown_to_fpdf.py input.md output.pdf \
     --font-regular /path/to/regular.ttc \
     --font-bold /path/to/bold.ttc
 ```
+
+CLI-specified fonts are always accepted (CFF fonts produce a warning but are not rejected).
 
 ## Mermaid Diagram Rendering
 
