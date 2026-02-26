@@ -113,6 +113,16 @@ Choose pattern(s) that fit your skill's purpose. Most skills combine patterns.
 
 ### 3. Develop Skill Components
 
+**Development Policy: Test-Driven Development (TDD)**
+
+When writing or modifying Python scripts in `scripts/`, always use the `tdd-developer` skill to follow the TDD workflow:
+
+1. **Red**: Write failing tests first (`scripts/tests/test_*.py`)
+2. **Green**: Write minimal implementation to pass the tests
+3. **Refactor**: Clean up while keeping tests green
+
+Run tests with: `uv run pytest skills/<skill-name>/scripts/tests/ -v`
+
 **SKILL.md Guidelines:**
 - Use imperative/infinitive form (verb-first instructions)
 - Include clear "When to Use" section with specific scenarios
