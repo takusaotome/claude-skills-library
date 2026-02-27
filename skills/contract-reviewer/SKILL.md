@@ -466,9 +466,10 @@ python scripts/analyze_contract.py contract.pdf \
 The script performs:
 - Contract type auto-detection
 - Key clause extraction
-- Red flag pattern matching
+- Red flag pattern matching (regex mode and absence mode for document-wide checks)
 - Preliminary risk scoring
-- Markdown report generation
+
+**Note on Risk Scoring**: The script uses a simplified additive formula (Critical=20, High=10, Medium=5, Low=2 points per finding, capped at 100). For the full Likelihood × Impact weighted risk matrix, use Workflow 3 manually.
 
 **Note**: Automated analysis is a starting point. Always perform manual review using the full workflow for final assessment.
 

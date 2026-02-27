@@ -223,34 +223,68 @@ def extract_contract_info(text: str) -> ContractInfo:
     return info
 
 
-def detect_red_flags(text: str) -> list[RedFlag]:
-    """Detect red flag patterns in the contract."""
-    red_flags: list[RedFlag] = []
-    normalized_text = text.lower()
+def detect_red_flags(text: str) -> list:
+    """Detect red flag patterns in the contract.
 
-    for red_flag_pattern in RED_FLAG_PATTERNS:
-        matches = list(re.finditer(red_flag_pattern["pattern"], normalized_text, re.IGNORECASE | re.DOTALL))
-        for match in matches:
-            # Extract surrounding context
-            start = max(0, match.start() - CONTEXT_CHARS_BEFORE)
-            end = min(len(text), match.end() + CONTEXT_CHARS_AFTER)
-            context = text[start:end].strip()
+    Supports two detection modes per pattern:
+    - "regex" (default): Each regex match generates one red flag.
+    - "absence": If prerequisite_pattern matches (topic exists) but pattern
+      (positive/protective language) is NOT found, generate exactly one red flag.
+    """
+    red_flags = []
+    text_lower = text.lower()
 
-            # Find approximate location
-            lines_before = text[: match.start()].count("\n") + 1
-            location = f"Approx. line {lines_before}"
+    for pattern_info in RED_FLAG_PATTERNS:
+        detection_mode = pattern_info.get("detection_mode", "regex")
 
+        if detection_mode == "absence":
+            # Stage 1: Check if the prerequisite topic exists in the contract
+            prerequisite = pattern_info.get("prerequisite_pattern", "")
+            if not prerequisite:
+                continue
+            if not re.search(prerequisite, text_lower, re.IGNORECASE | re.DOTALL):
+                continue  # Topic not present in contract → skip
+
+            # Stage 2: Check if protective/positive language exists
+            if re.search(pattern_info["pattern"], text_lower, re.IGNORECASE | re.DOTALL):
+                continue  # Protection found → no flag
+
+            # No protection found → generate exactly 1 flag
             red_flag = RedFlag(
-                pattern_id=red_flag_pattern["id"],
-                title=red_flag_pattern["title"],
-                severity=red_flag_pattern["severity"],
-                category=red_flag_pattern["category"],
-                clause_text=context,
-                location=location,
-                description=red_flag_pattern["description"],
-                recommendation=red_flag_pattern["recommendation"],
+                pattern_id=pattern_info["id"],
+                title=pattern_info["title"],
+                severity=pattern_info["severity"],
+                category=pattern_info["category"],
+                clause_text="[Document-wide check: expected pattern not found]",
+                location="N/A (document-wide check)",
+                description=pattern_info["description"],
+                recommendation=pattern_info["recommendation"],
             )
             red_flags.append(red_flag)
+        else:
+            # Default regex mode: each match generates one red flag
+            matches = list(re.finditer(pattern_info["pattern"], text_lower, re.IGNORECASE | re.DOTALL))
+            for match in matches:
+                # Extract surrounding context
+                start = max(0, match.start() - 100)
+                end = min(len(text), match.end() + 100)
+                context = text[start:end].strip()
+
+                # Find approximate location
+                lines_before = text[: match.start()].count("\n") + 1
+                location = f"Approx. line {lines_before}"
+
+                red_flag = RedFlag(
+                    pattern_id=pattern_info["id"],
+                    title=pattern_info["title"],
+                    severity=pattern_info["severity"],
+                    category=pattern_info["category"],
+                    clause_text=context,
+                    location=location,
+                    description=pattern_info["description"],
+                    recommendation=pattern_info["recommendation"],
+                )
+                red_flags.append(red_flag)
 
     return red_flags
 
