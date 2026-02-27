@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (67 skills)
+├── skills/                 # All Claude Code skills (74 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (67 Skills)
+## Skill Catalog (74 Skills)
 
 ### Business Strategy & Consulting (12 skills)
 
@@ -145,10 +145,12 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
 | helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
 
-### Compliance & Governance (10 skills)
+### Compliance & Governance (12 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
+| audit-control-designer | 統制設計書ドラフト自動生成 | 8 Control Templates, SoD Analysis, Assertion Mapping |
+| audit-doc-checker | 監査ドキュメント品質レビュー（0-100スコア） | 12 Check Categories, Severity Scoring |
 | bcp-planner | BCP（事業継続計画）策定支援 | Risk Assessment, Recovery Strategies |
 | compliance-advisor | J-SOX/SOX、RCM、内部監査計画 | COSO Framework, Internal Audit |
 | contract-reviewer | 契約書レビュー・リスク分析 | Risk Analysis, Clause Review |
@@ -2157,6 +2159,52 @@ AI（LLM）生成テキストの「AI臭」を検出・診断し、人間らし�
 
 ---
 
+### 🔍 Audit Document Checker
+
+**File:** `skills/audit-doc-checker/`
+
+Review audit-related documents against 12 quality categories and produce a structured quality score (0-100) with severity-rated findings.
+
+**When to use:**
+- Reviewing control design documents before submission to external auditors
+- Checking quality of bottleneck analyses or risk assessment reports
+- Verifying consistency across audit documentation (terminology, currency, accounting standards)
+- Pre-publication quality gate for audit-context documents
+
+**Key Features:**
+- 12 check categories (terminology, currency, accounting standards, control logic, assertions, SoD, materiality, etc.)
+- Severity-based scoring (High -5, Medium -3, Low -1 per finding)
+- Document-type weighting (control design, bottleneck analysis, requirements, process inventory)
+- 4-tier quality assessment (90+ High Quality, 70-89 Improvement Recommended, 50-69 Revision Required, <50 Critical Risk)
+- Integration with audit-control-designer for generate→review workflow
+
+---
+
+### 🏗️ Audit Control Designer
+
+**File:** `skills/audit-control-designer/`
+
+Generate audit-ready internal control design documents from As-Is business process inventories.
+
+**When to use:**
+- Building internal controls from As-Is process inventories
+- Designing controls for new audit engagements (SOX, J-SOX, PCAOB)
+- Preparing for initial audit readiness assessment
+- Strengthening existing control frameworks
+
+**Key Features:**
+- 5 business process patterns (AP, Inventory, COGS, Returns, Price Management)
+- 8 control templates (T-AP-01/02, T-INV-01/02, T-CO-01, T-VAL-01, T-CALC-01/02)
+- 5 audit assertion mapping (C/A/V/CO/E) with coverage assessment
+- 5 SoD pair analysis with compensating controls for small organizations
+- 8 KPI definitions (K01-K08) with baseline/target guidelines
+- Materiality framework (Overall, Performance, Clearly Trivial)
+- Accounting standards reference (US GAAP / IFRS / J-GAAP differences)
+- Short-term (M+1~M+4) and medium-term (M+6~M+18) roadmap generation
+- Industry customization (F&B, Retail, Manufacturing, Services)
+
+---
+
 ## Installation
 
 ### Installing a Skill
@@ -3111,6 +3159,25 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### audit-doc-checker v1.0 (2026-02-26)
+- 12-category audit document quality review with 0-100 scoring
+- Severity-based deduction model (High -5, Medium -3, Low -1)
+- Document-type weighting adjustments (control design, bottleneck analysis, requirements, process inventory)
+- 4-tier quality assessment (High Quality / Improvement Recommended / Revision Required / Critical Risk)
+- Generalized from Round1 F&B Inventory COGS audit engagement
+- Integration with audit-control-designer for generate→review workflow
+
+### audit-control-designer v1.0 (2026-02-26)
+- 5 business process patterns (AP, Inventory, COGS, Returns/Credits, Price Management)
+- 8 control pattern templates derived from real audit engagements (T-AP-01/02, T-INV-01/02, T-CO-01, T-VAL-01, T-CALC-01/02)
+- 5 audit assertion mapping rules (C/A/V/CO/E) with coverage matrix
+- 5 SoD pair patterns with compensating controls for small organizations
+- 8 KPI catalog entries (K01-K08) with baseline/target guidelines
+- Materiality framework (Overall, Performance, Clearly Trivial) with industry-specific guidelines
+- Accounting standards reference (US GAAP/IFRS/J-GAAP differences affecting control design)
+- Industry customization (F&B, Retail, Manufacturing, Services)
+- Generalized from Round1 F&B Inventory COGS audit engagement
 
 ### shift-planner v1.0 (2026-02-21)
 - Employee shift auto-assignment with constraint-satisfaction greedy algorithm

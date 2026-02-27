@@ -70,6 +70,8 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 
 | Skill | Version | Domain | Key Components |
 |-------|---------|--------|----------------|
+| audit-doc-checker | 1.0 | Audit Quality Review | check_rules.md (12 categories), scoring_model.md, review_output_template.md |
+| audit-control-designer | 1.0 | Audit Control Design | 7 reference files (process patterns, control templates, assertions, SoD, KPIs, materiality, accounting standards), control_design_template.md |
 | data-scientist | 1.0 | Data Science | auto_eda.py, model_comparison.py, timeseries_analysis.py |
 | project-manager | 1.0 | Project Management | project_health_check.py, PMBOK templates, EVM analysis |
 | business-analyst | 1.0 | Business Analysis | business_analysis.py, BABOK templates, stakeholder analysis |
