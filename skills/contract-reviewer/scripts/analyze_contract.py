@@ -375,22 +375,22 @@ def generate_report(result: AnalysisResult, filepath: Path, party_name: str = ""
         report += "| # | Severity | Issue | Category |\n"
         report += "|---|----------|-------|----------|\n"
 
-        for i, rf in enumerate(result.red_flags, 1):
-            report += f"| {i} | {rf.severity} | {rf.title} | {rf.category} |\n"
+        for i, red_flag in enumerate(result.red_flags, 1):
+            report += f"| {i} | {red_flag.severity} | {red_flag.title} | {red_flag.category} |\n"
 
         report += "\n#### Red Flag Details\n\n"
 
-        for i, rf in enumerate(result.red_flags, 1):
-            report += f"""##### {i}. {rf.title}
+        for i, red_flag in enumerate(result.red_flags, 1):
+            report += f"""##### {i}. {red_flag.title}
 
-- **Severity**: {rf.severity}
-- **Category**: {rf.category}
-- **Location**: {rf.location}
-- **Issue**: {rf.description}
-- **Recommendation**: {rf.recommendation}
+- **Severity**: {red_flag.severity}
+- **Category**: {red_flag.category}
+- **Location**: {red_flag.location}
+- **Issue**: {red_flag.description}
+- **Recommendation**: {red_flag.recommendation}
 
 **Context**:
-> ...{rf.clause_text}...
+> ...{red_flag.clause_text}...
 
 ---
 
