@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (74 skills)
+├── skills/                 # All Claude Code skills (78 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (74 Skills)
+## Skill Catalog (78 Skills)
 
 ### Business Strategy & Consulting (12 skills)
 
@@ -85,7 +85,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 
-### Software Development & IT (15 skills)
+### Software Development & IT (16 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -104,6 +104,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | gogcli-expert | gogcli（Google Workspace CLI）操作支援 | 13 Services, OAuth2, Multi-Account |
 | network-diagnostics | ネットワーク品質診断・ボトルネック特定 | Ping/Speed/HTTP/Traceroute, Cross-Platform |
 | office-script-expert | Office Scripts（Excel Online）開発支援 | ExcelScript API, 13 Bug Patterns, lib/Testing |
+| incident-rca-specialist | インシデントRCA・是正措置計画 | 5 Whys, Fishbone, FTA, 3D Prevention |
 
 ### Salesforce (4 skills)
 
@@ -123,7 +124,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (7 skills)
+### Documentation & Communication (9 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -134,8 +135,10 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | fujisoft-presentation-creator | FUJISOFT形式プレゼン作成 | MARP Templates, Corporate Style |
 | markdown-to-pdf | Markdown→プロフェッショナルPDF | fpdf2, Playwright, Mermaid, Business Docs |
 | video2minutes | 動画→文字起こし・議事録 | Transcription, Meeting Minutes |
+| technical-spec-writer | 技術仕様書作成（画面/API/DB設計） | IEEE 830, Mermaid Diagrams, Traceability |
+| operations-manual-creator | 操作マニュアル・SOP作成 | STEP Format, ANSI Z535, Troubleshooting |
 
-### QA & Testing (5 skills)
+### QA & Testing (6 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -144,6 +147,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | qa-bug-analyzer | バグデータ分析・品質トレンド | Quality Metrics, Trend Analysis |
 | uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
 | helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
+| cx-error-analyzer | CXエラーシナリオ分析・改善優先度付け | 6-Axis CX Scoring, Impact vs Effort Matrix |
 
 ### Compliance & Governance (12 skills)
 
@@ -3145,6 +3149,96 @@ Generates weekly employee shift schedules from roster and requirements using con
 
 ---
 
+### 🔍 Incident RCA Specialist
+
+Systematically analyzes incidents to identify root causes and develop corrective action plans. Focuses on organizational process improvement, not log-level debugging (use log-debugger for that).
+
+**When to use:**
+- Conducting post-incident reviews
+- Creating incident reports and RCA documentation
+- Developing corrective action plans with SMART criteria
+- Performing organizational root cause analysis (5 Whys, Fishbone, FTA)
+- Building incident timelines with TTD/TTR/TTM/TTRe metrics
+
+**Key Features:**
+- 8 workflows: Information Gathering → Timeline → Impact Assessment → 5 Whys → Fishbone → FTA → Corrective Actions → Report
+- 5 Whys with branching technique and human error decomposition (never stop at "operator error")
+- Fault Tree Analysis with AND/OR gates, minimal cut sets, SPOF identification
+- 3D Prevention Framework (Detect/Defend/Degrade)
+- P0-P4 severity matrix with SLA violation evaluation
+- Mermaid gantt-based timeline with TTD/TTR/TTM/TTRe calculation
+- Bilingual report templates (Japanese/English)
+- Corrective action tracker with SMART criteria validation
+
+---
+
+### 📝 Technical Spec Writer
+
+Creates structured technical specifications bridging requirements and implementation. Generates screen designs, API specs, DB designs, sequence diagrams, and state transition diagrams with Mermaid.
+
+**When to use:**
+- Creating functional specifications from BRD/requirements
+- Designing screen layouts with UI element and event tables
+- Creating REST API design documents
+- Designing database schemas with ER diagrams
+- Generating sequence and state transition diagrams
+
+**Key Features:**
+- 7 workflows: Requirements Intake → Screen Design → API Design → DB Design → Sequence Diagram → State Transition → Document Assembly
+- IEEE 830 / ISO 29148 compliant specifications
+- ID numbering system (SCR-xxx, API-xxx, TBL-xxx, SEQ-xxx, STS-xxx)
+- Mermaid diagram patterns (sequence, state, ER, flowchart)
+- REST API design guide with error codes, pagination, authentication
+- DB design guide with normalization, indexing, audit columns
+- Traceability matrix (REQ → SCR/API/TBL mapping)
+- Bilingual templates (Japanese/English)
+
+---
+
+### 📋 Operations Manual Creator
+
+Creates structured operations manuals and SOPs using the STEP format (Specific/Target/Expected/Proceed) with ANSI Z535-inspired caution/warning classification.
+
+**When to use:**
+- Creating operations manuals for business systems
+- Writing standard operating procedures (SOPs)
+- Creating user guides with step-by-step instructions
+- Building troubleshooting guides with escalation procedures
+
+**Key Features:**
+- 6 workflows: Scope Definition → Operations Inventory → Procedure Writing → Caution/Warning Notes → Troubleshooting → Assembly
+- STEP format: Specific action, Target UI element, Expected result, Proceed confirmation
+- ANSI Z535 classification: DANGER/WARNING/CAUTION/NOTE with placement rules
+- Operation ID system (OP-xxx) with dependency mapping
+- Symptom-Cause-Resolution troubleshooting tables
+- L1/L2/L3 escalation procedure templates
+- Screenshot placeholders and annotation guidance
+- Bilingual templates (Japanese/English)
+
+---
+
+### 🎯 CX Error Analyzer
+
+Analyzes error/exception scenarios from a customer experience perspective, scoring them on 6 axes and prioritizing improvements using an Impact vs Effort matrix.
+
+**When to use:**
+- Evaluating error scenarios from CX perspective
+- Improving error message quality and recovery flows
+- Prioritizing error UX improvements
+- Creating CX-focused error analysis reports
+
+**Key Features:**
+- 5 workflows: Error Inventory → Multi-Axis Evaluation → CX Scoring → Priority Matrix → Report
+- 6-axis evaluation: Impact Severity (25%), Frequency (20%), Recovery Ease (15%), Message Quality (15%), Emotional Impact (10%), Business Cost (15%)
+- CX Score tiers: Critical (4.0-5.0) / Significant (3.0-3.9) / Moderate (2.0-2.9) / Minor (1.0-1.9)
+- Impact vs Effort matrix with Quick Wins identification
+- Error UX best practices (message design, recovery flows, emotional design)
+- CX metrics reference (CES/CSAT correlation, support cost, churn risk)
+- ROI calculation for error UX improvements
+- Error classification taxonomy and user journey mapping
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -3159,6 +3253,42 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### cx-error-analyzer v1.0 (2026-02-28)
+- 6-axis CX evaluation (Impact/Frequency/Recovery/Message Quality/Emotional/Business Cost)
+- Weighted CX scoring with 4 severity tiers
+- Impact vs Effort priority matrix with Quick Wins identification
+- Error UX best practices (message design, recovery flows, emotional design)
+- CX metrics reference (CES/CSAT correlation, support cost calculation, churn risk)
+- ROI calculation framework for error UX improvements
+- Error classification taxonomy and user journey stage mapping
+
+### operations-manual-creator v1.0 (2026-02-28)
+- STEP format (Specific/Target/Expected/Proceed) for procedure writing
+- ANSI Z535-inspired caution/warning classification (DANGER/WARNING/CAUTION/NOTE)
+- Operation inventory with ID system (OP-xxx), frequency/role categorization
+- Symptom-Cause-Resolution troubleshooting tables with decision trees
+- L1/L2/L3 escalation procedure templates
+- Bilingual manual templates (Japanese/English)
+
+### technical-spec-writer v1.0 (2026-02-28)
+- IEEE 830 / ISO 29148 compliant specification writing
+- ID numbering system (SCR-xxx, API-xxx, TBL-xxx, SEQ-xxx, STS-xxx)
+- Mermaid diagram patterns (sequenceDiagram, stateDiagram-v2, erDiagram, flowchart)
+- REST API design guide (error codes, pagination, authentication, versioning)
+- DB design guide (naming conventions, normalization, indexing, audit columns)
+- Traceability matrix (REQ → SCR/API/TBL mapping)
+- Bilingual functional spec templates (Japanese/English)
+
+### incident-rca-specialist v1.0 (2026-02-28)
+- 8-workflow incident RCA process (Information → Timeline → Impact → 5 Whys → Fishbone → FTA → Corrective Actions → Report)
+- 5 Whys with branching technique and human error decomposition
+- Fault Tree Analysis with AND/OR gates, minimal cut sets, SPOF identification
+- 3D Prevention Framework (Detect/Defend/Degrade)
+- P0-P4 severity matrix with SLA violation evaluation and business impact calculation
+- Corrective action tracker with SMART criteria validation
+- Mermaid gantt timeline with TTD/TTR/TTM/TTRe metrics
+- Differentiated from log-debugger (organizational process focus vs log analysis)
 
 ### audit-doc-checker v1.0 (2026-02-26)
 - 12-category audit document quality review with 0-100 scoring

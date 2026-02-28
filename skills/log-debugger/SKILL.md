@@ -7,10 +7,13 @@ description: |
   問題の本質を突き止め、再発防止策まで提案する。
 
   Use when analyzing system logs to find error root causes, debugging application issues,
-  investigating incidents, or performing post-mortem analysis.
+  or performing technical post-mortem analysis with log data.
+  For organizational incident management processes (post-incident review,
+  corrective action plans, incident reports without log data),
+  use incident-rca-specialist instead.
 
   Triggers: "analyze this log", "find the root cause", "debug this error",
-  "why is this failing", "investigate this incident", "log analysis",
+  "why is this failing", "log analysis",
   "what caused this crash", "troubleshoot this issue"
 ---
 
