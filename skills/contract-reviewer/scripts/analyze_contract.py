@@ -23,6 +23,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+# Constants for context extraction and limits (MN-003)
+CONTEXT_CHARS_BEFORE = 100
+CONTEXT_CHARS_AFTER = 100
+MAX_RECOMMENDATIONS = 5
+
 # Import pattern definitions
 from pattern_definitions import CLAUSE_PATTERNS, CONTRACT_TYPE_PATTERNS, RED_FLAG_PATTERNS
 
@@ -54,7 +59,7 @@ class ContractInfo:
     """Basic contract information extracted from the document."""
 
     contract_type: str = "Unknown"
-    parties: list = field(default_factory=list)
+    parties: list[str] = field(default_factory=list)
     effective_date: str = ""
     term: str = ""
     governing_law: str = ""
@@ -68,11 +73,11 @@ class AnalysisResult:
     """Complete analysis result."""
 
     contract_info: ContractInfo
-    red_flags: list
-    risk_score: int
-    risk_level: str
-    clause_coverage: dict
-    recommendations: list
+    red_flags: list[RedFlag] = field(default_factory=list)
+    risk_score: int = 0
+    risk_level: str = "Low"
+    clause_coverage: dict[str, bool] = field(default_factory=dict)
+    recommendations: list[dict[str, str]] = field(default_factory=list)
 
 
 def read_file(filepath: Path) -> str:
@@ -129,15 +134,15 @@ def detect_contract_type(text: str, override_type: Optional[str] = None) -> str:
     if override_type:
         return override_type.upper()
 
-    text_lower = text.lower()
-    type_scores = {}
+    normalized_text = text.lower()
+    type_scores: dict[str, int] = {}
 
-    for ctype, patterns in CONTRACT_TYPE_PATTERNS.items():
+    for contract_type, patterns in CONTRACT_TYPE_PATTERNS.items():
         score = 0
         for pattern in patterns:
-            if re.search(pattern, text_lower):
+            if re.search(pattern, normalized_text):
                 score += 1
-        type_scores[ctype] = score
+        type_scores[contract_type] = score
 
     if max(type_scores.values()) > 0:
         return max(type_scores, key=type_scores.get)
@@ -164,7 +169,7 @@ def _has_negation_context(text: str, match_start: int, context_chars: int = 30) 
 def extract_contract_info(text: str) -> ContractInfo:
     """Extract basic contract information."""
     info = ContractInfo()
-    text_lower = text.lower()
+    normalized_text = text.lower()
 
     # Contract type
     info.contract_type = detect_contract_type(text)
@@ -184,8 +189,8 @@ def extract_contract_info(text: str) -> ContractInfo:
         info.effective_date = date_match.group(1)
 
     # Auto-renewal (CR-003: with negation context check)
-    auto_renewal_match = re.search(r"auto[\-\s]?renew|automatically\s+renew", text_lower)
-    if auto_renewal_match and not _has_negation_context(text_lower, auto_renewal_match.start()):
+    auto_renewal_match = re.search(r"auto[\-\s]?renew|automatically\s+renew", normalized_text)
+    if auto_renewal_match and not _has_negation_context(normalized_text, auto_renewal_match.start()):
         info.auto_renewal = True
 
     # Governing law
@@ -203,32 +208,32 @@ def extract_contract_info(text: str) -> ContractInfo:
         info.liability_cap = cap_match.group(1)
     else:
         # CR-003: Check for unlimited liability with negation context
-        unlimited_match = re.search(r"unlimited\s+liability|no\s+limit\s+on\s+liability", text_lower)
-        if unlimited_match and not _has_negation_context(text_lower, unlimited_match.start()):
+        unlimited_match = re.search(r"unlimited\s+liability|no\s+limit\s+on\s+liability", normalized_text)
+        if unlimited_match and not _has_negation_context(normalized_text, unlimited_match.start()):
             info.liability_cap = "UNLIMITED"
 
     # Indemnification type
-    if re.search(r"mutual\s+indemnif|each\s+party\s+shall\s+indemnif", text_lower):
+    if re.search(r"mutual\s+indemnif|each\s+party\s+shall\s+indemnif", normalized_text):
         info.indemnification_type = "Mutual"
-    elif re.search(r"customer\s+shall\s+indemnif|licensee\s+shall\s+indemnif", text_lower):
+    elif re.search(r"customer\s+shall\s+indemnif|licensee\s+shall\s+indemnif", normalized_text):
         info.indemnification_type = "One-sided (Customer)"
-    elif re.search(r"vendor\s+shall\s+indemnif|provider\s+shall\s+indemnif", text_lower):
+    elif re.search(r"vendor\s+shall\s+indemnif|provider\s+shall\s+indemnif", normalized_text):
         info.indemnification_type = "One-sided (Vendor)"
 
     return info
 
 
-def detect_red_flags(text: str) -> list:
+def detect_red_flags(text: str) -> list[RedFlag]:
     """Detect red flag patterns in the contract."""
-    red_flags = []
-    text_lower = text.lower()
+    red_flags: list[RedFlag] = []
+    normalized_text = text.lower()
 
-    for pattern_info in RED_FLAG_PATTERNS:
-        matches = list(re.finditer(pattern_info["pattern"], text_lower, re.IGNORECASE | re.DOTALL))
+    for red_flag_pattern in RED_FLAG_PATTERNS:
+        matches = list(re.finditer(red_flag_pattern["pattern"], normalized_text, re.IGNORECASE | re.DOTALL))
         for match in matches:
             # Extract surrounding context
-            start = max(0, match.start() - 100)
-            end = min(len(text), match.end() + 100)
+            start = max(0, match.start() - CONTEXT_CHARS_BEFORE)
+            end = min(len(text), match.end() + CONTEXT_CHARS_AFTER)
             context = text[start:end].strip()
 
             # Find approximate location
@@ -236,38 +241,38 @@ def detect_red_flags(text: str) -> list:
             location = f"Approx. line {lines_before}"
 
             red_flag = RedFlag(
-                pattern_id=pattern_info["id"],
-                title=pattern_info["title"],
-                severity=pattern_info["severity"],
-                category=pattern_info["category"],
+                pattern_id=red_flag_pattern["id"],
+                title=red_flag_pattern["title"],
+                severity=red_flag_pattern["severity"],
+                category=red_flag_pattern["category"],
                 clause_text=context,
                 location=location,
-                description=pattern_info["description"],
-                recommendation=pattern_info["recommendation"],
+                description=red_flag_pattern["description"],
+                recommendation=red_flag_pattern["recommendation"],
             )
             red_flags.append(red_flag)
 
     return red_flags
 
 
-def check_clause_coverage(text: str) -> dict:
+def check_clause_coverage(text: str) -> dict[str, bool]:
     """Check which standard clauses are present."""
-    coverage = {}
-    text_lower = text.lower()
+    coverage: dict[str, bool] = {}
+    normalized_text = text.lower()
 
     for clause_name, pattern in CLAUSE_PATTERNS.items():
-        coverage[clause_name] = bool(re.search(pattern, text_lower))
+        coverage[clause_name] = bool(re.search(pattern, normalized_text))
 
     return coverage
 
 
-def calculate_risk_score(red_flags: list) -> tuple:
+def calculate_risk_score(red_flags: list[RedFlag]) -> tuple[int, str]:
     """Calculate overall risk score based on red flags."""
     severity_weights = {"Critical": 20, "High": 10, "Medium": 5, "Low": 2}
 
     total_score = 0
-    for rf in red_flags:
-        total_score += severity_weights.get(rf.severity, 0)
+    for red_flag in red_flags:
+        total_score += severity_weights.get(red_flag.severity, 0)
 
     # Cap at 100
     total_score = min(100, total_score)
@@ -285,16 +290,18 @@ def calculate_risk_score(red_flags: list) -> tuple:
     return total_score, level
 
 
-def generate_recommendations(red_flags: list, clause_coverage: dict) -> list:
+def generate_recommendations(red_flags: list[RedFlag], clause_coverage: dict[str, bool]) -> list[dict[str, str]]:
     """Generate recommendations based on analysis."""
-    recommendations = []
+    recommendations: list[dict[str, str]] = []
 
     # Red flag based recommendations
     severity_order = {"Critical": 0, "High": 1, "Medium": 2, "Low": 3}
     sorted_flags = sorted(red_flags, key=lambda x: severity_order.get(x.severity, 4))
 
-    for rf in sorted_flags[:5]:  # Top 5 recommendations
-        recommendations.append({"priority": rf.severity, "issue": rf.title, "recommendation": rf.recommendation})
+    for red_flag in sorted_flags[:MAX_RECOMMENDATIONS]:
+        recommendations.append(
+            {"priority": red_flag.severity, "issue": red_flag.title, "recommendation": red_flag.recommendation}
+        )
 
     # Missing clause recommendations
     critical_clauses = ["Liability", "Indemnification", "Termination", "Governing Law"]
@@ -315,10 +322,12 @@ def generate_report(result: AnalysisResult, filepath: Path, party_name: str = ""
     """Generate Markdown analysis report."""
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
 
+    reviewing_party = f"\n**Reviewing Party**: {party_name}" if party_name else ""
+
     report = f"""# Preliminary Contract Analysis Report
 
 **Generated**: {now}
-**Document**: {filepath.name}
+**Document**: {filepath.name}{reviewing_party}
 **Analysis Tool**: Contract Analyzer v1.0
 
 ---
@@ -366,22 +375,22 @@ def generate_report(result: AnalysisResult, filepath: Path, party_name: str = ""
         report += "| # | Severity | Issue | Category |\n"
         report += "|---|----------|-------|----------|\n"
 
-        for i, rf in enumerate(result.red_flags, 1):
-            report += f"| {i} | {rf.severity} | {rf.title} | {rf.category} |\n"
+        for i, red_flag in enumerate(result.red_flags, 1):
+            report += f"| {i} | {red_flag.severity} | {red_flag.title} | {red_flag.category} |\n"
 
         report += "\n#### Red Flag Details\n\n"
 
-        for i, rf in enumerate(result.red_flags, 1):
-            report += f"""##### {i}. {rf.title}
+        for i, red_flag in enumerate(result.red_flags, 1):
+            report += f"""##### {i}. {red_flag.title}
 
-- **Severity**: {rf.severity}
-- **Category**: {rf.category}
-- **Location**: {rf.location}
-- **Issue**: {rf.description}
-- **Recommendation**: {rf.recommendation}
+- **Severity**: {red_flag.severity}
+- **Category**: {red_flag.category}
+- **Location**: {red_flag.location}
+- **Issue**: {red_flag.description}
+- **Recommendation**: {red_flag.recommendation}
 
 **Context**:
-> ...{rf.clause_text}...
+> ...{red_flag.clause_text}...
 
 ---
 

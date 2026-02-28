@@ -24,7 +24,7 @@ This skill provides a structured methodology for reviewing business contracts fr
 
 ## Prerequisites
 
-- **Python 3.8+**: Required for running analysis scripts
+- **Python 3.9+**: Required for running analysis scripts
 - **PyPDF2** (optional): Install with `pip install PyPDF2` for PDF document support
 - **Contract Document**: Text file (.txt, .md) or PDF file (.pdf) containing the contract
 - **No Legal Advice**: This skill provides business analysis; always consult legal counsel for binding decisions
