@@ -23,6 +23,41 @@ description: |
 - **セキュリティリスク**: 認証・認可・データ保護の考慮漏れ
 - **運用懸念**: 監視・障害対応・保守性の考慮漏れ
 
+## When to Use
+
+- 設計文書（システム設計書、API設計書、DB設計書など）のレビュー
+- 要件定義書・仕様書のレビュー
+- 不具合分析レポート・インシデントレポートのレビュー
+- 提案書・企画書のレビュー
+- セキュリティ設計書のレビュー
+- 運用設計書・運用手順書のレビュー
+- 重要文書の公開・納品前の最終チェック
+- 「本当にこの内容で問題ないか？」と確認したい場面
+
+## Prerequisites
+
+- レビュー対象となるドキュメントファイル
+- （推奨）関連文書（元の要件定義書、前工程のドキュメント、ログファイルなど）
+
+## Resources
+
+### References
+- `references/critical_analysis_framework.md` - 批判的分析の詳細フレームワーク
+- `references/persona_definitions.md` - ペルソナの詳細定義
+- `references/evidence_evaluation_criteria.md` - 証拠評価基準
+- `references/red_flag_patterns.md` - 危険な表現パターン集
+
+### Assets
+- `assets/review_report_template.md` - レビューレポートテンプレート
+
+### Agents
+- `agents/document-reviewer-developer.md` - Developer/Implementer ペルソナ
+- `agents/document-reviewer-pm.md` - Project Manager ペルソナ
+- `agents/document-reviewer-customer.md` - Customer/Stakeholder ペルソナ
+- `agents/document-reviewer-qa.md` - QA/Tester ペルソナ
+- `agents/document-reviewer-security.md` - Security/Compliance ペルソナ
+- `agents/document-reviewer-ops.md` - Operations/SRE ペルソナ
+
 ## Multi-Persona Review Architecture
 
 ```
@@ -418,22 +453,3 @@ Claude:
    - document-reviewer-ops
 3. [Phase 3] 結果を統合し、レビューレポートを生成。
 ```
-
-## Files
-
-### References
-- `references/critical_analysis_framework.md` - 批判的分析の詳細フレームワーク
-- `references/persona_definitions.md` - ペルソナの詳細定義
-- `references/evidence_evaluation_criteria.md` - 証拠評価基準
-- `references/red_flag_patterns.md` - 危険な表現パターン集
-
-### Assets
-- `assets/review_report_template.md` - レビューレポートテンプレート
-
-### Agents (並列レビュー用サブエージェント)
-- `agents/document-reviewer-developer.md` - Developer/Implementer ペルソナ
-- `agents/document-reviewer-pm.md` - Project Manager ペルソナ
-- `agents/document-reviewer-customer.md` - Customer/Stakeholder ペルソナ
-- `agents/document-reviewer-qa.md` - QA/Tester ペルソナ
-- `agents/document-reviewer-security.md` - Security/Compliance ペルソナ
-- `agents/document-reviewer-ops.md` - Operations/SRE ペルソナ
