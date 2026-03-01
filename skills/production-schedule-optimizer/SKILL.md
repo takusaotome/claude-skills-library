@@ -95,7 +95,7 @@ SAUCE-001,Tomato Sauce,90,80,2,5,SAUCE;BROTH
 | staff_count | int | 配置人数 |
 | shift_hours | float | シフト時間（時間） |
 
-> **Sample files**: `skills/production-schedule-optimizer/assets/sample_products.csv`, `skills/production-schedule-optimizer/assets/sample_demand.csv`, `skills/production-schedule-optimizer/assets/sample_rooms.csv`, `skills/production-schedule-optimizer/assets/sample_staff.csv`
+> **Sample files**: `assets/sample_products.csv`, `assets/sample_demand.csv`, `assets/sample_rooms.csv`, `assets/sample_staff.csv`
 
 ---
 
@@ -224,7 +224,7 @@ room_day_next_available[room][day] = end_time
 ```
 
 > **Detail**: Load `references/scheduling_methodology.md` for improvement techniques and constraint patterns.
-> **Template**: Use `skills/production-schedule-optimizer/assets/schedule_template.md` for output formatting.
+> **Template**: Use `assets/schedule_template.md` for output formatting.
 
 ---
 
@@ -458,11 +458,11 @@ python3 skills/production-schedule-optimizer/scripts/estimate_staff.py \
 
 | File | Description |
 |------|-------------|
-| `skills/production-schedule-optimizer/assets/schedule_template.md` | 週次スケジュール出力テンプレート |
-| `skills/production-schedule-optimizer/assets/sample_products.csv` | 製品マスタサンプル（10製品） |
-| `skills/production-schedule-optimizer/assets/sample_demand.csv` | 週次需要サンプル |
-| `skills/production-schedule-optimizer/assets/sample_rooms.csv` | 作業室マスタサンプル（5室） |
-| `skills/production-schedule-optimizer/assets/sample_staff.csv` | 人員配置サンプル（7日x5室） |
+| `assets/schedule_template.md` | 週次スケジュール出力テンプレート |
+| `assets/sample_products.csv` | 製品マスタサンプル（10製品） |
+| `assets/sample_demand.csv` | 週次需要サンプル |
+| `assets/sample_rooms.csv` | 作業室マスタサンプル（5室） |
+| `assets/sample_staff.csv` | 人員配置サンプル（7日x5室） |
 
 ---
 

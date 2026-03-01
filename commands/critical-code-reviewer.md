@@ -24,7 +24,7 @@ $ARGUMENTS
 
 ## 実行手順
 
-1. **スキル読み込み**: `skills/critical-code-reviewer/SKILL.md` を読み込んでワークフローを理解する
+1. **スキル読み込み**: `critical-code-reviewer` スキルの `SKILL.md` を読み込んでワークフローを理解する
 
 2. **引数の解析とレビュー対象の確認**:
    - 引数からファイルパス/ディレクトリパスを抽出
@@ -34,7 +34,7 @@ $ARGUMENTS
 3. **言語の検出**: コードの言語を判定
    - Python の場合: 型ヒント、Pythonic patterns の追加チェック
    - JavaScript/TypeScript の場合: 型安全性、async patterns の追加チェック
-   - 該当する場合は `skills/critical-code-reviewer/references/language_specific_checks.md` を参照
+   - 該当する場合は `references/language_specific_checks.md` を参照
 
 4. **並列レビュー実行**: Task ツールで4つのサブエージェントを**並列**起動
 
@@ -70,16 +70,16 @@ $ARGUMENTS
 5. **結果統合**: 4つのレビュー結果を統合
    - 重複する指摘は統合（複数ペルソナからの指摘として記録）
    - 重大度を付与: Critical / Major / Minor / Info
-   - `skills/critical-code-reviewer/assets/code_review_report_template.md` の形式でレポート作成
+   - `assets/code_review_report_template.md` の形式でレポート作成
 
 ## 参照リソース
 
-レビュー実行時に以下を参照：
-- `skills/critical-code-reviewer/references/persona_definitions.md` - ペルソナ詳細定義
-- `skills/critical-code-reviewer/references/code_smell_patterns.md` - コードスメル・アンチパターン
-- `skills/critical-code-reviewer/references/review_framework.md` - レビューフレームワーク
-- `skills/critical-code-reviewer/references/severity_criteria.md` - 重大度判定基準
-- `skills/critical-code-reviewer/references/failure_mode_patterns.md` - 失敗モードパターン集（Bug Hunter用）
+レビュー実行時に以下を参照（`critical-code-reviewer` スキルディレクトリ内）：
+- `references/persona_definitions.md` - ペルソナ詳細定義
+- `references/code_smell_patterns.md` - コードスメル・アンチパターン
+- `references/review_framework.md` - レビューフレームワーク
+- `references/severity_criteria.md` - 重大度判定基準
+- `references/failure_mode_patterns.md` - 失敗モードパターン集（Bug Hunter用）
 
 ## 重要な指示
 

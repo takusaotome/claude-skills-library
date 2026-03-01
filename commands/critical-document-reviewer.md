@@ -35,7 +35,7 @@ $ARGUMENTS
 
 ## 実行手順
 
-1. **スキル読み込み**: `skills/critical-document-reviewer/SKILL.md` を読み込んでワークフローを理解する
+1. **スキル読み込み**: `critical-document-reviewer` スキルの `SKILL.md` を読み込んでワークフローを理解する
 
 2. **引数の解析とレビュー対象の確認**:
    - 引数からファイルパスを抽出（最初のパスがレビュー対象、以降は関連文書）
@@ -75,15 +75,15 @@ $ARGUMENTS
 5. **結果統合**: レビュー結果を統合
    - 重複する指摘は統合（複数ペルソナからの指摘として記録）
    - 重大度を付与: Critical / Major / Minor / Info
-   - `skills/critical-document-reviewer/assets/review_report_template.md` の形式でレポート作成
+   - `assets/review_report_template.md` の形式でレポート作成
 
 ## 参照リソース
 
-レビュー実行時に以下を参照：
-- `skills/critical-document-reviewer/references/critical_analysis_framework.md` - 批判的分析フレームワーク
-- `skills/critical-document-reviewer/references/evidence_evaluation_criteria.md` - 根拠評価基準
-- `skills/critical-document-reviewer/references/persona_definitions.md` - ペルソナ詳細定義
-- `skills/critical-document-reviewer/references/red_flag_patterns.md` - 危険表現パターン
+レビュー実行時に以下を参照（`critical-document-reviewer` スキルディレクトリ内）：
+- `references/critical_analysis_framework.md` - 批判的分析フレームワーク
+- `references/evidence_evaluation_criteria.md` - 根拠評価基準
+- `references/persona_definitions.md` - ペルソナ詳細定義
+- `references/red_flag_patterns.md` - 危険表現パターン
 
 ## 重要な指示
 

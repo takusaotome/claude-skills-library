@@ -99,14 +99,14 @@ $ARGUMENTS
    - `document-reviewer-security`
    - `document-reviewer-ops`
 
-4. **参照リソース**:
-   - `skills/critical-document-reviewer/references/critical_analysis_framework.md`
-   - `skills/critical-document-reviewer/references/evidence_evaluation_criteria.md`
-   - `skills/critical-document-reviewer/references/persona_definitions.md`
-   - `skills/critical-document-reviewer/references/red_flag_patterns.md`
+4. **参照リソース**（`critical-document-reviewer` スキルディレクトリ内）:
+   - `references/critical_analysis_framework.md`
+   - `references/evidence_evaluation_criteria.md`
+   - `references/persona_definitions.md`
+   - `references/red_flag_patterns.md`
 
 5. **レポートテンプレート**:
-   - `skills/critical-document-reviewer/assets/review_report_template.md`
+   - `assets/review_report_template.md`
 
 #### コードレビューの場合
 
@@ -129,15 +129,15 @@ $ARGUMENTS
    - `code-reviewer-clean-code-expert`
    - `code-reviewer-bug-hunter`
 
-4. **参照リソース**:
-   - `skills/critical-code-reviewer/references/persona_definitions.md`
-   - `skills/critical-code-reviewer/references/code_smell_patterns.md`
-   - `skills/critical-code-reviewer/references/review_framework.md`
-   - `skills/critical-code-reviewer/references/language_specific_checks.md`
-   - `skills/critical-code-reviewer/references/failure_mode_patterns.md`
+4. **参照リソース**（`critical-code-reviewer` スキルディレクトリ内）:
+   - `references/persona_definitions.md`
+   - `references/code_smell_patterns.md`
+   - `references/review_framework.md`
+   - `references/language_specific_checks.md`
+   - `references/failure_mode_patterns.md`
 
 5. **レポートテンプレート**:
-   - `skills/critical-code-reviewer/assets/code_review_report_template.md`
+   - `assets/code_review_report_template.md`
 
 ---
 

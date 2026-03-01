@@ -100,7 +100,7 @@ production-schedule-optimizer の出力（人員要件）を活用可能だが�
 
 未指定時はビルトインの5パターン（FULL_8H / EARLY_8H / LATE_8H / SHORT_6H / HALF_4H）を使用。
 
-> **Sample files**: `skills/shift-planner/assets/sample_roster.csv`, `skills/shift-planner/assets/sample_requirements.csv`, `skills/shift-planner/assets/sample_shift_patterns.csv`
+> **Sample files**: `assets/sample_roster.csv`, `assets/sample_requirements.csv`, `assets/sample_shift_patterns.csv`
 
 ---
 
