@@ -54,7 +54,7 @@ This skill provides **conversational guidance and advisory support**. It does no
 - Internal audit planning frameworks and procedures
 - Regulatory response strategies and remediation advice
 
-Templates in `skills/compliance-advisor/assets/` can be used as starting points when formal documentation is needed.
+Templates in `assets/` can be used as starting points when formal documentation is needed.
 
 ## When to Use This Skill
 
@@ -227,7 +227,7 @@ Classify identified deficiencies:
 | Significant Deficiency | 開示すべき重要な不備 | Significant Deficiency | Less severe than material weakness |
 | Material Weakness | 重要な欠陥 | Material Weakness | Reasonable possibility of material misstatement |
 
-Use template: `skills/compliance-advisor/assets/jsox_sox_checklist_ja.md` or `skills/compliance-advisor/assets/jsox_sox_checklist_en.md`
+Use template: `assets/jsox_sox_checklist_ja.md` or `assets/jsox_sox_checklist_en.md`
 
 ---
 
@@ -319,7 +319,7 @@ Evaluate whether controls adequately mitigate risks:
 | Medium (8-14) | Effective | Low |
 | Low (1-7) | Any | Low |
 
-Use template: `skills/compliance-advisor/assets/risk_control_matrix_ja.md` or `skills/compliance-advisor/assets/risk_control_matrix_en.md`
+Use template: `assets/risk_control_matrix_ja.md` or `assets/risk_control_matrix_en.md`
 
 ---
 
@@ -431,7 +431,7 @@ Create detailed audit procedures:
    - Scope and methodology
    - Testing details
 
-Use template: `skills/compliance-advisor/assets/internal_audit_plan_ja.md` or `skills/compliance-advisor/assets/internal_audit_plan_en.md`
+Use template: `assets/internal_audit_plan_ja.md` or `assets/internal_audit_plan_en.md`
 
 ---
 
@@ -552,16 +552,16 @@ Create sustainable compliance:
 
 ## Resources
 
-### Templates (skills/compliance-advisor/assets/)
+### Templates (assets/)
 
 | Template | Language | Use For |
 |----------|----------|---------|
-| `skills/compliance-advisor/assets/jsox_sox_checklist_ja.md` | Japanese | J-SOX compliance evaluation |
-| `skills/compliance-advisor/assets/jsox_sox_checklist_en.md` | English | SOX compliance evaluation |
-| `skills/compliance-advisor/assets/risk_control_matrix_ja.md` | Japanese | RCM development (domestic) |
-| `skills/compliance-advisor/assets/risk_control_matrix_en.md` | English | RCM development (global) |
-| `skills/compliance-advisor/assets/internal_audit_plan_ja.md` | Japanese | Audit planning (domestic) |
-| `skills/compliance-advisor/assets/internal_audit_plan_en.md` | English | Audit planning (global) |
+| `assets/jsox_sox_checklist_ja.md` | Japanese | J-SOX compliance evaluation |
+| `assets/jsox_sox_checklist_en.md` | English | SOX compliance evaluation |
+| `assets/risk_control_matrix_ja.md` | Japanese | RCM development (domestic) |
+| `assets/risk_control_matrix_en.md` | English | RCM development (global) |
+| `assets/internal_audit_plan_ja.md` | Japanese | Audit planning (domestic) |
+| `assets/internal_audit_plan_en.md` | English | Audit planning (global) |
 
 ### Reference Guides (references/)
 

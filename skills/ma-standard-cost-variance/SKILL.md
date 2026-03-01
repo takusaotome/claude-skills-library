@@ -128,7 +128,7 @@ The analysis produces a structured cost variance report containing:
 4. **Responsibility Matrix**: Variance amounts mapped to responsible departments
 5. **Root Cause Analysis**: Hypotheses and recommended actions for major variances
 
-Output template: `skills/ma-standard-cost-variance/assets/cost_variance_report_template_ja.md` (Japanese) or `skills/ma-standard-cost-variance/assets/cost_variance_report_template_en.md` (English)
+Output template: `assets/cost_variance_report_template_ja.md` (Japanese) or `assets/cost_variance_report_template_en.md` (English)
 
 ## Resources
 
@@ -139,8 +139,8 @@ Output template: `skills/ma-standard-cost-variance/assets/cost_variance_report_t
 
 ### Assets (templates for output generation)
 
-- `skills/ma-standard-cost-variance/assets/cost_variance_report_template_ja.md` - Japanese cost variance analysis report template
-- `skills/ma-standard-cost-variance/assets/cost_variance_report_template_en.md` - English cost variance analysis report template
+- `assets/cost_variance_report_template_ja.md` - Japanese cost variance analysis report template
+- `assets/cost_variance_report_template_en.md` - English cost variance analysis report template
 
 ## Best Practices
 

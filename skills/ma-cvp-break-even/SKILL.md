@@ -114,7 +114,7 @@ The analysis produces a structured CVP report containing:
 4. **Scenario Analysis Table**: Multiple what-if scenarios with profit projections
 5. **Decision Recommendations**: Prioritized actions based on analysis
 
-Output template: `skills/ma-cvp-break-even/assets/cvp_analysis_template_ja.md` (Japanese) or `skills/ma-cvp-break-even/assets/cvp_analysis_template_en.md` (English)
+Output template: `assets/cvp_analysis_template_ja.md` (Japanese) or `assets/cvp_analysis_template_en.md` (English)
 
 ## Resources
 
@@ -125,8 +125,8 @@ Output template: `skills/ma-cvp-break-even/assets/cvp_analysis_template_ja.md` (
 
 ### Assets (templates for output generation)
 
-- `skills/ma-cvp-break-even/assets/cvp_analysis_template_ja.md` - Japanese CVP analysis report template
-- `skills/ma-cvp-break-even/assets/cvp_analysis_template_en.md` - English CVP analysis report template
+- `assets/cvp_analysis_template_ja.md` - Japanese CVP analysis report template
+- `assets/cvp_analysis_template_en.md` - English CVP analysis report template
 
 ## Best Practices
 

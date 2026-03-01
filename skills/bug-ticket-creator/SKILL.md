@@ -30,7 +30,7 @@ This skill transforms bug discoveries into comprehensive, professional bug ticke
 
 - A complete bug ticket as a Markdown file (`.md`)
 - File name format: `BUG-[NUMBER]_[short-description]_[YYYY-MM-DD].md`
-- Generated using templates from `skills/bug-ticket-creator/assets/`
+- Generated using templates from `assets/`
 
 ## Core Workflows
 
@@ -431,8 +431,8 @@ Determine language preference:
 ```
 
 Based on selection:
-- 日本語: Use `skills/bug-ticket-creator/assets/bug_ticket_template_ja.md`
-- English: Use `skills/bug-ticket-creator/assets/bug_ticket_template_en.md`
+- 日本語: Use `assets/bug_ticket_template_ja.md`
+- English: Use `assets/bug_ticket_template_en.md`
 
 ### Step 3: Populate Template
 
@@ -673,12 +673,12 @@ This skill integrates comprehensive reference guides for accurate bug classifica
 
 ### assets/
 
-**`skills/bug-ticket-creator/assets/bug_ticket_template_ja.md`**: 日本語不具合チケットテンプレート
+**`assets/bug_ticket_template_ja.md`**: 日本語不具合チケットテンプレート
 - 完全な12セクション構成
 - ヘッダー、分類、再現手順、期待結果、実際結果、環境情報、添付ファイル、影響分析、推奨対応、更新履歴、チェックリスト
 - プロフェッショナルなフォーマット
 
-**`skills/bug-ticket-creator/assets/bug_ticket_template_en.md`**: English bug ticket template
+**`assets/bug_ticket_template_en.md`**: English bug ticket template
 - Complete 12-section structure
 - Header, classification, reproduction steps, expected/actual results, environment, attachments, impact analysis, recommended action, update history, quality checklist
 - Professional format

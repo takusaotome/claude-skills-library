@@ -61,7 +61,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 ## Skill Catalog (78 Skills)
 
-### Business Strategy & Consulting (12 skills)
+### Business Strategy & Consulting (16 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -77,6 +77,10 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | lean-six-sigma-consultant | リーンシックスシグマ、プロセス改善 | DMAIC, Value Stream Mapping |
 | kpi-designer | KPI設計・パフォーマンス測定 | SMART KPIs, Dashboard Design |
 | patent-analyst | 特許分析・IP戦略 | Prior Art Search, Patent Landscape |
+| management-accounting-navigator | 管理会計ナビゲーター（12領域ルーティング） | COSO/IMA Framework, Domain Classification |
+| ma-budget-actual-variance | 予算実績差異分析 | 有利/不利差異判定, Price/Quantity分解, CSV分析 |
+| ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
+| ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 
 ### Project Management (2 skills)
 
@@ -124,7 +128,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (9 skills)
+### Documentation & Communication (10 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -137,6 +141,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | video2minutes | 動画→文字起こし・議事録 | Transcription, Meeting Minutes |
 | technical-spec-writer | 技術仕様書作成（画面/API/DB設計） | IEEE 830, Mermaid Diagrams, Traceability |
 | operations-manual-creator | 操作マニュアル・SOP作成 | STEP Format, ANSI Z535, Troubleshooting |
+| presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
 
 ### QA & Testing (6 skills)
 
@@ -3239,6 +3244,100 @@ Analyzes error/exception scenarios from a customer experience perspective, scori
 
 ---
 
+### 📊 Management Accounting Navigator
+
+Routes management accounting inquiries to the appropriate analysis skill by auto-classifying user requests into 12 management accounting domains. COSO/IMA framework aligned.
+
+**When to use:**
+- Determining which management accounting analysis to perform
+- Routing budget variance, CVP, cost accounting inquiries
+- Navigating across management accounting domains
+
+**Key Features:**
+- 12-domain auto-classification with routing to specialized skills
+- COSO/IMA management accounting framework alignment
+- Bilingual domain classification templates (Japanese/English)
+- Covers: Budget variance, CVP, standard costing, KPI design, ABC, make-or-buy
+
+---
+
+### 💰 MA: Budget-Actual Variance Analysis
+
+Analyzes budget vs actual variances with automatic favorable/unfavorable classification by account type (revenue/expense), variance decomposition, and root cause hypothesis generation.
+
+**When to use:**
+- Monthly/quarterly budget vs actual comparison
+- Variance decomposition (price variance, quantity variance)
+- Management reporting with variance ranking
+
+**Key Features:**
+- Auto favorable/unfavorable determination by account type
+- Price and quantity variance decomposition
+- Significance ranking and root cause hypothesis
+- CSV data upload support
+- Bilingual report templates (Japanese/English)
+
+---
+
+### 📈 MA: CVP / Break-Even Analysis
+
+Performs Cost-Volume-Profit analysis including break-even point calculation, contribution margin analysis, margin of safety evaluation, and target profit simulation. Supports multi-product analysis.
+
+**When to use:**
+- Calculating break-even point (sales amount/volume)
+- New business or pricing change profitability simulation
+- Fixed cost reduction / variable cost improvement impact analysis
+- What-if scenario analysis
+
+**Key Features:**
+- Fixed/variable cost structure analysis
+- Break-even point calculation (amount and volume)
+- Contribution margin ratio and margin of safety
+- Target profit required sales simulation
+- Multi-product CVP analysis support
+- Bilingual templates (Japanese/English)
+
+---
+
+### 🏭 MA: Standard Cost Variance Analysis
+
+Analyzes variances between standard (planned) costs and actual costs, decomposing into price and quantity variances across material, labor, and overhead categories.
+
+**When to use:**
+- Manufacturing cost variance analysis
+- Standard costing system operation and reporting
+- Cost reduction activity effectiveness measurement
+
+**Key Features:**
+- Price and quantity variance decomposition
+- Material, labor, and manufacturing overhead categorization
+- Favorable/unfavorable auto-determination
+- Responsible department identification
+- Root cause hypothesis generation
+- CSV data upload support
+- Bilingual templates (Japanese/English)
+
+---
+
+### 🎯 Presentation Reviewer
+
+Reviews presentation materials from the audience perspective, evaluating content clarity, visual design, logical flow, engagement factors, and Marp technical compatibility.
+
+**When to use:**
+- Reviewing draft presentations before delivery
+- Getting objective feedback on slide quality
+- Checking Marp template compatibility
+- Improving presentation effectiveness
+
+**Key Features:**
+- 5 evaluation axes: Content clarity, visual design, logical flow, engagement, technical compatibility
+- Audience perspective review methodology
+- Actionable improvement recommendations
+- Marp-specific technical checks
+- Best practices checklist reference
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -3289,6 +3388,35 @@ Future skills planned for this library:
 - Corrective action tracker with SMART criteria validation
 - Mermaid gantt timeline with TTD/TTR/TTM/TTRe metrics
 - Differentiated from log-debugger (organizational process focus vs log analysis)
+
+### presentation-reviewer v1.0 (2026-02-26)
+- 5 evaluation axes: content clarity, visual design, logical flow, engagement, Marp compatibility
+- Audience perspective review methodology
+- Actionable improvement recommendations with best practices checklist
+
+### management-accounting-navigator v1.0 (2026-02-24)
+- 12-domain auto-classification for management accounting inquiries
+- COSO/IMA management accounting framework alignment
+- Routing to specialized MA skills (budget variance, CVP, standard cost)
+- Bilingual domain classification templates
+
+### ma-budget-actual-variance v1.0 (2026-02-24)
+- Auto favorable/unfavorable determination by account type (revenue/expense)
+- Price and quantity variance decomposition
+- Significance ranking and root cause hypothesis generation
+- CSV data upload support, bilingual report templates
+
+### ma-cvp-break-even v1.0 (2026-02-24)
+- Fixed/variable cost structure analysis and break-even point calculation
+- Contribution margin ratio and margin of safety evaluation
+- Target profit required sales simulation
+- Multi-product CVP analysis support, bilingual templates
+
+### ma-standard-cost-variance v1.0 (2026-02-24)
+- Standard vs actual cost variance decomposition (price/quantity)
+- Material, labor, and manufacturing overhead categorization
+- Responsible department identification and root cause hypothesis
+- CSV data upload support, bilingual report templates
 
 ### audit-doc-checker v1.0 (2026-02-26)
 - 12-category audit document quality review with 0-100 scoring

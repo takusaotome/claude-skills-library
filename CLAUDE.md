@@ -33,13 +33,21 @@ skill-name/
 
 - **`assets/`**: Files not loaded into context, but used within Claude's output. Examples: templates, boilerplate code, document templates.
 
+### Resource Path Convention
+
+**IMPORTANT: Always use relative paths when referencing resources within a skill.**
+
+- **In SKILL.md**: Use `references/...` and `assets/...` (relative to skill directory)
+- **In command files** (`commands/*.md`): Use `references/...` and `assets/...` (relative to skill directory), with the skill name noted for context (e.g., "`critical-code-reviewer` スキルディレクトリ内")
+- **DO NOT** use repo-relative paths like `skills/skill-name/references/...` — these won't resolve when installed to `~/.claude/skills/`
+
 ## Common Development Commands
 
 ### Creating a New Skill
 
 ```bash
 # Initialize new skill structure
-python /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/init_skill.py <skill-name> --path ./
+python ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/init_skill.py <skill-name> --path ./
 
 # This creates:
 # - skill-name/ directory with standard structure
@@ -51,7 +59,7 @@ python /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/
 
 ```bash
 # Package skill into distributable .zip
-python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/package_skill.py ./skill-name ./
+python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/package_skill.py ./skill-name ./
 
 # This:
 # 1. Validates skill structure (checks SKILL.md exists, runs quick_validate)
@@ -63,39 +71,91 @@ python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills
 
 ```bash
 # Quick validation before packaging
-python3 /Users/takueisaotome/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/quick_validate.py ./skill-name
+python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creator/scripts/quick_validate.py ./skill-name
 ```
 
 ## Current Skills in Library
 
 | Skill | Version | Domain | Key Components |
 |-------|---------|--------|----------------|
-| audit-doc-checker | 1.0 | Audit Quality Review | check_rules.md (12 categories), scoring_model.md, review_output_template.md |
-| audit-control-designer | 1.0 | Audit Control Design | 7 reference files (process patterns, control templates, assertions, SoD, KPIs, materiality, accounting standards), control_design_template.md |
-| data-scientist | 1.0 | Data Science | auto_eda.py, model_comparison.py, timeseries_analysis.py |
-| project-manager | 1.0 | Project Management | project_health_check.py, PMBOK templates, EVM analysis |
+| ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy | 27 reference files, ROI analysis, 5-step workflow |
+| ai-text-humanizer | 1.0 | Text Processing | 6-Pattern Detection, 0-100 Scoring, 3 Humanization Techniques |
+| audit-control-designer | 1.0 | Audit Control Design | 7 reference files, control templates, SoD, KPIs, materiality |
+| audit-doc-checker | 1.0 | Audit Quality Review | check_rules.md (12 categories), scoring_model.md |
+| aws-cli-expert | 1.0 | Cloud Infrastructure | EC2, S3, IAM, Lambda, RDS, ECS operations |
+| bcp-planner | 1.0 | Business Continuity | BIA, Risk Assessment, Recovery Strategies, BCP/DRP |
+| bug-ticket-creator | 1.0 | Bug Reporting, QA | CLEAR Principles, severity/priority, bilingual templates |
 | business-analyst | 1.0 | Business Analysis | business_analysis.py, BABOK templates, stakeholder analysis |
-| data-visualization-expert | 1.0 | Data Visualization | create_visualization.py, visualization_templates.py, color_palettes.json |
-| vendor-estimate-reviewer | 1.0 | Vendor Estimate Evaluation | analyze_estimate.py, review_checklist.md, cost_estimation_standards.md, risk_factors.md |
-| vendor-rfq-creator | 1.0 | RFQ Creation | rfq_checklist_ja.md, rfq_template_ja.md |
-| vendor-estimate-creator | 1.0 | Cost Estimation | estimation_methodology.md, effort_estimation_standards.md, roi_analysis_guide.md, estimate_template_ja.md |
-| project-plan-creator | 1.0 | Project Planning | project_charter_guide.md, project_plan_template.md (with 5 Mermaid diagrams) |
-| bug-ticket-creator | 1.0 | Bug Reporting, QA | defect_classification_guide.md, severity_priority_guide.md, reproduction_steps_guide.md, bug_ticket_template_ja.md, bug_ticket_template_en.md |
-| itil4-consultant | 1.0 | IT Service Management, ITIL 4 | 34 Practices knowledge base (4 comprehensive guides), Maturity assessment framework, 5 consulting workflows, Department-specific scenarios |
-| salesforce-expert | 1.0 | Salesforce Development, Operations Management | sharing_settings_guide.md, approval_process_guide.md, custom_development_patterns.md, architecture_best_practices.md, Bug analysis workflow, Enterprise patterns |
-| ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy, Consulting | 27 reference files (5 industries, 5 functions, 5 scenarios, 4 agent types, 6 case studies), ROI analysis, 5-step workflow, Multi-dimensional analysis |
-| migration-validation-explorer | 2.0 | Data Migration QA | 4-Perspective hypothesis generation, Priority scoring, Automated profiling/testing scripts, Cross-pollination with operators, QA backlog generation |
-| helpdesk-responder | 1.0 | Customer Support, Helpdesk | KB-based response drafts, confidence scoring, auto-detection patterns, multi-language templates, escalation workflow |
-| markdown-to-pdf | 2.0 | Documentation, Business Documents | markdown_to_pdf.py, markdown_to_fpdf.py, themes.py, mermaid_to_image.py |
-| uat-testcase-generator | - | QA Testing | generate_uat_testcases.py, Excel generation |
-| salesforce-cli-expert | - | Salesforce | CLI reference guide |
-| gogcli-expert | 1.0 | Google Workspace CLI | 13 services (Gmail, Calendar, Drive, Sheets, etc.), OAuth2/SA auth, multi-account |
-| business-plan-creator | 1.0 | Business Planning | 5-Phase Workflow, Financial Modeling, Industry Templates, frameworks.md, financial-modeling.md |
-| network-diagnostics | 1.0 | Network Quality Assessment | network_diagnostics.py, network_quality_thresholds.md, deep_dive_procedures.md, network_report_template.md |
-| office-script-expert | 1.0 | Office Scripts (Excel Online) | excel_api_patterns.md, common_bug_patterns.md, platform_limitations.md, testing_strategy.md, implementation_checklist.md |
-| production-schedule-optimizer | 1.0 | Manufacturing Scheduling | generate_schedule.py, estimate_staff.py, Greedy Bin-Packing, PSO alerts, 4-CSV input |
-| shift-planner | 1.0 | Employee Shift Scheduling | generate_shifts.py, Greedy Assignment, 30-min coverage, fairness metrics, SFT alerts |
-| dual-axis-skill-reviewer | 1.0 | Skill Quality Review | run_dual_axis_review.py, scoring_rubric.md, llm_review_schema.md, 5-dimension auto scoring, LLM merge |
+| business-plan-creator | 1.0 | Business Planning | 5-Phase Workflow, Financial Modeling, Industry Templates |
+| change-management-consultant | 1.0 | Change Management | ADKAR, Kotter 8-Step, Stakeholder Engagement |
+| codex-reviewer | 1.0 | Code Review | OpenAI Codex integration, GPT-5 high reasoning |
+| competitive-intelligence-analyst | 1.0 | Competitive Analysis | Battlecards, Win/Loss, Market Landscape |
+| compliance-advisor | 1.0 | Compliance | J-SOX/SOX, RCM, COSO Framework |
+| contract-reviewer | 1.0 | Contract Review | Risk Analysis, Clause Review, Red Flag Detection |
+| critical-code-reviewer | 1.0 | Code Review | 4-Persona parallel review (Veteran/TDD/CleanCode/BugHunter) |
+| critical-document-reviewer | 1.0 | Document Review | 6-Persona parallel review (Dev/PM/Customer/QA/Security/Ops) |
+| cx-error-analyzer | 1.0 | CX Error Analysis | 6-Axis CX Scoring, Impact vs Effort Matrix, ROI Calculation |
+| dama-dmbok | 1.0 | Data Management | 11 Knowledge Areas, Data Governance, Quality |
+| data-scientist | 1.0 | Data Science | auto_eda.py, model_comparison.py, timeseries_analysis.py |
+| data-visualization-expert | 1.0 | Data Visualization | create_visualization.py, 30+ Chart Types |
+| design-implementation-reviewer | 1.0 | Code Review | Bug Hunting, Correctness Focus, ultrathink |
+| design-thinking | 1.0 | Innovation | 5-Phase Process, Empathy Maps, Prototyping |
+| docling-converter | 1.0 | Document Conversion | PDF, DOCX, PPTX, Markdown conversion |
+| dual-axis-skill-reviewer | 1.0 | Skill Quality Review | run_dual_axis_review.py, 5-dimension auto scoring, LLM merge |
+| duckdb-expert | 1.0 | Data Analytics | SQL Optimization, CSV/Parquet/JSON |
+| esg-reporter | 1.0 | ESG Reporting | GRI, SASB, TCFD, CDP standards |
+| executive-briefing-writer | 1.0 | Executive Communication | Board Reports, So What Analysis |
+| ffmpeg-expert | 1.0 | Media Processing | Video/Audio encoding, filters, streaming |
+| financial-analyst | 1.0 | Financial Analysis | DCF, NPV/IRR, Comparable Analysis |
+| fujisoft-presentation-creator | 1.0 | Presentations | MARP Templates, Corporate Style |
+| gogcli-expert | 1.0 | Google Workspace CLI | 13 services, OAuth2/SA auth, multi-account |
+| helpdesk-responder | 1.0 | Customer Support | KB-based responses, confidence scoring, escalation |
+| imagemagick-expert | 1.0 | Image Processing | Convert, Resize, Effects, Batch |
+| incident-rca-specialist | 1.0 | Incident Management | 5 Whys, Fishbone, FTA, 3D Prevention, bilingual templates |
+| internal-audit-assistant | 1.0 | Internal Audit | IIA Standards, Audit Planning, Sampling Methods |
+| iso-implementation-guide | 1.0 | ISO Standards | ISO 9001, 27001, 22301, Gap Analysis |
+| it-system-roi-analyzer | 1.0 | IT Investment | ROI, TCO, NPV, Payback Period |
+| itil4-consultant | 1.0 | IT Service Management | 34 Practices, Maturity Assessment, 5 workflows |
+| kpi-designer | 1.0 | Performance Management | SMART KPIs, BSC, OKR, Dashboard Design |
+| lean-six-sigma-consultant | 1.0 | Process Improvement | DMAIC, Value Stream Mapping, All Belt Levels |
+| log-debugger | 1.0 | Log Analysis, Debugging | 4-Phase Framework, Log Patterns, RCA |
+| m-and-a-advisor | 1.0 | M&A Advisory | Valuation, Due Diligence, PMI |
+| ma-budget-actual-variance | 1.0 | Management Accounting | Budget variance, auto-classification, CSV analysis |
+| ma-cvp-break-even | 1.0 | Management Accounting | CVP analysis, break-even, margin of safety |
+| ma-standard-cost-variance | 1.0 | Management Accounting | Standard cost variance, price/quantity decomposition |
+| management-accounting-navigator | 1.0 | Management Accounting | 12 domain routing, COSO/IMA framework |
+| markdown-to-pdf | 2.0 | Documentation | markdown_to_pdf.py, fpdf2, Playwright, Mermaid |
+| migration-validation-explorer | 2.0 | Data Migration QA | 4-Perspective hypothesis, Priority scoring |
+| network-diagnostics | 1.0 | Network Quality | network_diagnostics.py, Ping/Speed/HTTP/Traceroute |
+| office-script-expert | 1.0 | Office Scripts | ExcelScript API, 13 Bug Patterns, Testing |
+| operations-manual-creator | 1.0 | Operations Documentation | STEP Format, ANSI Z535, Troubleshooting, bilingual templates |
+| patent-analyst | 1.0 | IP Strategy | Prior Art Search, Patent Landscape |
+| pci-dss-compliance-consultant | 1.0 | PCI DSS Compliance | Gap Analysis, SAQ Selection, v4.0.1 |
+| presentation-reviewer | 1.0 | Presentation Review | Audience perspective, 5 evaluation axes, Marp compatibility |
+| pricing-strategist | 1.0 | Pricing Strategy | Value-Based, Competitive, Price Testing |
+| production-schedule-optimizer | 1.0 | Manufacturing Scheduling | Greedy Bin-Packing, Staff Estimation, PSO alerts |
+| project-manager | 1.0 | Project Management | project_health_check.py, PMBOK, EVM analysis |
+| project-plan-creator | 1.0 | Project Planning | Charter, WBS, Gantt, RACI, 5 Mermaid diagrams |
+| qa-bug-analyzer | 1.0 | QA Testing | Quality Metrics, Trend Analysis |
+| render-cli-expert | 1.0 | Cloud Deployment | Deploys, Logs, SSH, PostgreSQL |
+| salesforce-cli-expert | 1.0 | Salesforce | SOQL, Metadata, Security Audit |
+| salesforce-expert | 1.0 | Salesforce Development | Sharing, Apex, LWC, Architecture |
+| salesforce-flow-expert | 1.0 | Salesforce Flow | Validation, Metadata Gen, Deploy |
+| salesforce-report-creator | 1.0 | Salesforce Reports | Report Types, REST/Metadata API |
+| shift-planner | 1.0 | Employee Scheduling | Greedy Assignment, 30-min coverage, fairness metrics |
+| sox-expert | 1.0 | Audio Processing | Audio Effects, Format Conversion, Spectrogram |
+| strategic-planner | 1.0 | Business Strategy | SWOT, PEST, Porter 5F, Scenario Planning |
+| streamlit-expert | 1.0 | Web Development | OIDC Auth, Plotly/Altair, Caching |
+| supply-chain-consultant | 1.0 | Supply Chain | Supply Chain Modeling, Optimization, S&OP |
+| talent-acquisition-specialist | 1.0 | HR/Recruitment | JD Templates, Interview Evaluation, Onboarding |
+| tdd-developer | 1.0 | Software Development | Red-Green-Refactor, pytest patterns |
+| technical-spec-writer | 1.0 | Technical Documentation | IEEE 830, Mermaid Diagrams, API/DB/Screen Design |
+| uat-testcase-generator | 1.0 | QA Testing | generate_uat_testcases.py, Excel generation |
+| vendor-estimate-creator | 1.0 | Cost Estimation | WBS, 4 Estimation Methods, ROI |
+| vendor-estimate-reviewer | 1.0 | Vendor Management | 12 Review Dimensions, 60+ Risk Factors |
+| vendor-rfq-creator | 1.0 | RFQ Creation | 150+ Checklist Items |
+| video2minutes | 1.0 | Media Processing | Transcription, Meeting Minutes |
+| yt-dlp-expert | 1.0 | Media Download | 1000+ Sites, Subtitles, Formats |
 
 ## Skill Development Workflow
 
@@ -291,3 +351,12 @@ name: skill-name
 ```
 
 The `description` field is critical - it determines when Claude Code automatically suggests the skill.
+
+## No Personal Information in Committed Files
+
+This is a **public repository**. Never hardcode personal information:
+- **Absolute paths** containing usernames (e.g., `/Users/username/...`) — use `~` notation, relative paths, or dynamic resolution like `Path(__file__).resolve().parents[N]`
+- **API keys / secrets** — use environment variables (`$FMP_API_KEY`, `$FINVIZ_API_KEY`) or `.gitignore`-listed config files (`.mcp.json`, `.envrc`)
+- **Usernames, email addresses, or other PII**
+
+Files that contain secrets (`.mcp.json`, `.envrc`) must be listed in `.gitignore` and never committed.

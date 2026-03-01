@@ -100,7 +100,7 @@ The analysis produces a structured variance report containing:
 4. **Root Cause Analysis**: Hypotheses and supporting evidence for major variances
 5. **Recommended Actions**: Prioritized list of corrective/follow-up actions
 
-Output template: `skills/ma-budget-actual-variance/assets/variance_report_template_ja.md` (Japanese) or `skills/ma-budget-actual-variance/assets/variance_report_template_en.md` (English)
+Output template: `assets/variance_report_template_ja.md` (Japanese) or `assets/variance_report_template_en.md` (English)
 
 ## Resources
 
@@ -111,8 +111,8 @@ Output template: `skills/ma-budget-actual-variance/assets/variance_report_templa
 
 ### Assets (templates for output generation)
 
-- `skills/ma-budget-actual-variance/assets/variance_report_template_ja.md` - Japanese variance analysis report template
-- `skills/ma-budget-actual-variance/assets/variance_report_template_en.md` - English variance analysis report template
+- `assets/variance_report_template_ja.md` - Japanese variance analysis report template
+- `assets/variance_report_template_en.md` - English variance analysis report template
 
 ## Best Practices
 

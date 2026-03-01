@@ -103,7 +103,7 @@ The navigator produces:
 3. **Structured Analysis**: 6-component response following the standard format
 4. **Follow-Up Suggestions**: Related domains or analyses the user might also consider
 
-Output template: `skills/management-accounting-navigator/assets/domain_classification_template_ja.md` (Japanese) or `skills/management-accounting-navigator/assets/domain_classification_template_en.md` (English)
+Output template: `assets/domain_classification_template_ja.md` (Japanese) or `assets/domain_classification_template_en.md` (English)
 
 ## Resources
 
@@ -131,8 +131,8 @@ Output template: `skills/management-accounting-navigator/assets/domain_classific
 
 ### Assets (templates for output generation)
 
-- `skills/management-accounting-navigator/assets/domain_classification_template_ja.md` - Japanese domain classification and routing template
-- `skills/management-accounting-navigator/assets/domain_classification_template_en.md` - English domain classification and routing template
+- `assets/domain_classification_template_ja.md` - Japanese domain classification and routing template
+- `assets/domain_classification_template_en.md` - English domain classification and routing template
 
 ## Best Practices
 

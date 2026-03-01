@@ -535,7 +535,7 @@ Skill(data-scientist): "自由に分析してインサイト発見して"
 
 ## 参考資料
 
-- Claude Skills Library: `/Users/takueisaotome/PycharmProjects/claude-skills-library/`
+- Claude Skills Library: (this repository root)
 - data-scientist skill: `data-scientist/SKILL.md`
 - data-visualization-expert skill: `data-visualization-expert/SKILL.md`
 
