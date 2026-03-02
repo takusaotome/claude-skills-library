@@ -217,5 +217,5 @@ The skill will run `markdown_to_fpdf.py --theme gray --no-cover`, using `<!-- pa
 ## Related Skills
 
 - [operations-manual-creator]({{ '/en/skills/ops/operations-manual-creator/' | relative_url }}) -- Create operations manuals, then convert to PDF with this skill
-- [technical-spec-writer]({{ '/en/skills/ops/technical-spec-writer/' | relative_url }}) -- Write technical specifications with Mermaid diagrams
-- [presentation-reviewer]({{ '/en/skills/ops/presentation-reviewer/' | relative_url }}) -- Review presentations before converting to PDF
+- **technical-spec-writer** -- Write technical specifications with Mermaid diagrams
+- **presentation-reviewer** -- Review presentations before converting to PDF

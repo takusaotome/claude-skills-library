@@ -187,4 +187,4 @@ The skill will produce advanced-level procedures focused on edge cases and confi
 
 - [incident-rca-specialist]({{ '/en/skills/ops/incident-rca-specialist/' | relative_url }}) -- Post-incident review and root cause analysis
 - [markdown-to-pdf]({{ '/en/skills/ops/markdown-to-pdf/' | relative_url }}) -- Convert the generated manual to professional PDF
-- [technical-spec-writer]({{ '/en/skills/ops/technical-spec-writer/' | relative_url }}) -- IEEE 830 compliant technical specification writing
+- **technical-spec-writer** -- IEEE 830 compliant technical specification writing

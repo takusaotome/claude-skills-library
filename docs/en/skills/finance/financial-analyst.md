@@ -284,5 +284,5 @@ Claude calculates ratios for each period, generates trend line charts, and flags
 
 ## Related Skills
 
-- [IT System ROI Analyzer]({{ '/en/skills/dev/it-system-roi-analyzer/' | relative_url }}) -- ROI and TCO analysis specifically for IT investments
+- **IT System ROI Analyzer** -- ROI and TCO analysis specifically for IT investments
 - [Project Plan Creator]({{ '/en/skills/management/project-plan-creator/' | relative_url }}) -- project planning with budget and resource allocation

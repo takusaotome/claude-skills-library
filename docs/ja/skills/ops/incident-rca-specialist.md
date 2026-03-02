@@ -204,6 +204,6 @@ SLA 閾値に対する累計ダウンタイムを計算し、SLA 違反の有無
 
 ## 関連スキル
 
-- [log-debugger]({{ '/ja/skills/ops/log-debugger/' | relative_url }}) -- ログファイル解析とコードレベルの技術的根本原因調査
+- **log-debugger** -- ログファイル解析とコードレベルの技術的根本原因調査
 - [operations-manual-creator]({{ '/ja/skills/ops/operations-manual-creator/' | relative_url }}) -- 構造化された操作マニュアル・SOP の作成
-- [project-manager]({{ '/ja/skills/management/project-manager/' | relative_url }}) -- プロジェクトヘルスチェックと PMBOK ベースの管理
+- **project-manager** -- プロジェクトヘルスチェックと PMBOK ベースの管理

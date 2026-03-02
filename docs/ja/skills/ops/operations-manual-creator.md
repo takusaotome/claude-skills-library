@@ -187,4 +187,4 @@ PostgreSQL データベースの運用ランブックを作成してください
 
 - [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) -- インシデント後の振り返りと根本原因分析
 - [markdown-to-pdf]({{ '/ja/skills/ops/markdown-to-pdf/' | relative_url }}) -- 生成したマニュアルをプロフェッショナル PDF に変換
-- [technical-spec-writer]({{ '/ja/skills/ops/technical-spec-writer/' | relative_url }}) -- IEEE 830 準拠の技術仕様書作成
+- **technical-spec-writer** -- IEEE 830 準拠の技術仕様書作成

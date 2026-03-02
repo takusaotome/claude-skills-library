@@ -257,4 +257,4 @@ jobs:
 ## Related Skills
 
 - [Critical Code Reviewer]({{ '/en/skills/dev/critical-code-reviewer/' | relative_url }}) -- multi-persona code review for source files
-- [Critical Document Reviewer]({{ '/en/skills/ops/critical-document-reviewer/' | relative_url }}) -- multi-persona document quality review
+- **Critical Document Reviewer** -- multi-persona document quality review

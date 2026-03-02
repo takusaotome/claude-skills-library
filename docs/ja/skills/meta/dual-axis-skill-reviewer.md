@@ -256,4 +256,4 @@ jobs:
 ## 関連スキル
 
 - [Critical Code Reviewer]({{ '/ja/skills/dev/critical-code-reviewer/' | relative_url }}) -- ソースファイルのマルチペルソナコードレビュー
-- [Critical Document Reviewer]({{ '/ja/skills/ops/critical-document-reviewer/' | relative_url }}) -- ドキュメント品質のマルチペルソナレビュー
+- **Critical Document Reviewer** -- ドキュメント品質のマルチペルソナレビュー

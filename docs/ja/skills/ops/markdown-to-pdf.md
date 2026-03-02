@@ -217,5 +217,5 @@ gray テーマ（社内文書）を使用し、セクション間にページ区
 ## 関連スキル
 
 - [operations-manual-creator]({{ '/ja/skills/ops/operations-manual-creator/' | relative_url }}) -- 操作マニュアルを作成し、本スキルで PDF に変換
-- [technical-spec-writer]({{ '/ja/skills/ops/technical-spec-writer/' | relative_url }}) -- Mermaid ダイアグラム付き技術仕様書の作成
-- [presentation-reviewer]({{ '/ja/skills/ops/presentation-reviewer/' | relative_url }}) -- PDF 変換前のプレゼンテーションレビュー
+- **technical-spec-writer** -- Mermaid ダイアグラム付き技術仕様書の作成
+- **presentation-reviewer** -- PDF 変換前のプレゼンテーションレビュー

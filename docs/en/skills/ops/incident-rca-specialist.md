@@ -204,6 +204,6 @@ The skill will calculate the total downtime against the SLA threshold for the pe
 
 ## Related Skills
 
-- [log-debugger]({{ '/en/skills/ops/log-debugger/' | relative_url }}) -- Log file analysis and technical root cause investigation at the code level
+- **log-debugger** -- Log file analysis and technical root cause investigation at the code level
 - [operations-manual-creator]({{ '/en/skills/ops/operations-manual-creator/' | relative_url }}) -- Create structured operations manuals and SOPs
-- [project-manager]({{ '/en/skills/management/project-manager/' | relative_url }}) -- Project health checks and PMBOK-based management
+- **project-manager** -- Project health checks and PMBOK-based management
