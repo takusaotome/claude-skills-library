@@ -22,59 +22,49 @@ Skills cover everything from code review and data science to compliance advisory
 
 ## Skill Categories
 
-<div class="category-cards">
-
-  <a href="{{ '/en/skill-catalog/#software-development--it' | relative_url }}" class="category-card" style="text-decoration:none;color:inherit;">
+<div class="category-cards" markdown="0">
+  <div class="category-card">
     <h3>Software Development & IT</h3>
-    <p>16 skills -- Code review, TDD, data science, cloud CLI, debugging, and more.</p>
-  </a>
-
-  <a href="{{ '/en/skill-catalog/#project--business' | relative_url }}" class="category-card" style="text-decoration:none;color:inherit;">
+    <p>16 skills — Code review, TDD, data science, cloud CLI, debugging, and more.</p>
+  </div>
+  <div class="category-card">
     <h3>Project & Business</h3>
-    <p>18 skills -- Strategy, M&A, pricing, project planning, management accounting.</p>
-  </a>
-
-  <a href="{{ '/en/skill-catalog/#operations--documentation' | relative_url }}" class="category-card" style="text-decoration:none;color:inherit;">
+    <p>18 skills — Strategy, M&A, pricing, project planning, management accounting.</p>
+  </div>
+  <div class="category-card">
     <h3>Operations & Documentation</h3>
-    <p>10 skills -- Technical writing, presentations, PDF conversion, meeting minutes.</p>
-  </a>
-
-  <a href="{{ '/en/skill-catalog/#compliance-finance--governance' | relative_url }}" class="category-card" style="text-decoration:none;color:inherit;">
+    <p>10 skills — Technical writing, presentations, PDF conversion, meeting minutes.</p>
+  </div>
+  <div class="category-card">
     <h3>Compliance, Finance & Governance</h3>
-    <p>12 skills -- SOX, ISO, PCI DSS, ESG, audit, financial analysis.</p>
-  </a>
-
-  <a href="{{ '/en/skill-catalog/#qa-testing--vendor-management' | relative_url }}" class="category-card" style="text-decoration:none;color:inherit;">
+    <p>12 skills — SOX, ISO, PCI DSS, ESG, audit, financial analysis.</p>
+  </div>
+  <div class="category-card">
     <h3>QA, Testing & Vendor Management</h3>
-    <p>9 skills -- UAT, migration QA, vendor estimates, helpdesk, CX analysis.</p>
-  </a>
-
+    <p>9 skills — UAT, migration QA, vendor estimates, helpdesk, CX analysis.</p>
+  </div>
 </div>
 
 ---
 
 ## Get Started in 3 Steps
 
-<div class="steps">
-
+<div class="steps" markdown="0">
   <div class="step">
     <div class="step-number">1</div>
     <h4>Install Claude Code</h4>
     <p>Set up the Claude Code CLI on your machine.</p>
   </div>
-
   <div class="step">
     <div class="step-number">2</div>
     <h4>Copy a Skill</h4>
     <p><code>cp -r ./skills/skill-name ~/.claude/skills/</code></p>
   </div>
-
   <div class="step">
     <div class="step-number">3</div>
     <h4>Use It</h4>
     <p>Claude automatically detects installed skills and applies them when relevant.</p>
   </div>
-
 </div>
 
 [Getting Started Guide]({{ '/en/getting-started/' | relative_url }}){: .btn .btn-primary }
