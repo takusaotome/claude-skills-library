@@ -352,6 +352,25 @@ name: skill-name
 
 The `description` field is critical - it determines when Claude Code automatically suggests the skill.
 
+## Docs Site Local Verification
+
+Before pushing changes to `docs/`, always run a local Jekyll build to verify:
+
+```bash
+cd docs && bundle install && bundle exec jekyll serve
+# Open http://127.0.0.1:4000/claude-skills-library/
+```
+
+Verification checklist:
+- Landing pages (EN/JA) render correctly with language selector
+- Category cards display in grid layout
+- Sidebar 3-level navigation works
+- All skill guide pages render without errors
+- Language toggle in footer links to correct peer page
+- "Edit this page on GitHub" link points to correct file path
+- Search bar is visible and functional
+- `jekyll build` completes with no errors
+
 ## No Personal Information in Committed Files
 
 This is a **public repository**. Never hardcode personal information:

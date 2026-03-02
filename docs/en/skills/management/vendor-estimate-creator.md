@@ -58,6 +58,75 @@ The skill follows 6 sequential workflows:
 5. **ROI Analysis** -- Analyze current-state costs (As-Is), project future-state benefits (To-Be), calculate financial metrics (ROI, NPV, IRR, payback period), and run sensitivity analysis across optimistic, standard, and pessimistic scenarios.
 6. **Estimate Document Generation** -- Populate a 12-section estimate template (executive summary, assumptions, WBS detail, schedule, ROI, team structure, risks, maintenance costs, payment terms, contract terms, approval).
 
+### 4 Estimation Methods Compared
+
+The skill supports four methods. Choose based on how much is known about the project:
+
+| Method | When to Use | Accuracy | How It Works |
+|:-------|:-----------|:---------|:-------------|
+| **Analogous** | Very early stage, similar past project exists | +/- 50% | Compare with a completed project of similar size and complexity. Scale up/down based on differences. |
+| **Parametric** | Planning stage, scope metrics known (screen count, API count) | +/- 30% | Multiply a productivity rate (e.g., 3 person-days per API) by quantity. Quick and data-driven. |
+| **Bottom-up** | Requirements are defined, WBS is available | +/- 10% | Estimate each WBS task individually, then sum. Most accurate but most time-consuming. |
+| **Three-point (PERT)** | Any stage where uncertainty range is known | Varies | Calculate `(Optimistic + 4 x Most Likely + Pessimistic) / 6` for each task. Useful for risk-adjusted estimates. |
+
+For best results, estimate with bottom-up and cross-check with parametric benchmarks.
+
+### Contingency Allocation
+
+Contingency covers unknowns that cannot be estimated precisely. The percentage depends on project risk level:
+
+| Risk Level | Contingency % | Typical Indicators |
+|:-----------|:-------------|:-------------------|
+| Low | 5-10% | Familiar technology, clear requirements, experienced team |
+| Medium | 10-15% | Some new technology, requirements mostly defined, mixed team experience |
+| High | 15-25% | New technology stack, vague requirements, many external integrations |
+
+Contingency is applied to the sum of all phase efforts (including PM and QA), not just implementation.
+
+### Standard Effort Allocation by Phase
+
+A well-formed estimate distributes effort across phases. Use these ranges as a sanity check:
+
+| Phase | Typical % of Total Effort |
+|:------|:-------------------------|
+| Requirements Definition | 8-12% |
+| Design | 12-18% |
+| Implementation | 30-40% |
+| Testing | 18-25% |
+| Deployment & Ops Prep | 5-8% |
+| PM (cross-cutting) | 10-15% |
+| QA (cross-cutting) | 7-11% |
+
+### Labor Rate Ranges
+
+The skill uses role-based daily rates for cost calculation. Adjust these to your market:
+
+| Role | Rate (JPY/person-day) |
+|:-----|:---------------------|
+| Project Manager | 100,000 - 150,000 |
+| Architect | 90,000 - 140,000 |
+| Senior Engineer | 80,000 - 120,000 |
+| Mid-level Engineer | 60,000 - 90,000 |
+
+Rates are multiplied by the person-day estimate for each WBS task, then summed to produce the project total.
+
+### Estimate Document Structure
+
+The final output follows a 12-section template:
+
+1. Executive Summary -- Key figures and recommendation
+2. Assumptions -- All scope, technology, and team assumptions
+3. WBS Detail -- Hierarchical task breakdown with effort per task
+4. Project Schedule -- Timeline with milestones
+5. ROI Analysis -- Current vs. future state, financial metrics
+6. Team Structure -- Roles, headcount, utilization rates
+7. Risks and Mitigation -- Risk register with response strategies
+8. Maintenance Costs -- Annual operating and support costs
+9. Payment Terms -- Milestone-based or periodic payment schedule
+10. Contract Terms -- Scope change process, warranty, SLA
+11. Appendix -- Detailed calculations, reference data
+12. Approval -- Sign-off section for client and vendor
+
 ## Usage Examples
 
 ### Example 1: Full estimate from an RFQ
@@ -91,6 +160,26 @@ error rate 5% to 0.5%.
 Calculate ROI, NPV, and payback period over 5 years.
 ```
 
+### Example 4: Estimate review and validation
+
+```
+Here is our existing estimate for a CRM migration project
+(attached as estimate.md). Review it for completeness:
+check if PM and QA effort are properly included,
+whether contingency is appropriate, and flag any
+commonly missed items.
+```
+
+### Example 5: Mobile app estimate with unfamiliar tech stack
+
+```
+We need to estimate a cross-platform mobile app (Flutter)
+for a logistics company. 15 screens, real-time GPS tracking,
+offline mode, push notifications. Our team has not used
+Flutter before. Factor in the learning curve and recommend
+an appropriate contingency level.
+```
+
 ## Tips & Best Practices
 
 - **Always include contingency.** Low-risk projects need 5-10%, medium 10-15%, and high-risk projects 15-25%. Omitting contingency is the most common estimation mistake.
@@ -99,6 +188,26 @@ Calculate ROI, NPV, and payback period over 5 years.
 - **Document every assumption.** Clearly state what is assumed about scope, technology, team composition, and constraints. Assumptions protect both vendor and client.
 - **Be conservative on benefits, generous on costs.** For ROI analysis, use realistic or slightly pessimistic benefit projections and include all cost categories.
 - **Check for commonly missed items.** Data migration, non-functional requirements (performance, security), integration testing, training, and documentation are often overlooked.
+
+## Troubleshooting
+
+### Estimate total seems too low compared to market rates
+
+**Symptom**: The calculated cost is significantly below what comparable vendors charge.
+
+**Solution**: Check for missing items: PM effort (10-15%), QA effort (7-11%), contingency (10-25%), data migration, training, documentation, and non-functional requirements testing. Also verify that labor rates reflect current market conditions -- rates from reference guides may need adjustment for your region or specialization.
+
+### Client challenges the contingency percentage
+
+**Symptom**: The client asks why 15-25% is added "on top" and wants it removed.
+
+**Solution**: Explain that contingency covers identified risks and unknowns that cannot be precisely estimated at this stage. Provide the risk assessment showing the specific factors (new technology, unclear requirements, multiple integrations). Offer to reduce contingency if the client agrees to a formal scope change process -- this shifts the cost of unknowns from contingency to change requests.
+
+### ROI analysis does not convince stakeholders
+
+**Symptom**: Positive financial metrics (ROI, NPV) but stakeholders remain skeptical.
+
+**Solution**: Ensure benefits are grounded in measurable current-state metrics (actual processing time, actual error rate, actual labor cost). Include sensitivity analysis showing even the pessimistic scenario is viable. Add qualitative benefits (compliance, scalability, employee satisfaction) alongside the numbers. Present a phased approach where Phase 1 delivers quick wins to prove value before committing to the full investment.
 
 ## Related Skills
 

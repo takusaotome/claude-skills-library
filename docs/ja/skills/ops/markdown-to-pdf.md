@@ -68,6 +68,20 @@ npm install -g @mermaid-js/mermaid-cli
 
 ## 仕組み
 
+### エンジン比較
+
+| 機能 | fpdf2 (`markdown_to_fpdf.py`) | Playwright (`markdown_to_pdf.py`) |
+|:-----|:------------------------------|:----------------------------------|
+| **適用領域** | ビジネス文書（見積書、提案書、レポート） | カスタム CSS 付き技術文書 |
+| **カバーページ** | YAML フロントマターで内蔵 | 非対応 |
+| **テーマ** | navy, gray（ヘッダー/フッター/テーブル） | カスタム CSS ファイル |
+| **テーブルスタイリング** | 交互行色、色付きヘッダー、info-table モード | 標準 HTML テーブル |
+| **Mermaid 対応** | mmdc で PNG レンダリング後 PDF に埋込 | mmdc または Playwright バックエンドで完全対応 |
+| **CJK フォント** | TrueType 優先の自動検出 | ブラウザのシステムフォントを使用 |
+| **ページ区切り** | `<!-- pagebreak -->` コメント | CSS `page-break-before` |
+| **依存パッケージ** | `fpdf2`, `mistune`, `pyyaml` | `markdown2`, `playwright`, `chromium` |
+| **機密マーク** | `--confidential` フラグ | CSS で手動設定 |
+
 ### モードの選び方
 
 | 要件 | モード | スクリプト |
@@ -96,6 +110,28 @@ npm install -g @mermaid-js/mermaid-cli
    ```
 2. Mermaid コードブロックは自動的に画像に変換
 3. 出力 PDF を確認
+
+### Mermaid ダイアグラム対応
+
+両エンジンとも Mermaid コードブロックを画像に変換できます。レンダリングパイプライン:
+
+1. Markdown ソース内の Mermaid コードブロック（` ```mermaid `）を検出
+2. 各ブロックを `mermaid_renderer.py` で PNG（Playwright モードでは SVG）にレンダリング
+3. レンダリングされた画像がコードブロックに置き換わり、最終 PDF に埋め込み
+4. SHA256 ベースのキャッシュにより、変更のないダイアグラムの再レンダリングを回避
+
+対応する Mermaid ダイアグラムの種類: フローチャート、シーケンス図、ガントチャート、クラス図、状態遷移図、ER 図、円グラフ。変換前に [mermaid.live](https://mermaid.live/) でプレビューを推奨します。
+
+**strict モード vs. permissive モード**: デフォルトでは Mermaid の構文エラーで PDF 生成が停止します。`--no-strict-mermaid` を指定すると、エラー時にコードブロックをそのまま表示するフォールバック動作に切り替わります。
+
+### ページ区切りと特殊構文
+
+| 構文 | モード | 効果 |
+|:-----|:-------|:-----|
+| `<!-- pagebreak -->` | fpdf2 | ページ区切りを挿入 |
+| `<!-- info-table -->` | fpdf2 | 次のテーブルをキーバリュー info-table スタイルで表示 |
+| `---` | fpdf2 | 水平線 |
+| ` ```mermaid ` | 両方 | Mermaid ダイアグラムを画像としてレンダリング |
 
 ---
 
@@ -131,6 +167,38 @@ graph TD
 ```
 
 `mermaid_to_image.py` を使用してスタンドアロン PNG を生成します。
+
+### 例 4: 社内レポート（gray テーマ）
+
+```
+この月次運用レポートを PDF に変換してください。
+gray テーマ（社内文書）を使用し、セクション間にページ区切りを入れてください。
+カバーページは不要です。
+```
+
+`markdown_to_fpdf.py --theme gray --no-cover` を実行し、`<!-- pagebreak -->` マーカーでセクションを区切り、gray テーマで社内文書スタイリングを適用します。
+
+---
+
+## トラブルシューティング
+
+### fpdf2 モードで CJK 文字が文字化けする
+
+**症状**: 日本語・中国語・韓国語の文字が PDF 上で四角や意味不明な記号として表示される。テキスト抽出ツールでは正しい文字が得られる場合がある。
+
+**解決策**: CFF アウトラインフォント（macOS の Hiragino Sans など）が原因です。TrueType CJK フォントをインストールしてください: macOS は `brew install --cask font-udev-gothic`、Linux は `sudo apt install fonts-noto-cjk`。stderr に "Warning: Using CFF-outline font" が出力されていないか確認してください。インストール後に再変換し、CFF 警告が表示されないことを確認します。
+
+### strict モードで Mermaid 変換が失敗する
+
+**症状**: Mermaid の構文エラーやツール不足により PDF 生成が途中で停止する。
+
+**解決策**: 出力のエラーカテゴリを確認してください。`mmdc_not_found` の場合は mermaid-cli をインストール: `npm install -g @mermaid-js/mermaid-cli`。`syntax_error` の場合は [mermaid.live](https://mermaid.live/) でダイアグラムを検証。`browser_launch_failed` の場合は Playwright をインストール: `pip install playwright && playwright install chromium`。エラー時にコードブロック表示へフォールバックさせるには `--no-strict-mermaid` を追加してください。
+
+### リスト項目内のテーブルが表示されない
+
+**症状**: リスト項目（`- item`）やブロック引用（`>`）の下にインデントされた Markdown テーブルが PDF に出力されない。
+
+**解決策**: fpdf2 モードの mistune パーサーはインデントされたテーブルを認識できません。テーブルをトップレベル（インデントなし）に移動してください。これは fpdf2 モードの既知の制限事項です。
 
 ---
 

@@ -78,6 +78,43 @@ The skill provides 7 workflows that can be used individually or combined:
 | Portfolio analysis report | 1, 5 | 2 |
 | SWOT analysis report | 1, 2 | -- |
 
+### Framework Selection Guide
+
+Different situations call for different frameworks. Use the table below to pick the right starting point:
+
+| You want to... | Recommended Framework | Why |
+|:---------------|:---------------------|:----|
+| Understand macro trends (regulation, economy, demographics) | PEST / PESTLE | Scans external forces beyond the industry level |
+| Assess industry profitability and competitive pressure | Porter's Five Forces | Maps structural forces that determine margins |
+| Identify internal strengths and weaknesses | Value Chain | Pinpoints where value is created or lost within the organization |
+| Generate actionable strategy options | Cross-SWOT | Combines internal and external factors into four strategy quadrants |
+| Design or redesign a business model | Business Model Canvas / Lean Canvas | Visualizes the full business logic on one page |
+| Decide where to invest across multiple businesses | BCG Matrix / GE Matrix | Classifies business units by growth potential and competitive position |
+| Choose a growth direction | Ansoff Matrix | Clarifies trade-offs between market penetration, development, product development, and diversification |
+
+### Data-Backing Caveats
+
+Strategic analysis is only as strong as the data behind it. Keep these points in mind:
+
+- **SWOT entries should be evidence-based.** Replace "strong brand" with "78% brand recognition in target segment (industry avg: 45%)." Unsupported claims weaken the analysis.
+- **Porter's Five Forces requires market data.** Without industry concentration ratios, switching cost estimates, or substitute pricing data, the assessment becomes opinion. Reference industry reports or public filings where possible.
+- **BCG and GE matrices depend on reliable market sizing.** Growth rates and market share figures must come from credible sources (industry associations, analyst reports). Flag any figures that are estimates.
+- **Financial projections in medium-term plans are hypotheses, not forecasts.** Always include sensitivity analysis showing optimistic, base, and pessimistic scenarios. State assumptions explicitly.
+- **Claude generates analysis based on the information you provide.** If your inputs are incomplete or biased, the output will reflect that. Supplement Claude's analysis with primary research (customer interviews, competitive intelligence, financial data).
+
+### Reference Files and Templates
+
+The skill bundles three reference guides and three output templates:
+
+| File | Type | Contents |
+|:-----|:-----|:---------|
+| `references/strategic_analysis_frameworks.md` | Reference | Detailed PEST/Porter/Value Chain methodology |
+| `references/business_model_frameworks.md` | Reference | BMC, Lean Canvas, Value Proposition Canvas guides |
+| `references/portfolio_matrix_frameworks.md` | Reference | BCG, GE/McKinsey, Ansoff detailed procedures |
+| `assets/strategic_plan_template.md` | Template | Medium-term business plan (13 sections) |
+| `assets/new_business_proposal_template.md` | Template | New business proposal document |
+| `assets/portfolio_analysis_template.md` | Template | Portfolio analysis report with matrices |
+
 ## Usage Examples
 
 ### Example 1: Medium-term business plan
@@ -108,6 +145,26 @@ Threats: Amazon, rising rent costs.
 Derive prioritized strategic options.
 ```
 
+### Example 4: Portfolio analysis for a conglomerate
+
+```
+We have 4 business units:
+A) Enterprise software (high growth, market leader)
+B) Legacy hardware (flat growth, #1 share)
+C) Cloud services (high growth, #4 in market)
+D) Print services (declining, small share)
+Run BCG and Ansoff analysis and recommend investment allocation.
+```
+
+### Example 5: Business Model Canvas for a platform business
+
+```
+We're building a B2B marketplace connecting manufacturers
+with logistics providers. Create a Business Model Canvas
+covering all 9 blocks, and identify the key revenue model
+options (transaction fee, subscription, or hybrid).
+```
+
 ## Tips & Best Practices
 
 - **Ground analysis in data.** Avoid vague SWOT entries like "strong brand." Instead use measurable statements: "Brand recognition at 78% in target segment (industry average: 45%)."
@@ -116,6 +173,26 @@ Derive prioritized strategic options.
 - **Use Mermaid Gantt for roadmaps.** The visual timeline helps stakeholders grasp phasing and dependencies at a glance.
 - **Write the executive summary last.** Complete all analysis first, then distill the key messages into a concise one-page summary.
 - **Validate portfolio scoring criteria upfront.** Agree on evaluation weights with stakeholders before scoring business units to avoid bias debates later.
+
+## Troubleshooting
+
+### SWOT analysis is too vague to be actionable
+
+**Symptom**: SWOT entries like "good team" or "market opportunity" without specifics.
+
+**Solution**: Provide Claude with concrete data points -- financial metrics, market share figures, customer survey results, or competitor benchmarks. Ask Claude to rewrite each SWOT entry with a measurable indicator. If data is unavailable, label entries as "(estimate)" and plan primary research to validate them.
+
+### Strategic plan has too many initiatives
+
+**Symptom**: The plan lists 15-20 initiatives with no clear prioritization.
+
+**Solution**: Ask Claude to apply the weighted scoring matrix (strategic fit, feasibility, impact, urgency) and limit the output to the top 5-7 initiatives. Use the phrase: "Prioritize to no more than 7 initiatives and explain what was deprioritized and why."
+
+### Portfolio analysis feels subjective
+
+**Symptom**: BCG or GE matrix placement depends heavily on the evaluator's judgment.
+
+**Solution**: Define scoring criteria and weights before starting the analysis. Share these with stakeholders for agreement. Use quantitative data (market growth rates from industry reports, revenue share figures) wherever possible. Where estimates are necessary, flag them and run sensitivity analysis on the placement.
 
 ## Related Skills
 

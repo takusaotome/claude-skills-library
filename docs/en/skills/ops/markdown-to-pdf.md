@@ -68,6 +68,20 @@ npm install -g @mermaid-js/mermaid-cli
 
 ## How It Works
 
+### Engine comparison
+
+| Feature | fpdf2 (`markdown_to_fpdf.py`) | Playwright (`markdown_to_pdf.py`) |
+|:--------|:------------------------------|:----------------------------------|
+| **Best for** | Business documents (estimates, proposals, reports) | Technical docs with custom CSS |
+| **Cover page** | Built-in with YAML frontmatter | Not supported |
+| **Themes** | navy, gray (headers/footers/tables) | Custom CSS files |
+| **Table styling** | Alternating rows, colored headers, info-table mode | Standard HTML tables |
+| **Mermaid support** | Renders to PNG via mmdc, embedded in PDF | Full support via mmdc or Playwright backend |
+| **CJK fonts** | Auto-discovery with TrueType preference | Uses system fonts via browser |
+| **Page breaks** | `<!-- pagebreak -->` comment | CSS `page-break-before` |
+| **Dependencies** | `fpdf2`, `mistune`, `pyyaml` | `markdown2`, `playwright`, `chromium` |
+| **Confidential mark** | `--confidential` flag | Manual CSS |
+
 ### Choosing a mode
 
 | Need | Mode | Script |
@@ -96,6 +110,28 @@ npm install -g @mermaid-js/mermaid-cli
    ```
 2. Mermaid code blocks are automatically converted to images
 3. Verify the output PDF
+
+### Mermaid diagram support
+
+Both engines can convert Mermaid code blocks into images. The rendering pipeline:
+
+1. Mermaid code blocks (` ```mermaid `) are detected in the Markdown source
+2. Each block is rendered to PNG (or SVG in Playwright mode) using `mermaid_renderer.py`
+3. The rendered image replaces the code block in the final PDF
+4. SHA256-based caching avoids re-rendering unchanged diagrams
+
+Supported Mermaid diagram types include flowcharts, sequence diagrams, Gantt charts, class diagrams, state diagrams, ER diagrams, and pie charts. Preview diagrams at [mermaid.live](https://mermaid.live/) before conversion.
+
+**Strict vs. permissive mode**: By default, Mermaid syntax errors halt PDF generation. Use `--no-strict-mermaid` to fall back to rendering the raw code block instead of failing.
+
+### Page break and special syntax
+
+| Syntax | Mode | Effect |
+|:-------|:-----|:-------|
+| `<!-- pagebreak -->` | fpdf2 | Insert a page break |
+| `<!-- info-table -->` | fpdf2 | Render the next table as key-value info-table style |
+| `---` | fpdf2 | Horizontal rule |
+| ` ```mermaid ` | Both | Render Mermaid diagram as image |
 
 ---
 
@@ -131,6 +167,38 @@ graph TD
 ```
 
 The skill will use `mermaid_to_image.py` to produce a standalone PNG.
+
+### Example 4: Internal report with gray theme
+
+```
+Convert this monthly operations report to PDF.
+Use the gray theme (internal document) and add page breaks
+between sections. No cover page needed.
+```
+
+The skill will run `markdown_to_fpdf.py --theme gray --no-cover`, using `<!-- pagebreak -->` markers for section transitions and the gray theme for internal document styling.
+
+---
+
+## Troubleshooting
+
+### CJK text appears garbled in fpdf2 mode
+
+**Symptom**: Japanese, Chinese, or Korean characters render as boxes or random symbols in the generated PDF, even though text extraction tools show the correct text.
+
+**Solution**: This is caused by CFF-outline fonts (e.g., Hiragino Sans on macOS). Install a TrueType CJK font: `brew install --cask font-udev-gothic` (macOS) or `sudo apt install fonts-noto-cjk` (Linux). Check stderr for "Warning: Using CFF-outline font" to confirm. After installing, re-run the conversion and confirm no CFF warning appears.
+
+### Mermaid conversion fails in strict mode
+
+**Symptom**: PDF generation halts with an error message about Mermaid syntax or missing tools.
+
+**Solution**: Check the error category in the output. If `mmdc_not_found`, install mermaid-cli: `npm install -g @mermaid-js/mermaid-cli`. If `syntax_error`, validate your diagram at [mermaid.live](https://mermaid.live/). If `browser_launch_failed`, install Playwright: `pip install playwright && playwright install chromium`. To allow graceful fallback (renders code block instead of failing), add `--no-strict-mermaid`.
+
+### Tables inside list items are not rendered
+
+**Symptom**: A Markdown table that is indented under a list item (`- item`) or blockquote (`>`) does not appear in the PDF.
+
+**Solution**: The fpdf2 mode's mistune parser cannot recognize indented tables. Move the table to the top level (no leading spaces or indentation). This is a known limitation of fpdf2 mode.
 
 ---
 

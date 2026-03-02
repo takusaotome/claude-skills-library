@@ -68,6 +68,44 @@ The skill follows a 6-step workflow:
 5. **Troubleshooting Guide** -- Create Symptom-Cause-Resolution tables, decision trees, and three-tier escalation paths (L1 Self-service, L2 Helpdesk, L3 Engineering)
 6. **Assembly & Review** -- Assemble all components into the final template, generate a table of contents, and run a quality checklist
 
+### STEP format detailed example
+
+Each procedure step is written using the four STEP components. Here is a concrete example for a user account creation operation:
+
+| STEP | Content |
+|:-----|:--------|
+| **S**pecific | Click the "Add New User" button |
+| **T**arget | Top-right corner of the User Management screen (Menu > Administration > User Management) |
+| **E**xpected | The "New User Registration" modal dialog opens with empty fields for Name, Email, and Role |
+| **P**roceed | Confirm the modal is displayed and the cursor is in the Name field, then go to Step 2 |
+
+A complete procedure uses numbered main steps (1, 2, 3...), sub-steps (1.1, 1.2...) for detailed actions within a step, and conditional branches (1a, 1b) when the flow diverges based on a condition. Every step includes a screenshot placeholder `[Screenshot: {description}]` to mark where actual images should be inserted later.
+
+### ANSI Z535 safety label reference
+
+The skill uses an ANSI Z535-inspired classification to apply consistent caution and warning labels throughout the manual:
+
+| Level | Color | When to Use | Example |
+|:------|:------|:------------|:--------|
+| **DANGER** | Red | Risk of irreversible data destruction or account termination | "DANGER: Clicking 'Delete All Records' permanently removes all data. This action cannot be undone." |
+| **WARNING** | Orange | Changes affecting all users, bulk operations, permission escalation | "WARNING: Changing the authentication method will force all 500 users to re-login immediately." |
+| **CAUTION** | Yellow | Risk of unexpected results, unsaved data loss, long-running processes | "CAUTION: This report generation may take up to 30 minutes. Do not close the browser tab." |
+| **NOTE** | Blue | Helpful tips, best practices, access requirements | "NOTE: You need the Admin role to access this screen. Contact IT if you lack permissions." |
+
+Labels are always placed **before** the step they relate to, and each label includes the consequence of ignoring it.
+
+### Operations inventory structure
+
+Before writing procedures, the skill creates a comprehensive inventory table:
+
+| OP-ID | Operation Name | Category | Frequency | Target Role | Est. Time | Prerequisites |
+|:------|:---------------|:---------|:----------|:------------|:----------|:--------------|
+| OP-001 | Create user account | User Management | Ad-hoc | Admin | 5 min | -- |
+| OP-002 | Assign role permissions | User Management | Ad-hoc | Admin | 3 min | OP-001 |
+| OP-003 | Daily batch export | Data Export | Daily | Operator | 10 min | -- |
+
+This inventory drives the order and grouping of procedures in the final manual.
+
 ---
 
 ## Usage Examples
@@ -100,6 +138,38 @@ Focus on the 5 most common operations only.
 ```
 
 The skill will select the essential operations, write beginner-friendly procedures with detailed UI navigation, and include a FAQ-style troubleshooting section.
+
+### Example 4: System admin runbook
+
+```
+Create an operations runbook for our PostgreSQL database.
+Target: infrastructure team (advanced).
+Cover backup, restore, failover, and performance monitoring.
+```
+
+The skill will produce advanced-level procedures focused on edge cases and configuration, with DANGER labels for destructive operations like manual failover, and a decision tree for troubleshooting replication lag.
+
+---
+
+## Troubleshooting
+
+### Steps are too vague
+
+**Symptom**: Generated procedures use phrases like "configure the settings appropriately" or "set values as needed" without specifying exact actions.
+
+**Solution**: The skill prohibits ambiguous language by design. If vague steps appear, provide more context about the system (screen names, field labels, exact menu paths). The skill will then produce precise STEP-format instructions. You can also prompt with "Rewrite this step using the STEP format with exact UI element names."
+
+### Too many WARNING labels
+
+**Symptom**: Almost every step has a WARNING or CAUTION label, which dilutes their importance and makes the manual feel alarmist.
+
+**Solution**: Review the labels against the ANSI Z535 classification criteria. DANGER and WARNING should be reserved for truly consequential actions (data destruction, bulk changes). Routine precautions should use NOTE (blue). Ask the skill to "Review and downgrade labels that do not involve irreversible consequences."
+
+### Manual is too long for the audience
+
+**Symptom**: The generated manual is hundreds of pages long and the target audience (e.g., general users) only needs a subset.
+
+**Solution**: Use the quick-start guide scope option in Workflow 1. Specify "quick-start guide" to limit output to the 5-10 most common operations. For comprehensive manuals, consider splitting into role-based volumes (Admin Guide, User Guide, Operator Guide) by specifying the target role during scope definition.
 
 ---
 

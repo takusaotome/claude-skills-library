@@ -70,6 +70,60 @@ The skill follows an 8-step workflow:
 7. **Corrective Action Planning** -- Three time horizons (immediate/short-term/long-term) with the 3D Prevention Framework (Detect, Defend, Degrade) and SMART criteria
 8. **Report Generation** -- Complete RCA report in Japanese or English using bundled templates
 
+### Branching 5 Whys in detail
+
+Traditional 5 Whys follows a single causal chain. This skill extends it with a **tree structure** -- when one "Why" reveals multiple independent causes, the analysis branches and explores each path separately.
+
+```
+Symptom: Payment service returned 500 errors
+ Why 1: Database connection pool exhausted
+   Why 2a: Connection leak in checkout module     Why 2b: Connection limit too low
+     Why 3a: Missing finally block                  Why 3b: Default config from 2 years ago
+       Why 4a: No static analysis rule                Why 4b: No capacity review process
+         [Process gap] [Evidence: git blame]           [Process gap] [Evidence: config history]
+```
+
+Each branch is tracked independently with:
+- **Evidence annotation** -- logs, metrics, or timestamps supporting the causal link
+- **Confidence level** -- High / Medium / Low for each link
+- **Human Error Decomposition** -- if analysis reaches "operator mistake," it must continue: "Why was this error possible?" Decompose into Process gap, System gap, or Training gap.
+
+### Fault Tree Analysis: AND/OR gates
+
+FTA decomposes the top-level failure event using two types of logic gates:
+
+**OR gate** -- the parent event occurs if **any** child event occurs:
+
+```
+        [Service outage]
+             OR
+        /          \
+[DB failure]   [Network failure]
+```
+
+Either a database failure or a network failure alone is sufficient to cause the outage.
+
+**AND gate** -- the parent event occurs only if **all** child events occur simultaneously:
+
+```
+        [Data corruption]
+            AND
+        /          \
+[Write race]   [No validation]
+```
+
+Data corruption requires both a write race condition and the absence of input validation.
+
+The skill identifies **Minimal Cut Sets** (the smallest combination of basic events causing the top event) and **Single Points of Failure** (events that appear in every cut set), then prioritizes SPOFs for corrective action.
+
+### 3D Prevention Framework
+
+Each corrective action is classified along three prevention dimensions:
+
+- **Detect** -- How to discover the problem earlier (monitoring thresholds, alerting rules, observability improvements)
+- **Defend** -- How to prevent occurrence entirely (input validation, guardrails, automation, safe defaults)
+- **Degrade** -- How to limit blast radius when failure occurs (circuit breakers, feature flags, graceful degradation, bulkheading)
+
 ---
 
 ## Usage Examples
@@ -103,6 +157,38 @@ failure and minimal cut sets.
 ```
 
 The skill will decompose the top event using AND/OR gates, generate a Mermaid FTA diagram, and highlight SPOFs for priority remediation.
+
+### Example 4: SLA compliance evaluation
+
+```
+Our SLA guarantees 99.9% uptime for the billing API. After last night's
+45-minute outage, check whether we breached the SLA for this month and
+calculate the remaining error budget.
+```
+
+The skill will calculate the total downtime against the SLA threshold for the period, determine whether the SLA was breached, and include the result in the impact assessment section with financial penalty estimates if applicable.
+
+---
+
+## Troubleshooting
+
+### Analysis stalls at "human error"
+
+**Symptom**: The 5 Whys chain reaches "the operator made a mistake" and the analysis feels complete, but no actionable improvement has been identified.
+
+**Solution**: The skill enforces a Human Error Decomposition rule -- it never stops at human error. When this happens, the analysis continues by asking "Why was this error possible?" and decomposes the finding into one or more of: Process gap (missing checklist, unclear procedure), System gap (no guardrail, missing validation), or Training gap (insufficient onboarding, no runbook). If you notice the analysis stopping too early, prompt the skill with "Decompose the human error further."
+
+### Too many branches in 5 Whys
+
+**Symptom**: The branching 5 Whys tree becomes unwieldy with dozens of branches, making the report hard to read.
+
+**Solution**: Focus on branches with High confidence evidence first. Prune Low-confidence branches or consolidate them into a summary note. You can also request the skill to limit the analysis to the top 3 most impactful branches and mention remaining branches as "areas for further investigation" in the report.
+
+### Choosing the right RCA method
+
+**Symptom**: Unsure whether to use 5 Whys, Fishbone, or FTA for a particular incident.
+
+**Solution**: Use **5 Whys** when the incident has a relatively clear causal chain (e.g., a single misconfiguration leading to an outage). Use **Fishbone** when there are multiple contributing factors across different categories (people, process, technology). Use **FTA** for complex system failures where you need to understand the structural relationships between failure modes. The methods can be combined -- for example, use Fishbone to identify categories, then 5 Whys to drill into the most significant category.
 
 ---
 

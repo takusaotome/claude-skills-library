@@ -14,7 +14,8 @@ permalink: /en/skills/dev/tdd-developer/
 Guided Test-Driven Development with the Red-Green-Refactor cycle.
 {: .fs-6 .fw-300 }
 
-<span class="badge badge-free">No API Required</span> <span class="badge badge-workflow">Workflow</span>
+<span class="badge badge-free">No API Required</span>
+<span class="badge badge-workflow">Workflow</span>
 
 <details open markdown="block">
   <summary>Table of Contents</summary>
@@ -68,12 +69,57 @@ Each feature is built through repeated short cycles:
                Repeat
 ```
 
+### The Three Laws of TDD
+
+These laws define the discipline that keeps cycles tight:
+
+1. **You shall not write production code unless you have a failing test.** No implementation without a test that demands it.
+2. **You shall not write more of a test than is sufficient to fail.** A compile error counts as a failure -- stop as soon as the test fails.
+3. **You shall not write more production code than is sufficient to pass the currently failing test.** Resist the urge to add extra logic.
+
+Following these laws naturally produces short cycles (1-2 minutes each) and ensures every line of production code is covered by a test.
+
 ### Full Workflow
 
-1. **Understand Requirements** -- Claude helps break down the feature into small, testable behaviors and identify edge cases.
-2. **Plan Test Cases** -- Create a prioritized list of test cases before writing any code.
-3. **Execute Cycles** -- Work through each test case using Red-Green-Refactor.
+1. **Understand Requirements** -- Claude helps break down the feature into small, testable behaviors and identify edge cases. Claude asks clarifying questions such as "What should happen when input is invalid?" or "Are there boundary values to consider?".
+2. **Plan Test Cases** -- Create a prioritized list of test cases before writing any code. Edge cases (empty collections, null values, boundary values) are identified upfront.
+3. **Execute Cycles** -- Work through each test case using Red-Green-Refactor. Claude runs the tests at every step to confirm red/green status.
 4. **Review** -- After all behaviors are implemented, review overall design and architecture.
+
+## Implementation Strategies
+
+When transitioning from RED to GREEN, Claude selects the most appropriate strategy:
+
+### Triangulation
+
+Use when the correct implementation is not immediately obvious:
+
+1. Write a first test and hard-code the return value to pass.
+2. Add a second test with different data that forces the hard-coded value to break.
+3. Generalize the implementation to handle both cases.
+4. Continue adding examples until the general algorithm emerges.
+
+This is the safest strategy for complex logic because it builds the solution incrementally from concrete examples.
+
+### Fake It Till You Make It
+
+Use when you want fast feedback:
+
+1. Return a constant to pass the first test immediately.
+2. Gradually replace constants with variables and expressions as new tests arrive.
+3. Let the accumulation of tests drive the real implementation organically.
+
+This strategy keeps cycles extremely short and avoids over-engineering.
+
+### Obvious Implementation
+
+Use when the solution is straightforward:
+
+1. Write the test.
+2. Implement the real logic directly (no faking).
+3. If the test unexpectedly fails, fall back to Triangulation for a more cautious approach.
+
+Choose this when the mapping from test to implementation is clear and unlikely to have edge cases.
 
 ## Usage Examples
 
@@ -103,6 +149,36 @@ Start with adding items, then quantities, then discount logic.
 ```
 
 Claude uses the specified framework and builds up functionality incrementally through test cycles.
+
+### Example 4: TDD for bug reproduction
+
+```
+There's a bug where duplicate orders are created when
+the user double-clicks submit. Write a failing test first
+that reproduces this, then fix it.
+```
+
+Claude writes a test that demonstrates the race condition, confirms it fails, then implements the fix while keeping the test green.
+
+## Troubleshooting
+
+### Tests pass but Claude skips the Refactor step
+
+**Symptom**: Claude writes the test (RED), makes it pass (GREEN), then immediately moves to the next test without refactoring.
+
+**Solution**: Explicitly ask Claude to "refactor before moving on" or say "follow strict Red-Green-Refactor." You can also remind Claude to check for duplication between the current implementation and previous code before proceeding.
+
+### Cycles are too large and take too long
+
+**Symptom**: A single Red-Green-Refactor cycle spans many files or takes more than a few minutes.
+
+**Solution**: Break the behavior into smaller pieces. Instead of "implement the full authentication flow," start with "validate that a username is non-empty." Each cycle should involve one small, focused test. If the GREEN step requires more than a few lines, the test is probably too ambitious.
+
+### Test framework not detected
+
+**Symptom**: Claude writes tests using the wrong framework or syntax (e.g., `unittest` instead of `pytest`).
+
+**Solution**: Specify the framework in your prompt: "Use TDD **with pytest**" or "Use TDD **with Jest**." If your project has an existing test suite, point Claude to an existing test file so it can match conventions.
 
 ## Tips & Best Practices
 
