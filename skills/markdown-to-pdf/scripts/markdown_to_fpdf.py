@@ -211,12 +211,24 @@ class ProfessionalPDF(FPDF):
             self.cell(0, 8, "CONFIDENTIAL", align="C", new_x="LMARGIN", new_y="NEXT")
             self.ln(3)
 
-        # Title
+        # Title — auto-shrink font to fit page width, wrap if still too long
         title = fm.get("title", "")
         if title:
-            self.set_font(FONT_FAMILY, "B", 28)
             self.set_text_color(*self.theme.primary)
-            self.cell(0, 15, title, align="C", new_x="LMARGIN", new_y="NEXT")
+            max_w = CONTENT_WIDTH_MM - 10  # 5mm padding each side
+            font_size = 28
+            min_font_size = 16
+            self.set_font(FONT_FAMILY, "B", font_size)
+            while self.get_string_width(title) > max_w and font_size > min_font_size:
+                font_size -= 1
+                self.set_font(FONT_FAMILY, "B", font_size)
+            if self.get_string_width(title) > max_w:
+                # Still too long after shrinking — use multi_cell to wrap
+                line_h = font_size * 0.55
+                self.multi_cell(0, line_h, title, align="C", new_x="LMARGIN", new_y="NEXT")
+            else:
+                line_h = max(15, font_size * 0.55)
+                self.cell(0, line_h, title, align="C", new_x="LMARGIN", new_y="NEXT")
             self.ln(2)
 
         # Subtitle
@@ -234,14 +246,28 @@ class ProfessionalPDF(FPDF):
         self.set_line_width(0.2)
         self.ln(15)
 
-        # Metadata info
-        info_fields = [
-            ("document_number", "文書番号"),
-            ("date", "発行日"),
-            ("recipient", "宛先"),
-            ("company", "発行元"),
-            ("author", "担当"),
-        ]
+        # Metadata info — detect language from frontmatter
+        _lang = fm.get("lang", "").lower()
+        if not _lang:
+            # Auto-detect: if title contains CJK characters, assume Japanese
+            _title = fm.get("title", "")
+            _lang = "ja" if any("\u3000" <= ch <= "\u9fff" for ch in _title) else "en"
+        if _lang == "ja":
+            info_fields = [
+                ("document_number", "文書番号"),
+                ("date", "発行日"),
+                ("recipient", "宛先"),
+                ("company", "発行元"),
+                ("author", "担当"),
+            ]
+        else:
+            info_fields = [
+                ("document_number", "Document No."),
+                ("date", "Date"),
+                ("recipient", "To"),
+                ("company", "Issued by"),
+                ("author", "Prepared by"),
+            ]
         for key, label in info_fields:
             val = fm.get(key, "")
             if not val:
@@ -260,29 +286,36 @@ class ProfessionalPDF(FPDF):
 
         self._is_cover = False
 
+    def _auto_fit_heading(self, text: str, max_size: int, min_size: int, line_h: float):
+        """Render a heading, auto-shrinking font to fit in one line."""
+        font_size = max_size
+        self.set_font(FONT_FAMILY, "B", font_size)
+        while self.get_string_width(text) > CONTENT_WIDTH_MM and font_size > min_size:
+            font_size -= 0.5
+            self.set_font(FONT_FAMILY, "B", font_size)
+        actual_line_h = max(line_h, font_size * 0.5)
+        self.cell(0, actual_line_h, text, new_x="LMARGIN", new_y="NEXT")
+
     def section_title(self, text: str):
         """Render H1 heading."""
-        self.set_font(FONT_FAMILY, "B", 14)
         self.set_text_color(*self.theme.primary)
-        self.cell(0, 10, text, new_x="LMARGIN", new_y="NEXT")
+        self._auto_fit_heading(text, max_size=14, min_size=9, line_h=10)
         self.set_draw_color(*self.theme.primary)
         self.line(PAGE_MARGIN_MM, self.get_y(), PAGE_WIDTH_MM - PAGE_MARGIN_MM, self.get_y())
         self.ln(5)
 
     def sub_title(self, text: str):
         """Render H2 heading."""
-        self.set_font(FONT_FAMILY, "B", 11)
         self.set_text_color(*self.theme.primary)
         self.ln(2)
-        self.cell(0, 8, text, new_x="LMARGIN", new_y="NEXT")
+        self._auto_fit_heading(text, max_size=11, min_size=8, line_h=8)
         self.ln(2)
 
     def sub_sub_title(self, text: str):
         """Render H3 heading."""
-        self.set_font(FONT_FAMILY, "B", 10)
         self.set_text_color(*self.theme.primary)
         self.ln(1)
-        self.cell(0, 7, text, new_x="LMARGIN", new_y="NEXT")
+        self._auto_fit_heading(text, max_size=10, min_size=7, line_h=7)
         self.ln(1)
 
     def body_text(self, text: str):
@@ -412,11 +445,43 @@ class ProfessionalPDF(FPDF):
         self.ln(3)
 
     def embed_image(self, image_path: str):
-        """Embed an image, fitting within content width."""
+        """Embed an image, fitting within content width and page height."""
         if not Path(image_path).exists():
             self.body_text(f"[Image not found: {image_path}]")
             return
-        self.image(image_path, x=PAGE_MARGIN_MM, w=CONTENT_WIDTH_MM)
+        # Calculate image dimensions to fit within page
+        from PIL import Image as PILImage
+
+        try:
+            with PILImage.open(image_path) as img:
+                img_w_px, img_h_px = img.size
+        except Exception:
+            self.image(image_path, x=PAGE_MARGIN_MM, w=CONTENT_WIDTH_MM)
+            self.ln(5)
+            return
+
+        # Scale to content width first
+        scale = CONTENT_WIDTH_MM / img_w_px
+        render_w = CONTENT_WIDTH_MM
+        render_h = img_h_px * scale
+
+        # Max usable height on a page (A4=297mm, top/bottom margins ~20mm)
+        max_page_h = 297 - 20 - 20  # ~257mm
+        if render_h > max_page_h:
+            # Scale down to fit within max page height
+            render_h = max_page_h
+            render_w = img_w_px * (max_page_h / img_h_px)
+            # Center horizontally if narrower than content width
+            x = PAGE_MARGIN_MM + (CONTENT_WIDTH_MM - render_w) / 2
+        else:
+            x = PAGE_MARGIN_MM
+
+        # Check if image fits on remaining space of current page
+        available_h = 297 - self.get_y() - 15  # 15mm bottom margin
+        if render_h > available_h:
+            self.add_page()
+
+        self.image(image_path, x=x, w=render_w, h=render_h)
         self.ln(5)
 
 
@@ -750,6 +815,16 @@ def main():
         help="Allow Mermaid fallback to code block on failure (default: strict)",
     )
     parser.add_argument("--debug-mermaid", action="store_true", help="Print detailed Mermaid conversion debug output")
+    parser.add_argument(
+        "--verify",
+        action="store_true",
+        help="Verify PDF layout after generation (check for overflow/clipping)",
+    )
+    parser.add_argument(
+        "--verify-save-images",
+        action="store_true",
+        help="Save page images to /tmp during verification (for debugging)",
+    )
 
     args = parser.parse_args()
 
@@ -775,6 +850,27 @@ def main():
             debug_mermaid=args.debug_mermaid,
         )
         print(f"Generated: {output}")
+
+        # Post-generation layout verification
+        if args.verify or args.verify_save_images:
+            try:
+                from verify_pdf_layout import verify_pdf
+
+                warnings = verify_pdf(
+                    output,
+                    save_images=args.verify_save_images,
+                )
+                if warnings:
+                    print(f"\n⚠ Layout verification ({len(warnings)} issues):", file=sys.stderr)
+                    for w in warnings:
+                        print(f"  - {w}", file=sys.stderr)
+                else:
+                    print("✓ Layout verification passed — no overflow detected")
+            except ImportError:
+                print(
+                    "Warning: PyMuPDF not installed, skipping layout verification. Run: pip install PyMuPDF",
+                    file=sys.stderr,
+                )
     except Exception as e:
         # Catch MermaidRenderError (and any other render errors) at CLI boundary
         err_name = type(e).__name__

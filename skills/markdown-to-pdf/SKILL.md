@@ -192,6 +192,8 @@ python scripts/markdown_to_fpdf.py input.md output.pdf [options]
 | `--font-bold PATH` | Custom bold font |
 | `--no-strict-mermaid` | Allow Mermaid fallback to code block on failure (default: strict) |
 | `--debug-mermaid` | Print detailed Mermaid conversion debug output |
+| `--verify` | Verify PDF layout after generation (detect overflow/clipping via PyMuPDF) |
+| `--verify-save-images` | Save page images to /tmp during verification (for debugging) |
 
 ### Font Requirements
 
@@ -206,6 +208,31 @@ Fonts are auto-discovered per platform with **TrueType outline preference** (bes
 Manual override: `--font-regular /path/to/font.ttc --font-bold /path/to/bold.ttc`
 
 **CFF compatibility note:** Fonts with CFF outlines (e.g., Hiragino Sans on macOS) may produce garbled CJK text in fpdf2-generated PDFs. The tool warns on stderr when CFF fonts are detected. Install a TrueType CJK font to resolve.
+
+## Layout Overflow Protection (fpdf2 mode)
+
+The fpdf2 renderer includes automatic protection against content overflow:
+
+1. **Cover page title**: Auto-shrinks font (28pt → 16pt min) to fit page width. Falls back to `multi_cell` wrapping if still too long.
+2. **Section headings (H1/H2/H3)**: Auto-shrinks font to fit in a single line (no awkward mid-word line breaks). H1: 14pt → 9pt, H2: 11pt → 8pt, H3: 10pt → 7pt.
+3. **Embedded images (Mermaid diagrams)**: Auto-scales to fit within page height. Adds page break if insufficient space remains on current page.
+
+### Post-Generation Layout Verification
+
+Use `--verify` to automatically check all content pages for overflow after PDF generation. Requires PyMuPDF (`pip install PyMuPDF`).
+
+```bash
+python scripts/markdown_to_fpdf.py input.md output.pdf --verify
+```
+
+The verifier renders each page as an image and checks edge margins (15px) for non-background content. Cover pages (page 1) are skipped since they have intentional edge-to-edge design bars.
+
+Standalone verification:
+```bash
+python scripts/verify_pdf_layout.py output.pdf [--margin 15] [--threshold 50] [--save-images]
+```
+
+**IMPORTANT**: Always use `--verify` when generating PDFs to catch overflow issues before delivery.
 
 ## Resources
 
