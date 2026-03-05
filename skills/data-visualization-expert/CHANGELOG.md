@@ -1,5 +1,38 @@
 # Data Visualization Expert Skill - Changelog
 
+## Version 1.2.0 - 2026-03-05
+
+### Documentation & Testing Improvements
+
+#### Changes Made
+
+**1. Added Prerequisites Section (`SKILL.md`)**
+- Documented Python 3.8+ requirement
+- Listed required packages: matplotlib, seaborn, pandas, numpy
+- Added platform-specific Japanese font support guidance
+- Included pip install command for quick setup
+
+**2. Added Output Section (`SKILL.md`)**
+- Documented output formats: PNG, PDF, SVG
+- Specified default 300 DPI resolution
+- Added output characteristics table
+- Included example output locations
+
+**3. Added Test Suite (`scripts/tests/test_create_visualization.py`)**
+- 30+ test cases covering all chart creation functions
+- Test fixtures for categorical, time series, scatter, and distribution data
+- Configuration tests (palettes, fonts, style)
+- Chart creation tests (bar, line, scatter, heatmap, distribution)
+- File output tests (PNG, PDF, SVG)
+- Color palette application tests
+
+#### Impact
+- Improved operator guidance with Prerequisites and Output sections
+- Better code quality assurance with comprehensive test coverage
+- Easier onboarding for new users
+
+---
+
 ## Version 1.1.0 - 2025-11-15
 
 ### 🎌 Japanese Font Support Enhancement

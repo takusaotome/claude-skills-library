@@ -31,6 +31,26 @@ Invoke this skill when working on tasks that involve:
 - "How should I present this data in a presentation?"
 - "Create visualizations that tell a story"
 
+## Prerequisites
+
+Before using this skill, ensure:
+
+- **Python 3.8+** with the following packages installed:
+  - `matplotlib>=3.5.0`
+  - `seaborn>=0.12.0`
+  - `pandas>=1.3.0`
+  - `numpy>=1.20.0`
+- **Japanese Font Support** (optional, for Japanese text):
+  - macOS: Built-in (Hiragino Sans)
+  - Windows: Built-in (Yu Gothic, Meiryo)
+  - Linux: Install `fonts-noto-cjk` or `fonts-takao`
+- **Input Data**: CSV files with headers for chart creation scripts
+
+Install dependencies:
+```bash
+pip install matplotlib seaborn pandas numpy
+```
+
 ## Core Visualization Workflow
 
 Follow this systematic approach when creating visualizations:
@@ -788,6 +808,33 @@ This skill includes the following resources:
    - Business and industry-specific
    - Accessibility-focused palettes
    - Usage guidelines
+
+## Output
+
+This skill produces the following outputs:
+
+| Output Type | Format | Description |
+|-------------|--------|-------------|
+| **Chart Images** | PNG, PDF, SVG | Publication-quality visualizations (300 DPI default) |
+| **Dashboards** | PNG, PDF | Multi-chart layouts with KPI cards |
+| **Code Snippets** | Python | Ready-to-execute matplotlib/seaborn code |
+
+### Output Characteristics
+
+- **Resolution**: 300 DPI (configurable via `--dpi` flag)
+- **Color Mode**: RGB with white background
+- **Font Embedding**: Supported for PDF output
+- **File Naming**: User-specified via `--output` parameter
+
+### Example Output Locations
+
+```bash
+# Single chart
+python scripts/create_visualization.py --type bar ... --output ./charts/sales_comparison.png
+
+# Dashboard
+python scripts/create_visualization.py --type dashboard ... --output ./reports/q4_dashboard.pdf
+```
 
 ## Best Practices Checklist
 
