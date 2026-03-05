@@ -37,6 +37,59 @@ Invoke this skill when working on tasks that involve:
 - "Help me understand what features are most important"
 - "Create visualizations to present these findings"
 
+## Prerequisites
+
+**Python Environment:**
+- Python 3.8 or higher
+
+**Required Libraries:**
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn statsmodels
+```
+
+**Optional Libraries (for extended functionality):**
+```bash
+pip install openpyxl pyarrow  # Excel and Parquet support
+pip install shap              # Model interpretation
+pip install prophet           # Advanced time series forecasting
+```
+
+**Data Requirements:**
+- Tabular data in CSV, Excel (.xlsx/.xls), Parquet, or JSON format
+- For supervised learning: clearly defined target column
+- For time series: datetime column with regular or irregular frequency
+
+## Output
+
+This skill produces outputs in the following formats:
+
+**EDA Output (`auto_eda.py`):**
+- `eda_report.txt` - Comprehensive text report with data quality, statistics, and insights
+- `missing_values.png` - Visualization of missing value patterns
+- `numerical_distributions.png` - Histograms and box plots for numerical features
+- `correlation_matrix.png` - Heatmap of feature correlations
+- `categorical_*.png` - Distribution plots for categorical features
+- `target_distribution.png` - Target variable analysis
+
+**Model Comparison Output (`model_comparison.py`):**
+- `model_results.csv` - Performance metrics for all models
+- `model_comparison.png` - Visual comparison of model performance
+- `model_comparison_summary.txt` - Detailed summary report
+- `confusion_matrix_*.png` - Confusion matrix for best classification model
+- `classification_report_*.txt` - Detailed classification metrics
+
+**Time Series Output (`timeseries_analysis.py`):**
+- `timeseries_analysis_report.txt` - Complete analysis report
+- `basic_stats.png` - Time series plot and distribution
+- `stationarity.png` - Rolling statistics visualization
+- `decomposition_additive.png` - Trend, seasonality, residual components
+- `autocorrelation.png` - ACF and PACF plots
+- `forecast.png` - Forecast visualization with confidence intervals
+- `forecast.csv` - Forecasted values with bounds
+
+**Report Templates:**
+- Use `assets/analysis_report_template.md` for professional reporting format
+
 ## Analysis Workflow
 
 Follow this systematic approach for comprehensive data science projects:
