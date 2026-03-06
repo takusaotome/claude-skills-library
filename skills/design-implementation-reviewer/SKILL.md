@@ -7,6 +7,26 @@ description: Use this skill for critical code review that focuses on whether the
 
 > **IMPORTANT: Always use `ultrathink` mode when performing reviews with this skill.**
 
+## When to Use
+
+Use this skill when:
+- Performing **critical code review** focusing on correctness and bug detection
+- Verifying that implementation **actually works** (not just matches design docs)
+- Conducting **deep code review** to find logic errors and edge cases
+- Reviewing implementation against requirements with skepticism
+- Investigating whether code achieves expected results with real data
+
+**Triggers:** "critical code review", "deep code review", "verify this implementation works", "find bugs in this code", "review implementation against requirements"
+
+**Do NOT use for:** Security vulnerability scanning (use dedicated security review skill)
+
+## Prerequisites
+
+Before using this skill:
+1. Have the code to review available (file paths or code snippets)
+2. Understand the expected outcome or requirements (even if informal)
+3. Access to sample data if validating data processing logic (recommended)
+
 ## Scope
 
 This skill covers **general-purpose code review** focusing on correctness, logic, and goal achievement.
@@ -22,6 +42,34 @@ This skill covers **general-purpose code review** focusing on correctness, logic
 **Out of Scope:**
 - Security vulnerabilities (SQL injection, XSS, auth bypass, etc.) → Use dedicated security review skill
 - If security concerns are observed during review, note them briefly and recommend a separate security review.
+
+## Workflow
+
+1. **Preparation**: Read required references (`references/review_checklist.md`, `references/common_gaps.md`)
+2. **Define Expected Result**: Clarify input → output → success criteria before diving into code
+3. **Layer 1 Review**: Code Quality (type safety, null handling, edge cases, logic, exceptions)
+4. **Layer 2 Review**: Execution Flow (function wiring, data flow, joins, concurrency, resources)
+5. **Layer 3 Review**: Goal Achievement (real data validation, success rate, end-to-end trace)
+6. **Document Findings**: Structure output as Scope/Assumptions → Findings (by severity) → Open Questions
+7. **Verify Test Plans**: Ensure Critical/High findings include specific test plans
+
+## Resources
+
+This skill includes the following reference materials:
+
+| Resource | Purpose |
+|----------|---------|
+| `references/review_checklist.md` | Structured checklist for systematic review |
+| `references/common_gaps.md` | Common defect patterns and detection strategies |
+
+## Output
+
+This skill provides **conversational guidance** - no files are generated. Output includes:
+- Structured review findings (Critical/High/Medium/Low severity)
+- Code snippets highlighting problems
+- Root cause analysis and fix recommendations
+- Test plans for Critical/High findings
+- Design gap identification
 
 ## Before You Start
 
