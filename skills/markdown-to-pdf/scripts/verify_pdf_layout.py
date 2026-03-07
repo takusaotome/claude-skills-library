@@ -130,7 +130,7 @@ def verify_pdf(
         img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
 
         if save_images:
-            img_path = f"/tmp/pdf_verify_page_{page_idx + 1}.png"
+            img_path = Path(tempfile.gettempdir()) / f"pdf_verify_page_{page_idx + 1}.png"
             img.save(img_path)
             print(f"  Saved: {img_path}", file=sys.stderr)
 
