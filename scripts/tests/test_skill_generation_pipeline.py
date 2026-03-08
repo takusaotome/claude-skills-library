@@ -1160,8 +1160,10 @@ def test_get_staged_files_allows_readme(pipeline_module, tmp_path: Path):
     with patch.object(pipeline_module.subprocess, "run", fake_run):
         files = pipeline_module._get_staged_files(tmp_path, "my-skill")
 
-    # Should include files from skills/my-skill/ (and README.md via separate call)
-    assert len(files) >= 1
+    # Should include both skills/my-skill/SKILL.md and README.md
+    assert len(files) == 2
+    assert "skills/my-skill/SKILL.md" in files
+    assert "README.md" in files
 
 
 def test_rollback_skill_restores_readme(pipeline_module, tmp_path: Path):
@@ -1271,3 +1273,34 @@ def test_pr_body_contains_generic_checklist(pipeline_module, tmp_path: Path):
     assert "SKILL.md frontmatter is valid" in body
     assert "Scripts have tests" in body
     assert "README.md updated" in body
+
+
+# -- idea=None guard tests --
+
+
+def test_write_daily_generation_summary_with_none_idea(pipeline_module, tmp_path: Path):
+    """write_daily_generation_summary handles idea=None without error."""
+    pipeline_module.write_daily_generation_summary(tmp_path, None, "unknown", None, None, dry_run=True)
+
+    summary_files = list((tmp_path / pipeline_module.SUMMARY_DIR).glob("*_daily.md"))
+    assert len(summary_files) == 1
+    content = summary_files[0].read_text(encoding="utf-8")
+    assert "N/A" in content
+
+
+def test_daily_flow_no_ideas_no_summary_error(pipeline_module, tmp_path: Path):
+    """No eligible ideas: summary is written without AttributeError."""
+    _setup_daily_backlog(tmp_path, pipeline_module, ideas=[])
+
+    rc = pipeline_module.run_daily(tmp_path, dry_run=False)
+    assert rc == 0
+
+    # State should not have a failed summary warning
+    state = pipeline_module.load_state(tmp_path)
+    assert state["history"][-1]["outcome"] == "no_ideas"
+
+    # Summary file should exist and contain valid content
+    summary_files = list((tmp_path / pipeline_module.SUMMARY_DIR).glob("*_daily.md"))
+    assert len(summary_files) >= 1
+    content = summary_files[0].read_text(encoding="utf-8")
+    assert "N/A" in content
