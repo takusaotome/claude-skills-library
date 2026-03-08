@@ -34,19 +34,24 @@ allowed-tools: Bash(docling:*), Bash(~/Library/Python/3.12/bin/docling:*)
 /docling-converter report.pdf --to json --ocr-lang ja --output ./output/
 ```
 
-## Execution Flow
+## Workflow
 
-スラッシュコマンドが実行されたら、以下の手順で処理を行う：
+1. **入力確認**: ユーザーからファイルパスとオプションを受け取る
+2. **引数解析**: ファイルパスとオプション（`--to`, `--ocr-lang`, `--output`等）を解析
+3. **デフォルト設定**: `--to` が未指定の場合は `md`（Markdown）を使用
+4. **docling実行**: 解析した引数でコマンドを実行
+   ```bash
+   docling $ARGUMENTS
+   ```
+5. **結果報告**: 変換完了後、出力ファイルのパスをユーザーに報告
 
-1. **引数を解析**: ファイルパスとオプションを取得
-2. **デフォルト設定**: `--to` が未指定の場合は `md`（Markdown）を使用
-3. **docling実行**: 以下のコマンドを実行
+## Output
 
-```bash
-docling $ARGUMENTS
-```
+このスキルは **ファイル生成型** です。docling CLIを実行し、変換されたファイル（Markdown、JSON、YAML、HTML、テキスト等）を指定ディレクトリに出力します。
 
-4. **結果報告**: 変換完了後、出力ファイルのパスをユーザーに報告
+- **デフォルト出力**: 入力ファイルと同じディレクトリに `.md` ファイルを生成
+- **カスタム出力**: `--output` オプションで出力先を指定可能
+- **複数形式**: `--to` を複数指定して複数形式を同時生成可能
 
 ## Overview
 
