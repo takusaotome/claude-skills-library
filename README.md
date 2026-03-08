@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (80 skills)
+├── skills/                 # All Claude Code skills (81 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (80 Skills)
+## Skill Catalog (81 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -128,7 +128,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (10 skills)
+### Documentation & Communication (11 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -142,6 +142,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | technical-spec-writer | 技術仕様書作成（画面/API/DB設計） | IEEE 830, Mermaid Diagrams, Traceability |
 | operations-manual-creator | 操作マニュアル・SOP作成 | STEP Format, ANSI Z535, Troubleshooting |
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
+| codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 
 ### QA & Testing (8 skills)
 
@@ -3379,6 +3380,39 @@ Design new Claude skills from structured idea specifications. Generates comprehe
 
 ---
 
+### Codebase Onboarding Generator
+
+**File:** `skill-packages/codebase-onboarding-generator.skill`
+
+Automatically analyze a codebase and generate comprehensive CLAUDE.md documentation for future Claude Code sessions. Identifies project type, common commands, build processes, test patterns, directory structure conventions, and architectural decisions.
+
+**When to use:**
+- Setting up Claude Code for a new project that lacks CLAUDE.md
+- Generating initial project documentation for AI assistants
+- Refreshing outdated CLAUDE.md files after significant project changes
+- Creating standardized onboarding documentation for team codebases
+- Analyzing unfamiliar codebases to understand structure and conventions
+
+**Key Features:**
+- Automatic project type detection (Python, Node.js, Rust, Go, Java, etc.)
+- Command extraction from package.json, pyproject.toml, Makefile, Cargo.toml
+- Framework detection (FastAPI, Django, React, Vue, Spring, etc.)
+- Environment variable detection from .env files and source code
+- Directory structure analysis with semantic descriptions
+- `analyze_codebase.py` - Main analysis script with JSON and CLAUDE.md output
+
+**Supported Project Types:**
+- Python (pyproject.toml, setup.py, requirements.txt)
+- Node.js (package.json with npm/yarn/pnpm/bun detection)
+- Rust (Cargo.toml)
+- Go (go.mod)
+- Java (Maven pom.xml, Gradle build.gradle)
+- Ruby (Gemfile)
+- PHP (composer.json)
+- .NET (*.csproj, *.sln)
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -3393,6 +3427,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### codebase-onboarding-generator v1.0 (2026-03-08)
+- Automatic project type detection for 8+ languages (Python, Node.js, Rust, Go, Java, Ruby, PHP, .NET)
+- Command extraction from package.json, pyproject.toml, Makefile, Cargo.toml, go.mod, pom.xml
+- Framework detection (FastAPI, Django, Flask, React, Vue, Angular, Spring, Rails, etc.)
+- Environment variable detection from .env files and source code patterns
+- Directory structure analysis with semantic descriptions
+- CLAUDE.md best practices reference guide
+- `analyze_codebase.py` with JSON and CLAUDE.md output modes
 
 ### skill-idea-miner v1.0 & skill-designer v1.0 (2026-03-07)
 - **skill-idea-miner**: Mine Claude Code session logs for skill idea candidates
