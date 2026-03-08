@@ -156,6 +156,8 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | vendor-rfq-creator | 1.0 | RFQ Creation | 150+ Checklist Items |
 | video2minutes | 1.0 | Media Processing | Transcription, Meeting Minutes |
 | yt-dlp-expert | 1.0 | Media Download | 1000+ Sites, Subtitles, Formats |
+| skill-idea-miner | 1.0 | Skill Pipeline | Session Log Mining, LLM Scoring, Backlog |
+| skill-designer | 1.0 | Skill Pipeline | Design Prompt Generation, Convention Compliance |
 
 ## Skill Development Workflow
 

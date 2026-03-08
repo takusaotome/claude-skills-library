@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (78 skills)
+├── skills/                 # All Claude Code skills (80 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (78 Skills)
+## Skill Catalog (80 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -143,7 +143,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | operations-manual-creator | 操作マニュアル・SOP作成 | STEP Format, ANSI Z535, Troubleshooting |
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
 
-### QA & Testing (6 skills)
+### QA & Testing (8 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -153,6 +153,8 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
 | helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
 | cx-error-analyzer | CXエラーシナリオ分析・改善優先度付け | 6-Axis CX Scoring, Impact vs Effort Matrix |
+| skill-idea-miner | セッションログからスキルアイデアを自動抽出・スコアリング | Session Log Mining, LLM Scoring, Backlog Management |
+| skill-designer | アイデア仕様からスキル設計プロンプトを生成 | Design Prompt Generation, Repository Convention Compliance |
 
 ### Compliance & Governance (12 skills)
 
@@ -3338,6 +3340,45 @@ Reviews presentation materials from the audience perspective, evaluating content
 
 ---
 
+### Skill Idea Miner
+
+**File:** `skill-packages/skill-idea-miner.skill`
+
+Mine Claude Code session logs for skill idea candidates, score them for novelty, feasibility, and work utility, and maintain a prioritized backlog for downstream skill generation.
+
+**When to use:**
+- Weekly automated pipeline run for skill idea generation
+- Manual backlog refresh from recent coding sessions
+- Dry-run to preview candidates without LLM scoring
+
+**Key Features:**
+- Session log extraction from `~/.claude/projects/` JSONL files
+- LLM-based scoring (novelty, feasibility, work utility, composite)
+- Backlog management with YAML persistence and dedup
+- `mine_session_logs.py` - Extract candidates from session logs
+- `score_ideas.py` - Score and merge candidates into backlog
+
+---
+
+### Skill Designer
+
+**File:** `skill-packages/skill-designer.skill`
+
+Design new Claude skills from structured idea specifications. Generates comprehensive Claude CLI prompts that create complete skill directories following repository conventions.
+
+**When to use:**
+- The skill auto-generation pipeline selects an idea from the backlog
+- Bootstrapping a new business/professional skill from a JSON idea specification
+- Quality review of generated skills requires awareness of the scoring rubric
+
+**Key Features:**
+- Design prompt generation from JSON idea specs
+- Repository convention compliance (SKILL.md frontmatter, directory structure)
+- Integration with dual-axis-skill-reviewer scoring rubric
+- `build_design_prompt.py` - Generate design prompt from idea JSON
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -3352,6 +3393,16 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### skill-idea-miner v1.0 & skill-designer v1.0 (2026-03-07)
+- **skill-idea-miner**: Mine Claude Code session logs for skill idea candidates
+  - Session log extraction from `~/.claude/projects/` JSONL files
+  - LLM-based scoring (novelty, feasibility, work utility)
+  - Backlog management with YAML persistence and dedup
+- **skill-designer**: Design new Claude skills from structured idea specifications
+  - Design prompt generation from JSON idea specs
+  - Repository convention compliance (SKILL.md frontmatter, directory structure)
+  - Integration with dual-axis-skill-reviewer scoring rubric
 
 ### cx-error-analyzer v1.0 (2026-02-28)
 - 6-axis CX evaluation (Impact/Frequency/Recovery/Message Quality/Emotional/Business Cost)
