@@ -10,12 +10,11 @@ import argparse
 import json
 import os
 import re
-import subprocess
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass
@@ -33,11 +32,12 @@ class ProjectAnalysis:
     conventions: dict[str, str] = field(default_factory=dict)
     frameworks: list[str] = field(default_factory=list)
     env_vars: list[str] = field(default_factory=list)
+    monorepo: dict[str, Any] = field(default_factory=lambda: {"detected": False, "tools": []})
 
     def to_dict(self) -> dict:
         """Convert to dictionary for JSON serialization."""
-        return {
-            "schema_version": "1.0",
+        result = {
+            "schema_version": "1.1",
             "project_name": self.project_name,
             "project_type": self.project_type,
             "detected_at": self.detected_at,
@@ -51,10 +51,39 @@ class ProjectAnalysis:
             "frameworks": self.frameworks,
             "env_vars": self.env_vars,
         }
+        if self.monorepo.get("detected"):
+            result["monorepo"] = self.monorepo
+        return result
 
 
 class CodebaseAnalyzer:
     """Analyzes a codebase to extract structure and patterns."""
+
+    EXCLUDED_DIRS = frozenset(
+        {
+            "node_modules",
+            ".venv",
+            "venv",
+            "__pycache__",
+            ".git",
+            "build",
+            "dist",
+            ".tox",
+            ".mypy_cache",
+            ".pytest_cache",
+            ".next",
+            ".nuxt",
+            "target",
+            ".eggs",
+            "site-packages",
+            ".cache",
+            ".ruff_cache",
+            "coverage",
+            "htmlcov",
+            ".hypothesis",
+            "bower_components",
+        }
+    )
 
     # Project type detection patterns
     PROJECT_PATTERNS = {
@@ -134,6 +163,21 @@ class CodebaseAnalyzer:
             root_path=self.root_path,
         )
 
+    def _iter_source_files(self, extensions: list[str], limit: int) -> list[Path]:
+        """Walk source files excluding known non-source directories, stop after limit."""
+        result: list[Path] = []
+        ext_set = set(extensions)
+        for dirpath, dirnames, filenames in os.walk(self.root_path):
+            # Prune excluded directories in-place
+            dirnames[:] = [d for d in dirnames if d not in self.EXCLUDED_DIRS and not d.startswith(".")]
+            for filename in filenames:
+                p = Path(dirpath) / filename
+                if p.suffix in ext_set:
+                    result.append(p)
+                    if len(result) >= limit:
+                        return result
+        return result
+
     def analyze(self) -> ProjectAnalysis:
         """Run full codebase analysis."""
         self._detect_project_type()
@@ -142,6 +186,7 @@ class CodebaseAnalyzer:
         self._detect_frameworks()
         self._analyze_conventions()
         self._detect_env_vars()
+        self._detect_monorepo()
         return self.analysis
 
     def _detect_project_type(self) -> None:
@@ -168,7 +213,7 @@ class CodebaseAnalyzer:
 
         # Get directories with descriptions
         for item in sorted(self.root_path.iterdir()):
-            if item.is_dir() and not item.name.startswith(".") and item.name != "__pycache__":
+            if item.is_dir() and not item.name.startswith(".") and item.name not in self.EXCLUDED_DIRS:
                 name = item.name.lower()
                 description = self.DIRECTORY_DESCRIPTIONS.get(name, self._infer_directory_description(item))
                 self.analysis.directories[item.name] = description
@@ -420,13 +465,12 @@ class CodebaseAnalyzer:
             if filepath.exists():
                 combined_content += filepath.read_text()
 
-        # Also check source files
-        for ext in [".py", ".js", ".ts", ".go", ".rs", ".java"]:
-            for filepath in list(self.root_path.rglob(f"*{ext}"))[:10]:
-                try:
-                    combined_content += filepath.read_text()
-                except (UnicodeDecodeError, PermissionError):
-                    continue
+        # Also check source files (excluding non-source directories)
+        for filepath in self._iter_source_files([".py", ".js", ".ts", ".go", ".rs", ".java"], limit=30):
+            try:
+                combined_content += filepath.read_text()
+            except (UnicodeDecodeError, PermissionError):
+                continue
 
         for framework, patterns in self.FRAMEWORK_PATTERNS.items():
             for pattern in patterns:
@@ -445,8 +489,8 @@ class CodebaseAnalyzer:
         conventions = {}
 
         # Detect naming convention from files
-        py_files = list(self.root_path.rglob("*.py"))[:10]
-        js_files = list(self.root_path.rglob("*.js"))[:10] + list(self.root_path.rglob("*.ts"))[:10]
+        py_files = self._iter_source_files([".py"], limit=10)
+        js_files = self._iter_source_files([".js", ".ts"], limit=20)
 
         if py_files:
             # Check for snake_case
@@ -499,18 +543,59 @@ class CodebaseAnalyzer:
             r"os\.Getenv\(['\"]([A-Z][A-Z0-9_]*)['\"]",
         ]
 
-        source_extensions = [".py", ".js", ".ts", ".go", ".rs"]
-        for ext in source_extensions:
-            for filepath in list(self.root_path.rglob(f"*{ext}"))[:20]:
-                try:
-                    content = filepath.read_text()
-                    for pattern in patterns:
-                        for match in re.finditer(pattern, content):
-                            env_vars.add(match.group(1))
-                except (UnicodeDecodeError, PermissionError):
-                    continue
+        for filepath in self._iter_source_files([".py", ".js", ".ts", ".go", ".rs"], limit=50):
+            try:
+                content = filepath.read_text()
+                for pattern in patterns:
+                    for match in re.finditer(pattern, content):
+                        env_vars.add(match.group(1))
+            except (UnicodeDecodeError, PermissionError):
+                continue
 
         self.analysis.env_vars = sorted(env_vars)
+
+    def _detect_monorepo(self) -> None:
+        """Detect monorepo setup (detection only, no recursive sub-project analysis)."""
+        tools: list[str] = []
+
+        # npm/yarn workspaces
+        package_json = self.root_path / "package.json"
+        if package_json.exists():
+            try:
+                data = json.loads(package_json.read_text())
+                if "workspaces" in data:
+                    tools.append("npm/yarn workspaces")
+            except json.JSONDecodeError:
+                pass
+
+        # pnpm
+        if (self.root_path / "pnpm-workspace.yaml").exists():
+            tools.append("pnpm")
+
+        # Lerna
+        if (self.root_path / "lerna.json").exists():
+            tools.append("Lerna")
+
+        # Nx
+        if (self.root_path / "nx.json").exists():
+            tools.append("Nx")
+
+        # Turborepo
+        if (self.root_path / "turbo.json").exists():
+            tools.append("Turborepo")
+
+        # Cargo workspaces
+        cargo_toml = self.root_path / "Cargo.toml"
+        if cargo_toml.exists():
+            try:
+                content = cargo_toml.read_text()
+                if "[workspace]" in content:
+                    tools.append("Cargo workspaces")
+            except (UnicodeDecodeError, PermissionError):
+                pass
+
+        if tools:
+            self.analysis.monorepo = {"detected": True, "tools": tools}
 
 
 class ClaudeMdGenerator:
@@ -524,6 +609,7 @@ class ClaudeMdGenerator:
         sections = [
             self._generate_header(),
             self._generate_overview(),
+            self._generate_monorepo(),
             self._generate_commands(),
             self._generate_structure(),
             self._generate_architecture(),
@@ -537,6 +623,17 @@ class ClaudeMdGenerator:
     def _generate_header(self) -> str:
         """Generate CLAUDE.md header."""
         return "# CLAUDE.md\n\nThis file provides guidance to Claude Code when working with this codebase."
+
+    def _generate_monorepo(self) -> str:
+        """Generate monorepo section if detected."""
+        if not self.analysis.monorepo.get("detected"):
+            return ""
+
+        tools = self.analysis.monorepo.get("tools", [])
+        lines = ["## Monorepo Structure\n"]
+        lines.append(f"This project is a monorepo using: {', '.join(tools)}.\n")
+        lines.append("<!-- TODO: Document workspace/package structure and inter-package dependencies -->")
+        return "\n".join(lines)
 
     def _generate_overview(self) -> str:
         """Generate project overview section."""

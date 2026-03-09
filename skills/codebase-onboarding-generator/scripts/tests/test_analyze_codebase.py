@@ -194,7 +194,7 @@ secret = os.getenv("SECRET_KEY")
         assert json_str is not None
 
         # Check structure
-        assert result["schema_version"] == "1.0"
+        assert result["schema_version"] == "1.1"
         assert "project_name" in result
         assert "project_type" in result
         assert "detected_at" in result
@@ -322,7 +322,7 @@ class TestProjectAnalysis:
 
         result = analysis.to_dict()
 
-        assert result["schema_version"] == "1.0"
+        assert result["schema_version"] == "1.1"
         assert result["project_name"] == "test-project"
         assert result["project_type"] == "python"
         assert result["structure"]["root_files"] == ["README.md", "pyproject.toml"]
@@ -330,3 +330,177 @@ class TestProjectAnalysis:
         assert result["commands"] == {"test": ["pytest"]}
         assert result["frameworks"] == ["FastAPI"]
         assert result["env_vars"] == ["DATABASE_URL"]
+
+
+class TestIterSourceFiles:
+    """Tests for _iter_source_files helper method."""
+
+    def test_excludes_node_modules(self, tmp_path: Path):
+        """Test that node_modules/ files are excluded."""
+        (tmp_path / "node_modules").mkdir()
+        (tmp_path / "node_modules" / "react").mkdir(parents=True)
+        (tmp_path / "node_modules" / "react" / "index.js").write_text("export default React;")
+        (tmp_path / "src").mkdir()
+        (tmp_path / "src" / "app.js").write_text("import React from 'react';")
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        files = analyzer._iter_source_files([".js"], limit=100)
+
+        filenames = [f.name for f in files]
+        assert "app.js" in filenames
+        assert "index.js" not in filenames
+
+    def test_excludes_venv(self, tmp_path: Path):
+        """Test that .venv/ files are excluded."""
+        (tmp_path / ".venv" / "lib").mkdir(parents=True)
+        (tmp_path / ".venv" / "lib" / "site.py").write_text("# venv site")
+        (tmp_path / "main.py").write_text("print('hello')")
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        files = analyzer._iter_source_files([".py"], limit=100)
+
+        file_strs = [str(f) for f in files]
+        assert any("main.py" in s for s in file_strs)
+        assert not any(".venv" in s for s in file_strs)
+
+    def test_respects_limit(self, tmp_path: Path):
+        """Test that limit parameter caps the number of files returned."""
+        (tmp_path / "src").mkdir()
+        for i in range(10):
+            (tmp_path / "src" / f"file_{i}.py").write_text(f"# file {i}")
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        files = analyzer._iter_source_files([".py"], limit=3)
+
+        assert len(files) <= 3
+
+    def test_returns_matching_extensions(self, tmp_path: Path):
+        """Test that only files with specified extensions are returned."""
+        (tmp_path / "app.py").write_text("# python")
+        (tmp_path / "app.js").write_text("// javascript")
+        (tmp_path / "data.csv").write_text("a,b,c")
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        files = analyzer._iter_source_files([".py"], limit=100)
+
+        assert len(files) == 1
+        assert files[0].suffix == ".py"
+
+
+class TestExcludedDirectories:
+    """Tests for directory exclusion in various analysis methods."""
+
+    def test_framework_detection_ignores_node_modules(self, tmp_path: Path):
+        """Test that framework detection ignores files in node_modules."""
+        (tmp_path / "node_modules" / "react").mkdir(parents=True)
+        (tmp_path / "node_modules" / "react" / "index.js").write_text("from fastapi import FastAPI")
+        (tmp_path / "package.json").write_text('{"name": "test"}')
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+
+        assert "FastAPI" not in analysis.frameworks
+
+    def test_structure_excludes_node_modules(self, tmp_path: Path):
+        """Test that node_modules/ is excluded from directory structure."""
+        (tmp_path / "node_modules").mkdir()
+        (tmp_path / "src").mkdir()
+        (tmp_path / "package.json").write_text('{"name": "test"}')
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+
+        assert "node_modules" not in analysis.directories
+        assert "src" in analysis.directories
+
+
+class TestMonorepoDetection:
+    """Tests for monorepo detection."""
+
+    def test_detect_yarn_workspaces(self, tmp_path: Path):
+        """Test detection of Yarn/npm workspaces in package.json."""
+        (tmp_path / "package.json").write_text(
+            json.dumps(
+                {
+                    "name": "my-monorepo",
+                    "private": True,
+                    "workspaces": ["packages/*"],
+                }
+            )
+        )
+        (tmp_path / "packages" / "app").mkdir(parents=True)
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+
+        assert analysis.monorepo["detected"] is True
+        assert "npm/yarn workspaces" in analysis.monorepo["tools"]
+
+    def test_detect_pnpm_workspace(self, tmp_path: Path):
+        """Test detection of pnpm workspace."""
+        (tmp_path / "pnpm-workspace.yaml").write_text("packages:\n  - 'packages/*'")
+        (tmp_path / "package.json").write_text('{"name": "test"}')
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+
+        assert analysis.monorepo["detected"] is True
+        assert "pnpm" in analysis.monorepo["tools"]
+
+    def test_detect_turborepo(self, tmp_path: Path):
+        """Test detection of Turborepo."""
+        (tmp_path / "turbo.json").write_text('{"pipeline": {}}')
+        (tmp_path / "package.json").write_text('{"name": "test"}')
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+
+        assert analysis.monorepo["detected"] is True
+        assert "Turborepo" in analysis.monorepo["tools"]
+
+    def test_detect_cargo_workspaces(self, tmp_path: Path):
+        """Test detection of Cargo workspaces."""
+        (tmp_path / "Cargo.toml").write_text("""
+[workspace]
+members = ["crates/*"]
+
+[package]
+name = "my-workspace"
+""")
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+
+        assert analysis.monorepo["detected"] is True
+        assert "Cargo workspaces" in analysis.monorepo["tools"]
+
+    def test_monorepo_claude_md_section(self, tmp_path: Path):
+        """Test that CLAUDE.md includes monorepo section when detected."""
+        (tmp_path / "package.json").write_text(
+            json.dumps(
+                {
+                    "name": "my-monorepo",
+                    "workspaces": ["packages/*"],
+                }
+            )
+        )
+        (tmp_path / "turbo.json").write_text('{"pipeline": {}}')
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+        generator = ClaudeMdGenerator(analysis)
+        output = generator.generate()
+
+        assert "## Monorepo" in output
+        assert "Turborepo" in output
+
+    def test_no_monorepo_no_section(self, tmp_path: Path):
+        """Test that non-monorepo projects don't get monorepo section."""
+        (tmp_path / "pyproject.toml").write_text("[project]\nname='test'")
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+        generator = ClaudeMdGenerator(analysis)
+        output = generator.generate()
+
+        assert "## Monorepo" not in output
