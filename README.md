@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (81 skills)
+├── skills/                 # All Claude Code skills (82 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (81 Skills)
+## Skill Catalog (82 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -89,7 +89,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 
-### Software Development & IT (17 skills)
+### Software Development & IT (18 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -100,6 +100,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | design-implementation-reviewer | 設計・実装の整合性レビュー | Bug Hunting, Correctness Focus |
 | duckdb-expert | DuckDBによる大規模データ分析 | SQL Optimization, File Formats |
 | log-debugger | ログ分析・RCA・デバッグ | Log Patterns, Root Cause Analysis |
+| multi-file-log-correlator | 複数ログファイルの相関分析・統合タイムライン | Cross-Source Correlation, Gap Detection |
 | streamlit-expert | Streamlit Webアプリ開発支援 | OIDC Auth, Plotly/Altair, Caching |
 | tdd-developer | TDD開発支援 | Red-Green-Refactor Cycle |
 | it-system-roi-analyzer | IT投資ROI分析・TCO計算 | ROI, TCO, NPV, Payback |
@@ -2098,6 +2099,38 @@ Analyzes network device logs to identify connectivity issues, latency problems, 
 
 ---
 
+### 🔗 Multi-File Log Correlator
+
+**File:** `skills/multi-file-log-correlator/`
+
+Correlates events across multiple log files from different sources, systems, or time periods. Builds unified timelines, identifies causal relationships between events, and highlights anomalies that span multiple data sources. Supports timezone normalization and gap detection.
+
+**When to use:**
+- Investigating incidents involving multiple services (frontend, API, database, cache)
+- Analyzing distributed system failures across microservices
+- Building event timelines from logs with different timestamp formats
+- Correlating infrastructure logs with application logs
+- Detecting timing anomalies between system components
+- Tracing request flows across multiple services
+
+**Key Features:**
+- Unified timeline construction from heterogeneous log sources
+- Correlation ID tracking (request_id, trace_id, transaction_id, UUID)
+- Temporal proximity correlation when explicit IDs are absent
+- Timezone normalization (supports IANA timezone names)
+- Gap detection with configurable thresholds
+- Anomaly detection (timing anomalies, error bursts)
+- JSON and Markdown report generation
+
+**Scripts:**
+- `correlate_logs.py` - Main correlation engine with CLI interface
+
+**Reference Guides:**
+- `correlation_methodology.md` - Correlation techniques and best practices
+- `timestamp_formats.md` - Common log timestamp formats reference
+
+---
+
 ### 🌊 Streamlit Expert
 
 **File:** `skills/streamlit-expert/`
@@ -3458,6 +3491,18 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### multi-file-log-correlator v1.0 (2026-03-09)
+- Multi-file log correlation for distributed system analysis
+- Unified timeline construction from heterogeneous log sources
+- Correlation ID tracking (request_id, trace_id, transaction_id, UUID patterns)
+- Temporal proximity correlation when explicit IDs are absent
+- Timezone normalization with python-dateutil support
+- Gap detection with configurable thresholds
+- Anomaly detection (timing anomalies, error bursts)
+- JSON and Markdown report generation
+- Auto-detection of common timestamp formats (ISO 8601, Apache/Nginx, syslog, Java/Log4j)
+- Differentiates from log-debugger (multi-source correlation vs single-file RCA)
 
 ### codebase-onboarding-generator v1.0 (2026-03-08)
 - Automatic project type detection for 8+ languages (Python, Node.js, Rust, Go, Java, Ruby, PHP, .NET)
