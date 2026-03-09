@@ -465,12 +465,13 @@ class CodebaseAnalyzer:
             if filepath.exists():
                 combined_content += filepath.read_text()
 
-        # Also check source files (excluding non-source directories)
-        for filepath in self._iter_source_files([".py", ".js", ".ts", ".go", ".rs", ".java"], limit=30):
-            try:
-                combined_content += filepath.read_text()
-            except (UnicodeDecodeError, PermissionError):
-                continue
+        # Sample source files per-extension to avoid one language dominating
+        for ext in [".py", ".js", ".ts", ".tsx", ".jsx", ".go", ".rs", ".java"]:
+            for filepath in self._iter_source_files([ext], limit=10):
+                try:
+                    combined_content += filepath.read_text()
+                except (UnicodeDecodeError, PermissionError):
+                    continue
 
         for framework, patterns in self.FRAMEWORK_PATTERNS.items():
             for pattern in patterns:

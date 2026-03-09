@@ -21,7 +21,7 @@ This skill analyzes a codebase to automatically generate comprehensive CLAUDE.md
 
 - Python 3.9+
 - No API keys required
-- Standard library only (pathlib, json, subprocess, re)
+- Standard library only (pathlib, json, os, re)
 
 ## Workflow
 
@@ -85,7 +85,7 @@ Review the generated CLAUDE.md for:
 
 ```json
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "project_name": "example-project",
   "project_type": "python",
   "detected_at": "2024-01-15T10:30:00Z",
@@ -121,12 +121,13 @@ Review the generated CLAUDE.md for:
 The generated CLAUDE.md follows this structure:
 
 1. **Project Overview** - Brief description and purpose
-2. **Common Commands** - Build, test, lint, run commands with examples
-3. **Directory Structure** - Annotated directory tree
-4. **Architecture** - Framework, patterns, and design decisions
-5. **Coding Conventions** - Naming, style, and documentation standards
-6. **Testing** - Test framework, patterns, and how to run tests
-7. **Key Files** - Important configuration and entry points
+2. **Monorepo Structure** - Workspace tools and packages (if detected)
+3. **Common Commands** - Build, test, lint, run commands with examples
+4. **Directory Structure** - Annotated directory tree
+5. **Architecture** - Framework, patterns, and design decisions
+6. **Coding Conventions** - Naming, style, and documentation standards
+7. **Testing** - Test framework, patterns, and how to run tests
+8. **Key Files** - Important configuration and entry points
 
 ## Resources
 

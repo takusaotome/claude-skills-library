@@ -413,6 +413,28 @@ class TestExcludedDirectories:
         assert "node_modules" not in analysis.directories
         assert "src" in analysis.directories
 
+    def test_polyglot_framework_detection(self, tmp_path: Path):
+        """Test that framework detection works in polyglot repos with many Python files.
+
+        Regression test: _iter_source_files must sample per-extension to avoid
+        one dominant language exhausting the limit and hiding other frameworks.
+        Here we put 50 .py files at root level (guaranteed to be walked first)
+        and a React .tsx in a subdirectory, verifying React is still detected.
+        """
+        # Create 50 Python files at root level to exhaust a naive single-pass limit
+        for i in range(50):
+            (tmp_path / f"module_{i}.py").write_text("# python module")
+        (tmp_path / "pyproject.toml").write_text("[project]\nname='polyglot'")
+
+        # Create a single TSX file that imports React in a subdirectory
+        (tmp_path / "frontend").mkdir()
+        (tmp_path / "frontend" / "app.tsx").write_text("import React from 'react';")
+
+        analyzer = CodebaseAnalyzer(tmp_path)
+        analysis = analyzer.analyze()
+
+        assert "React" in analysis.frameworks
+
 
 class TestMonorepoDetection:
     """Tests for monorepo detection."""
