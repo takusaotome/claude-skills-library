@@ -18,6 +18,10 @@ This skill provides professional ESG (Environmental, Social, Governance) reporti
 **Standards Supported**: GRI, SASB, TCFD, CDP, CSRD/ESRS, ISSB (IFRS S1/S2)
 **Output format**: Sustainability reports, materiality matrices, ESG KPI dashboards, TCFD disclosures, CDP responses
 
+---
+
+## When to Use
+
 Use this skill when:
 - Creating annual sustainability or ESG reports
 - Conducting materiality assessments
@@ -27,6 +31,113 @@ Use this skill when:
 - Complying with EU CSRD requirements
 - Benchmarking ESG performance against peers
 - Engaging with ESG rating agencies (MSCI, Sustainalytics, CDP)
+
+**Example triggers**:
+```
+"Create an ESG report for our company"
+"Help me with TCFD disclosure"
+"Conduct a materiality assessment"
+"Prepare CDP climate questionnaire response"
+"Calculate our carbon footprint"
+"How do I comply with GRI standards?"
+```
+
+---
+
+## Prerequisites
+
+- **Data Requirements**:
+  - Energy consumption data (electricity, fuel, natural gas)
+  - Emissions data or source data to calculate Scope 1, 2, and 3 emissions
+  - Water and waste management data
+  - Employee demographics and safety records (for social metrics)
+  - Governance policies and board composition
+
+- **Optional Tools**:
+  - Python 3.x with pandas (for data processing)
+  - Access to emission factor databases (IPCC, EPA, IEA)
+
+- **Knowledge Prerequisites**:
+  - Basic understanding of ESG concepts
+  - Access to company operational data
+
+---
+
+## Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ESG REPORTING WORKFLOW                        │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        ▼                     ▼                     ▼
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│  MATERIALITY  │    │ DATA COLLECT  │    │   FRAMEWORK   │
+│  ASSESSMENT   │    │ & MANAGEMENT  │    │   SELECTION   │
+│  (Workflow 1) │    │  (Workflow 2) │    │ (GRI/TCFD/CDP)│
+└───────┬───────┘    └───────┬───────┘    └───────┬───────┘
+        │                    │                    │
+        └─────────────────────┼─────────────────────┘
+                              ▼
+        ┌─────────────────────────────────────────┐
+        │           REPORT GENERATION              │
+        │  ┌─────────┬──────────┬───────────────┐ │
+        │  │  TCFD   │   GRI    │     CDP       │ │
+        │  │  Report │  Report  │   Response    │ │
+        │  │(Wkfl 3) │(Wkfl 4)  │  (Wkfl 5)     │ │
+        │  └─────────┴──────────┴───────────────┘ │
+        └─────────────────────────────────────────┘
+                              │
+                              ▼
+        ┌─────────────────────────────────────────┐
+        │        ASSURANCE & PUBLICATION           │
+        │   Third-party verification → Publish     │
+        └─────────────────────────────────────────┘
+```
+
+**Workflow Summary**:
+1. **Materiality Assessment** (Workflow 1): Identify priority ESG topics
+2. **Data Collection** (Workflow 2): Gather and validate ESG metrics
+3. **TCFD Disclosure** (Workflow 3): Climate risk reporting
+4. **GRI Report** (Workflow 4): Comprehensive sustainability report
+5. **CDP Response** (Workflow 5): Carbon disclosure questionnaire
+
+---
+
+## Output
+
+| Deliverable | Format | Description |
+|-------------|--------|-------------|
+| Materiality Matrix | Markdown + CSV | ESG topic prioritization with stakeholder analysis |
+| ESG Metrics Dashboard | Markdown table | KPIs for E, S, G performance tracking |
+| TCFD Disclosure Report | Markdown | 4-pillar climate disclosure (Governance, Strategy, Risk, Metrics) |
+| GRI Sustainability Report | Markdown | Full annual report following GRI Standards |
+| CDP Response Draft | Markdown | Climate questionnaire answers for CDP submission |
+| GHG Emissions Report | Markdown + CSV | Scope 1, 2, 3 emissions inventory |
+
+---
+
+## Resources
+
+### Reference Documentation
+- `references/gri-standards-guide.md` - GRI Universal Standards overview
+- `references/tcfd-framework.md` - TCFD 4-pillar disclosure guidance
+- `references/emission-factors.md` - Common emission factors for GHG calculations
+
+### Automation Scripts
+- `scripts/calculate_emissions.py` - Calculate GHG emissions from activity data
+- `scripts/tests/test_calculate_emissions.py` - Unit tests for emissions calculator
+
+### Quick Start
+
+```bash
+# Calculate emissions from energy data
+python3 scripts/calculate_emissions.py --input energy_data.csv --output emissions_report.csv
+
+# Run with scope selection
+python3 scripts/calculate_emissions.py --input data.csv --scope 1,2 --output scope12.csv
+```
 
 ---
 
