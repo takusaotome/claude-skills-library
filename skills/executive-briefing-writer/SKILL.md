@@ -31,7 +31,24 @@ This skill helps create:
 - Preparing approval requests or investment proposals
 - Communicating strategic initiatives or operational updates
 
-## Available Resources
+## Prerequisites
+
+- **Input Content**: Raw data, analysis results, or information to be communicated to executives
+- **Audience Knowledge**: Understanding of who will receive the document (CEO, Board, investors, etc.)
+- **Decision Context**: Clarity on what decision or action is being requested (if applicable)
+- **Timeline**: Awareness of relevant deadlines or urgency factors
+
+## Output
+
+This skill generates **executive briefing documents** in Markdown format:
+- One-page executive summaries
+- Board of Directors reports
+- Management meeting materials
+- Investor briefing documents
+
+Documents are created using templates from `assets/` and follow the "So What? / Why Now? / What Next?" framework.
+
+## Resources
 
 ### References (Load on-demand for guidance)
 - `references/executive_communication_guide.md` - Communication principles for executives
