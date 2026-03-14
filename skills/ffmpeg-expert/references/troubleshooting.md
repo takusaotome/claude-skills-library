@@ -104,7 +104,7 @@ ffmpeg -i "path with spaces/video.mp4" output.mp4
 ffmpeg -i "動画ファイル.mp4" output.mp4
 
 # 絶対パスを使用
-ffmpeg -i "/Users/name/Videos/input.mp4" output.mp4
+ffmpeg -i "/path/to/Videos/input.mp4" output.mp4
 
 # ファイル存在確認
 ls -la "input.mp4"
