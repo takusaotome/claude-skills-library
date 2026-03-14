@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (83 skills)
+├── skills/                 # All Claude Code skills (84 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (83 Skills)
+## Skill Catalog (84 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -131,7 +131,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (11 skills)
+### Documentation & Communication (12 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -146,6 +146,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | operations-manual-creator | 操作マニュアル・SOP作成 | STEP Format, ANSI Z535, Troubleshooting |
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
+| meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
 
 ### QA & Testing (8 skills)
 
@@ -1996,6 +1997,35 @@ Converts Markdown documents to professional PDF with two rendering modes: (1) fp
 
 ---
 
+### 📋 Meeting Asset Preparer
+
+**File:** `skills/meeting-asset-preparer/`
+
+Prepares comprehensive meeting assets including agendas, reference materials, decision logs, and follow-up action items. Integrates with project context to pull relevant documents, estimates, and implementation differences. Supports bilingual (Japanese/English) output for cross-regional meetings.
+
+**When to use:**
+- Preparing assets for an upcoming project meeting or status review
+- Creating bilingual meeting documentation for cross-regional teams
+- Compiling reference materials from estimates, specs, and implementation docs
+- Generating structured agendas with time allocations
+- Setting up decision log and action item tracking templates
+
+**Key Components:**
+- `scripts/prepare_meeting.py` - Main CLI for meeting asset preparation (init, compile-refs, generate-agenda, create-decision-log, create-action-items, package)
+- `references/meeting-best-practices.md` - Best practices for effective meeting preparation
+- `assets/agenda_template.md` - Bilingual agenda template
+- `assets/decision_log_template.md` - Bilingual decision log template
+- `assets/action_items_template.md` - Bilingual action items template
+
+**Key Features:**
+- Bilingual support (Japanese/English) for cross-regional teams
+- Context integration from project documents (estimates, specs, prior notes)
+- Structured templates for agendas, decision logs, and action items
+- Time allocation in agendas for focused meetings
+- Meeting package generation with index document
+
+---
+
 ### 🎤 Fujisoft Presentation Creator
 
 **File:** `skill-packages/fujisoft-presentation-creator.skill`
@@ -3530,6 +3560,15 @@ Future skills planned for this library:
 - Multi-timezone timeline reports (Markdown/JSON)
 - Pattern classification (cascading_failure, rapid_sequence, simultaneous)
 - Comprehensive timezone conversion reference guide
+
+### meeting-asset-preparer v1.0 (2026-03-10)
+- Comprehensive meeting asset preparation for project meetings
+- Bilingual (Japanese/English) output support for cross-regional teams
+- Context integration from project documents (estimates, specs, prior notes)
+- CLI with 6 commands: init, compile-refs, generate-agenda, create-decision-log, create-action-items, package
+- Structured templates for agendas, decision logs, and action items
+- Meeting package generation with index document
+- YAML-based meeting configuration
 
 ### multi-file-log-correlator v1.0 (2026-03-09)
 - Multi-file log correlation for distributed system analysis
