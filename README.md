@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (83 skills)
+├── skills/                 # All Claude Code skills (84 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (83 Skills)
+## Skill Catalog (84 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -89,7 +89,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 
-### Software Development & IT (18 skills)
+### Software Development & IT (19 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -111,6 +111,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | network-incident-analyzer | ネットワークログ分析・障害検出・原因分析 | Multi-Format Parsing, Anomaly Detection, Correlation |
 | office-script-expert | Office Scripts（Excel Online）開発支援 | ExcelScript API, 13 Bug Patterns, lib/Testing |
 | incident-rca-specialist | インシデントRCA・是正措置計画 | 5 Whys, Fishbone, FTA, 3D Prevention |
+| timezone-aware-event-tracker | マルチタイムゾーンイベント追跡・相関分析 | DST Handling, Multi-TZ Timeline, Event Correlation |
 
 ### Salesforce (4 skills)
 
@@ -3507,6 +3508,35 @@ Automatically analyze a codebase and generate comprehensive CLAUDE.md documentat
 
 ---
 
+### 🌍 Timezone-Aware Event Tracker
+
+**File:** `skill-packages/timezone-aware-event-tracker.skill`
+
+Track and correlate events across multiple timezones with automatic conversion. Maintains awareness of regional time differences (PST/CST/EST/JST and others), handles daylight saving time (DST) transitions, and generates time-normalized reports for distributed team incident analysis.
+
+**When to use:**
+- Analyzing incidents or logs from distributed systems spanning multiple timezones
+- Correlating events from teams in different regions (US West, US East, Japan, etc.)
+- Creating unified timelines from events recorded in different local times
+- Investigating issues where timestamp confusion led to coordination failures
+- Scheduling or reviewing cross-regional meetings and handoffs
+
+**Key Features:**
+- Automatic timezone detection from timestamp suffixes (PST, EST, JST, etc.)
+- DST transition handling with ambiguity detection and warnings
+- Event correlation within configurable time windows
+- Multi-timezone timeline reports (Markdown and JSON)
+- Pattern classification (cascading failure, rapid sequence, simultaneous)
+- `timezone_event_tracker.py` - CLI for parse, correlate, report, and dst-check commands
+
+**Supported Timestamp Formats:**
+- ISO 8601 with offset (2024-03-15T10:30:00-07:00)
+- Datetime with abbreviation (2024-03-15 10:30:00 PST)
+- Common log format (15/Mar/2024:10:30:00 -0700)
+- IANA timezone names (America/Los_Angeles, Asia/Tokyo)
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -3521,6 +3551,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### timezone-aware-event-tracker v1.0 (2026-03-11)
+- Multi-timezone event tracking and correlation
+- Automatic timezone detection from timestamp suffixes (PST, EST, JST, etc.)
+- DST transition handling with ambiguity detection
+- Event correlation within configurable time windows
+- Multi-timezone timeline reports (Markdown/JSON)
+- Pattern classification (cascading_failure, rapid_sequence, simultaneous)
+- Comprehensive timezone conversion reference guide
 
 ### meeting-asset-preparer v1.0 (2026-03-10)
 - Comprehensive meeting asset preparation for project meetings
