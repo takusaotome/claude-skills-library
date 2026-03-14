@@ -278,3 +278,28 @@ def test_score_prompt_contains_work_utility(score_module):
     assert "work_utility" in prompt
     assert "trading_value" not in prompt
     assert "business professionals" in prompt
+
+
+# ── Claude CLI arguments: no --max-turns ──
+
+
+def test_claude_cli_no_max_turns(score_module, tmp_path: Path, monkeypatch):
+    """score_with_llm should NOT pass --max-turns to claude CLI."""
+    captured_cmd = []
+
+    def fake_run(cmd, **kwargs):
+        from subprocess import CompletedProcess
+
+        captured_cmd.append(list(cmd))
+        return CompletedProcess(cmd, 0, '{"result": "{}"}', "")
+
+    monkeypatch.setattr(score_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(score_module.shutil, "which", lambda name: "/usr/bin/claude")
+
+    candidates = [
+        {"id": "cand_001", "title": "Test", "description": "Test desc"},
+    ]
+    score_module.score_with_llm(candidates, dry_run=False)
+
+    assert len(captured_cmd) == 1
+    assert "--max-turns" not in captured_cmd[0]

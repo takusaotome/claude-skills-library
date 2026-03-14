@@ -654,6 +654,75 @@ def test_apply_improvement_precommit_not_installed(
     assert len(commit_calls) == 1
 
 
+# ── Stale automation branch recovery tests ──
+
+
+def test_recover_stale_automation_branch_succeeds(loop_module, tmp_path: Path, monkeypatch):
+    """Recovery succeeds for clean automation branches (skill-improvement/*)."""
+    from subprocess import CompletedProcess
+
+    def fake_run(cmd, **kwargs):
+        cmd_list = list(cmd)
+        if cmd_list[:2] == ["git", "status"]:
+            return CompletedProcess(cmd, 0, "", "")  # clean tree
+        if cmd_list[:2] == ["git", "rev-parse"]:
+            return CompletedProcess(cmd, 0, "skill-improvement/2026-03-14-test-skill\n", "")
+        if cmd_list[:2] == ["git", "checkout"]:
+            return CompletedProcess(cmd, 0, "", "")
+        return CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(loop_module.subprocess, "run", fake_run)
+    assert loop_module._try_recover_stale_automation_branch(tmp_path) is True
+
+
+def test_recover_stale_automation_branch_skips_user_branch(loop_module, tmp_path: Path, monkeypatch):
+    """Recovery skips non-automation branches (user feature branches)."""
+    from subprocess import CompletedProcess
+
+    def fake_run(cmd, **kwargs):
+        cmd_list = list(cmd)
+        if cmd_list[:2] == ["git", "status"]:
+            return CompletedProcess(cmd, 0, "", "")  # clean tree
+        if cmd_list[:2] == ["git", "rev-parse"]:
+            return CompletedProcess(cmd, 0, "feature/my-cool-feature\n", "")
+        return CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(loop_module.subprocess, "run", fake_run)
+    assert loop_module._try_recover_stale_automation_branch(tmp_path) is False
+
+
+def test_recover_stale_automation_branch_checkout_fails(loop_module, tmp_path: Path, monkeypatch):
+    """Recovery returns False when git checkout main fails."""
+    from subprocess import CompletedProcess
+
+    def fake_run(cmd, **kwargs):
+        cmd_list = list(cmd)
+        if cmd_list[:2] == ["git", "status"]:
+            return CompletedProcess(cmd, 0, "", "")  # clean tree
+        if cmd_list[:2] == ["git", "rev-parse"]:
+            return CompletedProcess(cmd, 0, "skill-generation/raw_001-test\n", "")
+        if cmd_list[:2] == ["git", "checkout"]:
+            return CompletedProcess(cmd, 1, "", "error: cannot checkout")
+        return CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(loop_module.subprocess, "run", fake_run)
+    assert loop_module._try_recover_stale_automation_branch(tmp_path) is False
+
+
+def test_recover_stale_automation_branch_dirty_tree(loop_module, tmp_path: Path, monkeypatch):
+    """Recovery refuses when worktree is dirty, even on automation branch."""
+    from subprocess import CompletedProcess
+
+    def fake_run(cmd, **kwargs):
+        cmd_list = list(cmd)
+        if cmd_list[:2] == ["git", "status"]:
+            return CompletedProcess(cmd, 0, " M dirty.py\n", "")  # dirty tree
+        return CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(loop_module.subprocess, "run", fake_run)
+    assert loop_module._try_recover_stale_automation_branch(tmp_path) is False
+
+
 def test_apply_improvement_noop_commit_rolls_back_without_error(
     loop_module,
     tmp_path: Path,

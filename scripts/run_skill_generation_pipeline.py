@@ -296,6 +296,62 @@ def rotate_logs(project_root: Path) -> None:
 # -- Git safety --
 
 
+AUTOMATION_BRANCH_PREFIXES = ("skill-generation/", "skill-improvement/")
+
+
+def _try_recover_stale_automation_branch(project_root: Path) -> bool:
+    """Attempt to recover from a stale automation branch.
+
+    Only switches to main if the current branch matches known automation
+    prefixes **and** the working tree is clean. Returns True if recovery
+    succeeded, False otherwise.
+    Does NOT touch user feature branches or dirty worktrees.
+    """
+    # Refuse to switch if worktree is dirty to avoid carrying changes to main
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if status.returncode != 0 or status.stdout.strip():
+        logger.error(
+            "Working tree is dirty; cannot recover to main safely.",
+        )
+        return False
+
+    branch = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    current = branch.stdout.strip()
+    if not any(current.startswith(p) for p in AUTOMATION_BRANCH_PREFIXES):
+        logger.info(
+            "Current branch '%s' is not an automation branch; skipping recovery.",
+            current,
+        )
+        return False
+
+    logger.warning("Recovering from stale automation branch '%s'.", current)
+    checkout = subprocess.run(
+        ["git", "checkout", "main"],
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if checkout.returncode != 0:
+        logger.error("Recovery checkout failed: %s", checkout.stderr.strip()[:200])
+        return False
+
+    logger.info("Recovered to main from '%s'.", current)
+    return True
+
+
 def git_safe_check(project_root: Path) -> bool:
     """Verify clean working tree on main branch and pull latest."""
     try:
@@ -1265,8 +1321,13 @@ def run_daily(project_root: Path, dry_run: bool = False) -> int:
 
         # Non-dry-run: full flow
         if not git_safe_check(project_root):
-            _record_daily_state(project_root, idea, skill_name, idea_id, 0, None, "git_check_failed")
-            return 1
+            if not _try_recover_stale_automation_branch(project_root):
+                _record_daily_state(project_root, idea, skill_name, idea_id, 0, None, "git_check_failed")
+                return 1
+            # Retry after recovery
+            if not git_safe_check(project_root):
+                _record_daily_state(project_root, idea, skill_name, idea_id, 0, None, "git_check_failed")
+                return 1
 
         branch_name = f"skill-generation/{idea_id}-{skill_name}"
 
@@ -1354,13 +1415,20 @@ def run_daily(project_root: Path, dry_run: bool = False) -> int:
         update_backlog_status(project_root, idea_id, "completed", pr_url=pr_url)
 
         # Step 16: Return to main
-        subprocess.run(
+        checkout = subprocess.run(
             ["git", "checkout", "main"],
             cwd=project_root,
             capture_output=True,
+            text=True,
             check=False,
         )
-        created_branch = False
+        if checkout.returncode != 0:
+            logger.error(
+                "Failed to return to main after PR creation: %s",
+                checkout.stderr.strip()[:200],
+            )
+        else:
+            created_branch = False
 
         # Step 17: Summary and state
         score = 0
@@ -1395,12 +1463,18 @@ def run_daily(project_root: Path, dry_run: bool = False) -> int:
     finally:
         # Only checkout main if we created a branch and haven't returned to main yet
         if created_branch:
-            subprocess.run(
+            checkout = subprocess.run(
                 ["git", "checkout", "main"],
                 cwd=project_root,
                 capture_output=True,
+                text=True,
                 check=False,
             )
+            if checkout.returncode != 0:
+                logger.error(
+                    "Failed to return to main after generation: %s",
+                    checkout.stderr.strip()[:200],
+                )
         release_lock(project_root)
 
 

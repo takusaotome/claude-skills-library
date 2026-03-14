@@ -911,3 +911,30 @@ def test_candidates_have_scanned_projects(mine_module, tmp_path: Path):
     assert len(candidates) == 1
     assert "scanned_projects" in candidates[0]
     assert isinstance(candidates[0]["scanned_projects"], list)
+
+
+# ── Claude CLI arguments: no --max-turns ──
+
+
+def test_claude_cli_no_max_turns(mine_module, tmp_path: Path, monkeypatch):
+    """abstract_with_llm should NOT pass --max-turns to claude CLI."""
+    captured_cmd = []
+
+    def fake_run(cmd, **kwargs):
+        from subprocess import CompletedProcess
+
+        captured_cmd.append(list(cmd))
+        return CompletedProcess(cmd, 0, '{"result": "{}"}', "")
+
+    monkeypatch.setattr(mine_module.subprocess, "run", fake_run)
+    monkeypatch.setattr(mine_module.shutil, "which", lambda name: "/usr/bin/claude")
+
+    mine_module.abstract_with_llm(
+        signals={"skill_usage": {"count": 0}},
+        user_samples=["test"],
+        project_name="test-project",
+        dry_run=False,
+    )
+
+    assert len(captured_cmd) == 1
+    assert "--max-turns" not in captured_cmd[0]

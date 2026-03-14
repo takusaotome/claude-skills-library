@@ -65,6 +65,61 @@ def release_lock(project_root: Path) -> None:
 
 # ── Git safety ──
 
+AUTOMATION_BRANCH_PREFIXES = ("skill-generation/", "skill-improvement/")
+
+
+def _try_recover_stale_automation_branch(project_root: Path) -> bool:
+    """Attempt to recover from a stale automation branch.
+
+    Only switches to main if the current branch matches known automation
+    prefixes **and** the working tree is clean. Returns True if recovery
+    succeeded, False otherwise.
+    Does NOT touch user feature branches or dirty worktrees.
+    """
+    # Refuse to switch if worktree is dirty to avoid carrying changes to main
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if status.returncode != 0 or status.stdout.strip():
+        logger.error(
+            "Working tree is dirty; cannot recover to main safely.",
+        )
+        return False
+
+    branch = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    current = branch.stdout.strip()
+    if not any(current.startswith(p) for p in AUTOMATION_BRANCH_PREFIXES):
+        logger.info(
+            "Current branch '%s' is not an automation branch; skipping recovery.",
+            current,
+        )
+        return False
+
+    logger.warning("Recovering from stale automation branch '%s'.", current)
+    checkout = subprocess.run(
+        ["git", "checkout", "main"],
+        cwd=project_root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if checkout.returncode != 0:
+        logger.error("Recovery checkout failed: %s", checkout.stderr.strip()[:200])
+        return False
+
+    logger.info("Recovered to main from '%s'.", current)
+    return True
+
 
 def git_safe_check(project_root: Path) -> bool:
     """Verify clean working tree on main branch and pull latest."""
@@ -594,12 +649,18 @@ def apply_improvement(
 
     finally:
         # Return to main
-        subprocess.run(
+        checkout = subprocess.run(
             ["git", "checkout", "main"],
             cwd=project_root,
             capture_output=True,
+            text=True,
             check=False,
         )
+        if checkout.returncode != 0:
+            logger.error(
+                "Failed to return to main after improvement: %s",
+                checkout.stderr.strip()[:200],
+            )
 
 
 def _rollback(project_root: Path, skill_name: str, branch_name: str) -> None:
@@ -767,7 +828,11 @@ def run(project_root: Path, dry_run: bool = False) -> int:
     try:
         # Git safety
         if not dry_run and not git_safe_check(project_root):
-            return 1
+            if not _try_recover_stale_automation_branch(project_root):
+                return 1
+            # Retry after recovery
+            if not git_safe_check(project_root):
+                return 1
 
         # Discover and pick skill
         skills = discover_skills(project_root)

@@ -443,8 +443,6 @@ def abstract_with_llm(
                 "-p",
                 "--output-format",
                 "json",
-                "--max-turns",
-                "3",
                 f"--max-budget-usd={CLAUDE_BUDGET_MINE}",
             ],
             input=prompt,

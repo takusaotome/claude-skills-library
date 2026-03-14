@@ -201,8 +201,6 @@ def score_with_llm(candidates: list[dict], dry_run: bool = False) -> list[dict]:
                 "-p",
                 "--output-format",
                 "json",
-                "--max-turns",
-                "3",
                 f"--max-budget-usd={CLAUDE_BUDGET_SCORE}",
             ],
             input=prompt,
