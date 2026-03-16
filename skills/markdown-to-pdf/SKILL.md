@@ -1,6 +1,6 @@
 ---
 name: markdown-to-pdf
-description: Convert Markdown documents to PDF. Two modes available — (1) Playwright-based conversion with Mermaid diagram support for technical documentation, and (2) fpdf2-based professional PDF generation with cover pages, themed styling, and business-quality table formatting for estimates, proposals, and reports. Use this skill when converting Markdown to PDF, generating business documents from Markdown, or converting Mermaid diagrams to images.
+description: Convert Markdown documents to PDF. Two modes available — (1) Playwright-based conversion with Mermaid diagram support for technical documentation, and (2) fpdf2-based professional PDF generation with cover pages, themed styling, and business-quality table formatting for estimates, proposals, and reports. Use this skill when converting Markdown to PDF, generating business documents from Markdown, or converting Mermaid diagrams to images. Triggers on short phrases like "PDFに変換して", "markdownをpdfにして", "PDFにして", "PDF化して", "PDF出力して", "convert to PDF", "make a PDF", or any request involving converting content to PDF format.
 ---
 
 # Markdown to PDF Converter
