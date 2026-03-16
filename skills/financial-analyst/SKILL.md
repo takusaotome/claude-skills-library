@@ -22,6 +22,37 @@ A comprehensive financial analysis toolkit that enables systematic evaluation of
 
 ---
 
+## Prerequisites
+
+- **Python 3.8+** with the following packages:
+  - `pandas` (for CSV data handling and variance analysis)
+  - `numpy` (for numerical calculations)
+  - `matplotlib` (optional, for visualization charts)
+- **Input data** in JSON or CSV format (see Input Requirements in each workflow)
+- **Optional**: Industry benchmarks for comparative analysis
+
+---
+
+## Workflow
+
+1. **Gather Input Data** - Collect financial statements, cash flow projections, or budget data
+2. **Select Analysis Type** - Choose from ratio analysis, DCF evaluation, variance analysis, or sensitivity analysis
+3. **Execute Analysis** - Run the appropriate workflow or script command
+4. **Review Results** - Interpret metrics, identify areas of concern, compare to benchmarks
+5. **Generate Report** - Produce structured output using templates
+
+---
+
+## Output
+
+- **Financial Ratio Report** (Markdown) - Profitability, safety, and efficiency metrics with interpretations
+- **DCF Analysis Report** (Markdown) - NPV, IRR, payback period, and investment recommendation
+- **Budget Variance Report** (Markdown) - Line-by-line variances with materiality flags
+- **Sensitivity Analysis** - Tornado chart data and scenario comparison tables
+- **Visualization Charts** (PNG) - Radar charts, tornado charts via matplotlib
+
+---
+
 ## When to Use This Skill
 
 Use this skill when you need to:
@@ -356,22 +387,22 @@ The `scripts/financial_analyzer.py` provides CLI automation:
 
 ### Financial Ratio Analysis
 ```bash
-python financial_analyzer.py ratios <input.json> --output report.md --visualize
+python scripts/financial_analyzer.py ratios <input.json> --output report.md --visualize
 ```
 
 ### DCF Valuation
 ```bash
-python financial_analyzer.py dcf <project.json> --discount-rate 0.10 --terminal-method gordon
+python scripts/financial_analyzer.py dcf <project.json> --discount-rate 0.10 --terminal-method gordon
 ```
 
 ### Budget Variance
 ```bash
-python financial_analyzer.py variance <actual.csv> <budget.csv> --threshold 5
+python scripts/financial_analyzer.py variance <actual.csv> <budget.csv> --threshold 5
 ```
 
 ### Sensitivity Analysis
 ```bash
-python financial_analyzer.py sensitivity <model.json> --variables revenue,costs --range 20
+python scripts/financial_analyzer.py sensitivity <model.json> --variables revenue,costs --range 20
 ```
 
 ---
