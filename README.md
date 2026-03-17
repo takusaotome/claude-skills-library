@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (84 skills)
+├── skills/                 # All Claude Code skills (85 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (84 Skills)
+## Skill Catalog (85 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -82,12 +82,13 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 
-### Project Management (2 skills)
+### Project Management (3 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
+| project-completeness-scorer | プロジェクト完成度評価、重み付きスコアリング | 5 Dimensions, Gap Analysis, 4 Templates |
 
 ### Software Development & IT (19 skills)
 
@@ -376,6 +377,57 @@ A comprehensive PMBOK®-aligned project management skill for professional projec
 - Traditional (Waterfall) project management
 - Agile project management with PMBOK
 - Hybrid approaches
+
+---
+
+### 📊 Project Completeness Scorer
+
+**File:** `skill-packages/project-completeness-scorer.skill`
+
+A systematic project completeness evaluation skill that calculates weighted 0-100 scores across multiple dimensions.
+
+**When to use:**
+- Assessing project readiness for release or handoff
+- Reviewing milestone deliverables against acceptance criteria
+- Identifying gaps in code, documentation, or configuration
+- Preparing for stakeholder reviews or gate approvals
+- Scoring skill development projects within this repository
+
+**Core Capabilities:**
+- ✅ Multi-dimensional scoring (5 evaluation dimensions)
+- ✅ Weighted scoring with customizable weights
+- ✅ Gap identification with priority ranking
+- ✅ Actionable next steps for each gap
+- ✅ Project type templates (skill, webapp, library, document)
+
+**Key Features:**
+
+*Automated Scripts:*
+- `score_project.py` - CLI tool for project evaluation with JSON/Markdown reports
+
+*Reference Guides:*
+- `scoring-methodology.md` - Detailed scoring rules and dimension definitions
+- `project-templates.md` - Evaluation templates for different project types
+
+**Evaluation Dimensions:**
+- Functional Requirements (30%) - Core deliverables and features
+- Quality Standards (20%) - Code quality, linting, formatting
+- Test Coverage (25%) - Unit tests, integration tests
+- Documentation (15%) - README, API docs, user guides
+- Deployment Readiness (10%) - Config files, CI/CD, environment setup
+
+**Project Templates:**
+- `skill` - Claude Code skill projects
+- `webapp` - Web applications (frontend/backend)
+- `library` - Reusable libraries and packages
+- `document` - Documentation-only projects
+- `custom` - User-defined criteria from JSON file
+
+**Example Use Cases:**
+- "Score this skill project for completeness"
+- "Evaluate our webapp before release"
+- "Identify gaps in this library project"
+- "Generate a completeness report for stakeholder review"
 
 ---
 
@@ -3551,6 +3603,16 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### project-completeness-scorer v1.0 (2026-03-16)
+- Systematic project completeness evaluation with weighted 0-100 scoring
+- 5 evaluation dimensions: Functional Requirements, Quality Standards, Test Coverage, Documentation, Deployment Readiness
+- Gap identification with severity classification (Critical/Major/Minor)
+- Priority ranking based on impact-to-effort ratio
+- 4 project templates: skill, webapp, library, document
+- Custom template support via JSON files
+- JSON and Markdown report generation
+- CLI interface with `score_project.py`
 
 ### timezone-aware-event-tracker v1.0 (2026-03-11)
 - Multi-timezone event tracking and correlation
