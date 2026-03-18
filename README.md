@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (85 skills)
+├── skills/                 # All Claude Code skills (86 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (85 Skills)
+## Skill Catalog (86 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -123,12 +123,13 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | salesforce-flow-expert | Flow実装・検証・デプロイ自動化 | Validation, Metadata Gen, Deploy |
 | salesforce-report-creator | SF CLIでレポート作成・デプロイ | Report Types, REST/Metadata API |
 
-### Media Processing Tools (4 skills)
+### Media Processing Tools (5 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | ffmpeg-expert | FFmpegによる動画・音声処理 | Encoding, Filters, Streaming |
 | imagemagick-expert | ImageMagickによる画像処理 | Convert, Resize, Effects |
+| qr-code-generator | QRコード画像生成（URL/テキスト/vCard） | Customization, Batch Generation, Color Support |
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
@@ -3589,6 +3590,35 @@ Track and correlate events across multiple timezones with automatic conversion. 
 
 ---
 
+### 📱 QR Code Generator
+
+**File:** `skill-packages/qr-code-generator.skill`
+
+Generate QR code images from arbitrary strings (URLs, text, contact information, etc.) using Python's qrcode library. Supports customization of size, margin (quiet zone), foreground/background colors, and error correction levels. Batch generation mode allows creating multiple QR codes from a CSV or JSON input file.
+
+**When to use:**
+- Generate a QR code from a URL, text, or data
+- Create multiple QR codes in batch from a file
+- Create QR codes with specific customization (size, colors, error correction)
+- Encode contact information (vCard) as a QR code
+
+**Key Features:**
+- Single QR code generation with full customization
+- Batch processing from CSV or JSON files
+- vCard generation for contact information
+- Configurable error correction levels (L, M, Q, H)
+- Custom colors (named colors, hex, RGB)
+- Automatic preview with Claude's image display
+- `generate_qr.py` - CLI for single and batch QR code generation
+
+**Parameters:**
+- Box size (module pixel size): 5-20+ pixels
+- Border (quiet zone): minimum 4 modules
+- Error correction: L (7%), M (15%), Q (25%), H (30%)
+- Fill/background colors: named, hex (#RRGGBB), or RGB format
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -3603,6 +3633,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### qr-code-generator v1.0 (2026-03-17)
+- QR code image generation from text, URLs, or contact information
+- Single and batch generation modes (CSV/JSON input)
+- vCard format support for contact QR codes
+- Customizable parameters: box size, border, colors, error correction
+- Error correction levels: L (7%), M (15%), Q (25%), H (30%)
+- Named colors, hex codes (#RRGGBB), and RGB format support
+- Automatic batch summary report generation
 
 ### project-completeness-scorer v1.0 (2026-03-16)
 - Systematic project completeness evaluation with weighted 0-100 scoring
