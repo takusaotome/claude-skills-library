@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (85 skills)
+├── skills/                 # All Claude Code skills (86 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (85 Skills)
+## Skill Catalog (86 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -82,13 +82,14 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 
-### Project Management (3 skills)
+### Project Management (4 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 | project-completeness-scorer | プロジェクト完成度評価、重み付きスコアリング | 5 Dimensions, Gap Analysis, 4 Templates |
+| wbs-review-assistant | WBS・要件ドキュメント照合レビュー | Excel Annotation, Gap Analysis, Traceability Matrix |
 
 ### Software Development & IT (19 skills)
 
@@ -1072,6 +1073,126 @@ Mermaidダイアグラム5つを含む完全なプロジェクト計画テンプ
 - PMBOK® Guide 7th Edition principles対応
 - ISO 21500プロジェクトマネジメント標準
 - Prince2® compatible processes
+
+---
+
+### 📊 WBS Review Assistant（WBS照合レビュー支援）
+
+**File:** `skill-packages/wbs-review-assistant.skill`
+
+Work Breakdown Structure (WBS) Excelファイルをプロジェクト要件書、ヒアリングシート、過去の決定事項と照合し、ギャップ、不整合、決定事項からの逸脱を自動検出。Excelセルに直接レビューコメントを追加し、優先順位付けされたサマリーレポートを生成する専門スキル。
+
+A specialist skill for reviewing and annotating Work Breakdown Structure (WBS) Excel files against project requirements, hearing sheets, and prior decisions. Automatically identifies gaps, inconsistencies, and deviations. Adds review comments directly to Excel cells and generates prioritized summary reports.
+
+**When to use:**
+- WBSを要件書と照合してレビューする必要があるとき
+- WBS + 要件ドキュメントでギャップ分析が必要なとき
+- ヒアリングシートの決定事項とWBSの整合性を確認したいとき
+- ベースライン承認前にWBSの完全性を検証したいとき
+- Excelにレビューコメントをアノテーションしたいとき
+- キックオフ前にWBS課題の優先順位付けリストが必要なとき
+
+**Core Capabilities:**
+- ✅ 要件トレーサビリティ分析（要件IDとWBSタスクのマッピング）
+- ✅ 構造検証（WBSコード階層、フェーズ構成、マイルストーン）
+- ✅ コンテンツ品質チェック（工数見積、タスク記述、受入基準）
+- ✅ ヒアリングシート決定事項クロスチェック（決定がWBSに反映されているか）
+- ✅ Excel直接アノテーション（セルコメント + 条件付き書式で重要度可視化）
+- ✅ 優先順位付けレポート生成（JSON、Markdown、アノテーション済Excel）
+
+**Key Features:**
+
+**5段階レビュープロセス**:
+1. **Document Ingestion（ドキュメント取込）**: WBS Excel、要件書、ヒアリングノート解析
+2. **Traceability Analysis（トレーサビリティ分析）**: 要件→WBSタスク、WBS→要件の双方向マッピング
+3. **Structural Validation（構造検証）**: 階層整合性、WBSコード番号、フェーズ構成
+4. **Content Quality Checks（コンテンツ品質チェック）**: 工数見積、タスク記述、品質ゲート
+5. **Finding Prioritization（所見優先順位付け）**: 重要度 × 影響度で優先順位算出
+
+**チェックリストカテゴリ（YAML設定）**:
+- **Completeness（完全性）**: 全要件マッピング、成果物識別、受入基準、依存関係
+- **Consistency（一貫性）**: WBSコード番号、工数見積、リソース割当、詳細レベル
+- **Alignment（整合性）**: ヒアリングシート決定反映、スコープ境界遵守、技術選択整合
+- **Quality（品質）**: テストフェーズ存在、ドキュメント作成タスク、レビューゲート
+- **Estimation（見積品質）**: 積上計算正確性、妥当な工数範囲、バッファ/コンティンジェンシー
+
+**重要度レベル定義**:
+- **Critical（致命的）**: WBSベースライン不可（要件欠落、計算エラー）
+- **Major（重大）**: プロジェクト成功に高リスク（テスト不足、詳細不足）
+- **Minor（軽微）**: 改善機会（フォーマット、命名規則）
+
+**3つの出力形式**:
+1. **アノテーション済Excel** (`wbs_annotated_YYYYMMDD_HHMMSS.xlsx`):
+   - 元のWBS構造保持（非破壊レビュー）
+   - セルコメントに所見追加（Finding ID、重要度、推奨対応）
+   - 条件付き書式（赤=Critical、オレンジ=Major、黄=Minor）
+   - 新シート「Review Summary」（課題ダッシュボード、フィルタ機能）
+
+2. **Markdownサマリーレポート** (`wbs_review_summary_YYYYMMDD_HHMMSS.md`):
+   - エグゼクティブサマリー（重要度別課題数、準備度スコア）
+   - 優先順位付け所見リスト（Top 10、推奨対応付き）
+   - 要件カバレッジ分析（トレーサビリティマトリックス）
+   - 欠落タスク候補（未マッピング要件から推奨）
+
+3. **JSONギャップ分析** (`wbs_gaps_YYYYMMDD_HHMMSS.json`):
+   - 機械可読な所見データ（CI/CD統合可能）
+   - トレーサビリティマトリックス（要件→WBSタスク）
+   - 各チェック基準の検証結果
+
+**Readiness Score計算式**:
+```
+Base Score = 100
+- Criticalごとに20点減点
+- Majorごとに5点減点
+- Minorごとに1点減点
+Readiness Score = max(0, Base Score - 減点合計)
+
+90-100: ベースライン承認可
+70-89: 要修正だが使用可
+50-69: 重大なギャップ、大幅な作り直し必要
+<50: 不完全、レビュー不可
+```
+
+**よくあるWBS課題パターン（自動検出）**:
+- ❌ **MISSING-REQ**: 要件書に記載があるがWBSタスクなし（Critical）
+- ❌ **MISSING-MILESTONE**: フェーズ境界に承認マイルストーンなし（Major）
+- ❌ **MISSING-TESTING**: 単体テスト、結合テスト、UAT不足（Critical）
+- ❌ **INCONSISTENT-NUMBERING**: WBSコード階層スキップ（1.1→1.3）（Major）
+- ❌ **MISSING-EFFORT**: リーフタスクに工数見積なし（Major）
+- ❌ **ROLLUP-ERROR**: 親タスク合計 ≠ 子タスク合計（Critical）
+- ❌ **HEARING-DECISION-MISSING**: ヒアリングシート決定事項がWBSに未反映（Critical）
+- ❌ **OUT-OF-SCOPE-TASK**: 要件書に記載ない作業がWBSに存在（Major）
+- ❌ **TECH-CHOICE-MISMATCH**: 要件書と異なる技術スタック（Major）
+- ❌ **NO-ACCEPTANCE-CRITERIA**: マイルストーンに受入基準なし（Major）
+- ❌ **MISSING-DOCUMENTATION**: 成果物にドキュメント作成タスクなし（Major）
+- ❌ **NO-REVIEW-GATE**: 開発タスクに正式レビューなし（Major）
+- ❌ **UNREALISTIC-ESTIMATE**: タスク工数が大きすぎる（>80h、分解が必要）（Major）
+- ❌ **NO-CONTINGENCY**: コンティンジェンシーバッファなし（Minor）
+
+**バイリンガルサポート**:
+- 日本語WBS対応（タスク名、要件ID: 要件-001、機能-002）
+- 日本語ヒアリングノート対応（決定、合意、承認マーカー）
+- バイリンガルレポート生成（EN/JA並列表示オプション）
+
+**Use Cases:**
+- システム開発プロジェクトのWBS品質保証
+- ベースライン承認前のWBS最終チェック
+- ベンダー提出WBSの妥当性検証
+- 要件変更後のWBS更新確認
+- プロジェクトキックオフ前のWBS準備度評価
+- PMO標準レビュープロセスの自動化
+
+**Best For:**
+- プロジェクトマネージャー（WBS品質保証、ベースライン前確認）
+- PMO（標準レビュープロセス、品質ゲート）
+- ビジネスアナリスト（要件トレーサビリティ確認）
+- QAリード（テスト計画妥当性、受入基準確認）
+- ステアリングコミッティ（WBS承認前のリスク評価）
+
+**Framework Alignment:**
+- PMBOK® Guide (WBS作成、スコープ管理、品質保証)
+- ISO 21500 (Work Breakdown Structure standards)
+- IEEE 830 (Requirements Traceability)
 
 ---
 
@@ -3483,6 +3604,18 @@ Reviews presentation materials from the audience perspective, evaluating content
 - 5 evaluation axes: Content clarity, visual design, logical flow, engagement, technical compatibility
 - Audience perspective review methodology
 - Actionable improvement recommendations
+
+### wbs-review-assistant v1.0 (2026-03-19)
+- WBS Excel file review against requirements documents and hearing sheets
+- Automatic gap detection with requirement traceability analysis
+- Excel cell annotation with severity-based conditional formatting (Critical/Major/Minor)
+- Structural validation: WBS code hierarchy, phase organization, milestone checks
+- Content quality checks: effort estimates, task descriptions, acceptance criteria
+- Hearing notes cross-check for decision alignment
+- Three output formats: Annotated Excel, Markdown summary, JSON gap analysis
+- Readiness score calculation (0-100) with Go/No-Go recommendation
+- 14 common WBS issue patterns with auto-detection
+- Bilingual support (Japanese/English WBS and requirements)
 - Marp-specific technical checks
 - Best practices checklist reference
 
