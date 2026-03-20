@@ -31,6 +31,17 @@ ImageMagickは画像の作成、編集、合成、変換を行うための強力
 - 画像情報（サイズ、フォーマット、メタデータ）の取得
 - 画像の結合・モンタージュ作成
 
+## Workflow
+
+1. **Identify Requirements** - Determine the desired operation (convert, resize, filter, etc.) and output format
+2. **Select Command** - Choose appropriate ImageMagick command (`magick`, `mogrify`, `identify`, etc.)
+3. **Build Command** - Construct command with options and parameters based on Core Operations examples
+4. **Execute** - Run the command via Bash tool
+5. **Verify Output** - Check the result using `identify` or visual inspection
+6. **Iterate** - Adjust parameters if needed based on output quality
+
+For batch operations, use `mogrify` for in-place edits or shell loops for custom naming patterns.
+
 ## Prerequisites
 
 ```bash
@@ -503,10 +514,20 @@ magick -limit memory 2GB -limit map 4GB input.png output.png
 magick -list resource
 ```
 
-## Reference Files
+## Output
+
+This skill provides conversational guidance and ImageMagick CLI command examples. No files are automatically generated - you execute the suggested commands via the Bash tool to process images according to your requirements.
+
+## Resources
+
+### Reference Documentation
 
 For detailed information, refer to:
 
 - **references/format_conversion.md** - Format-specific options and best practices
 - **references/image_manipulation.md** - Advanced manipulation techniques
 - **references/batch_processing.md** - Batch processing patterns and scripts
+
+### Scripts
+
+The `scripts/` directory is reserved for future automation scripts. Currently, all operations use ImageMagick CLI commands directly.
