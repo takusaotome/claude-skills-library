@@ -33,6 +33,17 @@ Post-incident review and root cause analysis skill focused on organizational inc
 - SLA違反の有無を評価するとき
 - Lessons Learned を組織的に共有するとき
 
+## Prerequisites
+
+- **Incident closed or mitigated**: The incident must be resolved or stabilized before conducting RCA (this skill does not support real-time incident response)
+- **Basic incident data available**: Date/time of occurrence, affected services, and response actions taken
+- **Access to stakeholders**: Ability to gather information from incident responders and affected parties
+- **No log analysis requirement**: For log file debugging or technical root cause investigation, use `log-debugger` skill instead
+
+## Output
+
+This skill provides **conversational guidance** through the RCA process. While workflows reference templates in `assets/`, the primary output is structured advice, methodology guidance, and analysis frameworks delivered through dialogue. The operator integrates this guidance into their organization's incident management documentation as appropriate.
+
 ## Workflows
 
 ### Workflow 1: Incident Information Gathering（インシデント情報収集）
