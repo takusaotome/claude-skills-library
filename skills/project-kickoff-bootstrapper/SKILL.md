@@ -249,6 +249,7 @@ Before writing it:
 | `assets/.claude/rules/backend-api.md.template.md` | Template | Path-scoped backend rule file | Phase 6 |
 | `assets/.claude/rules/db-and-migrations.md.template.md` | Template | Path-scoped DB/migration rule file | Phase 6 |
 | `assets/.claude/rules/testing-and-release.md.template.md` | Template | Path-scoped testing/release rule file | Phase 6 |
+| `assets/docs/PROJECT_KICKOFF_CHECKLIST.template.md` | Template | Human + AI kickoff completeness checklist | Phase 8 |
 | `assets/.claude/commands/project-kickoff.md.template.md` | Template | Optional project-local slash command for future refreshes | Phase 7 |
 
 ## Best Practices
