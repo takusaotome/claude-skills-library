@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (85 skills)
+├── skills/                 # All Claude Code skills (91 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (85 Skills)
+## Skill Catalog (91 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -90,7 +90,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 | project-completeness-scorer | プロジェクト完成度評価、重み付きスコアリング | 5 Dimensions, Gap Analysis, 4 Templates |
 
-### Software Development & IT (19 skills)
+### Software Development & IT (21 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -113,6 +113,8 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | office-script-expert | Office Scripts（Excel Online）開発支援 | ExcelScript API, 13 Bug Patterns, lib/Testing |
 | incident-rca-specialist | インシデントRCA・是正措置計画 | 5 Whys, Fishbone, FTA, 3D Prevention |
 | timezone-aware-event-tracker | マルチタイムゾーンイベント追跡・相関分析 | DST Handling, Multi-TZ Timeline, Event Correlation |
+| hidden-contract-investigator | 既存コードの暗黙契約抽出・再利用リスク可視化 | 6-Category Mismatch Taxonomy, Reuse Risk Classification |
+| safe-by-default-architect | 危険パターン禁止・安全デフォルト設計標準 | Safe Pattern Catalog, Forbidden-to-Safe Mapping, Static Rules |
 
 ### Salesforce (4 skills)
 
@@ -149,7 +151,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
 
-### QA & Testing (8 skills)
+### QA & Testing (11 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -161,6 +163,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | cx-error-analyzer | CXエラーシナリオ分析・改善優先度付け | 6-Axis CX Scoring, Impact vs Effort Matrix |
 | skill-idea-miner | セッションログからスキルアイデアを自動抽出・スコアリング | Session Log Mining, LLM Scoring, Backlog Management |
 | skill-designer | アイデア仕様からスキル設計プロンプトを生成 | Design Prompt Generation, Repository Convention Compliance |
+| completion-quality-gate-designer | 完了判定・品質ゲート・証跡・例外運用設計 | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
+| cross-module-consistency-auditor | 変更波及・横断整合性・コピペ展開監査 | Impact Map, Consistency Matrix, Copy Propagation Review |
+| production-parity-test-designer | 本番同等テスト階層設計・盲点排除 | Test Tier Allocation, Smoke Suite, Adversarial Regression |
 
 ### Compliance & Governance (12 skills)
 
@@ -3589,6 +3594,111 @@ Track and correlate events across multiple timezones with automatic conversion. 
 
 ---
 
+### 🚪 Completion Quality Gate Designer
+
+**File:** `skill-packages/completion-quality-gate-designer.skill`
+
+Design quality gates, exit criteria, evidence requirements, and exception governance for each project phase. Separates "Implemented", "Verified", "Accepted", "Released", and "Exception-approved" states to prevent premature completion claims.
+
+**When to use:**
+- Defining Definition of Done per project phase
+- Designing release readiness gates with evidence requirements
+- Standardizing verification commands across CI, developers, and reports
+- Establishing exception governance for incomplete items
+- Reconciling test metrics between reports and dashboards
+
+**Key Features:**
+- 7-phase gate design workflow (scope → vocabulary → exit criteria → evidence → commands → exceptions → expression control)
+- 5 templates: Quality Gate Matrix, Definition of Done, Exception Register, Release Readiness, Evidence Ownership Matrix
+- Completion vocabulary separation framework (Implemented/Verified/Accepted/Released/Exception-approved)
+- Metrics reconciliation guide with single source of truth principles
+
+---
+
+### 🔍 Hidden Contract Investigator
+
+**File:** `skill-packages/hidden-contract-investigator.skill`
+
+Extract implicit contracts from existing code, functions, and modules before reuse. Identifies mismatches between expected and actual behavior — return types, side effects, environment dependencies, and scope shadowing.
+
+**When to use:**
+- Reusing legacy functions in new features
+- Investigating functions where names or comments don't match behavior
+- Extracting return type, side effect, and exception contracts from code
+- Assessing reuse risk before implementation
+- Designing contract verification tests
+
+**Key Features:**
+- 6-step investigation workflow (target → surface contract → actual contract → mismatch classification → reuse judgment → verification design)
+- 6-category mismatch taxonomy (Naming, Type, Scope, State, Environment, Hidden Side Effect)
+- 5-level reuse risk classification (A: as-is through E: do not reuse)
+- Contract test idea generation with pytest examples
+
+---
+
+### 🛡️ Safe By Default Architect
+
+**File:** `skill-packages/safe-by-default-architect.skill`
+
+Convert recurring dangerous implementation patterns into safe architectural defaults and enforceable standards. Defines forbidden patterns, approved replacements, common layers, static rule candidates, and exception governance.
+
+**When to use:**
+- Same dangerous code patterns keep recurring across controllers/pages
+- Establishing deny-by-default authorization, ORM-only queries, service-layer I/O
+- Creating static analysis rules (lint, semgrep) from defect patterns
+- Documenting forbidden-to-safe pattern mappings with code examples
+- Designing Architecture Decision Records for safety standards
+
+**Key Features:**
+- 6-step workflow (pattern aggregation → danger classification → safe standard definition → default decision → common layer design → operational deployment)
+- 7-category safe pattern catalog (query, auth, file, persistence, datetime, dependency, idempotency)
+- Forbidden-to-safe mapping with before/after code examples
+- Static rule candidate templates with false positive assessment
+
+---
+
+### 🔗 Cross Module Consistency Auditor
+
+**File:** `skill-packages/cross-module-consistency-auditor.skill`
+
+Map change impact across all affected modules, flows, reports, and APIs. Audit consistency rules for aggregation totals, sign inversion, status transitions, and copy-paste propagation.
+
+**When to use:**
+- One specification change affects multiple screens, reports, or APIs
+- Deploying the same logic to multiple flows (e.g., 6 POS transaction types)
+- Verifying refund/void/correction flows maintain sign consistency
+- Reviewing copy-paste implementations efficiently (canonical + diff strategy)
+- Ensuring report totals match drill-down details
+
+**Key Features:**
+- 6-step workflow (change kernel → impact lens → impact map → consistency rules → copy propagation strategy → test checklist)
+- 7-category consistency rule catalog (aggregation, status transitions, sign inversion, tax/rounding, visibility, naming, report alignment)
+- Copy propagation review strategy with canonical-plus-diff approach
+- Cross-module test checklist generation
+
+---
+
+### 🧪 Production Parity Test Designer
+
+**File:** `skill-packages/production-parity-test-designer.skill`
+
+Design test hierarchies that catch production-specific failures before deployment. Allocates failure modes to appropriate test tiers, eliminates proxy metrics, and creates adversarial regression backlogs.
+
+**When to use:**
+- PR CI is too light to catch production-specific failures
+- SQLite/PostgreSQL or other DB dialect gaps exist
+- UI shows success but database persistence is unverified
+- Mocks hide runtime import errors or dependency gaps
+- Defining what belongs in unit vs integration vs smoke vs E2E
+
+**Key Features:**
+- 7-step workflow (gap inventory → failure modes → tier allocation → proxy elimination → smoke suite → adversarial backlog → command map)
+- Production gap catalog covering DB dialect, dependencies, env vars, timezone, OS, mock vs real, serialization
+- Adversarial test patterns (injection, bypass, traversal, fake success, import mismatch, etc.)
+- Standard command map separating local/CI/staging/release test commands
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -3603,6 +3713,36 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### completion-quality-gate-designer v1.0 (2026-03-21)
+- 7-phase quality gate design workflow (scope, vocabulary, exit criteria, evidence, commands, exceptions, expression control)
+- 5 templates: Quality Gate Matrix, Definition of Done, Exception Register, Release Readiness, Evidence Ownership Matrix
+- Completion vocabulary separation (Implemented/Verified/Accepted/Released/Exception-approved)
+- Metrics reconciliation guide with single source of truth principles
+
+### hidden-contract-investigator v1.0 (2026-03-21)
+- 6-step implicit contract extraction workflow
+- 6-category mismatch taxonomy (Naming, Type, Scope, State, Environment, Hidden Side Effect)
+- 5-level reuse risk classification (A through E)
+- Contract test idea generation with pytest examples
+
+### safe-by-default-architect v1.0 (2026-03-21)
+- 6-step safe-by-default standard design workflow
+- 7-category safe pattern catalog (query, auth, file, persistence, datetime, dependency, idempotency)
+- Forbidden-to-safe mapping with before/after code examples
+- Static rule candidate templates with false positive assessment
+
+### cross-module-consistency-auditor v1.0 (2026-03-21)
+- 6-step change impact and consistency audit workflow
+- 7-category consistency rule catalog (aggregation, status, sign, tax, visibility, naming, report alignment)
+- Copy propagation review strategy (canonical + diff approach)
+- Cross-module test checklist generation
+
+### production-parity-test-designer v1.0 (2026-03-21)
+- 7-step production parity test design workflow
+- Production gap catalog (DB dialect, dependencies, env vars, timezone, OS, mock vs real, serialization)
+- Adversarial test patterns (injection, bypass, traversal, fake success, import mismatch)
+- Standard command map separating local/CI/staging/release test tiers
 
 ### project-completeness-scorer v1.0 (2026-03-16)
 - Systematic project completeness evaluation with weighted 0-100 scoring
