@@ -66,8 +66,6 @@
 
 ## Python Specific Checks
 
-## Python Specific Checks
-
 ### 1. 型ヒント（Type Hints）
 
 #### 型ヒントの有無
