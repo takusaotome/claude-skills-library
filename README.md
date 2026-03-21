@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (85 skills)
+├── skills/                 # All Claude Code skills (86 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (85 Skills)
+## Skill Catalog (86 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -82,13 +82,14 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 
-### Project Management (3 skills)
+### Project Management (4 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 | project-completeness-scorer | プロジェクト完成度評価、重み付きスコアリング | 5 Dimensions, Gap Analysis, 4 Templates |
+| project-artifact-linker | プロジェクト成果物のトレーサビリティ・クロスリファレンス | WBS↔Meeting↔Requirements Linking, Gap Detection |
 
 ### Software Development & IT (19 skills)
 
@@ -428,6 +429,54 @@ A systematic project completeness evaluation skill that calculates weighted 0-10
 - "Evaluate our webapp before release"
 - "Identify gaps in this library project"
 - "Generate a completeness report for stakeholder review"
+
+---
+
+### 🔗 Project Artifact Linker
+
+**File:** `skill-packages/project-artifact-linker.skill`
+
+A comprehensive traceability and cross-referencing skill for project artifacts including WBS, meeting minutes, requirements, and decisions.
+
+**When to use:**
+- Tracing decisions back to the meetings where they were made
+- Auditing project documentation for completeness and traceability
+- Onboarding to a project and understanding decision history
+- Preparing for project reviews with artifact linkage reports
+- Extracting action items from meeting minutes and mapping to WBS tasks
+- Generating compliance reports showing requirement-to-deliverable traceability
+- Identifying orphaned artifacts (decisions without documentation, tasks without requirements)
+
+**Core Capabilities:**
+- ✅ Multi-document parsing (meetings, WBS, requirements, decisions)
+- ✅ Automated link building with confidence scoring
+- ✅ Bidirectional traceability matrix generation
+- ✅ Gap detection for orphaned artifacts
+- ✅ Overall health scoring for project traceability
+
+**Key Features:**
+
+*Automated Scripts:*
+- `parse_artifacts.py` - Extract entities from project documents
+- `link_artifacts.py` - Build cross-reference links between entities
+- `generate_traceability_report.py` - Generate traceability matrix reports
+- `analyze_coverage.py` - Identify gaps and orphaned artifacts
+
+*Reference Guides:*
+- `artifact_patterns.md` - Patterns for extracting entities from documents
+- `link_heuristics.md` - Heuristics for establishing artifact links
+
+**Link Types:**
+- `action_item → wbs_task` - Action items mapped to implementing tasks
+- `decision → requirement` - Decisions linked to requirements they address
+- `meeting → wbs_task` - Meetings linked to tasks discussed
+- `requirement → wbs_task` - Requirements traced to implementing tasks
+
+**Example Use Cases:**
+- "Parse all meeting minutes and link action items to WBS tasks"
+- "Generate a traceability report for this project"
+- "Find orphaned requirements without implementing tasks"
+- "Show which decisions were made in which meetings"
 
 ---
 
@@ -3603,6 +3652,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### project-artifact-linker v1.0 (2026-03-21)
+- Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
+- Entity extraction from multiple document formats (Markdown, CSV, JSON)
+- Automated link building with confidence scoring (owner match, keyword overlap, date proximity)
+- Four link types: action_item→wbs_task, decision→requirement, meeting→wbs_task, requirement→wbs_task
+- Bidirectional traceability matrix generation in Markdown/JSON
+- Gap detection for orphaned artifacts (requirements without tasks, tasks without requirements)
+- Overall health scoring with weighted component scores
 
 ### project-completeness-scorer v1.0 (2026-03-16)
 - Systematic project completeness evaluation with weighted 0-100 scoring
