@@ -30,3 +30,5 @@ permalink: /ja/skills/dev/
 | network-diagnostics | ネットワーク品質診断 | Ping/Speed/HTTP/Traceroute |
 | office-script-expert | Office Scripts (Excel Online) 開発 | ExcelScript API、13バグパターン |
 | incident-rca-specialist | インシデントRCA・是正措置計画 | 5 Whys、Fishbone、FTA、3D Prevention |
+| [hidden-contract-investigator]({{ '/ja/skills/dev/hidden-contract-investigator/' | relative_url }}) | 既存コードの暗黙契約抽出・再利用リスク可視化 | 6カテゴリ不一致分類、再利用リスク判定 |
+| [safe-by-default-architect]({{ '/ja/skills/dev/safe-by-default-architect/' | relative_url }}) | 危険パターン禁止・安全デフォルト設計標準 | Safe Patternカタログ、禁止→安全マッピング、静的ルール |

@@ -30,3 +30,5 @@ Skills for code review, testing, data science, cloud operations, and debugging. 
 | network-diagnostics | Network quality diagnostics | Ping/Speed/HTTP/Traceroute |
 | office-script-expert | Office Scripts (Excel Online) development | ExcelScript API, 13 Bug Patterns |
 | incident-rca-specialist | Incident RCA and corrective action planning | 5 Whys, Fishbone, FTA, 3D Prevention |
+| [hidden-contract-investigator]({{ '/en/skills/dev/hidden-contract-investigator/' | relative_url }}) | Extract implicit contracts from existing code | 6-Category Mismatch Taxonomy, Reuse Risk Classification |
+| [safe-by-default-architect]({{ '/en/skills/dev/safe-by-default-architect/' | relative_url }}) | Convert dangerous patterns into safe defaults | Safe Pattern Catalog, Forbidden-to-Safe Mapping, Static Rules |
