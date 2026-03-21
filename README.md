@@ -1761,7 +1761,7 @@ Expert skill for large-scale data analysis using DuckDB - the embedded OLAP data
 
 **File:** `skill-packages/critical-code-reviewer.skill`
 
-Multi-persona code review skill using three expert perspectives for thorough quality assessment.
+Self-contained multi-persona code review skill using four expert perspectives for thorough quality assessment. Agent prompts are embedded in the skill package — no external dependencies required.
 
 **Reviewer Personas:**
 | Persona | Focus | Key Question |
@@ -1769,18 +1769,21 @@ Multi-persona code review skill using three expert perspectives for thorough qua
 | **Veteran Engineer** (20年経験) | Design decisions, anti-patterns, maintainability | "Can this be maintained in 5 years?" |
 | **TDD Expert** | Testability, dependency management, refactoring safety | "Can this be tested in isolation?" |
 | **Clean Code Expert** | Naming, readability, SOLID principles | "Can this be understood at a glance?" |
+| **Bug Hunter** | State transitions, exception paths, async race conditions | "How does this break in production?" |
 
 **When to use:**
 - Reviewing source code from multiple expert perspectives
-- Finding design flaws and testability issues
+- Finding design flaws, testability issues, and runtime bugs
 - Assessing code quality and maintainability
-- Python/JavaScript code gets additional language-specific checks
+- Python/JavaScript gets Tier 1 deep checks; IaC/Config files also supported
 
 **Key Components:**
-- `references/persona_definitions.md` - Detailed persona definitions
+- `references/agents/*.md` - 4 embedded persona prompts (self-contained)
 - `references/code_smell_patterns.md` - Code smells and anti-patterns
 - `references/review_framework.md` - Critical analysis framework
-- `references/language_specific_checks.md` - Python/JavaScript checks
+- `references/severity_criteria.md` - Severity judgment criteria
+- `references/file_type_classification.md` - File type auto-classification with content sniffing
+- `references/scale_strategy.md` - Large codebase hotspot extraction strategy
 
 ---
 
@@ -1788,27 +1791,31 @@ Multi-persona code review skill using three expert perspectives for thorough qua
 
 **File:** `skill-packages/critical-document-reviewer.skill`
 
-Multi-persona document review skill for rigorous validation of claims and evidence.
+Self-contained multi-persona document review skill for rigorous validation of claims and evidence. Agent prompts are embedded in the skill package — no external dependencies required.
 
-**Reviewer Personas:**
+**Reviewer Personas (up to 6, selected by document type):**
 | Persona | Focus |
 |---------|-------|
 | **Developer/Implementer** | Can I implement based on this? Technical accuracy? |
 | **Project Manager** | Risks? Consistency? Feasibility? Dependencies? |
 | **Customer/Stakeholder** | Does this meet requirements? Understandable? Business value? |
+| **QA/Tester** | Can this be tested? Are acceptance criteria clear? |
+| **Security/Compliance** | Authentication, data protection, regulatory compliance? |
+| **Operations/SRE** | Monitoring, failure recovery, operational readiness? |
 
 **When to use:**
 - Reviewing design documents, analysis reports, or proposals
 - Validating claims have proper evidence
-- Detecting logical gaps and speculation presented as fact
+- Detecting unsupported claims and logical gaps
 - Finding missing traceability to requirements
+- Security/operations review of technical documents
 
-**Detects:**
-- Insufficient evidence for claims
-- Speculation mixed with facts
-- Logical leaps (A→C without B)
-- Missing traceability
-- Confirmation bias
+**Key Components:**
+- `references/agents/*.md` - 6 embedded persona prompts (self-contained)
+- `references/severity_criteria.md` - Document review severity criteria
+- `references/red_flag_patterns.md` - Dangerous expression patterns (context-sensitive)
+- `references/persona_selection_matrix.md` - Document type to persona mapping
+- `references/scale_strategy.md` - Large document review strategy
 
 ---
 

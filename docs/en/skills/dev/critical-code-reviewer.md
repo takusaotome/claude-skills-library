@@ -83,7 +83,9 @@ Claude analyzes the review target before launching the personas:
 
 ### Phase 2: Parallel Review
 
-Four sub-agents run **simultaneously** via the Task tool. Each agent receives the target code, language-specific checklists, its persona definition, and the review framework. Because they run in parallel, total review time stays close to that of a single persona.
+Four agents run **simultaneously** via the Agent tool, each with an inline persona prompt from `references/agents/*.md`. Each agent receives the target code and relevant reference materials. Agents output findings with **Impact** descriptions (not severity) — severity is assigned in Phase 3 using the authoritative `references/severity_criteria.md`. Because they run in parallel, total review time stays close to that of a single persona.
+
+The skill is fully self-contained: all persona prompts are embedded in `references/agents/`, eliminating dependencies on external agent definitions.
 
 ### Phase 3: Integration
 
