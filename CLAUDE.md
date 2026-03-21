@@ -88,6 +88,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | business-analyst | 1.0 | Business Analysis | business_analysis.py, BABOK templates, stakeholder analysis |
 | business-plan-creator | 1.0 | Business Planning | 5-Phase Workflow, Financial Modeling, Industry Templates |
 | change-management-consultant | 1.0 | Change Management | ADKAR, Kotter 8-Step, Stakeholder Engagement |
+| codebase-onboarding-generator | 1.0 | Documentation | analyze_codebase.py, CLAUDE.md generation, 8+ language support |
 | codex-reviewer | 1.0 | Code Review | OpenAI Codex integration, GPT-5 high reasoning |
 | competitive-intelligence-analyst | 1.0 | Competitive Analysis | Battlecards, Win/Loss, Market Landscape |
 | completion-quality-gate-designer | 1.0 | Quality Gate Design | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
@@ -128,8 +129,11 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | ma-standard-cost-variance | 1.0 | Management Accounting | Standard cost variance, price/quantity decomposition |
 | management-accounting-navigator | 1.0 | Management Accounting | 12 domain routing, COSO/IMA framework |
 | markdown-to-pdf | 2.0 | Documentation | markdown_to_pdf.py, fpdf2, Playwright, Mermaid |
+| meeting-asset-preparer | 1.0 | Meeting Documentation | prepare_meeting.py, Bilingual (JA/EN), Context Integration |
 | migration-validation-explorer | 2.0 | Data Migration QA | 4-Perspective hypothesis, Priority scoring |
+| multi-file-log-correlator | 1.0 | Log Analysis | correlate_logs.py, Cross-Source Correlation, Gap Detection |
 | network-diagnostics | 1.0 | Network Quality | network_diagnostics.py, Ping/Speed/HTTP/Traceroute |
+| network-incident-analyzer | 1.0 | Network Analysis | analyze_network_logs.py, Multi-Format Parsing, Anomaly Detection |
 | office-script-expert | 1.0 | Office Scripts | ExcelScript API, 13 Bug Patterns, Testing |
 | operations-manual-creator | 1.0 | Operations Documentation | STEP Format, ANSI Z535, Troubleshooting, bilingual templates |
 | patent-analyst | 1.0 | IP Strategy | Prior Art Search, Patent Landscape |
@@ -139,6 +143,8 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | production-parity-test-designer | 1.0 | Test Design | Test Tier Allocation, Smoke Suite, Adversarial Regression |
 | production-schedule-optimizer | 1.0 | Manufacturing Scheduling | Greedy Bin-Packing, Staff Estimation, PSO alerts |
 | project-manager | 1.0 | Project Management | project_health_check.py, PMBOK, EVM analysis |
+| project-completeness-scorer | 1.0 | Project QA | score_project.py, 5 Dimensions, Weighted 0-100 Scoring |
+| project-kickoff-bootstrapper | 1.0 | Project Bootstrap | CLAUDE.md scaffolding, 15 templates, 3 install profiles |
 | project-plan-creator | 1.0 | Project Planning | Charter, WBS, Gantt, RACI, 5 Mermaid diagrams |
 | qa-bug-analyzer | 1.0 | QA Testing | Quality Metrics, Trend Analysis |
 | render-cli-expert | 1.0 | Cloud Deployment | Deploys, Logs, SSH, PostgreSQL |
@@ -154,6 +160,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | supply-chain-consultant | 1.0 | Supply Chain | Supply Chain Modeling, Optimization, S&OP |
 | talent-acquisition-specialist | 1.0 | HR/Recruitment | JD Templates, Interview Evaluation, Onboarding |
 | tdd-developer | 1.0 | Software Development | Red-Green-Refactor, pytest patterns |
+| timezone-aware-event-tracker | 1.0 | Timezone Event Tracking | DST Handling, Multi-TZ Timeline, Event Correlation |
 | technical-spec-writer | 1.0 | Technical Documentation | IEEE 830, Mermaid Diagrams, API/DB/Screen Design |
 | uat-testcase-generator | 1.0 | QA Testing | generate_uat_testcases.py, Excel generation |
 | vendor-estimate-creator | 1.0 | Cost Estimation | WBS, 4 Estimation Methods, ROI |

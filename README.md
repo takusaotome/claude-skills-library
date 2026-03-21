@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (91 skills)
+├── skills/                 # All Claude Code skills (92 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (91 Skills)
+## Skill Catalog (92 Skills)
 
 ### Business Strategy & Consulting (16 skills)
 
@@ -82,13 +82,14 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 
-### Project Management (3 skills)
+### Project Management (4 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 | project-completeness-scorer | プロジェクト完成度評価、重み付きスコアリング | 5 Dimensions, Gap Analysis, 4 Templates |
+| project-kickoff-bootstrapper | Claude用kickoff文脈・テンプレート導入、プロジェクト初期設定 | CLAUDE.md Scaffolding, 15 Templates, 3 Install Profiles |
 
 ### Software Development & IT (21 skills)
 
@@ -433,6 +434,28 @@ A systematic project completeness evaluation skill that calculates weighted 0-10
 - "Evaluate our webapp before release"
 - "Identify gaps in this library project"
 - "Generate a completeness report for stakeholder review"
+
+---
+
+### 🚀 Project Kickoff Bootstrapper
+
+**File:** `skill-packages/project-kickoff-bootstrapper.skill`
+
+新しいプロジェクトまたは既存リポジトリに Claude 用の kickoff 文脈（CLAUDE.md、docs/、.claude/rules/）を導入するスキル。リポジトリ証跡の自動検出とユーザー確認を組み合わせて、最小限の質問で最大限の文脈を整備する。
+
+**When to use:**
+- 新プロジェクト開始時に Claude の初期文脈を整備したい
+- 既存リポジトリに後付けで CLAUDE.md と kickoff ドキュメント群を導入したい
+- チーム間で完了判定やテスト方針の最低基準を揃えたい
+
+**Key Features:**
+- 8-phase bootstrap workflow (inspect → profile → question → resolve → create → extend → command → verify)
+- 3 installation profiles (minimal, standard, full)
+- 15 asset templates (CLAUDE.md, PROJECT_BRIEF, SKILL_ROUTING, QUALITY_GATES, TEST_STRATEGY, etc.)
+- 6 reference guides (repository inspection, install profiles, question strategy, non-destructive update, consistency checklist, follow-on skill sequence)
+- Non-destructive update policy for existing repositories
+- Repository evidence inspection for auto-detection of stack, commands, and governance docs
+- Follow-on skill recommendations (completion-quality-gate-designer, hidden-contract-investigator, etc.)
 
 ---
 
@@ -3720,6 +3743,14 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### project-kickoff-bootstrapper v1.0 (2026-03-21)
+- Claude kickoff context bootstrapper for new/existing repositories
+- 3 install profiles (minimal, standard, full) with escalation rules
+- 15 asset templates (CLAUDE.md, PROJECT_BRIEF, SKILL_ROUTING, QUALITY_GATES, TEST_STRATEGY, DECISION_LOG, HIDDEN_CONTRACT_REGISTER, CROSS_MODULE_CONSISTENCY_MATRIX, 3 rule templates, 1 command template, bootstrap input sheet, bootstrap summary)
+- 6 reference guides (repository inspection, install profiles, question strategy, non-destructive update, cross-file consistency, follow-on skill sequence)
+- Non-destructive update policy (create/refresh/augment modes)
+- Repository evidence inspection for auto-detection of stack, commands, and risk areas
 
 ### completion-quality-gate-designer v1.0 (2026-03-21)
 - 7-phase quality gate design workflow (scope, vocabulary, exit criteria, evidence, commands, exceptions, expression control)
