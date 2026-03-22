@@ -14,21 +14,21 @@ Skills for code review, testing, data science, cloud operations, and debugging. 
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
-| codex-reviewer | OpenAI Codex integration for code review | GPT-5.1-Codex-Max Integration |
+| [codex-reviewer]({{ '/en/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codex integration for code review | GPT-5.1-Codex-Max Integration |
 | [critical-code-reviewer]({{ '/en/skills/dev/critical-code-reviewer/' | relative_url }}) | Multi-persona parallel code review | 4-Persona Review (Veteran/TDD/CleanCode/BugHunter) |
 | [data-scientist]({{ '/en/skills/dev/data-scientist/' | relative_url }}) | Data analysis, ML, and time-series forecasting | Auto EDA, Model Comparison, Time Series |
 | data-visualization-expert | Data visualization and chart design | 30+ Chart Types, Accessibility |
-| design-implementation-reviewer | Design-implementation consistency review | Bug Hunting, Correctness Focus |
-| duckdb-expert | Large-scale data analytics with DuckDB | SQL Optimization, CSV/Parquet/JSON |
-| log-debugger | Log analysis, RCA, and debugging | 4-Phase Framework, Log Patterns |
-| streamlit-expert | Streamlit web app development | OIDC Auth, Plotly/Altair, Caching |
+| [design-implementation-reviewer]({{ '/en/skills/dev/design-implementation-reviewer/' | relative_url }}) | Design-implementation consistency review | Bug Hunting, Correctness Focus |
+| [duckdb-expert]({{ '/en/skills/dev/duckdb-expert/' | relative_url }}) | Large-scale data analytics with DuckDB | SQL Optimization, CSV/Parquet/JSON |
+| [log-debugger]({{ '/en/skills/dev/log-debugger/' | relative_url }}) | Log analysis, RCA, and debugging | 4-Phase Framework, Log Patterns |
+| [streamlit-expert]({{ '/en/skills/dev/streamlit-expert/' | relative_url }}) | Streamlit web app development | OIDC Auth, Plotly/Altair, Caching |
 | [tdd-developer]({{ '/en/skills/dev/tdd-developer/' | relative_url }}) | Test-driven development workflow | Red-Green-Refactor Cycle |
 | it-system-roi-analyzer | IT investment ROI and TCO analysis | ROI, TCO, NPV, Payback Period |
-| aws-cli-expert | AWS CLI command generation | EC2, S3, Lambda, IAM |
-| render-cli-expert | Render CLI deployment management | Deploys, Logs, PostgreSQL |
-| gogcli-expert | Google Workspace CLI operations | 13 Services, OAuth2, Multi-Account |
-| network-diagnostics | Network quality diagnostics | Ping/Speed/HTTP/Traceroute |
-| office-script-expert | Office Scripts (Excel Online) development | ExcelScript API, 13 Bug Patterns |
+| [aws-cli-expert]({{ '/en/skills/dev/aws-cli-expert/' | relative_url }}) | AWS CLI command generation | EC2, S3, Lambda, IAM |
+| [render-cli-expert]({{ '/en/skills/dev/render-cli-expert/' | relative_url }}) | Render CLI deployment management | Deploys, Logs, PostgreSQL |
+| [gogcli-expert]({{ '/en/skills/dev/gogcli-expert/' | relative_url }}) | Google Workspace CLI operations | 13 Services, OAuth2, Multi-Account |
+| [network-diagnostics]({{ '/en/skills/dev/network-diagnostics/' | relative_url }}) | Network quality diagnostics | Ping/Speed/HTTP/Traceroute |
+| [office-script-expert]({{ '/en/skills/dev/office-script-expert/' | relative_url }}) | Office Scripts (Excel Online) development | ExcelScript API, 13 Bug Patterns |
 | incident-rca-specialist | Incident RCA and corrective action planning | 5 Whys, Fishbone, FTA, 3D Prevention |
 | [hidden-contract-investigator]({{ '/en/skills/dev/hidden-contract-investigator/' | relative_url }}) | Extract implicit contracts from existing code | 6-Category Mismatch Taxonomy, Reuse Risk Classification |
 | [safe-by-default-architect]({{ '/en/skills/dev/safe-by-default-architect/' | relative_url }}) | Convert dangerous patterns into safe defaults | Safe Pattern Catalog, Forbidden-to-Safe Mapping, Static Rules |

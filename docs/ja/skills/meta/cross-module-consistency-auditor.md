@@ -15,6 +15,9 @@ permalink: /ja/skills/meta/cross-module-consistency-auditor/
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
+
+[スキルパッケージをダウンロード (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/cross-module-consistency-auditor.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[GitHubでソースを見る](https://github.com/takusaotome/claude-skills-library/tree/main/skills/cross-module-consistency-auditor){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">ワークフロー</span>
 
 <details open markdown="block">

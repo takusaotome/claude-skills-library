@@ -15,6 +15,9 @@ Create professional cost estimates for software development projects -- WBS, eff
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">No API Required</span>
+
+[Download Skill Package (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/vendor-estimate-creator.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[View Source on GitHub](https://github.com/takusaotome/claude-skills-library/tree/main/skills/vendor-estimate-creator){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">Workflow</span>
 <span class="badge badge-bilingual">Bilingual JA/EN</span>
 

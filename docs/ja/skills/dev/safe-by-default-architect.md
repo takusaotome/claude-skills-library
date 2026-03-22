@@ -15,6 +15,9 @@ permalink: /ja/skills/dev/safe-by-default-architect/
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
+
+[スキルパッケージをダウンロード (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/safe-by-default-architect.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[GitHubでソースを見る](https://github.com/takusaotome/claude-skills-library/tree/main/skills/safe-by-default-architect){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">ワークフロー</span>
 
 <details open markdown="block">
