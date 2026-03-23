@@ -17,6 +17,21 @@ This skill enables creation of professional, high-quality presentation materials
 - Developing seminar or workshop materials
 - Any external-facing presentation requiring FUJISOFT America branding
 
+## Prerequisites
+
+- **MARP CLI**: Install via `npm install -g @marp-team/marp-cli` for command-line export
+- **Node.js**: Required for visual review tools (v16+ recommended)
+- **VS Code/Cursor with Marp Extension** (optional): For live preview and GUI export
+
+## Output
+
+This skill generates **MARP-format Markdown files** (`.md`) that can be exported to:
+- **PDF** (recommended for distribution)
+- **HTML** (for web viewing)
+- **PPTX** (editable PowerPoint format)
+
+The output follows FUJISOFT America's corporate branding and design standards.
+
 ## Workflow
 
 ### Step 1: Understand Requirements
@@ -250,10 +265,10 @@ After creating the presentation, run the automated visual review:
 marp presentation.md -o presentation.html
 
 # 2. Setup review tools (first time only)
-cd scripts && ./setup-review-tools.sh
+./scripts/setup-review-tools.sh
 
-# 3. Run visual review
-node visual-review.js ../presentation.html
+# 3. Run visual review (from skill directory)
+node scripts/visual-review.js presentation.html
 
 # 4. Check results
 open review-output/review-report.html

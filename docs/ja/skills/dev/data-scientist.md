@@ -15,6 +15,9 @@ permalink: /ja/skills/dev/data-scientist/
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-scripts">Pythonスクリプト</span>
+
+[スキルパッケージをダウンロード (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/data-scientist.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[GitHubでソースを見る](https://github.com/takusaotome/claude-skills-library/tree/main/skills/data-scientist){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">ワークフロー</span>
 
 <details open markdown="block">

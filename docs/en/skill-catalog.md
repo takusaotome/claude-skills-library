@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 78 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 83 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -23,7 +23,7 @@ All 78 skills organized by category. Skills with dedicated guide pages are shown
 
 ## Software Development & IT
 
-16 skills for code review, testing, data analysis, cloud operations, and debugging.
+18 skills for code review, testing, data analysis, cloud operations, and debugging.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -43,6 +43,8 @@ All 78 skills organized by category. Skills with dedicated guide pages are shown
 | network-diagnostics | Network quality diagnostics | Ping/Speed/HTTP/Traceroute |
 | office-script-expert | Office Scripts for Excel Online | ExcelScript API, 13 Bug Patterns |
 | [incident-rca-specialist]({{ '/en/skills/ops/incident-rca-specialist/' | relative_url }}) | Incident RCA and corrective action planning | 5 Whys, Fishbone, FTA, 3D Prevention |
+| [hidden-contract-investigator]({{ '/en/skills/dev/hidden-contract-investigator/' | relative_url }}) | Extract implicit contracts from existing code for reuse risk assessment | Implicit Contract Extraction, Reuse Risk |
+| [safe-by-default-architect]({{ '/en/skills/dev/safe-by-default-architect/' | relative_url }}) | Convert dangerous patterns into safe architectural defaults | Safe Defaults, Pattern Prohibition |
 
 ---
 
@@ -115,7 +117,7 @@ All 78 skills organized by category. Skills with dedicated guide pages are shown
 
 ## QA, Testing & Vendor Management
 
-9 skills for quality assurance, testing, vendor evaluation, and customer experience.
+12 skills for quality assurance, testing, vendor evaluation, and customer experience.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -128,6 +130,9 @@ All 78 skills organized by category. Skills with dedicated guide pages are shown
 | [vendor-estimate-creator]({{ '/en/skills/management/vendor-estimate-creator/' | relative_url }}) | Development cost estimation | WBS, 4 Estimation Methods, ROI |
 | vendor-estimate-reviewer | Vendor estimate review and validation | 12 Review Dimensions, 60+ Risk Factors |
 | vendor-rfq-creator | RFQ document creation | 150+ Checklist Items |
+| [completion-quality-gate-designer]({{ '/en/skills/meta/completion-quality-gate-designer/' | relative_url }}) | Design quality gates, exit criteria, and evidence requirements | Quality Gates, Exit Criteria |
+| [cross-module-consistency-auditor]({{ '/en/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | Audit cross-module consistency for change impact | Cross-Module Consistency, Change Impact |
+| [production-parity-test-designer]({{ '/en/skills/meta/production-parity-test-designer/' | relative_url }}) | Design production-parity test hierarchies | Test Hierarchy Design, Production Parity |
 
 ---
 

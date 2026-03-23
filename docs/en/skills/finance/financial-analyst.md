@@ -15,6 +15,9 @@ Comprehensive financial analysis for investment decisions, budgeting, and busine
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">No API Required</span>
+
+[Download Skill Package (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/financial-analyst.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[View Source on GitHub](https://github.com/takusaotome/claude-skills-library/tree/main/skills/financial-analyst){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">Workflow</span>
 
 <details open markdown="block">
