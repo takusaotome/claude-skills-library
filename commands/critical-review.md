@@ -5,7 +5,7 @@ description: |
   - ドキュメント: Developer, PM, Customer, QA, Security, Ops の6視点
   - コード: Veteran Engineer, TDD Expert, Clean Code Expert, Bug Hunter の4視点
   Usage: /critical-review <path> [追加の指示]
-allowed-tools: Read, Glob, Grep, Task, Write, TodoWrite, AskUserQuestion
+allowed-tools: Read, Glob, Grep, Agent, Write, TodoWrite, AskUserQuestion
 argument-hint: <path> [追加の指示]
 ---
 
@@ -60,7 +60,17 @@ $ARGUMENTS
    - ドキュメント系が多数 → ドキュメントレビュー
    - 混在 → AskUserQuestion で確認
 
-   **判定不可** (`.json`, `.yaml`, `.xml` 等): AskUserQuestion で確認
+   **コンフィグ/スキーマ系ファイル** (.json, .yaml, .yml, .xml, .toml, .ini 等):
+   `critical-code-reviewer` スキルの `references/file_type_classification.md` に準拠。
+   判定優先順位: (1) ファイル名/明示パターン → (2) 拡張子ルール → (3) Content Sniffing（先頭20行）→ (4) AskUserQuestion（全て不明の場合のみ）
+
+---
+
+### Step 1.5: スケール判定
+
+対象が大規模な場合:
+- コード: 500行超 or 5ファイル超 → `critical-code-reviewer` の `references/scale_strategy.md` 参照
+- ドキュメント: 30,000字超 or 見出し30超 → `critical-document-reviewer` の `references/scale_strategy.md` 参照
 
 ---
 
@@ -68,42 +78,25 @@ $ARGUMENTS
 
 #### ドキュメントレビューの場合
 
-1. **利用可能なペルソナ（6種類）**:
+1. **ペルソナ選択**:
 
-   | ペルソナ | 視点 |
-   |---------|------|
-   | Developer | 実装者視点：技術的正確性、実装可能性 |
-   | PM | プロジェクト視点：リスク、整合性、実現性 |
-   | Customer | 顧客視点：要件充足、ビジネス価値 |
-   | QA | 品質保証視点：テスト可能性、受入基準 |
-   | Security | セキュリティ視点：脆弱性、コンプライアンス |
-   | Ops | 運用視点：運用準備度、障害対応 |
+   各ペルソナの詳細は対応スキルの SKILL.md を参照。
 
 2. **文書タイプに応じたペルソナ選択**:
 
-   | 文書タイプ | 推奨ペルソナ |
-   |-----------|-------------|
-   | 設計文書（一般） | Developer, QA, PM |
-   | セキュリティ設計 | Developer, Security, Ops |
-   | インフラ/運用設計 | Developer, Ops, Security |
-   | 要件定義書 | Developer, PM, Customer |
-   | 提案書/企画書 | PM, Customer, Developer |
-   | 不具合分析レポート | Developer, QA, PM |
-   | その他 | Developer, PM, Customer（デフォルト） |
+   ペルソナ選定は `critical-document-reviewer` スキルの `references/persona_selection_matrix.md` に準拠。
 
-3. **並列レビュー実行**: Task tool でサブエージェントを並列起動
-   - `document-reviewer-developer`
-   - `document-reviewer-pm`
-   - `document-reviewer-customer`
-   - `document-reviewer-qa`
-   - `document-reviewer-security`
-   - `document-reviewer-ops`
+3. **並列レビュー実行**: Agent tool で選定したペルソナのレビューを並列実行
+   - 各 Agent には `references/agents/{persona}.md` の内容をプロンプトとして渡す
+   - レビュー対象文書をインラインで含める
 
 4. **参照リソース**（`critical-document-reviewer` スキルディレクトリ内）:
+   - `references/agents/*.md` - ペルソナプロンプト（6ファイル）
    - `references/critical_analysis_framework.md`
    - `references/evidence_evaluation_criteria.md`
-   - `references/persona_definitions.md`
    - `references/red_flag_patterns.md`
+   - `references/persona_selection_matrix.md`
+   - `references/severity_criteria.md`
 
 5. **レポートテンプレート**:
    - `assets/review_report_template.md`
@@ -116,25 +109,19 @@ $ARGUMENTS
 
 2. **ペルソナ（4種類）**:
 
-   | ペルソナ | 視点 |
-   |---------|------|
-   | Veteran Engineer | 20年ベテラン視点：設計判断、アンチパターン、運用・保守性 |
-   | TDD Expert | TDD視点：テスト容易性、依存関係、リファクタリング安全性 |
-   | Clean Code Expert | Clean Code視点：命名、関数設計、SOLID原則 |
-   | Bug Hunter | バグハンター視点：失敗モード、境界条件、冪等性・並行実行 |
+   各ペルソナの詳細は対応スキルの SKILL.md を参照。
 
-3. **並列レビュー実行**: Task tool で4つのサブエージェントを並列起動
-   - `code-reviewer-veteran-engineer`
-   - `code-reviewer-tdd-expert`
-   - `code-reviewer-clean-code-expert`
-   - `code-reviewer-bug-hunter`
+3. **並列レビュー実行**: Agent tool で4つのレビューを並列実行
+   - 各 Agent には `references/agents/{persona}.md` の内容をプロンプトとして渡す
+   - レビュー対象コードをインラインで含める
 
 4. **参照リソース**（`critical-code-reviewer` スキルディレクトリ内）:
-   - `references/persona_definitions.md`
+   - `references/agents/*.md` - ペルソナプロンプト（4ファイル）
    - `references/code_smell_patterns.md`
    - `references/review_framework.md`
    - `references/language_specific_checks.md`
-   - `references/failure_mode_patterns.md`
+   - `references/severity_criteria.md`
+   - `references/file_type_classification.md`
 
 5. **レポートテンプレート**:
    - `assets/code_review_report_template.md`
@@ -145,14 +132,7 @@ $ARGUMENTS
 
 1. レビュー結果を収集
 2. 重複する指摘を統合（複数ペルソナからの指摘として記録）
-3. 重大度を付与:
-
-| 重大度 | 定義 |
-|--------|------|
-| **Critical** | このまま進めると失敗リスク大。バグ、データ損失、セキュリティ問題 |
-| **Major** | 重大な問題。根拠不十分、重大な設計欠陥 |
-| **Minor** | 改善推奨だが緊急ではない |
-| **Info** | 参考情報、ベストプラクティス提案 |
+3. 重大度は各スキルの `references/severity_criteria.md` を参照して判定する。
 
 4. 統合レビューレポートを生成
 
@@ -160,10 +140,8 @@ $ARGUMENTS
 
 ### Step 4: レポート出力
 
-- 対象と同じディレクトリに保存（推奨）
-  - ドキュメント: `REVIEW_REPORT_<文書名>.md`
-  - コード: `CODE_REVIEW_REPORT_<ファイル/ディレクトリ名>.md`
-- または標準出力でユーザーに表示
+- デフォルト: 標準出力でユーザーに表示
+- ファイル保存: ユーザーが明示的に指示した場合のみ
 
 ---
 

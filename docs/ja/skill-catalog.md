@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 78 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 83 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -23,7 +23,7 @@ permalink: /ja/skill-catalog/
 
 ## ソフトウェア開発 & IT
 
-コードレビュー、テスト、データ分析、クラウド運用、デバッグの 16 スキル。
+コードレビュー、テスト、データ分析、クラウド運用、デバッグの 18 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -43,6 +43,8 @@ permalink: /ja/skill-catalog/
 | network-diagnostics | ネットワーク品質診断 | Ping/Speed/HTTP/Traceroute |
 | office-script-expert | Office Scripts 開発支援 | ExcelScript API、13 バグパターン |
 | [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) | インシデント RCA・是正措置計画 | 5 Whys、Fishbone、FTA |
+| [hidden-contract-investigator]({{ '/ja/skills/dev/hidden-contract-investigator/' | relative_url }}) | 既存コードの暗黙契約抽出・再利用リスク可視化 | 暗黙契約抽出、再利用リスク |
+| [safe-by-default-architect]({{ '/ja/skills/dev/safe-by-default-architect/' | relative_url }}) | 危険パターン禁止・安全デフォルト設計標準 | 安全デフォルト設計、パターン禁止 |
 
 ---
 
@@ -115,7 +117,7 @@ permalink: /ja/skill-catalog/
 
 ## QA、テスト & ベンダー管理
 
-品質保証、テスト、ベンダー評価、顧客体験の 9 スキル。
+品質保証、テスト、ベンダー評価、顧客体験の 12 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -128,6 +130,9 @@ permalink: /ja/skill-catalog/
 | [vendor-estimate-creator]({{ '/ja/skills/management/vendor-estimate-creator/' | relative_url }}) | 開発見積作成 | WBS、4 見積手法、ROI |
 | vendor-estimate-reviewer | ベンダー見積レビュー | 12 評価軸、60+ リスク要因 |
 | vendor-rfq-creator | RFQ (見積依頼書) 作成 | 150+ チェック項目 |
+| [completion-quality-gate-designer]({{ '/ja/skills/meta/completion-quality-gate-designer/' | relative_url }}) | 完了判定・品質ゲート・証跡・例外運用設計 | 品質ゲート、Exit Criteria |
+| [cross-module-consistency-auditor]({{ '/ja/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | 変更波及・横断整合性・コピペ展開監査 | 横断整合性、変更波及分析 |
+| [production-parity-test-designer]({{ '/ja/skills/meta/production-parity-test-designer/' | relative_url }}) | 本番同等テスト階層設計・盲点排除 | テスト階層設計、本番同等 |
 
 ---
 

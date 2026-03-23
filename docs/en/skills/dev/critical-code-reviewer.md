@@ -15,6 +15,9 @@ Multi-persona parallel code review from four expert perspectives.
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">No API Required</span>
+
+[Download Skill Package (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/critical-code-reviewer.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[View Source on GitHub](https://github.com/takusaotome/claude-skills-library/tree/main/skills/critical-code-reviewer){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">Workflow</span>
 
 <details open markdown="block">
@@ -83,7 +86,9 @@ Claude analyzes the review target before launching the personas:
 
 ### Phase 2: Parallel Review
 
-Four sub-agents run **simultaneously** via the Task tool. Each agent receives the target code, language-specific checklists, its persona definition, and the review framework. Because they run in parallel, total review time stays close to that of a single persona.
+Four agents run **simultaneously** via the Agent tool, each with an inline persona prompt from `references/agents/*.md`. Each agent receives the target code and relevant reference materials. Agents output findings with **Impact** descriptions (not severity) — severity is assigned in Phase 3 using the authoritative `references/severity_criteria.md`. Because they run in parallel, total review time stays close to that of a single persona.
+
+The skill is fully self-contained: all persona prompts are embedded in `references/agents/`, eliminating dependencies on external agent definitions.
 
 ### Phase 3: Integration
 

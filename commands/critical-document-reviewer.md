@@ -54,22 +54,20 @@ $ARGUMENTS
    | 不具合分析レポート | Developer, QA, PM |
    | その他 | Developer, PM, Customer（デフォルト） |
 
-4. **並列レビュー実行**: Task ツールでサブエージェントを**並列**起動
+4. **並列レビュー実行**: Agent tool で選定したペルソナのレビューを**並列**実行
 
    ```
-   Task tool を使用して以下を並列実行（文書タイプに応じて3-6エージェント）：
+   Agent tool を使用して以下を並列実行（文書タイプに応じて3-6エージェント）：
 
-   - document-reviewer-developer: 開発メンバー/実装者視点
-   - document-reviewer-pm: PM視点
-   - document-reviewer-customer: お客様/ステークホルダー視点
-   - document-reviewer-qa: QA/テスター視点
-   - document-reviewer-security: セキュリティ/コンプライアンス視点
-   - document-reviewer-ops: 運用/SRE視点
+   各 Agent には references/agents/{persona}.md の内容をプロンプトとして渡し、
+   レビュー対象文書をインラインで含める。
 
-   各サブエージェントには以下を渡す：
-   - レビュー対象文書の内容
-   - 関連文書の内容（あれば）
-   - ペルソナに応じた指示
+   1. references/agents/developer.md: 開発メンバー/実装者視点
+   2. references/agents/pm.md: PM視点
+   3. references/agents/customer.md: お客様/ステークホルダー視点
+   4. references/agents/qa.md: QA/テスター視点
+   5. references/agents/security.md: セキュリティ/コンプライアンス視点
+   6. references/agents/ops.md: 運用/SRE視点
    ```
 
 5. **結果統合**: レビュー結果を統合
@@ -80,17 +78,21 @@ $ARGUMENTS
 ## 参照リソース
 
 レビュー実行時に以下を参照（`critical-document-reviewer` スキルディレクトリ内）：
+- `references/agents/*.md` - ペルソナプロンプト（6ファイル）
 - `references/critical_analysis_framework.md` - 批判的分析フレームワーク
 - `references/evidence_evaluation_criteria.md` - 根拠評価基準
-- `references/persona_definitions.md` - ペルソナ詳細定義
 - `references/red_flag_patterns.md` - 危険表現パターン
+- `references/persona_selection_matrix.md` - ペルソナ選定マトリクス
+- `references/severity_criteria.md` - 重大度判定基準
+- `references/scale_strategy.md` - 大規模入力向けスケール戦略
 
 ## 重要な指示
 
-- **並列実行**: サブエージェントは必ず並列で起動すること（効率化のため）
-- **ultrathink**: 各サブエージェントは ultrathink モードで深い分析を行う
+- **並列実行**: Agent は必ず並列で起動すること（効率化のため）
+- **ultrathink**: 各 Agent は ultrathink モードで深い分析を行う
 - **ペルソナ選択**: 文書タイプに応じて最適な3-6ペルソナを選択
-- **根拠重視**: 「〜と思われる」「おそらく」などの推測表現は必ず指摘
+- **スケール判定**: 30,000字超 or 見出し30超の場合は `references/scale_strategy.md` を参照
+- **根拠重視**: 推測表現は `references/red_flag_patterns.md` の文脈依存ルールに従って評価する
 - **建設的**: 問題の指摘だけでなく、改善の方向性も示す
 
 ## 出力

@@ -27,7 +27,7 @@ description: |
 
 ## Prerequisites
 
-- **Task tool**: 4つのサブエージェントを並列起動するために必要
+- **Agent tool**: 4つのサブエージェントを並列起動するために必要
 - **Read tool**: レビュー対象ファイルの読み込み
 - **Grep/Glob tools**: 依存関係の事前チェック（関数内import検出等）
 
@@ -95,40 +95,41 @@ description: |
    - 関連する設計書があれば参照
    - 既存のテストコードがあれば参照
 
+5. **ファイルタイプの確認**
+   - `references/file_type_classification.md` を参照してファイルの分類を確認
+   - 設定ファイル（Dockerfile, K8s, Terraform 等）も Config tier としてレビュー対象
+
+### Phase 1.5: スケール判定
+
+対象が大規模な場合（500行超 or 5ファイル超）:
+- `references/scale_strategy.md` を参照
+- ホットスポット抽出 → 重点レビュー の2段階で実行
+
 ### Phase 2: 並列レビュー（Parallel Review）
 
-4つのサブエージェントを**並列実行**します：
+4つのレビューを Agent tool を使って**並列実行**します。
+
+各レビューの Agent prompt 構成:
+1. `references/agents/{persona}.md` の全内容（ペルソナプロンプト）
+2. レビュー対象コード
+3. ペルソナ固有リファレンス（推奨、Token Budget Strategy 参照）
 
 ```
-Task tool を使用して4つのサブエージェントを並列起動：
+Agent tool を使用して4つのレビューを並列実行：
 
-1. code-reviewer-veteran-engineer: 20年ベテランエンジニア視点
-   - 設計判断の妥当性
-   - アンチパターンの検出
-   - 運用・保守性の観点
+1. references/agents/veteran-engineer.md をプロンプトとして使用
+   + 推奨リファレンス: references/code_smell_patterns.md
 
-2. code-reviewer-tdd-expert: TDDエキスパート視点
-   - テスト容易性
-   - 依存関係の管理
-   - リファクタリング安全性
+2. references/agents/tdd-expert.md をプロンプトとして使用
 
-3. code-reviewer-clean-code-expert: Clean Codeエキスパート視点
-   - 命名の適切さ
-   - 関数/クラス設計
-   - SOLID原則の遵守
+3. references/agents/clean-code-expert.md をプロンプトとして使用
 
-4. code-reviewer-bug-hunter: バグハンター視点
-   - 状態遷移の一貫性（クロスモジュール）
-   - 例外パスの状態整合性
-   - 依存関係の完全性（requirements.txt照合）
-   - 非同期競合状態の検出
+4. references/agents/bug-hunter.md をプロンプトとして使用
+   + 推奨リファレンス: references/review_framework.md（検出テクニック部分）
 ```
 
-各サブエージェントには以下を渡す：
-- レビュー対象コード
-- 言語固有チェックリスト（該当する場合）
-- ペルソナ定義（references/persona_definitions.md から）
-- レビューフレームワーク（references/review_framework.md）
+**Agent には severity を付けさせない。** 各 Agent は Issue ごとに Impact（影響の説明）を出力する。
+Severity の最終判定は Phase 3（統合）で行う。
 
 ### Phase 3: 統合（Integration）
 
@@ -140,16 +141,20 @@ Task tool を使用して4つのサブエージェントを並列起動：
    - 同じ問題を異なる視点で指摘している場合は統合
    - 視点の違いは「関連ペルソナ」として記録
 
-3. **重大度の付与**
+3. **重大度の最終判定**
 
-   | 重大度 | 定義 | 例 |
-   |--------|------|-----|
-   | **Critical** | バグ、データ損失、セキュリティ問題を引き起こす | Nullチェック欠如、リソースリーク |
-   | **Major** | 重大な保守性・設計問題 | God class、テスト不可能な設計 |
-   | **Minor** | 改善推奨だが緊急ではない | 命名改善、軽微なリファクタリング |
-   | **Info** | ベストプラクティス提案 | 代替アプローチの提示 |
+   `references/severity_criteria.md` を参照し、各 Issue の Impact 記述に基づいて
+   Critical / Major / Minor / Info を判定する。
 
-4. **統合レビューレポート生成**
+   ※Agent 側では severity を付けない。統合フェーズが authoritative criteria を参照して一貫性を保証する。
+
+4. **部分失敗ハンドリング**
+
+   - 1件以上の Agent が結果を返せば統合レポートを生成する
+   - 失敗した Agent はレポートに明記し、該当ペルソナの観点が欠落している旨を注記する
+   - 全 Agent 失敗時のみ中断しエラーを報告する
+
+5. **統合レビューレポート生成**
    - assets/code_review_report_template.md を使用
 
 ## Differentiation from design-implementation-reviewer
@@ -188,6 +193,14 @@ Task tool を使用して4つのサブエージェントを並列起動：
 - async/await の正しい使用
 - Promise の適切なエラーハンドリング
 - `this` バインディングの問題
+
+### Language Tier 分類
+
+`references/file_type_classification.md` の Tier 分類を参照:
+- **Tier 1** (Python, JS/TS): 詳細チェック（`references/language_specific_checks.md` 適用）
+- **Tier 2** (Go, Java, Rust, C/C++): 基本パターンチェック
+- **Tier 3** (その他): 汎用チェックのみ
+- **Config** (Dockerfile, K8s, Terraform, CI/CD): インフラ/設定固有チェック
 
 ## Output Format
 
@@ -259,17 +272,37 @@ Claude:
 3. [Phase 3] 結果を統合し、レビューレポートを生成。
 ```
 
+## Token Budget Strategy
+
+### Agent Prompt 構成（優先度順）
+1. **必須**: `references/agents/{persona}.md`（ペルソナプロンプト）
+2. **必須**: レビュー対象コード
+3. **推奨**: ペルソナ固有リファレンス
+   - Veteran Engineer → `references/code_smell_patterns.md`
+   - Bug Hunter → `references/review_framework.md`（検出テクニック部分）
+   - 他ペルソナ → プロンプト内の知識で十分
+4. **Agent には渡さない**: `references/severity_criteria.md` → 統合フェーズでのみ使用
+
+### 大規模入力時（scale_strategy 発動時）
+- ホットスポットのみ渡す
+- ペルソナ固有リファレンスも省略可
+
 ## Resources
 
 ### References（参照ドキュメント）
 
 | File | Purpose |
 |------|---------|
-| `references/persona_definitions.md` | 4ペルソナの詳細定義・レビュー観点 |
+| `references/agents/veteran-engineer.md` | Veteran Engineer ペルソナプロンプト |
+| `references/agents/tdd-expert.md` | TDD Expert ペルソナプロンプト |
+| `references/agents/clean-code-expert.md` | Clean Code Expert ペルソナプロンプト |
+| `references/agents/bug-hunter.md` | Bug Hunter ペルソナプロンプト |
 | `references/code_smell_patterns.md` | コードスメル・アンチパターン集 |
 | `references/review_framework.md` | 批判的コード分析フレームワーク |
 | `references/language_specific_checks.md` | Python/JavaScript固有チェック |
-| `references/severity_criteria.md` | 重大度判定基準 |
+| `references/severity_criteria.md` | 重大度判定基準（統合フェーズ用） |
+| `references/file_type_classification.md` | ファイルタイプ分類・Tier定義 |
+| `references/scale_strategy.md` | 大規模入力向けスケール戦略 |
 
 ### Assets（出力テンプレート）
 

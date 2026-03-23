@@ -15,6 +15,9 @@ End-to-end data science workflow with automated EDA, model comparison, and time 
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-scripts">Python Scripts</span>
+
+[Download Skill Package (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/data-scientist.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[View Source on GitHub](https://github.com/takusaotome/claude-skills-library/tree/main/skills/data-scientist){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">Workflow</span>
 
 <details open markdown="block">

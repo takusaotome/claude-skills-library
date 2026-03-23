@@ -18,13 +18,69 @@ This skill provides professional internal audit support aligned with IIA (Instit
 **Framework**: IIA Standards, COSO Internal Control Framework, ISO 19011 (Audit Guidelines)
 **Output format**: Audit plans, audit programs, audit workpapers, CAR (Corrective Action Request) tracking
 
-Use this skill when:
-- Planning annual internal audit programs
-- Conducting risk-based audit planning
-- Creating audit checklists and programs
-- Documenting audit findings and workpapers
-- Managing corrective action follow-up
-- Preparing for external audits (ISO, SOX, regulatory)
+---
+
+## When to Use
+
+- **Annual audit planning**: "Create FY2025 internal audit plan" or "年次監査計画を作成"
+- **Risk assessment**: "Assess risks for the IT department" or "リスク評価マトリクスを作成"
+- **Audit program development**: "Create audit program for accounts payable" or "買掛金監査プログラムを作成"
+- **Workpaper documentation**: "Help document audit findings" or "監査調書を作成"
+- **CAR management**: "Track corrective actions" or "是正措置のフォローアップ"
+- **External audit prep**: "Prepare for SOX audit" or "ISO監査の準備"
+
+---
+
+## Prerequisites
+
+- **Knowledge**: Basic understanding of internal control frameworks (COSO, IIA Standards)
+- **Access**: Organizational data for risk assessment (auditable entity list, prior audit findings)
+- **Tools**: None required for documentation; optional Python for risk scoring automation
+
+---
+
+## Workflow
+
+1. **Risk Assessment** → Calculate risk scores for auditable entities using `scripts/risk_scorer.py`
+2. **Audit Planning** → Prioritize entities and allocate audit resources
+3. **Program Development** → Create detailed audit procedures and test steps
+4. **Fieldwork** → Execute audit program, document workpapers
+5. **Reporting** → Develop findings with condition/criteria/cause/effect structure
+6. **Follow-up** → Track CARs through lifecycle using `scripts/car_tracker.py`
+
+---
+
+## Output
+
+| Deliverable | Format | Description |
+|-------------|--------|-------------|
+| Risk Assessment Matrix | Markdown table | Weighted risk scores for all auditable entities |
+| Annual Audit Plan | Markdown report | Prioritized audit schedule with resource allocation |
+| Audit Program | Markdown checklist | Detailed test procedures per audit |
+| Audit Workpaper | Markdown document | Test results with evidence references |
+| Audit Finding | Markdown document | Condition/Criteria/Cause/Effect/Recommendation structure |
+| CAR Status Report | Markdown table | Corrective action tracking dashboard |
+
+---
+
+## Resources
+
+- **`references/iia_standards_summary.md`**: IIA International Standards quick reference
+- **`references/sampling_guide.md`**: Statistical and judgmental sampling methods
+- **`scripts/risk_scorer.py`**: Calculate weighted risk scores for auditable entities
+- **`scripts/car_tracker.py`**: Track CAR lifecycle and generate status reports
+
+---
+
+## Quick Start Examples
+
+```bash
+# Calculate risk scores for auditable entities (CSV input)
+python3 scripts/risk_scorer.py entities.csv --output risk_matrix.md
+
+# Generate CAR status report from tracking data
+python3 scripts/car_tracker.py cars.csv --report monthly
+```
 
 ---
 

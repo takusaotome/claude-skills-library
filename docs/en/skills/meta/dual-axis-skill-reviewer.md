@@ -15,6 +15,9 @@ Reproducible quality scoring for Claude skills using deterministic checks and LL
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-scripts">Scripts</span>
+
+[Download Skill Package (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/dual-axis-skill-reviewer.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[View Source on GitHub](https://github.com/takusaotome/claude-skills-library/tree/main/skills/dual-axis-skill-reviewer){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">Workflow</span>
 
 <details open markdown="block">
