@@ -296,6 +296,8 @@
 
 ### B. Severity Definitions
 
+※判定基準の詳細は `references/severity_criteria.md` を参照。ここはレポート読者向けの概要のみ。
+
 | Severity | Definition |
 |----------|------------|
 | Critical | バグ、セキュリティ、データ損失の可能性。マージブロック。 |

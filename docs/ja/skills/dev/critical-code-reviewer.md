@@ -15,6 +15,9 @@ permalink: /ja/skills/dev/critical-code-reviewer/
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
+
+[スキルパッケージをダウンロード (.skill)](https://github.com/takusaotome/claude-skills-library/raw/main/skill-packages/critical-code-reviewer.skill){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
+[GitHubでソースを見る](https://github.com/takusaotome/claude-skills-library/tree/main/skills/critical-code-reviewer){: .btn .fs-5 .mb-4 .mb-md-0 }
 <span class="badge badge-workflow">ワークフロー</span>
 
 <details open markdown="block">
@@ -83,7 +86,9 @@ Claude はペルソナを起動する前にレビュー対象を分析します:
 
 ### Phase 2: 並列レビュー
 
-Task ツールを使って4つのサブエージェントを **同時に** 実行します。各エージェントには対象コード、言語固有チェックリスト、ペルソナ定義、レビューフレームワークが渡されます。並列実行のため、合計レビュー時間は単一ペルソナの実行時間に近い水準に収まります。
+Agent ツールを使って4つのレビューを **同時に** 実行します。各エージェントには `references/agents/*.md` のペルソナプロンプトをインラインで渡し、対象コードと必要なリファレンスを含めます。エージェントは **Impact**（影響の説明）を出力し、severity は Phase 3 で `references/severity_criteria.md` を参照して最終判定します。並列実行のため、合計レビュー時間は単一ペルソナの実行時間に近い水準に収まります。
+
+スキルは完全に自己完結しています。全てのペルソナプロンプトが `references/agents/` に埋め込まれており、外部のエージェント定義に依存しません。
 
 ### Phase 3: 統合
 
