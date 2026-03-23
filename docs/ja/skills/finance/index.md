@@ -14,15 +14,15 @@ permalink: /ja/skills/finance/
 
 | スキル | 説明 | 主な機能 |
 |:------|:-----|:---------|
-| audit-control-designer | 統制設計書ドラフト自動生成 | 8統制テンプレート、SoD分析、アサーションマッピング |
-| audit-doc-checker | 監査ドキュメント品質レビュー（0-100スコア） | 12チェックカテゴリ、重大度スコアリング |
+| [audit-control-designer]({{ '/ja/skills/finance/audit-control-designer/' | relative_url }}) | 統制設計書ドラフト自動生成 | 8統制テンプレート、SoD分析、アサーションマッピング |
+| [audit-doc-checker]({{ '/ja/skills/finance/audit-doc-checker/' | relative_url }}) | 監査ドキュメント品質レビュー（0-100スコア） | 12チェックカテゴリ、重大度スコアリング |
 | bcp-planner | BCP（事業継続計画）策定支援 | リスク評価、復旧戦略 |
-| compliance-advisor | J-SOX/SOX、RCM、内部監査計画 | COSOフレームワーク、内部監査 |
+| [compliance-advisor]({{ '/ja/skills/finance/compliance-advisor/' | relative_url }}) | J-SOX/SOX、RCM、内部監査計画 | COSOフレームワーク、内部監査 |
 | contract-reviewer | 契約書レビュー・リスク分析 | リスク分析、条項レビュー、レッドフラグ検出 |
-| dama-dmbok | DMBOK準拠データ管理 | データガバナンス、データ品質 |
-| esg-reporter | ESG報告書作成支援 | GRI基準、TCFD対応 |
-| internal-audit-assistant | 内部監査計画・実施支援 | 監査計画、サンプリング手法 |
-| iso-implementation-guide | ISO規格実装ガイド | ISO 9001、27001、14001 |
+| [dama-dmbok]({{ '/ja/skills/finance/dama-dmbok/' | relative_url }}) | DMBOK準拠データ管理 | データガバナンス、データ品質 |
+| [esg-reporter]({{ '/ja/skills/finance/esg-reporter/' | relative_url }}) | ESG報告書作成支援 | GRI基準、TCFD対応 |
+| [internal-audit-assistant]({{ '/ja/skills/finance/internal-audit-assistant/' | relative_url }}) | 内部監査計画・実施支援 | 監査計画、サンプリング手法 |
+| [iso-implementation-guide]({{ '/ja/skills/finance/iso-implementation-guide/' | relative_url }}) | ISO規格実装ガイド | ISO 9001、27001、14001 |
 | itil4-consultant | ITIL 4コンサルティング・成熟度評価 | 34プラクティス、成熟度評価 |
-| pci-dss-compliance-consultant | PCI DSS v4準拠支援 | ギャップ分析、SAQ選定 |
+| [pci-dss-compliance-consultant]({{ '/ja/skills/finance/pci-dss-compliance-consultant/' | relative_url }}) | PCI DSS v4準拠支援 | ギャップ分析、SAQ選定 |
 | [financial-analyst]({{ '/ja/skills/finance/financial-analyst/' | relative_url }}) | 財務分析・投資評価 | DCF、NPV/IRR、類似企業分析 |

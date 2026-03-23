@@ -22,6 +22,9 @@ Skills for quality assurance, vendor management, CRM, media processing, HR, and 
 | uat-testcase-generator | UAT test case generation (Excel) | Excel Output, Traceability |
 | helpdesk-responder | Helpdesk response draft creation | KB-Based Responses, Confidence Scoring |
 | cx-error-analyzer | CX error scenario analysis and prioritization | 6-Axis CX Scoring, Impact vs Effort Matrix |
+| [completion-quality-gate-designer]({{ '/en/skills/meta/completion-quality-gate-designer/' | relative_url }}) | Design quality gates, exit criteria, evidence requirements | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
+| [cross-module-consistency-auditor]({{ '/en/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | Audit cross-module consistency for change impact | Impact Map, Consistency Matrix, Copy Propagation Review |
+| [production-parity-test-designer]({{ '/en/skills/meta/production-parity-test-designer/' | relative_url }}) | Design production-parity test hierarchies | Test Tier Allocation, Smoke Suite, Adversarial Regression |
 
 ## Vendor Management
 

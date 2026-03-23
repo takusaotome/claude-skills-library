@@ -36,36 +36,19 @@ $ARGUMENTS
    - JavaScript/TypeScript の場合: 型安全性、async patterns の追加チェック
    - 該当する場合は `references/language_specific_checks.md` を参照
 
-4. **並列レビュー実行**: Task ツールで4つのサブエージェントを**並列**起動
+4. **並列レビュー実行**: Agent tool で4つのレビューを**並列**実行
 
    ```
-   Task tool を使用して以下を並列実行（1つのメッセージで4つのツールコール）：
+   Agent tool を使用して以下を並列実行（1つのメッセージで4つのツールコール）：
 
-   1. code-reviewer-veteran-engineer: 20年ベテランエンジニア視点
-      - 設計判断の妥当性
-      - アンチパターンの検出
-      - 運用・保守性の観点
+   各 Agent には references/agents/{persona}.md の内容をプロンプトとして渡し、
+   レビュー対象コードをインラインで含める。
 
-   2. code-reviewer-tdd-expert: TDDエキスパート視点
-      - テスト容易性
-      - 依存関係の管理
-      - リファクタリング安全性
-
-   3. code-reviewer-clean-code-expert: Clean Codeエキスパート視点
-      - 命名の適切さ
-      - 関数/クラス設計
-      - SOLID原則の遵守
-
-   4. code-reviewer-bug-hunter: バグハンター視点
-      - 失敗モード分析（境界条件、null、タイムアウト等）
-      - 影響範囲の探索（呼び出し元、後方互換性）
-      - 冪等性・並行実行の問題
-      - P0/P1優先度付け（壊れる・漏れる・戻せない）
+   1. references/agents/veteran-engineer.md: 20年ベテランエンジニア視点
+   2. references/agents/tdd-expert.md: TDDエキスパート視点
+   3. references/agents/clean-code-expert.md: Clean Codeエキスパート視点
+   4. references/agents/bug-hunter.md: バグハンター視点
    ```
-
-   各サブエージェントには以下を渡す：
-   - レビュー対象コード
-   - 言語固有チェックリスト（該当する場合）
 
 5. **結果統合**: 4つのレビュー結果を統合
    - 重複する指摘は統合（複数ペルソナからの指摘として記録）
@@ -75,17 +58,19 @@ $ARGUMENTS
 ## 参照リソース
 
 レビュー実行時に以下を参照（`critical-code-reviewer` スキルディレクトリ内）：
-- `references/persona_definitions.md` - ペルソナ詳細定義
+- `references/agents/*.md` - ペルソナプロンプト（4ファイル）
 - `references/code_smell_patterns.md` - コードスメル・アンチパターン
 - `references/review_framework.md` - レビューフレームワーク
 - `references/severity_criteria.md` - 重大度判定基準
-- `references/failure_mode_patterns.md` - 失敗モードパターン集（Bug Hunter用）
+- `references/file_type_classification.md` - ファイルタイプ分類・Tier定義
+- `references/scale_strategy.md` - 大規模入力向けスケール戦略
 
 ## 重要な指示
 
-- **並列実行**: 4つのサブエージェントは必ず並列で起動すること（効率化のため）
-- **ultrathink**: 各サブエージェントは ultrathink モードで深い分析を行う
+- **並列実行**: 4つの Agent は必ず並列で起動すること（効率化のため）
+- **ultrathink**: 各 Agent は ultrathink モードで深い分析を行う
 - **言語固有チェック**: Python/JavaScript の場合は追加チェックを適用
+- **スケール判定**: 500行超 or 5ファイル超の場合は `references/scale_strategy.md` を参照
 - **建設的**: 問題の指摘だけでなく、具体的な改善コード例も示す
 - **良い点も認める**: 問題だけでなく、良い設計/コードも指摘する
 

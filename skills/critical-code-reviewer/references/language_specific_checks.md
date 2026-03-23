@@ -1,6 +1,66 @@
 # Language-Specific Checks
 
-Python と JavaScript/TypeScript に特化した追加チェックポイント。
+言語・エコシステム固有の追加チェックポイント。
+ファイルタイプの分類と Tier 定義は `references/file_type_classification.md` を参照。
+
+---
+
+## JS/TS Ecosystem Checks
+
+### package.json
+
+| チェック項目 | 問題パターン | 推奨 |
+|------------|------------|------|
+| 依存バージョン | `"^"` や `"*"` で不安定 | 本番では固定バージョンまたは lockfile 必須 |
+| scripts 定義 | `start`, `build`, `test` の欠落 | 標準スクリプトを定義 |
+| engines | 未指定 | Node.js バージョン制約を明記 |
+| devDependencies 混入 | 本番依存に dev パッケージ | dependencies と devDependencies を適切に分離 |
+
+### Lockfile
+
+- `package-lock.json` または `yarn.lock` の存在を確認
+- `.gitignore` で除外されていないか確認
+- lockfile と package.json の整合性
+
+### tsconfig.json
+
+| チェック項目 | 推奨設定 |
+|------------|---------|
+| strict | `true` |
+| noImplicitAny | `true` |
+| strictNullChecks | `true` |
+| path aliases | baseUrl/paths が正しいか |
+
+---
+
+## Infrastructure as Code (IaC) Checks
+
+### Dockerfile
+
+| チェック項目 | 問題パターン | 推奨 |
+|------------|------------|------|
+| 実行ユーザー | `USER` 未指定（root 実行） | non-root ユーザーを指定 |
+| Multi-stage | 単一ステージで dev 依存を含む | multi-stage ビルドでイメージ軽量化 |
+| レイヤー最適化 | `RUN` が多すぎる | `&&` でコマンド連結 |
+| COPY 順序 | 依存ファイルとソースを同時 COPY | 依存ファイルを先に COPY（キャッシュ活用） |
+| .dockerignore | 未設定 | node_modules, .git 等を除外 |
+
+### Terraform (.tf)
+
+| チェック項目 | 問題パターン |
+|------------|------------|
+| State 管理 | ローカル state を使用 |
+| Variable validation | validation ブロック未使用 |
+| Module 構造 | 全リソースが1ファイル |
+| Provider バージョン | 未固定 |
+
+### CI/CD Configs (.github/workflows/*.yml 等)
+
+| チェック項目 | 問題パターン |
+|------------|------------|
+| Secret 取扱い | ハードコードされた値 |
+| Timeout 設定 | timeout 未指定（無限実行リスク） |
+| 権限スコープ | `permissions` 未制限 |
 
 ---
 
