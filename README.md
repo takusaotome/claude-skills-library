@@ -61,7 +61,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 ## Skill Catalog (93 Skills)
 
-### Business Strategy & Consulting (16 skills)
+### Business Strategy & Consulting (17 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -81,6 +81,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-budget-actual-variance | 予算実績差異分析 | 有利/不利差異判定, Price/Quantity分解, CSV分析 |
 | ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
+| hearing-to-requirements-mapper | ヒアリングシート→要件定義書変換、ギャップ分析 | RTM, WBS Mapping, Ambiguity Detection, Bilingual |
 
 ### Project Management (4 skills)
 
@@ -3888,6 +3889,16 @@ Future skills planned for this library:
 - Custom template support via JSON files
 - JSON and Markdown report generation
 - CLI interface with `score_project.py`
+
+### hearing-to-requirements-mapper v1.0 (2026-03-15)
+- Transform client hearing sheets and meeting notes into structured requirements
+- Requirements classification by type (BR/SR/FR/NFR/CON/ASM) and priority (MoSCoW)
+- Automatic ambiguity detection (vague quantifiers, open lists, passive voice, temporal)
+- Gap analysis against requirements completeness checklist
+- WBS mapping with standard software project template
+- Requirements traceability matrix (RTM) generation
+- Bilingual (Japanese/English) input and output support
+- Language auto-detection with mixed-language handling
 
 ### timezone-aware-event-tracker v1.0 (2026-03-11)
 - Multi-timezone event tracking and correlation
