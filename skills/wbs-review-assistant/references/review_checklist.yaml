@@ -1,0 +1,155 @@
+# WBS Review Checklist
+# Default validation criteria for WBS review
+# Each criterion has: id, name, description, severity, check_type
+
+schema_version: "1.0"
+
+categories:
+  completeness:
+    name: "Completeness"
+    criteria:
+      - id: COMP-001
+        name: "All requirements mapped to tasks"
+        description: "Every requirement ID from requirements document must map to at least one WBS task"
+        severity: critical
+        check_type: traceability
+
+      - id: COMP-002
+        name: "Deliverables identified"
+        description: "Each major phase must have explicit deliverable(s) defined"
+        severity: major
+        check_type: structure
+
+      - id: COMP-003
+        name: "Acceptance criteria defined"
+        description: "Tasks marked as milestones must have acceptance criteria"
+        severity: major
+        check_type: content
+
+      - id: COMP-004
+        name: "Dependencies documented"
+        description: "Task dependencies must be explicitly stated (predecessor/successor)"
+        severity: minor
+        check_type: structure
+
+  consistency:
+    name: "Consistency"
+    criteria:
+      - id: CONS-001
+        name: "Consistent task numbering"
+        description: "WBS codes must follow hierarchical numbering (1.1, 1.1.1, 1.1.2, 1.2, etc.)"
+        severity: major
+        check_type: format
+
+      - id: CONS-002
+        name: "Effort estimates present"
+        description: "All leaf tasks must have effort estimates (hours/days)"
+        severity: major
+        check_type: content
+
+      - id: CONS-003
+        name: "Resource assignments"
+        description: "Tasks must have assigned resources (roles or names)"
+        severity: minor
+        check_type: content
+
+      - id: CONS-004
+        name: "Uniform level of detail"
+        description: "Similar tasks should have similar decomposition depth"
+        severity: minor
+        check_type: structure
+
+  alignment:
+    name: "Alignment with Decisions"
+    criteria:
+      - id: ALIGN-001
+        name: "Hearing sheet decisions incorporated"
+        description: "All decisions from hearing notes must be reflected in WBS"
+        severity: critical
+        check_type: hearing_notes
+
+      - id: ALIGN-002
+        name: "Scope boundaries respected"
+        description: "Out-of-scope items from requirements must not appear in WBS"
+        severity: major
+        check_type: scope
+
+      - id: ALIGN-003
+        name: "Technology choices reflected"
+        description: "Selected technology stack from requirements must match WBS tasks"
+        severity: major
+        check_type: content
+
+  quality:
+    name: "Quality & Standards"
+    criteria:
+      - id: QUAL-001
+        name: "Testing phases included"
+        description: "WBS must include unit test, integration test, and UAT phases"
+        severity: critical
+        check_type: structure
+
+      - id: QUAL-002
+        name: "Documentation tasks present"
+        description: "Each deliverable must have corresponding documentation task"
+        severity: major
+        check_type: structure
+
+      - id: QUAL-003
+        name: "Review gates defined"
+        description: "Formal review/approval milestones must be present"
+        severity: major
+        check_type: structure
+
+      - id: QUAL-004
+        name: "Risk mitigation tasks"
+        description: "High-risk areas must have explicit risk mitigation activities"
+        severity: minor
+        check_type: content
+
+  estimation:
+    name: "Estimation Quality"
+    criteria:
+      - id: EST-001
+        name: "Rollup calculations correct"
+        description: "Parent task totals must equal sum of child tasks"
+        severity: critical
+        check_type: calculation
+
+      - id: EST-002
+        name: "Reasonable effort ranges"
+        description: "Task estimates should be within 1-80 hours (no single task >2 weeks)"
+        severity: major
+        check_type: validation
+
+      - id: EST-003
+        name: "Buffer/contingency allocated"
+        description: "Project should include contingency buffer (10-20% of total)"
+        severity: minor
+        check_type: calculation
+
+# Severity definitions
+severity_levels:
+  critical:
+    description: "Blocker - WBS cannot be baselined without fix"
+    priority: 1
+    color: "red"
+  major:
+    description: "Significant issue - High risk of project failure"
+    priority: 2
+    color: "orange"
+  minor:
+    description: "Improvement opportunity - Should fix but not blocking"
+    priority: 3
+    color: "yellow"
+
+# Check type processing hints
+check_types:
+  traceability: "Compare requirement IDs against WBS task descriptions and custom fields"
+  structure: "Analyze WBS hierarchy and phase organization"
+  content: "Parse task descriptions and custom field values"
+  format: "Validate WBS code patterns and naming conventions"
+  hearing_notes: "Cross-reference hearing sheet items against WBS"
+  scope: "Verify explicitly out-of-scope items are not in WBS"
+  calculation: "Verify numeric rollups and formulas"
+  validation: "Check values against acceptable ranges"
