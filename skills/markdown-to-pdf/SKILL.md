@@ -291,9 +291,15 @@ Sample YAML frontmatter templates for estimates, internal documents, and simple 
 
 **Tables inside list items are NOT supported.** The mistune parser cannot recognize Markdown tables that are indented inside list items (`- item` followed by indented `| table |`). Tables must be placed at the top level (no leading spaces/indentation) to be parsed and rendered correctly.
 
+**`<br>` tags are NOT rendered as line breaks.** fpdf2 mode does not interpret HTML `<br>` tags. They will appear as literal text in the PDF output. Convert `<br>`-separated fields to `<!-- info-table -->` tables or separate lines before conversion.
+
 **Before conversion, check for and fix:**
+- `<br>` tags used for line breaks → Replace with `<!-- info-table -->` table format or separate paragraphs
 - Tables indented under `- ` list items → Move to top level
 - Tables indented under `>` blockquotes → Move to top level
+
+**After conversion, verify:**
+- No literal `<br>` text visible in the generated PDF
 
 ## Troubleshooting
 
