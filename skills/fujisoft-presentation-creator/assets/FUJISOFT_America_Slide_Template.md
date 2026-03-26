@@ -446,13 +446,18 @@ style: |
   }
 
   .step-card {
-    background: white;
     text-align: center;
     border-radius: 8px;
     overflow: hidden;
     margin: 0.5em;
     border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
   }
+
+  .step-card:nth-child(1) { background: #e3f2fd; }
+  .step-card:nth-child(2) { background: #e8f5e9; }
+  .step-card:nth-child(3) { background: #fff3e0; }
 
   .step-number {
     background: var(--round1-primary);
@@ -483,6 +488,7 @@ style: |
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex: 1;
   }
 
   .step-card:nth-child(1) .step-content {
