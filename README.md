@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (93 skills)
+├── skills/                 # All Claude Code skills (94 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (93 Skills)
+## Skill Catalog (94 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -139,7 +139,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (12 skills)
+### Documentation & Communication (13 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -155,6 +155,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
+| multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 
 ### QA & Testing (11 skills)
 
@@ -2571,6 +2572,54 @@ Generate audit-ready internal control design documents from As-Is business proce
 
 ---
 
+### 📄 Multi-Format Document Optimizer
+
+**File:** `skill-packages/multi-format-document-optimizer.skill`
+
+Unified document optimization skill that chains docling-converter, imagemagick-expert, and markdown-to-pdf to create comprehensive document processing pipelines.
+
+**When to use:**
+- Converting PDF/DOCX/PPTX to optimized PDF with compressed images
+- Creating web-ready documents with WebP images from source documents
+- Generating print-ready PDFs with high-DPI images from mixed sources
+- Batch processing multiple documents through consistent optimization pipeline
+- Extracting, optimizing, and re-embedding images from existing documents
+- Converting scanned documents with OCR and image enhancement
+
+**Core Capabilities:**
+- ✅ Automatic format detection and pipeline routing
+- ✅ Quality presets (web, print, archive, minimal, custom)
+- ✅ Image optimization with configurable quality, DPI, and format
+- ✅ PDF image extraction and re-embedding
+- ✅ Batch processing with parallel workers
+- ✅ Document verification and quality assessment
+
+**Key Features:**
+
+*Automated Scripts:*
+- `document_optimizer.py` - Main CLI tool with analyze/convert/batch/optimize-images/verify commands
+
+*Reference Guides:*
+- `pipeline_guide.md` - Detailed pipeline configurations and customization options
+- `image_optimization_guide.md` - Image optimization strategies and quality settings
+
+**Quality Presets:**
+
+| Preset | Quality | DPI | Format | Use Case |
+|--------|---------|-----|--------|----------|
+| `web` | 80% | 96 | WebP | Online viewing, fast load |
+| `print` | 95% | 300 | PNG/JPEG | Professional printing |
+| `archive` | 90% | 150 | JPEG | Long-term storage |
+| `minimal` | 70% | 72 | WebP | Maximum compression |
+
+**Example Use Cases:**
+- "Convert this PPTX to PDF and optimize images for web"
+- "Make this scanned PDF smaller while keeping it readable"
+- "Batch process all documents in this folder for web publishing"
+- "Optimize this PDF's embedded images"
+
+---
+
 ## Installation
 
 ### Installing a Skill
@@ -3956,6 +4005,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### multi-format-document-optimizer v1.0 (2026-03-27)
+- Unified document optimization skill chaining docling, ImageMagick, and markdown-to-pdf
+- Automatic format detection and pipeline routing (pdf_optimize, docx_to_pdf, pptx_to_pdf, etc.)
+- Four quality presets: web (80%, 96dpi, WebP), print (95%, 300dpi), archive (90%, 150dpi), minimal (70%, 72dpi)
+- CLI commands: analyze, convert, batch, optimize-images, verify
+- PDF image extraction and re-embedding with PyMuPDF
+- Batch processing with configurable patterns and parallel workers
+- Document verification and quality assessment
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
