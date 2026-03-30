@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (93 skills)
+├── skills/                 # All Claude Code skills (94 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (93 Skills)
+## Skill Catalog (94 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -139,7 +139,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (12 skills)
+### Documentation & Communication (13 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -155,6 +155,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
+| purchase-request-generator | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
 
 ### QA & Testing (11 skills)
 
@@ -2298,6 +2299,35 @@ Creates professional presentations following FUJISOFT America's slide template s
 
 ---
 
+### 📝 Purchase Request Generator
+
+**File:** `skills/purchase-request-generator/`
+
+Generates structured IT/hardware purchase request documents from informal requirements. Transforms product details, pricing, and justification notes into formal approval documents including cost-benefit analysis, ROI justification, vendor comparison matrices, and MARP presentation slides suitable for management approval workflows.
+
+**When to use:**
+- Creating formal purchase requests from informal product/price specifications
+- Generating cost-benefit analysis for IT equipment or software purchases
+- Building ROI justification documents for budget approvals
+- Comparing multiple vendors for procurement decisions
+- Preparing MARP presentation slides for purchase approval meetings
+
+**Key Components:**
+- `scripts/generate_purchase_request.py` - Generate formal purchase request documents
+- `scripts/generate_cba.py` - Generate cost-benefit analysis with ROI/NPV calculations
+- `scripts/generate_vendor_comparison.py` - Create vendor comparison matrices
+- `scripts/generate_marp_slides.py` - Generate MARP presentation slides
+- `references/purchase_request_guide.md` - Best practices for purchase justifications
+
+**Key Features:**
+- ROI, NPV, and payback period calculations
+- Weighted vendor comparison matrices
+- MARP-formatted presentation slides
+- Sensitivity analysis and risk scenarios
+- Professional document formatting for management approval
+
+---
+
 ### 📊 Office Script Expert
 
 **File:** `skills/office-script-expert/`
@@ -3956,6 +3986,14 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### purchase-request-generator v1.0 (2026-03-30)
+- Generate formal IT/hardware purchase request documents from informal specifications
+- Cost-benefit analysis with ROI, NPV, and payback period calculations
+- Weighted vendor comparison matrices with scoring and ranking
+- MARP presentation slides for management approval meetings
+- Sensitivity analysis with break-even and risk scenarios
+- Four scripts: generate_purchase_request.py, generate_cba.py, generate_vendor_comparison.py, generate_marp_slides.py
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
