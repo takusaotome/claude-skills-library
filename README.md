@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (93 skills)
+├── skills/                 # All Claude Code skills (94 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (93 Skills)
+## Skill Catalog (94 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -156,7 +156,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
 
-### QA & Testing (11 skills)
+### QA & Testing (12 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -171,6 +171,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | completion-quality-gate-designer | 完了判定・品質ゲート・証跡・例外運用設計 | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
 | cross-module-consistency-auditor | 変更波及・横断整合性・コピペ展開監査 | Impact Map, Consistency Matrix, Copy Propagation Review |
 | production-parity-test-designer | 本番同等テスト階層設計・盲点排除 | Test Tier Allocation, Smoke Suite, Adversarial Regression |
+| skill-template-validator | Claude Skillテンプレート構造検証・品質チェック | Structure/Frontmatter/Path/Content Validation, JSON Output |
 
 ### Compliance & Governance (12 skills)
 
@@ -3746,6 +3747,39 @@ Design new Claude skills from structured idea specifications. Generates comprehe
 
 ---
 
+### ✅ Skill Template Validator
+
+**File:** `skill-packages/skill-template-validator.skill`
+
+Validate Claude skill templates against standard structure (SKILL.md, scripts/, references/, assets/), check for incorrect path references, missing frontmatter fields, and template inheritance issues. Provides actionable fix suggestions with severity levels.
+
+**When to use:**
+- After creating a new skill to verify it meets quality standards
+- Before packaging a skill for distribution
+- When debugging why a skill isn't being triggered correctly
+- During skill review to identify improvement areas
+- When migrating or updating existing skills to the latest conventions
+
+**Key Features:**
+- Structure validation (SKILL.md, scripts/, references/, tests/)
+- YAML frontmatter validation (name, description, field matching)
+- Path validation (hardcoded paths, username detection, repo-relative paths)
+- Content quality checks (required sections, workflow, prerequisites)
+- `validate_skill.py` - CLI tool with console and JSON output formats
+
+**Validation Categories:**
+- STRUCT: Missing directories, invalid naming, empty folders
+- FRONT: Missing frontmatter, name mismatch, description length
+- PATH: Hardcoded absolute paths, personal usernames, traversal
+- CONTENT: Missing Overview/Workflow/Prerequisites sections
+
+**Exit Codes:**
+- 0: All checks passed (no errors)
+- 1: One or more errors found
+- 2: Invalid arguments or skill path
+
+---
+
 ### Codebase Onboarding Generator
 
 **File:** `skill-packages/codebase-onboarding-generator.skill`
@@ -3956,6 +3990,14 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### skill-template-validator v1.0 (2026-04-01)
+- Claude skill template structure validation
+- 4 validation categories: structure, frontmatter, paths, content
+- 20+ validation rules with error codes (STRUCT, FRONT, PATH, CONTENT)
+- Console and JSON output formats for CI/CD integration
+- Actionable fix suggestions with severity levels (error, warning, info)
+- Test suite with 23 tests covering all validation categories
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
