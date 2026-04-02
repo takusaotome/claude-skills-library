@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (93 skills)
+├── skills/                 # All Claude Code skills (94 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (93 Skills)
+## Skill Catalog (94 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -129,11 +129,12 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | salesforce-flow-expert | Flow実装・検証・デプロイ自動化 | Validation, Metadata Gen, Deploy |
 | salesforce-report-creator | SF CLIでレポート作成・デプロイ | Report Types, REST/Metadata API |
 
-### Media Processing Tools (5 skills)
+### Media Processing Tools (6 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | ffmpeg-expert | FFmpegによる動画・音声処理 | Encoding, Filters, Streaming |
+| image-optimizer | 画像ファイルサイズ最適化、画像タイプ検出、バッチ最適化 | Type Detection, Target Size, WebP/AVIF |
 | imagemagick-expert | ImageMagickによる画像処理 | Convert, Resize, Effects |
 | qr-code-generator | QRコード画像生成（URL/テキスト/vCard） | Customization, Batch Generation, Color Support |
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
@@ -1888,6 +1889,43 @@ A comprehensive FFmpeg CLI skill for multimedia processing - video/audio convers
 - "Compress with H.265"
 - "Add a watermark"
 - "Prepare for HLS streaming"
+
+---
+
+### 🖼️ Image Optimizer
+
+**File:** `skill-packages/image-optimizer.skill`
+
+An intelligent image file size optimizer that analyzes images and automatically selects optimal compression settings based on image characteristics.
+
+**When to use:**
+- Optimizing images for web deployment with target file size limits
+- Batch processing folders of images with intelligent quality settings
+- Converting images to modern formats (WebP, AVIF) for better compression
+- Reducing storage costs by compressing existing image libraries
+- Analyzing images to determine optimal format and compression settings
+- Creating optimized image variants (thumbnail, preview, full-size)
+
+**Key Components:**
+- `scripts/analyze_image.py` - Image type detection and recommendation engine
+- `scripts/optimize_images.py` - Batch optimization with target constraints
+- `references/image-optimization-guide.md` - Format comparison and best practices
+
+**Key Features:**
+- ✅ Automatic image type detection (photo, screenshot, diagram, illustration)
+- ✅ Target file size optimization using binary search quality adjustment
+- ✅ Modern format conversion (WebP, AVIF) with tool availability detection
+- ✅ Resolution scaling with aspect ratio preservation
+- ✅ Transparency-aware format selection
+- ✅ Batch processing with progress tracking and reporting
+- ✅ Before/after comparison reports in Markdown and JSON
+
+**Example Use Cases:**
+- "Optimize these product images for web with max 200KB each"
+- "Convert all PNG screenshots to WebP for smaller file sizes"
+- "Analyze this folder of images and recommend compression settings"
+- "Batch optimize images preserving transparency"
+- "Generate an optimization report showing size reductions"
 
 ---
 
@@ -3956,6 +3994,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### image-optimizer v1.0 (2026-04-02)
+- Intelligent image file size optimizer with automatic type detection
+- Image type classification: photo, screenshot, diagram, illustration, mixed
+- Target file size optimization using binary search quality adjustment
+- Modern format conversion (WebP, AVIF) with tool availability detection
+- Batch processing with progress tracking and before/after reporting
+- analyze_image.py for recommendations, optimize_images.py for execution
+- 37 unit tests covering analysis, optimization, and report generation
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
