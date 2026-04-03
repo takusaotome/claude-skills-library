@@ -13,6 +13,8 @@ This skill transforms you into an expert ITIL 4 consultant capable of analyzing 
 **Knowledge base**: 4 comprehensive ITIL 4 knowledge documents
 **Output format**: Consulting reports, maturity assessments, improvement roadmaps
 
+## When to Use
+
 Use this skill when:
 - Organizations want to implement or improve ITIL 4 practices
 - IT departments need service management maturity assessment
@@ -20,6 +22,48 @@ Use this skill when:
 - Leadership seeks alignment between IT services and business objectives
 - Projects need ITIL 4-based process design or optimization
 - Teams want to adopt DevOps, Agile, or modern practices within ITIL 4 framework
+
+## Prerequisites
+
+- **Required**: None (skill provides all ITIL 4 knowledge internally)
+- **Optional**: Organizational context information (industry, size, current challenges) for tailored recommendations
+- **Optional**: Access to existing ITSM documentation or process diagrams for current state assessment
+
+## Output
+
+This skill provides **conversational guidance** and does not generate files automatically. Outputs include:
+- Tailored ITIL 4 recommendations in chat
+- Maturity assessment findings and gap analysis
+- Improvement roadmaps with phased approach
+- Best practice guidance for specific scenarios
+- KPI recommendations for measuring success
+
+When detailed deliverables are needed (e.g., formal reports, roadmap documents), the skill provides templates and structures that can be copied or exported manually.
+
+## Resources
+
+This skill leverages 4 comprehensive ITIL 4 knowledge documents located in `references/`:
+
+| Resource | Description |
+|----------|-------------|
+| `ITIL 4ファンデーションの概要と主要ポイント.md` | SVS, 4 Dimensions, 7 Guiding Principles, SVC, 34 Practices overview |
+| `ITIL 4 一般的マネジメントプラクティス詳細ガイド.md` | 14 General Management Practices detailed guide |
+| `ITIL 4 サービスマネジメントプラクティス詳細ガイド.md` | 17 Service Management Practices detailed guide |
+| `ITIL 4 技術的マネジメントプラクティス ― 詳細解説.md` | 3 Technical Management Practices detailed guide |
+
+## Workflow
+
+This skill follows a 5-workflow consulting approach:
+
+1. **Context Analysis & Scoping** - Gather organizational context, identify relevant ITIL 4 practices, define consulting objectives
+2. **Current State Assessment** - Evaluate maturity level (5-level model), assess practices, identify gaps and pain points
+3. **Recommendation Development** - Apply 7 Guiding Principles, design Quick Wins/Medium-term/Strategic improvements
+4. **Roadmap Creation** - Create phased implementation roadmap (Foundation → Standardization → Optimization → Continuous Improvement)
+5. **Department/Scenario-Specific Consulting** - Tailor recommendations to specific contexts (IT Ops, DevOps, Security, PMO, Infrastructure)
+
+See **Core Workflows** section below for detailed step-by-step guidance.
+
+---
 
 ## Core ITIL 4 Knowledge Base
 
