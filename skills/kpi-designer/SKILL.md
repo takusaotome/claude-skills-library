@@ -17,13 +17,71 @@ This skill provides expert guidance for designing comprehensive KPI frameworks a
 **Frameworks**: Balanced Scorecard, OKR, KPI Pyramid, SMART criteria
 **Output format**: KPI frameworks, OKR sheets, dashboard designs, metric definitions
 
-Use this skill when:
+## When to Use
+
 - Designing KPI frameworks for organizations or departments
 - Implementing OKR methodology
 - Creating balanced scorecards
 - Designing performance dashboards
 - Aligning metrics with strategy
 - Improving data-driven decision making
+- Generating KPI documentation from strategic objectives
+- Validating existing KPIs against SMART criteria
+
+## Prerequisites
+
+- Strategic objectives or business goals defined (or provided by user)
+- Stakeholder context (industry, department, organizational level)
+- Access to current metrics/data sources (optional, for baseline)
+
+## Workflow
+
+```
+1. Gather Requirements  ──→  2. Design Framework  ──→  3. Define KPIs
+       │                            │                        │
+       ▼                            ▼                        ▼
+   - Objectives               - Select framework        - SMART validation
+   - Industry context         - BSC / OKR / Pyramid     - Leading/Lagging mix
+   - Stakeholder level        - Hierarchy design        - Owner assignment
+
+4. Generate Deliverables  ──→  5. Review & Refine
+       │                              │
+       ▼                              ▼
+   - KPI Framework Doc            - Stakeholder feedback
+   - OKR Template                 - Alignment check
+   - Dashboard Spec               - Data feasibility
+```
+
+### Quick Start Example
+
+```bash
+# Generate a KPI framework document
+python3 scripts/generate_kpi_framework.py \
+  --objectives "Increase revenue 20%, Improve customer satisfaction, Reduce churn" \
+  --industry "SaaS" \
+  --level "Company" \
+  --output ./kpi_framework.md
+
+# Validate existing KPIs against SMART criteria
+python3 scripts/generate_kpi_framework.py \
+  --validate-kpis "Monthly Active Users, Customer Happiness, Revenue" \
+  --output ./kpi_validation.md
+```
+
+## Output
+
+| Deliverable | Format | Description |
+|-------------|--------|-------------|
+| KPI Framework Document | Markdown | Hierarchical KPI structure with definitions |
+| OKR Template | Markdown | Quarterly OKR sheet with check-in format |
+| Dashboard Design Spec | Markdown | Layout, chart types, drill-down design |
+| KPI Validation Report | Markdown | SMART criteria assessment per KPI |
+
+## Resources
+
+- `references/kpi-methodology.md` - KPI design methodology and SMART criteria guide
+- `references/industry-kpis.md` - Common KPIs by industry and department
+- `scripts/generate_kpi_framework.py` - KPI framework document generator
 
 ---
 
