@@ -53,7 +53,7 @@ codex logout
 
 ```toml
 # デフォルトモデル（レビュー用に最高性能モデルを推奨）
-model = "gpt-5.3-codex-max"
+model = "gpt-5.4"
 
 # デフォルト推論レベル
 model_reasoning_effort = "high"
@@ -75,25 +75,25 @@ profile = "deep-review"
 
 ```toml
 # ルートレベル設定（デフォルト）
-model = "gpt-5.3-codex-max"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 approval_policy = "on-request"
 
 # 標準レビュー用プロファイル（推奨）
 [profiles.deep-review]
-model = "gpt-5.3-codex-max"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 approval_policy = "never"
 
 # 超詳細分析用プロファイル
 [profiles.xhigh-review]
-model = "gpt-5.3-codex-max"
+model = "gpt-5.4"
 model_reasoning_effort = "xhigh"
 approval_policy = "never"
 
 # 軽量レビュー用プロファイル（高速）
 [profiles.quick-review]
-model = "gpt-5-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "medium"
 approval_policy = "never"
 ```
@@ -104,10 +104,9 @@ approval_policy = "never"
 
 | モデル | 特徴 | 用途 |
 |--------|------|------|
-| `gpt-5.3-codex-max` | **最高性能モデル（推奨）** | 詳細レビュー、複雑な分析 |
-| `gpt-5-codex` | デフォルトモデル、バランス重視 | 日常的なコーディング支援 |
-| `gpt-5` | 汎用モデル | 一般的なタスク |
-| `gpt-4.1` | 軽量モデル | 単純なタスク、高速応答 |
+| `gpt-5.4` | **最高性能モデル（推奨）** | 詳細レビュー、複雑な分析 |
+| `gpt-5.3-codex` | エージェント型コーディングモデル | コーディング支援 |
+| `gpt-5.2-codex` | 旧世代モデル | 軽量タスク |
 
 ### 推論レベル（Reasoning Effort）
 
@@ -125,7 +124,7 @@ approval_policy = "never"
 
 ```bash
 # モデル指定
-codex --model gpt-5.3-codex-max "プロンプト"
+codex --model gpt-5.4 "プロンプト"
 
 # プロファイル指定
 codex --profile deep-review "プロンプト"
@@ -190,25 +189,25 @@ codex --full-auto "プロンプト"
 # ~/.codex/config.toml
 
 # デフォルトは最高性能モデル
-model = "gpt-5.3-codex-max"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 approval_policy = "on-request"
 
 # 標準レビュー用（推奨）
 [profiles.deep-review]
-model = "gpt-5.3-codex-max"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 approval_policy = "never"
 
 # 超詳細分析用（非常に遅いが最も深い分析）
 [profiles.xhigh-review]
-model = "gpt-5.3-codex-max"
+model = "gpt-5.4"
 model_reasoning_effort = "xhigh"
 approval_policy = "never"
 
 # 軽量レビュー用（高速）
 [profiles.quick-review]
-model = "gpt-5-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "medium"
 approval_policy = "never"
 ```
@@ -216,7 +215,7 @@ approval_policy = "never"
 ### レビュー実行コマンド例
 
 ```bash
-# コードレビュー（標準: gpt-5.3-codex-max + high）
+# コードレビュー（標準: gpt-5.4 + high）
 codex exec --profile deep-review \
   -C /path/to/project \
   -o ./reviews/review_$(date +%Y%m%d).md \
