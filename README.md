@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (93 skills)
+├── skills/                 # All Claude Code skills (94 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (93 Skills)
+## Skill Catalog (94 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -211,6 +211,12 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | supply-chain-consultant | サプライチェーン最適化、在庫管理 | Supply Chain Modeling, Optimization |
 | production-schedule-optimizer | 製造施設の週次生産スケジュール最適化 | Greedy Bin-Packing, Staff Estimation, Shift Planning |
 | shift-planner | 従業員別シフト自動編成、カバレッジ検証 | Greedy Assignment, Fairness Metrics, 30-min Coverage |
+
+### Workflow Automation (1 skill)
+
+| Skill Name | Description | Key Features |
+|------------|-------------|--------------|
+| email-action-triager | メール受信トリアージ、アクション抽出、優先度付け日次タスクリスト生成 | Multi-Factor Urgency Scoring, Action Type Taxonomy, Delegation Intelligence |
 
 ---
 
@@ -3942,6 +3948,36 @@ Design test hierarchies that catch production-specific failures before deploymen
 
 ---
 
+### 📧 Email Action Triager
+
+**File:** `skill-packages/email-action-triager.skill`
+
+Analyze inbox emails to identify actionable items, categorize by urgency/owner, and generate prioritized daily action lists.
+
+**When to use:**
+- Triaging a backlog of unread emails to identify what needs action
+- Creating a daily action list from inbox communications
+- Identifying urgent emails that require immediate response
+- Categorizing emails by project, sender priority, or deadline
+- Generating delegation recommendations for team emails
+
+**Key Features:**
+- Multi-factor urgency scoring (sender priority, deadline proximity, keywords, thread activity, age)
+- 7 action types: RESPOND, REVIEW, DELEGATE, SCHEDULE, TASK, FYI, ARCHIVE
+- Configurable business rules (sender tiers, project associations, delegation rules)
+- Deadline detection (explicit dates, relative phrases like "by EOD", "ASAP")
+- JSON and Markdown output formats for daily action lists
+- Suggested response templates for common scenarios
+
+**Scripts:**
+- `scripts/triage_emails.py` - Main triage script with Gmail API and local file (MBOX/EML) support
+
+**Reference Guides:**
+- `references/email_prioritization_framework.md` - Multi-factor scoring methodology
+- `references/action_type_taxonomy.md` - Classification system for email actions
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -3956,6 +3992,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### email-action-triager v1.0 (2026-04-06)
+- Email inbox triage with multi-factor urgency scoring
+- 7 action types (RESPOND, REVIEW, DELEGATE, SCHEDULE, TASK, FYI, ARCHIVE)
+- Configurable business rules (sender priority tiers, project associations, delegation rules)
+- Deadline detection (explicit dates, relative phrases)
+- Gmail API and local file (MBOX/EML) support
+- JSON and Markdown output formats for daily action lists
+- Suggested response templates
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
