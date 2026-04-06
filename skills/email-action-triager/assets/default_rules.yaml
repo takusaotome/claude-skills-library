@@ -1,0 +1,265 @@
+# Email Action Triager - Default Business Rules Configuration
+# Copy this file and customize for your organization
+
+schema_version: "1.0"
+
+# =============================================================================
+# SENDER PRIORITY CONFIGURATION
+# =============================================================================
+# Define sender tiers for priority scoring
+# Patterns support: exact match, domain wildcard (*@domain.com), local wildcard (ceo@*)
+
+sender_priority:
+  vip:
+    # Executive leadership
+    - "ceo@*"
+    - "cfo@*"
+    - "cto@*"
+    - "*@board.company.com"
+    # Key clients (customize)
+    # - "*@important-client.com"
+
+  high:
+    # Management
+    - "*-manager@company.com"
+    - "*@legal.company.com"
+    - "*@hr.company.com"
+    # External partners
+    # - "*@partner.com"
+
+  normal:
+    # Default for unmatched senders
+    # No patterns needed - this is the fallback
+
+  low:
+    # Newsletters and automated senders
+    - "*@newsletter.*"
+    - "*@marketing.*"
+    - "noreply@*"
+    - "no-reply@*"
+    - "notifications@*"
+    - "alerts@*"
+
+# =============================================================================
+# PROJECT ASSOCIATIONS
+# =============================================================================
+# Map emails to projects based on keywords and sender patterns
+
+project_associations:
+  # Example project configuration
+  # Q1-Planning:
+  #   keywords:
+  #     - "Q1"
+  #     - "quarterly planning"
+  #     - "2024 planning"
+  #   senders:
+  #     - "*@strategy.company.com"
+  #   subject_patterns:
+  #     - "\\[Q1\\]"
+  #     - "Q1 Planning:"
+
+  # Client-Acme:
+  #   keywords:
+  #     - "Acme"
+  #     - "Acme Corp"
+  #     - "Project Alpha"
+  #   senders:
+  #     - "*@acme.com"
+  #     - "acme-*@company.com"
+
+# =============================================================================
+# DEADLINE DETECTION
+# =============================================================================
+# Patterns for detecting deadlines in email content
+
+deadline_patterns:
+  # ISO and standard date formats (auto-detected)
+  date_formats:
+    - "YYYY-MM-DD"
+    - "MM/DD/YYYY"
+    - "DD/MM/YYYY"
+    - "Month DD, YYYY"
+
+  # Relative deadline phrases
+  relative_phrases:
+    immediate:  # Maps to today
+      - "ASAP"
+      - "immediately"
+      - "right away"
+      - "urgent"
+    today:
+      - "by EOD"
+      - "by end of day"
+      - "by close of business"
+      - "by COB"
+      - "today"
+    tomorrow:
+      - "by tomorrow"
+      - "by EOD tomorrow"
+    this_week:
+      - "by end of week"
+      - "by EOW"
+      - "by Friday"
+      - "this week"
+    next_week:
+      - "by next week"
+      - "early next week"
+
+  # Contextual deadline detection
+  contextual:
+    - pattern: "before (our|the) (call|meeting|sync)"
+      action: "lookup_next_calendar_event"
+    - pattern: "prior to (.*) meeting"
+      action: "extract_meeting_reference"
+
+# =============================================================================
+# URGENCY KEYWORD WEIGHTS
+# =============================================================================
+# Adjust urgency score based on keyword presence
+
+urgency_keywords:
+  boost_high:  # +40 to urgency score
+    - "URGENT"
+    - "ASAP"
+    - "CRITICAL"
+    - "EMERGENCY"
+    - "TIME SENSITIVE"
+
+  boost_medium:  # +25 to urgency score
+    - "Important"
+    - "Priority"
+    - "High priority"
+    - "Action required"
+    - "Please respond"
+
+  boost_low:  # +15 to urgency score
+    - "Please review"
+    - "When you have a chance"
+    - "Follow up"
+    - "Reminder"
+
+  reduce_medium:  # -20 from urgency score
+    - "FYI"
+    - "For your information"
+    - "No action required"
+    - "Just a heads up"
+
+  reduce_high:  # -30 from urgency score
+    - "Automated"
+    - "Auto-generated"
+    - "Do not reply"
+    - "Newsletter"
+    - "Digest"
+
+# =============================================================================
+# DELEGATION RULES
+# =============================================================================
+# Define when and to whom emails should be delegated
+
+delegation_rules:
+  enabled: true
+
+  # Content-based delegation
+  content_rules:
+    - pattern: "(server|infrastructure|deployment|DevOps)"
+      delegate_to: "devops-team@company.com"
+      delegate_name: "DevOps Team"
+
+    - pattern: "(invoice|payment|expense|budget)"
+      delegate_to: "finance@company.com"
+      delegate_name: "Finance Team"
+
+    - pattern: "(hiring|onboarding|benefits|PTO)"
+      delegate_to: "hr@company.com"
+      delegate_name: "HR Team"
+
+    - pattern: "(customer|support|help desk|ticket)"
+      delegate_to: "support@company.com"
+      delegate_name: "Support Team"
+
+  # Conditions that prevent delegation
+  no_delegate_when:
+    - sender_tier: "vip"  # VIP emails always need personal response
+    - urgency_level: "CRITICAL"
+    - contains_keywords: ["confidential", "sensitive", "private"]
+
+# =============================================================================
+# AUTO-ARCHIVE RULES
+# =============================================================================
+# Emails matching these patterns are automatically archived
+
+auto_archive:
+  enabled: true
+
+  patterns:
+    - from: "noreply@*"
+      unless_contains: ["error", "fail", "urgent", "action required"]
+
+    - from: "*@notifications.*"
+      unless_contains: ["security", "breach", "unauthorized"]
+
+    - subject_contains: "unsubscribe"
+
+    - subject_contains: "out of office"
+      unless_from: "vip"
+
+    - from: "calendar-notification@*"
+
+    - from: "*@social-media.*"
+
+# =============================================================================
+# RESPONSE TEMPLATES
+# =============================================================================
+# Pre-defined response templates for common scenarios
+
+response_templates:
+  acknowledge_deadline:
+    trigger: "deadline_detected"
+    template: |
+      Thank you for your email. I've noted the deadline of {deadline}.
+      I'll have this completed by then and will reach out if I have any questions.
+
+  need_clarification:
+    trigger: "unclear_request"
+    template: |
+      Thank you for reaching out. To ensure I address your request properly,
+      could you please clarify {clarification_point}?
+
+  delegation_forward:
+    trigger: "delegating"
+    template: |
+      I'm looping in {delegate_name} who is best positioned to help with this.
+      {delegate_name}, please see the request below.
+
+  busy_deferral:
+    trigger: "manual"
+    template: |
+      Thank you for your message. I'm currently focused on {current_priority}
+      and will be able to give this proper attention after {available_date}.
+
+  task_complete:
+    trigger: "manual"
+    template: |
+      Done. Please let me know if you need anything else.
+
+# =============================================================================
+# OUTPUT PREFERENCES
+# =============================================================================
+
+output:
+  # Include email body preview in output
+  include_body_preview: true
+  body_preview_length: 200  # characters
+
+  # Group action items by
+  group_by: "urgency_level"  # urgency_level, action_type, project, sender
+
+  # Include in daily summary
+  daily_summary:
+    show_stats: true
+    show_sender_breakdown: true
+    show_project_breakdown: true
+
+  # Time display
+  timezone: "America/New_York"
+  date_format: "YYYY-MM-DD HH:mm"
