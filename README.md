@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (93 skills)
+├── skills/                 # All Claude Code skills (94 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (93 Skills)
+## Skill Catalog (94 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -139,7 +139,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (12 skills)
+### Documentation & Communication (13 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -155,6 +155,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
+| iterative-design-assistant | デザイン反復履歴管理・文脈理解・一貫スタイリング | Design Decision Log, Contextual Reference Resolution, Token Management |
 
 ### QA & Testing (11 skills)
 
@@ -3534,6 +3535,41 @@ Systematically analyzes incidents to identify root causes and develop corrective
 
 ---
 
+### 🔄 Iterative Design Assistant
+
+**File:** `skill-packages/iterative-design-assistant.skill`
+
+Tracks design iteration history for documents and presentations, understands context from previous change requests, and applies consistent styling decisions across multiple revision cycles.
+
+**When to use:**
+- User references a previous design decision ("前回も色で良いんだけど", "like last time")
+- Multiple revision cycles on the same document/presentation
+- Need to track which design elements were changed and why
+- Applying consistent styling across related documents
+- Reviewing design history to understand document evolution
+- User asks to "undo" or "revert" to a previous design state
+
+**Key Features:**
+- Session-local design decision log with JSON schema
+- 5 decision categories: color, typography, layout, content, style
+- Contextual reference resolution (Japanese/English patterns)
+- Design token extraction and management
+- Bidirectional traceability (decisions ↔ elements)
+- Markdown/JSON history report generation
+
+**Scripts:**
+- `design_log.py` - CLI for init, record, query, search, apply, history, token, resolve
+
+**References:**
+- `design-decision-methodology.md` - Best practices for tracking and applying design decisions
+
+**Example Use Cases:**
+- "Use the same blue as before" → Resolves to most recent color decision
+- "前回と同じフォントで" → Applies previous typography decision
+- "Generate a history of all design changes" → Markdown report with timeline
+
+---
+
 ### 📝 Technical Spec Writer
 
 Creates structured technical specifications bridging requirements and implementation. Generates screen designs, API specs, DB designs, sequence diagrams, and state transition diagrams with Mermaid.
@@ -3956,6 +3992,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### iterative-design-assistant v1.0 (2026-03-29)
+- Session-local design decision log with JSON schema (schema v1.0)
+- 5 decision categories: color, typography, layout, content, style
+- CLI commands: init, record, query, search, apply, history, token, resolve
+- Contextual reference resolution for Japanese and English patterns
+- Design token extraction and management with category namespacing
+- Bidirectional traceability (decisions ↔ elements)
+- Markdown and JSON history report generation
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
