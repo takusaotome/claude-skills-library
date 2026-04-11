@@ -408,9 +408,16 @@ class ProfessionalPDF(FPDF):
                     row.cell(cell_val)
         self.ln(3)
 
-    def render_data_table(self, headers: List[str], rows: List[List[str]]):
-        """Render a multi-column data table with header styling."""
+    def render_data_table(self, headers: List[str], rows: List[List[str]], col_aligns: List[str] = None):
+        """Render a multi-column data table with header styling and column alignment."""
         col_widths = _compute_col_widths(self, headers, rows)
+
+        # Default alignment: all left
+        if not col_aligns:
+            col_aligns = ["L"] * len(headers)
+        # Pad if shorter than headers
+        while len(col_aligns) < len(headers):
+            col_aligns.append("L")
 
         header_style = FontFace(
             color=DeviceRGB(*[c / 255 for c in self.theme.table_header_fg]),
@@ -432,16 +439,18 @@ class ProfessionalPDF(FPDF):
             col_widths=col_widths,
             headings_style=header_style,
             line_height=self.font_size * 1.8,
+            text_align="L",
         ) as table:
             # Header row
             row = table.row()
-            for h in headers:
-                row.cell(h)
+            for i, h in enumerate(headers):
+                row.cell(h, align=col_aligns[i])
             # Data rows
             for data_row in rows:
                 row = table.row()
-                for cell_val in data_row:
-                    row.cell(cell_val)
+                for i, cell_val in enumerate(data_row):
+                    align = col_aligns[i] if i < len(col_aligns) else "L"
+                    row.cell(cell_val, align=align)
         self.ln(3)
 
     def embed_image(self, image_path: str):
@@ -587,8 +596,15 @@ class FPDFRenderer:
                 self.pdf.sub_sub_title(text)
 
         elif ttype == "paragraph":
-            text = children_to_markdown(token.get("children", []))
-            self.pdf.body_text(text)
+            children = token.get("children", [])
+            # Check if paragraph contains a single image token
+            if len(children) == 1 and children[0].get("type") == "image":
+                img_url = children[0].get("attrs", {}).get("url", "")
+                if img_url:
+                    self.pdf.embed_image(img_url)
+            else:
+                text = children_to_markdown(children)
+                self.pdf.body_text(text)
 
         elif ttype == "list":
             items = self._extract_list_items(token)
@@ -641,6 +657,7 @@ class FPDFRenderer:
         """Parse table AST and render using appropriate table style."""
         headers = []
         rows = []
+        col_aligns = []
 
         for child in table_token.get("children", []):
             if child["type"] == "table_head":
@@ -648,11 +665,15 @@ class FPDFRenderer:
                     if cell_or_row["type"] == "table_cell":
                         # mistune 3.x: table_cell directly under table_head
                         headers.append(extract_text(cell_or_row.get("children", [])))
+                        attrs = cell_or_row.get("attrs", {}) or {}
+                        col_aligns.append(attrs.get("align") or attrs.get("style", ""))
                     elif cell_or_row["type"] == "table_row":
                         # Compatibility: table_row wrapper around table_cells
                         for cell_token in cell_or_row.get("children", []):
                             if cell_token["type"] == "table_cell":
                                 headers.append(extract_text(cell_token.get("children", [])))
+                                attrs = cell_token.get("attrs", {}) or {}
+                                col_aligns.append(attrs.get("align") or attrs.get("style", ""))
             elif child["type"] == "table_body":
                 for row_token in child.get("children", []):
                     if row_token["type"] == "table_row":
@@ -665,6 +686,17 @@ class FPDFRenderer:
         if not headers:
             return
 
+        # Normalize alignment strings to fpdf2 align values
+        normalized_aligns = []
+        for a in col_aligns:
+            a_str = str(a).lower() if a else ""
+            if "right" in a_str:
+                normalized_aligns.append("R")
+            elif "center" in a_str:
+                normalized_aligns.append("C")
+            else:
+                normalized_aligns.append("L")
+
         # Determine style and reset
         style = self._next_table_style
         self._next_table_style = "data"
@@ -672,7 +704,7 @@ class FPDFRenderer:
         if style == "info":
             self.pdf.render_info_table(headers, rows)
         else:
-            self.pdf.render_data_table(headers, rows)
+            self.pdf.render_data_table(headers, rows, col_aligns=normalized_aligns)
 
     def _render_mermaid(self, code: str):
         """Render Mermaid diagram via MermaidRenderer (in-process).
