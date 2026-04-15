@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 83 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 96 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -23,7 +23,7 @@ All 83 skills organized by category. Skills with dedicated guide pages are shown
 
 ## Software Development & IT
 
-18 skills for code review, testing, data analysis, cloud operations, and debugging.
+21 skills for code review, testing, data analysis, cloud operations, and debugging.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -45,12 +45,15 @@ All 83 skills organized by category. Skills with dedicated guide pages are shown
 | [incident-rca-specialist]({{ '/en/skills/ops/incident-rca-specialist/' | relative_url }}) | Incident RCA and corrective action planning | 5 Whys, Fishbone, FTA, 3D Prevention |
 | [hidden-contract-investigator]({{ '/en/skills/dev/hidden-contract-investigator/' | relative_url }}) | Extract implicit contracts from existing code for reuse risk assessment | Implicit Contract Extraction, Reuse Risk |
 | [safe-by-default-architect]({{ '/en/skills/dev/safe-by-default-architect/' | relative_url }}) | Convert dangerous patterns into safe architectural defaults | Safe Defaults, Pattern Prohibition |
+| [multi-file-log-correlator]({{ '/en/skills/meta/multi-file-log-correlator/' | relative_url }}) | Cross-source log correlation and timeline building | Multi-Source Correlation, Gap Detection |
+| [network-incident-analyzer]({{ '/en/skills/meta/network-incident-analyzer/' | relative_url }}) | Network log analysis and incident detection | Multi-Format Parsing, Anomaly Detection |
+| [codebase-onboarding-generator]({{ '/en/skills/meta/codebase-onboarding-generator/' | relative_url }}) | Auto-generate CLAUDE.md from codebase analysis | 8+ Language Support, AI Context |
 
 ---
 
 ## Project & Business
 
-18 skills for strategy, consulting, project management, and management accounting.
+23 skills for strategy, consulting, project management, and management accounting.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -72,12 +75,17 @@ All 83 skills organized by category. Skills with dedicated guide pages are shown
 | [ma-standard-cost-variance]({{ '/en/skills/finance/ma-standard-cost-variance/' | relative_url }}) | Standard cost variance analysis | Material/Labor/Overhead Variance |
 | [project-manager]({{ '/en/skills/management/project-manager/' | relative_url }}) | PMBOK-compliant project management | 10 Knowledge Areas, EVM Metrics |
 | [project-plan-creator]({{ '/en/skills/management/project-plan-creator/' | relative_url }}) | Project charter, WBS, Gantt, RACI | 5 Mermaid Diagrams |
+| [hearing-to-requirements-mapper]({{ '/en/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | Transform hearing sheets into structured requirements | RTM, WBS Mapping, Gap Detection |
+| [project-artifact-linker]({{ '/en/skills/management/project-artifact-linker/' | relative_url }}) | Cross-reference project artifacts by date and action items | WBS↔Meeting↔Requirements Linking |
+| [wbs-review-assistant]({{ '/en/skills/management/wbs-review-assistant/' | relative_url }}) | Review WBS against requirements and hearing sheets | Excel Annotation, Traceability Matrix |
+| [project-completeness-scorer]({{ '/en/skills/meta/project-completeness-scorer/' | relative_url }}) | Evaluate project completeness with weighted 0-100 scoring | 5 Dimensions, Gap Analysis, Templates |
+| [project-kickoff-bootstrapper]({{ '/en/skills/meta/project-kickoff-bootstrapper/' | relative_url }}) | Bootstrap Claude project context and templates | CLAUDE.md Scaffolding, 15 Templates |
 
 ---
 
 ## Operations & Documentation
 
-10 skills for technical writing, presentations, document conversion, and meeting minutes.
+12 skills for technical writing, presentations, document conversion, and meeting minutes.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -91,6 +99,8 @@ All 83 skills organized by category. Skills with dedicated guide pages are shown
 | [technical-spec-writer]({{ '/en/skills/management/technical-spec-writer/' | relative_url }}) | Technical specification documents | IEEE 830, Mermaid Diagrams |
 | [operations-manual-creator]({{ '/en/skills/ops/operations-manual-creator/' | relative_url }}) | Operations manuals and SOPs | STEP Format, ANSI Z535 |
 | [presentation-reviewer]({{ '/en/skills/ops/presentation-reviewer/' | relative_url }}) | Presentation review from audience perspective | 5 Evaluation Axes |
+| [meeting-asset-preparer]({{ '/en/skills/meta/meeting-asset-preparer/' | relative_url }}) | Prepare meeting agendas, materials, and action items | Bilingual (JA/EN), Context Integration |
+| [timezone-aware-event-tracker]({{ '/en/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | Track and correlate events across timezones | DST Handling, Multi-TZ Timeline |
 
 ---
 
@@ -117,7 +127,7 @@ All 83 skills organized by category. Skills with dedicated guide pages are shown
 
 ## QA, Testing & Vendor Management
 
-12 skills for quality assurance, testing, vendor evaluation, and customer experience.
+14 skills for quality assurance, testing, vendor evaluation, and customer experience.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -133,6 +143,8 @@ All 83 skills organized by category. Skills with dedicated guide pages are shown
 | [completion-quality-gate-designer]({{ '/en/skills/meta/completion-quality-gate-designer/' | relative_url }}) | Design quality gates, exit criteria, and evidence requirements | Quality Gates, Exit Criteria |
 | [cross-module-consistency-auditor]({{ '/en/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | Audit cross-module consistency for change impact | Cross-Module Consistency, Change Impact |
 | [production-parity-test-designer]({{ '/en/skills/meta/production-parity-test-designer/' | relative_url }}) | Design production-parity test hierarchies | Test Hierarchy Design, Production Parity |
+| [skill-designer]({{ '/en/skills/meta/skill-designer/' | relative_url }}) | Design new Claude skills from idea specifications | Convention Compliance, Prompt Generation |
+| [skill-idea-miner]({{ '/en/skills/meta/skill-idea-miner/' | relative_url }}) | Mine session logs for skill idea candidates | LLM Scoring, Backlog Management |
 
 ---
 
@@ -151,7 +163,7 @@ All 83 skills organized by category. Skills with dedicated guide pages are shown
 
 ## Media Processing
 
-4 skills for video, audio, and image processing.
+5 skills for video, audio, image processing, and QR code generation.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -159,6 +171,7 @@ All 83 skills organized by category. Skills with dedicated guide pages are shown
 | [imagemagick-expert]({{ '/en/skills/dev/imagemagick-expert/' | relative_url }}) | Image processing with ImageMagick | Convert, Resize, Effects, Batch |
 | [sox-expert]({{ '/en/skills/dev/sox-expert/' | relative_url }}) | Audio processing with SoX | Audio Effects, Format Conversion |
 | [yt-dlp-expert]({{ '/en/skills/dev/yt-dlp-expert/' | relative_url }}) | Video download with yt-dlp | 1000+ Sites, Subtitles, Formats |
+| [qr-code-generator]({{ '/en/skills/dev/qr-code-generator/' | relative_url }}) | QR code image generation from text/URL/vCard | Customization, Batch Generation, Color |
 
 ---
 

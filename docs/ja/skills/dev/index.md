@@ -32,3 +32,15 @@ permalink: /ja/skills/dev/
 | [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) | インシデントRCA・是正措置計画 | 5 Whys、Fishbone、FTA、3D Prevention |
 | [hidden-contract-investigator]({{ '/ja/skills/dev/hidden-contract-investigator/' | relative_url }}) | 既存コードの暗黙契約抽出・再利用リスク可視化 | 6カテゴリ不一致分類、再利用リスク判定 |
 | [safe-by-default-architect]({{ '/ja/skills/dev/safe-by-default-architect/' | relative_url }}) | 危険パターン禁止・安全デフォルト設計標準 | Safe Patternカタログ、禁止→安全マッピング、静的ルール |
+| [critical-document-reviewer]({{ '/ja/skills/dev/critical-document-reviewer/' | relative_url }}) | マルチペルソナドキュメントレビュー | 6ペルソナレビュー |
+| [docling-converter]({{ '/ja/skills/dev/docling-converter/' | relative_url }}) | ドキュメント形式変換 | PDF、DOCX、PPTX、Markdown |
+| [ffmpeg-expert]({{ '/ja/skills/dev/ffmpeg-expert/' | relative_url }}) | FFmpegによる動画・音声処理 | エンコード、フィルター、ストリーミング |
+| [imagemagick-expert]({{ '/ja/skills/dev/imagemagick-expert/' | relative_url }}) | ImageMagickによる画像処理 | 変換、リサイズ、エフェクト、バッチ |
+| [qr-code-generator]({{ '/ja/skills/dev/qr-code-generator/' | relative_url }}) | QRコード画像生成(URL/テキスト/vCard) | カスタマイズ、バッチ生成 |
+| [salesforce-cli-expert]({{ '/ja/skills/dev/salesforce-cli-expert/' | relative_url }}) | Salesforce CLIコマンド生成 | SOQL、Metadata、Security Audit |
+| [salesforce-expert]({{ '/ja/skills/dev/salesforce-expert/' | relative_url }}) | Salesforce開発・運用 | Sharing、Apex、LWC |
+| [salesforce-flow-expert]({{ '/ja/skills/dev/salesforce-flow-expert/' | relative_url }}) | Flow実装・検証・デプロイ | Validation、Metadata Gen |
+| [salesforce-report-creator]({{ '/ja/skills/dev/salesforce-report-creator/' | relative_url }}) | SF CLIでレポート作成 | Report Types、REST API |
+| [sox-expert]({{ '/ja/skills/dev/sox-expert/' | relative_url }}) | SoXによる音声処理 | Audio Effects、フォーマット変換 |
+| [video2minutes]({{ '/ja/skills/dev/video2minutes/' | relative_url }}) | 動画文字起こし・議事録 | Transcription、Meeting Minutes |
+| [yt-dlp-expert]({{ '/ja/skills/dev/yt-dlp-expert/' | relative_url }}) | yt-dlpによる動画ダウンロード | 1000+サイト、字幕 |

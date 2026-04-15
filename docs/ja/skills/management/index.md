@@ -33,3 +33,17 @@ permalink: /ja/skills/management/
 | [project-manager]({{ '/ja/skills/management/project-manager/' | relative_url }}) | PMBOK準拠プロジェクト管理 | 10知識領域、EVMメトリクス |
 | [project-plan-creator]({{ '/ja/skills/management/project-plan-creator/' | relative_url }}) | プロジェクト計画書・WBS・ガント作成 | チャーター、WBS、ガント、RACI |
 | [vendor-estimate-creator]({{ '/ja/skills/management/vendor-estimate-creator/' | relative_url }}) | 開発見積作成 | WBS、4見積手法、ROI |
+| [bug-ticket-creator]({{ '/ja/skills/management/bug-ticket-creator/' | relative_url }}) | バグチケット作成支援 | CLEAR原則、Severity/Priority |
+| [change-management-consultant]({{ '/ja/skills/management/change-management-consultant/' | relative_url }}) | 組織変革マネジメント | ADKAR、Kotter 8-Step |
+| [contract-reviewer]({{ '/ja/skills/management/contract-reviewer/' | relative_url }}) | 契約書レビュー・リスク分析 | リスク分析、レッドフラグ検出 |
+| [hearing-to-requirements-mapper]({{ '/ja/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | ヒアリングシート→要件定義書変換 | RTM、WBSマッピング、ギャップ検出 |
+| [helpdesk-responder]({{ '/ja/skills/management/helpdesk-responder/' | relative_url }}) | ヘルプデスク対応ドラフト | KBベース、信頼度スコア |
+| [project-artifact-linker]({{ '/ja/skills/management/project-artifact-linker/' | relative_url }}) | プロジェクト成果物のクロスリファレンス | WBS↔議事録↔要件リンク |
+| [qa-bug-analyzer]({{ '/ja/skills/management/qa-bug-analyzer/' | relative_url }}) | バグデータ分析・品質トレンド | 品質メトリクス |
+| [supply-chain-consultant]({{ '/ja/skills/management/supply-chain-consultant/' | relative_url }}) | サプライチェーンモデリング・最適化 | S&OP、在庫管理 |
+| [talent-acquisition-specialist]({{ '/ja/skills/management/talent-acquisition-specialist/' | relative_url }}) | JD作成・面接評価・オンボーディング | JDテンプレート |
+| [technical-spec-writer]({{ '/ja/skills/management/technical-spec-writer/' | relative_url }}) | 技術仕様書作成 | IEEE 830、Mermaidダイアグラム |
+| [uat-testcase-generator]({{ '/ja/skills/management/uat-testcase-generator/' | relative_url }}) | UATテストケース生成 (Excel) | Excel出力、トレーサビリティ |
+| [vendor-estimate-reviewer]({{ '/ja/skills/management/vendor-estimate-reviewer/' | relative_url }}) | ベンダー見積レビュー | 12評価軸、60+リスク要因 |
+| [vendor-rfq-creator]({{ '/ja/skills/management/vendor-rfq-creator/' | relative_url }}) | RFQ(見積依頼書)作成 | 150+チェック項目 |
+| [wbs-review-assistant]({{ '/ja/skills/management/wbs-review-assistant/' | relative_url }}) | WBS・要件ドキュメント照合レビュー | Excelアノテーション、トレーサビリティ |

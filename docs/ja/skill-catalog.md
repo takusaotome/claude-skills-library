@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 83 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 96 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -23,7 +23,7 @@ permalink: /ja/skill-catalog/
 
 ## ソフトウェア開発 & IT
 
-コードレビュー、テスト、データ分析、クラウド運用、デバッグの 18 スキル。
+コードレビュー、テスト、データ分析、クラウド運用、デバッグの 21 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -45,12 +45,15 @@ permalink: /ja/skill-catalog/
 | [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) | インシデント RCA・是正措置計画 | 5 Whys、Fishbone、FTA |
 | [hidden-contract-investigator]({{ '/ja/skills/dev/hidden-contract-investigator/' | relative_url }}) | 既存コードの暗黙契約抽出・再利用リスク可視化 | 暗黙契約抽出、再利用リスク |
 | [safe-by-default-architect]({{ '/ja/skills/dev/safe-by-default-architect/' | relative_url }}) | 危険パターン禁止・安全デフォルト設計標準 | 安全デフォルト設計、パターン禁止 |
+| [multi-file-log-correlator]({{ '/ja/skills/dev/multi-file-log-correlator/' | relative_url }}) | 複数ログファイルの相関分析・統合タイムライン | クロスソース相関、ギャップ検出 |
+| [network-incident-analyzer]({{ '/ja/skills/dev/network-incident-analyzer/' | relative_url }}) | ネットワークログ分析・障害検出 | マルチフォーマット解析、異常検出 |
+| [codebase-onboarding-generator]({{ '/ja/skills/dev/codebase-onboarding-generator/' | relative_url }}) | コードベースからCLAUDE.md自動生成 | 8+言語対応、AI文脈ファイル |
 
 ---
 
 ## プロジェクト & ビジネス
 
-戦略、コンサルティング、プロジェクト管理、管理会計の 18 スキル。
+戦略、コンサルティング、プロジェクト管理、管理会計の 23 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -72,12 +75,17 @@ permalink: /ja/skill-catalog/
 | [ma-standard-cost-variance]({{ '/ja/skills/finance/ma-standard-cost-variance/' | relative_url }}) | 標準原価差異分析 | 材料費/労務費/間接費 |
 | [project-manager]({{ '/ja/skills/management/project-manager/' | relative_url }}) | PMBOK 準拠 PM | 10 知識エリア、EVM |
 | [project-plan-creator]({{ '/ja/skills/management/project-plan-creator/' | relative_url }}) | プロジェクト計画書・WBS・ガント | 5 Mermaid ダイアグラム |
+| [hearing-to-requirements-mapper]({{ '/ja/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | ヒアリングシート→要件定義書変換 | RTM、WBSマッピング、ギャップ検出 |
+| [project-artifact-linker]({{ '/ja/skills/management/project-artifact-linker/' | relative_url }}) | プロジェクト成果物のクロスリファレンス | WBS↔議事録↔要件リンク |
+| [wbs-review-assistant]({{ '/ja/skills/management/wbs-review-assistant/' | relative_url }}) | WBS・要件ドキュメント照合レビュー | Excelアノテーション、トレーサビリティ |
+| [project-completeness-scorer]({{ '/ja/skills/meta/project-completeness-scorer/' | relative_url }}) | プロジェクト完成度評価 (0-100) | 5軸評価、Gap分析、テンプレート |
+| [project-kickoff-bootstrapper]({{ '/ja/skills/meta/project-kickoff-bootstrapper/' | relative_url }}) | Claude用プロジェクトkickoff文脈導入 | CLAUDE.mdスキャフォールド、15テンプレート |
 
 ---
 
 ## オペレーション & ドキュメンテーション
 
-技術文書、プレゼン、ドキュメント変換、議事録の 10 スキル。
+技術文書、プレゼン、ドキュメント変換、議事録の 12 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -91,6 +99,8 @@ permalink: /ja/skill-catalog/
 | [technical-spec-writer]({{ '/ja/skills/management/technical-spec-writer/' | relative_url }}) | 技術仕様書作成 | IEEE 830、Mermaid ダイアグラム |
 | [operations-manual-creator]({{ '/ja/skills/ops/operations-manual-creator/' | relative_url }}) | 操作マニュアル・SOP 作成 | STEP フォーマット、ANSI Z535 |
 | [presentation-reviewer]({{ '/ja/skills/ops/presentation-reviewer/' | relative_url }}) | プレゼン資料レビュー (聴衆視点) | 5 評価軸 |
+| [meeting-asset-preparer]({{ '/ja/skills/meta/meeting-asset-preparer/' | relative_url }}) | 会議アジェンダ・資料・アクション準備 | バイリンガル(JA/EN)、文脈統合 |
+| [timezone-aware-event-tracker]({{ '/ja/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | マルチタイムゾーンイベント追跡・相関 | DST対応、マルチTZタイムライン |
 
 ---
 
@@ -117,7 +127,7 @@ permalink: /ja/skill-catalog/
 
 ## QA、テスト & ベンダー管理
 
-品質保証、テスト、ベンダー評価、顧客体験の 12 スキル。
+品質保証、テスト、ベンダー評価、顧客体験の 14 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -133,6 +143,8 @@ permalink: /ja/skill-catalog/
 | [completion-quality-gate-designer]({{ '/ja/skills/meta/completion-quality-gate-designer/' | relative_url }}) | 完了判定・品質ゲート・証跡・例外運用設計 | 品質ゲート、Exit Criteria |
 | [cross-module-consistency-auditor]({{ '/ja/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | 変更波及・横断整合性・コピペ展開監査 | 横断整合性、変更波及分析 |
 | [production-parity-test-designer]({{ '/ja/skills/meta/production-parity-test-designer/' | relative_url }}) | 本番同等テスト階層設計・盲点排除 | テスト階層設計、本番同等 |
+| [skill-designer]({{ '/ja/skills/meta/skill-designer/' | relative_url }}) | Claudeスキル設計 | 規約準拠、プロンプト生成 |
+| [skill-idea-miner]({{ '/ja/skills/meta/skill-idea-miner/' | relative_url }}) | セッションログからスキルアイデア抽出 | LLMスコアリング、バックログ管理 |
 
 ---
 
@@ -151,7 +163,7 @@ Salesforce 開発、管理、レポートの 4 スキル。
 
 ## メディア処理
 
-動画、音声、画像処理の 4 スキル。
+動画、音声、画像処理の 5 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -159,6 +171,7 @@ Salesforce 開発、管理、レポートの 4 スキル。
 | [imagemagick-expert]({{ '/ja/skills/dev/imagemagick-expert/' | relative_url }}) | ImageMagick による画像処理 | 変換、リサイズ、効果 |
 | [sox-expert]({{ '/ja/skills/dev/sox-expert/' | relative_url }}) | SoX による音声処理 | Audio Effects、フォーマット変換 |
 | [yt-dlp-expert]({{ '/ja/skills/dev/yt-dlp-expert/' | relative_url }}) | yt-dlp による動画ダウンロード | 1000+ サイト、字幕 |
+| [qr-code-generator]({{ '/ja/skills/dev/qr-code-generator/' | relative_url }}) | QRコード画像生成(URL/テキスト/vCard) | カスタマイズ、バッチ生成 |
 
 ---
 

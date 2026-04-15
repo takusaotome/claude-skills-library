@@ -39,6 +39,7 @@ jobs:
           - dual-axis-skill-reviewer
           - esg-reporter
           - financial-analyst
+          - hearing-to-requirements-mapper
           - internal-audit-assistant
           - iso-implementation-guide
           - it-system-roi-analyzer
@@ -46,10 +47,13 @@ jobs:
           - meeting-asset-preparer
           - multi-file-log-correlator
           - production-schedule-optimizer
+          - project-artifact-linker
           - project-completeness-scorer
+          - qr-code-generator
           - shift-planner
           - skill-designer
           - skill-idea-miner
+          - wbs-review-assistant
     steps:
       - uses: actions/checkout@v4
 
@@ -59,11 +63,13 @@ jobs:
           python-version: "3.9"
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev]" pytest-cov
 
       - name: Test ${{ matrix.skill }}
         run: >
           python -m pytest skills/${{ matrix.skill }}/scripts/tests/ -v
+          --cov=skills/${{ matrix.skill }}/scripts
+          --cov-report=term-missing
 
   test-repo-scripts:
     name: Test Repo Scripts
@@ -77,10 +83,13 @@ jobs:
           python-version: "3.9"
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev]" pytest-cov
 
       - name: Test repo-level scripts
-        run: python -m pytest scripts/tests/ -v
+        run: >
+          python -m pytest scripts/tests/ -v
+          --cov=scripts
+          --cov-report=term-missing
 
   security:
     name: Security
