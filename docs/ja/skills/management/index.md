@@ -23,13 +23,13 @@ permalink: /ja/skills/management/
 | [pricing-strategist]({{ '/ja/skills/management/pricing-strategist/' | relative_url }}) | 価格戦略・価格弾力性分析 | バリューベース価格設定、価格テスト |
 | [strategic-planner]({{ '/ja/skills/management/strategic-planner/' | relative_url }}) | 事業戦略立案・SWOT・シナリオ分析 | 戦略キャンバス、シナリオプランニング |
 | [design-thinking]({{ '/ja/skills/management/design-thinking/' | relative_url }}) | デザイン思考プロセス支援 | 5フェーズプロセス、共感マップ |
-| lean-six-sigma-consultant | リーンシックスシグマ・プロセス改善 | DMAIC、バリューストリームマッピング |
+| [lean-six-sigma-consultant]({{ '/ja/skills/finance/lean-six-sigma-consultant/' | relative_url }}) | リーンシックスシグマ・プロセス改善 | DMAIC、バリューストリームマッピング |
 | [kpi-designer]({{ '/ja/skills/management/kpi-designer/' | relative_url }}) | KPI設計・パフォーマンス測定 | SMART KPI、ダッシュボード設計 |
 | [patent-analyst]({{ '/ja/skills/management/patent-analyst/' | relative_url }}) | 特許分析・IP戦略 | 先行技術調査、特許ランドスケープ |
-| management-accounting-navigator | 管理会計ナビゲーター（12領域ルーティング） | COSO/IMAフレームワーク、領域分類 |
-| ma-budget-actual-variance | 予算実績差異分析 | 有利/不利差異判定、CSV分析 |
-| ma-cvp-break-even | CVP・損益分岐点分析 | 損益分岐点、安全余裕率 |
-| ma-standard-cost-variance | 標準原価差異分析 | 価格/数量差異分解 |
+| [management-accounting-navigator]({{ '/ja/skills/finance/management-accounting-navigator/' | relative_url }}) | 管理会計ナビゲーター（12領域ルーティング） | COSO/IMAフレームワーク、領域分類 |
+| [ma-budget-actual-variance]({{ '/ja/skills/finance/ma-budget-actual-variance/' | relative_url }}) | 予算実績差異分析 | 有利/不利差異判定、CSV分析 |
+| [ma-cvp-break-even]({{ '/ja/skills/finance/ma-cvp-break-even/' | relative_url }}) | CVP・損益分岐点分析 | 損益分岐点、安全余裕率 |
+| [ma-standard-cost-variance]({{ '/ja/skills/finance/ma-standard-cost-variance/' | relative_url }}) | 標準原価差異分析 | 価格/数量差異分解 |
 | [project-manager]({{ '/ja/skills/management/project-manager/' | relative_url }}) | PMBOK準拠プロジェクト管理 | 10知識領域、EVMメトリクス |
 | [project-plan-creator]({{ '/ja/skills/management/project-plan-creator/' | relative_url }}) | プロジェクト計画書・WBS・ガント作成 | チャーター、WBS、ガント、RACI |
 | [vendor-estimate-creator]({{ '/ja/skills/management/vendor-estimate-creator/' | relative_url }}) | 開発見積作成 | WBS、4見積手法、ROI |

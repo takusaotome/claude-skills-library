@@ -23,13 +23,13 @@ Skills for strategic planning, project management, business analysis, and manage
 | [pricing-strategist]({{ '/en/skills/management/pricing-strategist/' | relative_url }}) | Pricing strategy and elasticity analysis | Value-Based Pricing, Price Testing |
 | [strategic-planner]({{ '/en/skills/management/strategic-planner/' | relative_url }}) | Business strategy with SWOT and scenario analysis | Strategy Canvas, Scenario Planning |
 | [design-thinking]({{ '/en/skills/management/design-thinking/' | relative_url }}) | Design thinking process facilitation | 5-Phase Process, Empathy Maps |
-| lean-six-sigma-consultant | Lean Six Sigma process improvement | DMAIC, Value Stream Mapping |
+| [lean-six-sigma-consultant]({{ '/en/skills/finance/lean-six-sigma-consultant/' | relative_url }}) | Lean Six Sigma process improvement | DMAIC, Value Stream Mapping |
 | [kpi-designer]({{ '/en/skills/management/kpi-designer/' | relative_url }}) | KPI design and performance measurement | SMART KPIs, Dashboard Design |
 | [patent-analyst]({{ '/en/skills/management/patent-analyst/' | relative_url }}) | Patent analysis and IP strategy | Prior Art Search, Patent Landscape |
-| management-accounting-navigator | Management accounting domain router (12 areas) | COSO/IMA Framework, Domain Classification |
-| ma-budget-actual-variance | Budget vs actual variance analysis | Favorable/Unfavorable, CSV Analysis |
-| ma-cvp-break-even | CVP and break-even analysis | Break-Even, Margin of Safety |
-| ma-standard-cost-variance | Standard cost variance analysis | Price/Quantity Variance Decomposition |
+| [management-accounting-navigator]({{ '/en/skills/finance/management-accounting-navigator/' | relative_url }}) | Management accounting domain router (12 areas) | COSO/IMA Framework, Domain Classification |
+| [ma-budget-actual-variance]({{ '/en/skills/finance/ma-budget-actual-variance/' | relative_url }}) | Budget vs actual variance analysis | Favorable/Unfavorable, CSV Analysis |
+| [ma-cvp-break-even]({{ '/en/skills/finance/ma-cvp-break-even/' | relative_url }}) | CVP and break-even analysis | Break-Even, Margin of Safety |
+| [ma-standard-cost-variance]({{ '/en/skills/finance/ma-standard-cost-variance/' | relative_url }}) | Standard cost variance analysis | Price/Quantity Variance Decomposition |
 | [project-manager]({{ '/en/skills/management/project-manager/' | relative_url }}) | PMBOK-aligned project management | 10 Knowledge Areas, EVM Metrics |
 | [project-plan-creator]({{ '/en/skills/management/project-plan-creator/' | relative_url }}) | Project plan, WBS, and Gantt creation | Charter, WBS, Gantt, RACI |
 | [vendor-estimate-creator]({{ '/en/skills/management/vendor-estimate-creator/' | relative_url }}) | Development cost estimation | WBS, 4 Estimation Methods, ROI |

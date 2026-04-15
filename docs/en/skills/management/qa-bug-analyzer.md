@@ -3,7 +3,7 @@ layout: default
 title: "QA Bug Analyzer"
 grand_parent: English
 parent: Project & Business
-nav_order: 19
+nav_order: 21
 lang_peer: /ja/skills/management/qa-bug-analyzer/
 permalink: /en/skills/management/qa-bug-analyzer/
 ---
@@ -67,37 +67,73 @@ User provides bug data
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+Follow this decision tree to determine the appropriate workflow:
+
+```
+User provides bug data
+    │
+    ├─→ Data in CSV/JSON format
+    │   └─→ Use Automated Analysis Workflow (Section 3)
+    │
+    ├─→ Data in multiple Markdown files (from bug-ticket-creator)
+    │   └─→ Use Markdown Aggregation Workflow (Section 4)
+    │
+    └─→ User wants custom analysis or specific focus
+        └─→ Use Custom Analysis Workflow (Section 5)
+```
+
+After analysis, always:
+1. Review quality_metrics_guide.md for metric interpretation
+2. Review analysis_methodology.md for analysis best practices
+3. Generate comprehensive Markdown report using report_template.md
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **User provides bug ticket data** in CSV, Excel, JSON, or Markdown format
+- **Quality assessment is needed** for project reviews, milestone gates, or release readiness
+- **Trend analysis is requested** to understand quality patterns over time
+- **Stakeholder reporting is required** for project managers or executive leadership
+- **Improvement recommendations are needed** based on objective data analysis
+- **User mentions:**
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+- A structured response or artifact aligned to the skill's workflow.
+- Reference support from 2 guide file(s).
+- Script-assisted execution using 1 helper command(s) where applicable.
+- Reusable output that can be reviewed, refined, and incorporated into a wider project workflow.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/qa-bug-analyzer/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: analysis_methodology.md, quality_metrics_guide.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: analyze_bugs.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/management/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

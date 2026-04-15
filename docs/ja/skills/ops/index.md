@@ -15,13 +15,13 @@ permalink: /ja/skills/ops/
 | スキル | 説明 | 主な機能 |
 |:------|:-----|:---------|
 | [ai-text-humanizer]({{ '/ja/skills/ops/ai-text-humanizer/' | relative_url }}) | AI生成テキストの検出・人間化リライト | 6パターン検出、0-100スコアリング |
-| bug-ticket-creator | バグチケット作成支援 | CLEAR原則、重大度/優先度 |
-| critical-document-reviewer | 多角的ドキュメント批評レビュー | 6ペルソナレビュー (Dev/PM/Customer/QA/Security/Ops) |
-| docling-converter | ドキュメント形式変換 | PDF、DOCX、PPTXからMarkdown |
+| [bug-ticket-creator]({{ '/ja/skills/management/bug-ticket-creator/' | relative_url }}) | バグチケット作成支援 | CLEAR原則、重大度/優先度 |
+| [critical-document-reviewer]({{ '/ja/skills/dev/critical-document-reviewer/' | relative_url }}) | 多角的ドキュメント批評レビュー | 6ペルソナレビュー (Dev/PM/Customer/QA/Security/Ops) |
+| [docling-converter]({{ '/ja/skills/dev/docling-converter/' | relative_url }}) | ドキュメント形式変換 | PDF、DOCX、PPTXからMarkdown |
 | [fujisoft-presentation-creator]({{ '/ja/skills/ops/fujisoft-presentation-creator/' | relative_url }}) | 企業スタイルプレゼンテーション作成 | MARPテンプレート、コーポレートスタイル |
 | [markdown-to-pdf]({{ '/ja/skills/ops/markdown-to-pdf/' | relative_url }}) | MarkdownからプロフェッショナルPDF変換 | fpdf2、Playwright、Mermaid図 |
-| video2minutes | 動画文字起こし・議事録作成 | トランスクリプション、議事録 |
-| technical-spec-writer | 技術仕様書作成（画面/API/DB設計） | IEEE 830、Mermaid図、トレーサビリティ |
+| [video2minutes]({{ '/ja/skills/dev/video2minutes/' | relative_url }}) | 動画文字起こし・議事録作成 | トランスクリプション、議事録 |
+| [technical-spec-writer]({{ '/ja/skills/management/technical-spec-writer/' | relative_url }}) | 技術仕様書作成（画面/API/DB設計） | IEEE 830、Mermaid図、トレーサビリティ |
 | [operations-manual-creator]({{ '/ja/skills/ops/operations-manual-creator/' | relative_url }}) | 操作マニュアル・SOP作成 | STEPフォーマット、ANSI Z535、トラブルシューティング |
 | [presentation-reviewer]({{ '/ja/skills/ops/presentation-reviewer/' | relative_url }}) | プレゼン資料レビュー（聴衆視点） | 5評価軸、Marp互換性 |
 | [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) | インシデントRCA・是正措置計画 | 5 Whys、Fishbone、FTA、3D Prevention |

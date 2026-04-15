@@ -90,3 +90,7 @@ reports/
 # Environment files
 .env
 .envrc
+
+# Analysis output files (generated at runtime)
+macro_regime_*.json
+macro_regime_*.md

@@ -98,6 +98,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "streamlit-expert": "dev",
     "tdd-developer": "dev",
     "video2minutes": "dev",
+    "qr-code-generator": "dev",
     "yt-dlp-expert": "dev",
     # === management (Project & Business) ===
     "ai-adoption-consultant": "management",
@@ -109,11 +110,13 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "contract-reviewer": "management",
     "design-thinking": "management",
     "executive-briefing-writer": "management",
+    "hearing-to-requirements-mapper": "management",
     "helpdesk-responder": "management",
     "kpi-designer": "management",
     "m-and-a-advisor": "management",
     "patent-analyst": "management",
     "pricing-strategist": "management",
+    "project-artifact-linker": "management",
     "project-manager": "management",
     "project-plan-creator": "management",
     "qa-bug-analyzer": "management",
@@ -125,6 +128,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "vendor-estimate-creator": "management",
     "vendor-estimate-reviewer": "management",
     "vendor-rfq-creator": "management",
+    "wbs-review-assistant": "management",
     # === ops (Operations & Documentation) ===
     "ai-text-humanizer": "ops",
     "bcp-planner": "ops",
@@ -406,48 +410,20 @@ def generate_ja_page(
     skill_name: str,
     skill_data: dict,
     nav_order: int,
+    resources: dict,
     category: str,
     skill_packages_dir: Path | None = None,
 ) -> str:
-    """Generate a JA documentation page (EN content + translation banner)."""
-    fm = skill_data["frontmatter"]
-    title = _title_case(skill_name)
-    description = fm.get("description", "")
-    badges = api_badges_ja()
-    buttons = _generate_buttons(skill_name, skill_packages_dir, "ja")
-    parent_ja = CATEGORY_PARENTS[category][1]
-
-    page = f"""---
-layout: default
-title: "{title}"
-grand_parent: 日本語
-parent: {parent_ja}
-nav_order: {nav_order}
-lang_peer: /en/skills/{category}/{skill_name}/
-permalink: /ja/skills/{category}/{skill_name}/
----
-
-# {title}
-{{: .no_toc }}
-
-{description}
-{{: .fs-6 .fw-300 }}
-
-{badges}
-
-"""
-    if buttons:
-        page += f"{buttons}\n\n"
-
-    page += f"""> **Note:** This page has not yet been translated into Japanese.
-> Please refer to the [English version]({{{{ '/en/skills/{category}/{skill_name}/' | relative_url }}}}) for the full guide.
-{{: .warning }}
-
----
-
-[English版ガイドを見る]({{{{ '/en/skills/{category}/{skill_name}/' | relative_url }}}}){{: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }}
-"""
-    return page
+    """Generate a compact JA documentation page."""
+    return _generate_ja_doc_page(
+        skill_name=skill_name,
+        skill_data=skill_data,
+        nav_order=nav_order,
+        resources=resources,
+        category=category,
+        skill_packages_dir=skill_packages_dir,
+        extended=False,
+    )
 
 
 def generate_en_full_page(
@@ -458,7 +434,7 @@ def generate_en_full_page(
     category: str,
     skill_packages_dir: Path | None = None,
 ) -> str:
-    """Generate a 10-section EN documentation skeleton page."""
+    """Generate a 10-section EN documentation page without TODO placeholders."""
     fm = skill_data["frontmatter"]
     sections = skill_data["sections"]
     title = _title_case(skill_name)
@@ -467,7 +443,6 @@ def generate_en_full_page(
     buttons = _generate_buttons(skill_name, skill_packages_dir, "en")
     parent_en = CATEGORY_PARENTS[category][0]
 
-    # Auto-fill content
     overview = _extract_section(sections, ["overview", title.lower()])
     if not overview:
         overview = skill_data["body"].split("\n\n")[0] if skill_data["body"] else description
@@ -476,20 +451,26 @@ def generate_en_full_page(
     if not prerequisites:
         prerequisites = "- **API Key:** None required\n- **Python 3.9+** recommended"
 
-    quick_start = _extract_quick_start(
-        _extract_section(sections, ["workflow", "running the script", "how to run"]),
-        None,
+    workflow = _extract_section(sections, ["workflow", "running the script", "how to run"])
+    when_to_use = _extract_section(sections, ["when to use", "when to use this skill"])
+    outputs = _extract_section(
+        sections,
+        ["output", "outputs", "deliverables", "artifacts", "output format", "this skill generates"],
     )
+    related = _extract_section(sections, ["combining with other skills", "related skills", "multi-skill"])
+    quick_start = _extract_quick_start(workflow, None)
 
-    refs_list = _format_file_list(resources.get("references", []), f"skills/{skill_name}/references/")
-    scripts_list = _format_file_list(resources.get("scripts", []), f"skills/{skill_name}/scripts/")
-    resources_text = ""
-    if refs_list:
-        resources_text += f"**References:**\n\n{refs_list}\n\n"
-    if scripts_list:
-        resources_text += f"**Scripts:**\n\n{scripts_list}\n\n"
-    if not resources_text:
-        resources_text = "This skill uses built-in Claude capabilities without external scripts or references.\n"
+    workflow_summary = _excerpt_markdown(
+        workflow or "Follow the skill's SKILL.md workflow step by step, starting from a small validated input.",
+        max_lines=24,
+        ellipsis_note="See the skill's SKILL.md for the full end-to-end workflow.",
+    )
+    usage_examples = _build_usage_examples_en(when_to_use, title)
+    output_text = _build_outputs_en(outputs, resources)
+    tips_text = _build_tips_en(skill_name, resources)
+    related_text = _build_related_en(related, category)
+    troubleshooting_text = _build_troubleshooting_en(resources, prerequisites)
+    resources_text = _build_resources_text_en(skill_name, resources)
 
     page = f"""---
 layout: default
@@ -542,37 +523,37 @@ permalink: /en/skills/{category}/{skill_name}/
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+{workflow_summary}
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+{usage_examples}
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+{output_text}
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+{tips_text}
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+{related_text}
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+{troubleshooting_text}
 
 ---
 
@@ -591,135 +572,16 @@ def generate_ja_full_page(
     category: str,
     skill_packages_dir: Path | None = None,
 ) -> str:
-    """Generate a 10-section JA documentation skeleton page."""
-    fm = skill_data["frontmatter"]
-    sections = skill_data["sections"]
-    title = _title_case(skill_name)
-    description = fm.get("description", "")
-    badges = api_badges_ja()
-    buttons = _generate_buttons(skill_name, skill_packages_dir, "ja")
-    parent_ja = CATEGORY_PARENTS[category][1]
-
-    # Auto-fill content (same as EN)
-    overview = _extract_section(sections, ["overview", title.lower()])
-    if not overview:
-        overview = skill_data["body"].split("\n\n")[0] if skill_data["body"] else description
-
-    prerequisites = _extract_section(sections, ["prerequisites", "pre-requisites"])
-    if not prerequisites:
-        prerequisites = "- **API Key:** None required\n- **Python 3.9+** recommended"
-
-    quick_start = _extract_quick_start(
-        _extract_section(sections, ["workflow", "running the script", "how to run"]),
-        None,
+    """Generate a 10-section JA documentation page without untranslated placeholders."""
+    return _generate_ja_doc_page(
+        skill_name=skill_name,
+        skill_data=skill_data,
+        nav_order=nav_order,
+        resources=resources,
+        category=category,
+        skill_packages_dir=skill_packages_dir,
+        extended=True,
     )
-
-    refs_list = _format_file_list(resources.get("references", []), f"skills/{skill_name}/references/")
-    scripts_list = _format_file_list(resources.get("scripts", []), f"skills/{skill_name}/scripts/")
-    resources_text = ""
-    if refs_list:
-        resources_text += f"**References:**\n\n{refs_list}\n\n"
-    if scripts_list:
-        resources_text += f"**Scripts:**\n\n{scripts_list}\n\n"
-    if not resources_text:
-        resources_text = "This skill uses built-in Claude capabilities without external scripts or references.\n"
-
-    page = f"""---
-layout: default
-title: "{title}"
-grand_parent: 日本語
-parent: {parent_ja}
-nav_order: {nav_order}
-lang_peer: /en/skills/{category}/{skill_name}/
-permalink: /ja/skills/{category}/{skill_name}/
----
-
-# {title}
-{{: .no_toc }}
-
-{description}
-{{: .fs-6 .fw-300 }}
-
-{badges}
-
-"""
-    if buttons:
-        page += f"{buttons}\n\n"
-
-    page += f"""<details open markdown="block">
-  <summary>目次</summary>
-  {{: .text-delta }}
-- TOC
-{{:toc}}
-</details>
-
----
-
-## 1. 概要
-
-{overview}
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 2. 前提条件
-
-{prerequisites}
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 3. クイックスタート
-
-{quick_start}
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 4. 仕組み
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 5. 使用例
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 6. 出力の読み方
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 7. Tips & ベストプラクティス
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 8. 他スキルとの連携
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 9. トラブルシューティング
-
-<!-- TODO: 翻訳 -->
-
----
-
-## 10. リファレンス
-
-{resources_text}"""
-
-    return page.rstrip() + "\n"
 
 
 # ---------------------------------------------------------------------------
@@ -742,6 +604,7 @@ def _title_case(slug: str) -> str:
         "esg": "ESG",
         "iso": "ISO",
         "pdf": "PDF",
+        "qr": "QR",
         "m": "M",
         "a": "A",
         "bcp": "BCP",
@@ -758,6 +621,7 @@ def _title_case(slug: str) -> str:
         "mcp": "MCP",
         "sql": "SQL",
         "ai": "AI",
+        "wbs": "WBS",
     }
     words = slug.split("-")
     return " ".join(acronyms.get(w, w.capitalize()) for w in words)
@@ -790,6 +654,436 @@ def _extract_quick_start(workflow: str, cli_example: str | None) -> str:
                 break
         return "\n".join(quick).strip()
     return "Invoke this skill by describing your analysis needs to Claude."
+
+
+def _excerpt_markdown(text: str, max_lines: int, ellipsis_note: str | None = None) -> str:
+    """Return the first N markdown lines, optionally appending a note."""
+    clean_lines: list[str] = []
+    for line in text.strip().splitlines():
+        if line.strip() == "---":
+            break
+        clean_lines.append(line)
+    if len(clean_lines) <= max_lines:
+        return "\n".join(clean_lines).strip()
+    excerpt = "\n".join(clean_lines[:max_lines]).rstrip()
+    if ellipsis_note:
+        excerpt += f"\n\n{ellipsis_note}"
+    return excerpt
+
+
+def _extract_bullet_lines(text: str, max_items: int = 6) -> list[str]:
+    """Extract bullet or numbered list items from markdown text."""
+    items: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if re.match(r"^[-*]\s+", stripped):
+            items.append(re.sub(r"^[-*]\s+", "", stripped))
+        elif re.match(r"^\d+\.\s+", stripped):
+            items.append(re.sub(r"^\d+\.\s+", "", stripped))
+        if len(items) >= max_items:
+            break
+    return items
+
+
+def _build_usage_examples_en(when_to_use: str, title: str) -> str:
+    """Build a practical usage examples section."""
+    items = _extract_bullet_lines(when_to_use, max_items=6)
+    if items:
+        return "\n".join(f"- {item}" for item in items)
+    return "\n".join(
+        [
+            f"- Use **{title}** when you need a structured workflow rather than an ad-hoc answer.",
+            "- Start with a small representative input before applying the workflow to production data or assets.",
+            "- Review the helper scripts and reference guides to tailor the output format to your project.",
+        ]
+    )
+
+
+def _build_outputs_en(outputs: str, resources: dict) -> str:
+    """Describe expected outputs using explicit sections or resource inventory."""
+    if outputs:
+        return _excerpt_markdown(
+            outputs, max_lines=18, ellipsis_note="The full output details are documented in SKILL.md."
+        )
+
+    refs = len(resources.get("references", []))
+    scripts = len(resources.get("scripts", []))
+    lines = [
+        "- A structured response or artifact aligned to the skill's workflow.",
+        f"- Reference support from {refs} guide file(s)."
+        if refs
+        else "- Guidance derived directly from the skill instructions.",
+    ]
+    if scripts:
+        lines.append(f"- Script-assisted execution using {scripts} helper command(s) where applicable.")
+    lines.append("- Reusable output that can be reviewed, refined, and incorporated into a wider project workflow.")
+    return "\n".join(lines)
+
+
+def _build_tips_en(skill_name: str, resources: dict) -> str:
+    """Generate best-practice guidance for auto-generated pages."""
+    refs = resources.get("references", [])
+    scripts = resources.get("scripts", [])
+    lines = [
+        "- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.",
+        f"- Keep `skills/{skill_name}/SKILL.md` open while working; it remains the authoritative source for the full procedure.",
+    ]
+    if refs:
+        lines.append(
+            f"- Review the most relevant reference files first instead of scanning every guide: {', '.join(refs[:3])}."
+        )
+    if scripts:
+        lines.append(
+            f"- Run helper scripts on test data before using them on final assets or production-bound inputs: {', '.join(scripts[:3])}."
+        )
+    lines.append(
+        "- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly."
+    )
+    return "\n".join(lines)
+
+
+def _build_related_en(related: str, category: str) -> str:
+    """Generate related-skills guidance."""
+    if related:
+        return _excerpt_markdown(
+            related, max_lines=16, ellipsis_note="Refer to the category index for additional related skills."
+        )
+
+    category_url = f"{{{{ '/en/skills/{category}/' | relative_url }}}}"
+    return "\n".join(
+        [
+            "- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.",
+            f"- Browse the broader category for neighboring workflows: [category index]({category_url}).",
+            "- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.",
+        ]
+    )
+
+
+def _build_troubleshooting_en(resources: dict, prerequisites: str) -> str:
+    """Generate generic troubleshooting guidance."""
+    lines = [
+        "- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.",
+        "- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.",
+        "- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.",
+    ]
+    if "Python" in prerequisites:
+        lines.append(
+            "- Confirm the expected Python version and required packages are installed in the active environment."
+        )
+    if resources.get("scripts"):
+        lines.append(
+            "- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths."
+        )
+    return "\n".join(lines)
+
+
+def _build_resources_text_en(skill_name: str, resources: dict) -> str:
+    """Render reference and script lists for EN pages."""
+    refs_list = _format_file_list(resources.get("references", []), f"skills/{skill_name}/references/")
+    scripts_list = _format_file_list(resources.get("scripts", []), f"skills/{skill_name}/scripts/")
+    chunks = []
+    if refs_list:
+        chunks.append(f"**References:**\n\n{refs_list}")
+    if scripts_list:
+        chunks.append(f"**Scripts:**\n\n{scripts_list}")
+    if not chunks:
+        chunks.append("This skill uses built-in Claude capabilities without external scripts or references.")
+    return "\n\n".join(chunks)
+
+
+def _localize_prerequisites_ja(prerequisites: str) -> str:
+    """Convert common prerequisite lines into Japanese."""
+    if not prerequisites.strip():
+        return "- APIキーは不要です\n- Python 3.9 以上を推奨します"
+
+    packages: list[str] = []
+    package_match = re.search(r"(Required packages|Dependencies)\s*:\s*(.+)", prerequisites, re.IGNORECASE)
+    if package_match:
+        raw = package_match.group(2).replace("`", "")
+        packages = [p.strip() for p in re.split(r",\s*", raw) if p.strip()]
+
+    lines = [
+        "- APIキーは不要です",
+        "- Python 3.9 以上を推奨します",
+    ]
+    if packages:
+        lines.append(f"- 主な依存パッケージ: {', '.join(packages)}")
+    elif any(dep in prerequisites for dep in ("openpyxl", "pandas", "pyyaml")):
+        deps = [dep for dep in ("openpyxl", "pandas", "pyyaml") if dep in prerequisites]
+        lines.append(f"- 主な依存パッケージ: {', '.join(deps)}")
+    lines.append("- 詳細な実行条件は英語版ガイドまたは `SKILL.md` を参照してください。")
+    return "\n".join(lines)
+
+
+def _build_ja_blurb(title: str, skill_name: str) -> str:
+    """Build a Japanese lead sentence for generated pages."""
+    return (
+        f"{title} に関する日本語ガイドです。`skills/{skill_name}/SKILL.md` をもとに、"
+        "利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。"
+    )
+
+
+def _build_overview_ja(title: str, skill_name: str, resources: dict) -> str:
+    """Build a Japanese overview without embedding untranslated English sections."""
+    refs = len(resources.get("references", []))
+    scripts = len(resources.get("scripts", []))
+    lines = [
+        f"このページは **{title}** スキルの日本語サマリーです。",
+        f"- スキル本体: `skills/{skill_name}/SKILL.md`",
+        f"- 参照ガイド: {refs} 件" if refs else "- 参照ガイド: なし",
+        f"- 補助スクリプト: {scripts} 件" if scripts else "- 補助スクリプト: なし",
+        "- 詳細な背景説明や判断基準は英語版ガイドを参照してください。",
+    ]
+    return "\n".join(lines)
+
+
+def _build_usage_examples_ja(title: str, resources: dict) -> str:
+    """Build a practical Japanese usage section."""
+    lines = [
+        f"- **{title}** に沿って作業の進め方を整理したいとき",
+        "- まず最小の入力やサンプルデータで手順を確認したいとき",
+    ]
+    if resources.get("scripts"):
+        lines.append("- 補助スクリプトを使って定型処理や検証を実行したいとき")
+    if resources.get("references"):
+        lines.append("- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき")
+    lines.append("- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき")
+    return "\n".join(lines)
+
+
+def _build_workflow_ja(skill_name: str, resources: dict) -> str:
+    """Build a generic Japanese workflow summary."""
+    lines = [
+        f"1. `skills/{skill_name}/SKILL.md` を開き、対象タスクと期待する成果物を確認します。",
+        "2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。",
+    ]
+    if resources.get("references"):
+        lines.append("3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。")
+    if resources.get("scripts"):
+        lines.append("4. 補助スクリプトがある場合は小さな入力で実行し、出力形式を確認してから本番データへ広げます。")
+    else:
+        lines.append("4. スキルの手順に沿って対話またはドキュメント作成を進めます。")
+    lines.append("5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。")
+    return "\n".join(lines)
+
+
+def _build_outputs_ja(resources: dict) -> str:
+    """Describe expected outputs in Japanese."""
+    refs = len(resources.get("references", []))
+    scripts = len(resources.get("scripts", []))
+    lines = [
+        "- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト",
+        f"- 参照ガイド {refs} 件を根拠にした判断材料" if refs else "- スキル定義に基づく判断材料",
+    ]
+    if scripts:
+        lines.append(f"- 補助スクリプト {scripts} 件による補助出力や検証結果")
+    lines.append("- 後続レビューや別スキル連携に回せる中間成果物")
+    return "\n".join(lines)
+
+
+def _build_tips_ja(skill_name: str, resources: dict) -> str:
+    """Generate Japanese best-practice guidance."""
+    lines = [
+        "- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。",
+        f"- 詳細な手順や判断基準は `skills/{skill_name}/SKILL.md` を基準にしてください。",
+    ]
+    if resources.get("references"):
+        lines.append("- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。")
+    if resources.get("scripts"):
+        lines.append("- 補助スクリプトは本番データの前にサンプル入力で実行し、引数と出力先を確認してください。")
+    lines.append("- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。")
+    return "\n".join(lines)
+
+
+def _build_related_ja(category: str) -> str:
+    """Generate Japanese related-skills guidance."""
+    category_url = f"{{{{ '/ja/skills/{category}/' | relative_url }}}}"
+    en_url = f"{{{{ '/en/skills/{category}/' | relative_url }}}}"
+    return "\n".join(
+        [
+            "- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。",
+            f"- 日本語のカテゴリ一覧: [カテゴリページ]({category_url})",
+            f"- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({en_url})",
+        ]
+    )
+
+
+def _build_troubleshooting_ja(prerequisites: str, resources: dict) -> str:
+    """Generate Japanese troubleshooting guidance."""
+    lines = [
+        "- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。",
+        "- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。",
+        "- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。",
+    ]
+    if "Python" in prerequisites:
+        lines.append("- Python のバージョン差分が原因になることがあるため、推奨バージョンを確認してください。")
+    if resources.get("scripts"):
+        lines.append("- 引数や出力先の指定漏れが多いため、コマンド例をそのまま起点に調整すると安全です。")
+    return "\n".join(lines)
+
+
+def _build_resources_text_ja(skill_name: str, resources: dict) -> str:
+    """Render reference and script lists for JA pages."""
+    refs_list = _format_file_list(resources.get("references", []), f"skills/{skill_name}/references/")
+    scripts_list = _format_file_list(resources.get("scripts", []), f"skills/{skill_name}/scripts/")
+    chunks = []
+    if refs_list:
+        chunks.append(f"**参照ガイド:**\n\n{refs_list}")
+    if scripts_list:
+        chunks.append(f"**補助スクリプト:**\n\n{scripts_list}")
+    if not chunks:
+        chunks.append("このスキルは外部スクリプトや追加の参照ファイルを使わず、Claude の標準機能を中心に利用します。")
+    return "\n\n".join(chunks)
+
+
+def _generate_ja_doc_page(
+    skill_name: str,
+    skill_data: dict,
+    nav_order: int,
+    resources: dict,
+    category: str,
+    skill_packages_dir: Path | None,
+    extended: bool,
+) -> str:
+    """Generate a Japanese summary page."""
+    title = _title_case(skill_name)
+    badges = api_badges_ja()
+    buttons = _generate_buttons(skill_name, skill_packages_dir, "ja")
+    parent_ja = CATEGORY_PARENTS[category][1]
+    workflow = _extract_section(skill_data["sections"], ["workflow", "running the script", "how to run"])
+    quick_start = _extract_quick_start(workflow, None)
+    prerequisites = _extract_section(skill_data["sections"], ["prerequisites", "pre-requisites"])
+    localized_prereqs = _localize_prerequisites_ja(prerequisites)
+    blurb = _build_ja_blurb(title, skill_name)
+    overview = _build_overview_ja(title, skill_name, resources)
+    usage_examples = _build_usage_examples_ja(title, resources)
+    workflow_text = _build_workflow_ja(skill_name, resources)
+    outputs_text = _build_outputs_ja(resources)
+    tips_text = _build_tips_ja(skill_name, resources)
+    related_text = _build_related_ja(category)
+    troubleshooting_text = _build_troubleshooting_ja(prerequisites, resources)
+    resources_text = _build_resources_text_ja(skill_name, resources)
+    english_link = f"{{{{ '/en/skills/{category}/{skill_name}/' | relative_url }}}}"
+
+    page = f"""---
+layout: default
+title: "{title}"
+grand_parent: 日本語
+parent: {parent_ja}
+nav_order: {nav_order}
+lang_peer: /en/skills/{category}/{skill_name}/
+permalink: /ja/skills/{category}/{skill_name}/
+---
+
+# {title}
+{{: .no_toc }}
+
+{blurb}
+{{: .fs-6 .fw-300 }}
+
+{badges}
+
+"""
+    if buttons:
+        page += f"{buttons}\n\n"
+
+    page += f"""<details open markdown="block">
+  <summary>目次</summary>
+  {{: .text-delta }}
+- TOC
+{{:toc}}
+</details>
+
+---
+
+## 1. 概要
+
+{overview}
+
+---
+
+## 2. 前提条件
+
+{localized_prereqs}
+
+---
+
+## 3. クイックスタート
+
+{quick_start}
+
+"""
+    if not extended:
+        page += f"""---
+
+## 4. 進め方
+
+{workflow_text}
+
+---
+
+## 5. リソース
+
+{resources_text}
+
+---
+
+## 6. 英語版ガイド
+
+- 詳細な背景説明、判断基準、実装例は [English version]({english_link}) を参照してください。
+"""
+        return page.rstrip() + "\n"
+
+    page += f"""---
+
+## 4. 進め方
+
+{workflow_text}
+
+---
+
+## 5. 使用例
+
+{usage_examples}
+
+---
+
+## 6. 出力の読み方
+
+{outputs_text}
+
+---
+
+## 7. ベストプラクティス
+
+{tips_text}
+
+---
+
+## 8. 他スキルとの連携
+
+{related_text}
+
+---
+
+## 9. トラブルシューティング
+
+{troubleshooting_text}
+
+---
+
+## 10. リファレンス
+
+{resources_text}
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({english_link}) を参照してください。
+"""
+
+    return page.rstrip() + "\n"
 
 
 def _format_file_list(files: list[str], prefix: str) -> str:
@@ -848,52 +1142,53 @@ def update_index_pages(
     skills_dir: Path,
     docs_dir: Path,
 ) -> None:
-    """Add links to index tables for skills that now have a docs page."""
+    """Add links to category index tables and skill catalog rows."""
+    table_paths = []
     for lang in ("en", "ja"):
+        table_paths.append(docs_dir / lang / "skill-catalog.md")
         for cat_slug in CATEGORY_PARENTS:
-            index_path = docs_dir / lang / "skills" / cat_slug / "index.md"
-            if not index_path.exists():
+            table_paths.append(docs_dir / lang / "skills" / cat_slug / "index.md")
+
+    for table_path in table_paths:
+        if not table_path.exists():
+            continue
+
+        text = table_path.read_text(encoding="utf-8")
+        lines = text.splitlines()
+        changed = False
+        lang = "ja" if "/ja/" in str(table_path) else "en"
+
+        for i, line in enumerate(lines):
+            if not line.startswith("|"):
+                continue
+            cols = [c.strip() for c in line.split("|")]
+            if len(cols) < 4:
+                continue
+            name_col = cols[1]
+            if not name_col or name_col.startswith("---") or name_col in ("Skill", "スキル", "Badge"):
+                continue
+            if "[" in name_col:
                 continue
 
-            text = index_path.read_text(encoding="utf-8")
-            lines = text.splitlines()
-            changed = False
+            slug = _slugify(name_col)
+            if not slug:
+                continue
 
-            for i, line in enumerate(lines):
-                if not line.startswith("|"):
-                    continue
-                # Skip header/separator lines
-                cols = [c.strip() for c in line.split("|")]
-                if len(cols) < 4:
-                    continue
-                name_col = cols[1]
-                if not name_col or name_col.startswith("---") or name_col in ("Skill", "スキル", "Badge"):
-                    continue
-                # Already linked?
-                if "[" in name_col:
-                    continue
+            cat_slug = _get_category(slug)
+            page_path = docs_dir / lang / "skills" / cat_slug / f"{slug}.md"
+            if not page_path.exists():
+                continue
 
-                # Try to match as a skill slug
-                slug = _slugify(name_col)
-                if not slug:
-                    continue
+            link = f"{{{{ '/{lang}/skills/{cat_slug}/{slug}/' | relative_url }}}}"
+            linked_name = f"[{name_col}]({link})"
+            new_line = line.replace(f"| {name_col} |", f"| {linked_name} |", 1)
+            if new_line != line:
+                lines[i] = new_line
+                changed = True
 
-                # Check if a docs page now exists for this skill
-                page_path = docs_dir / lang / "skills" / cat_slug / f"{slug}.md"
-                if not page_path.exists():
-                    continue
-
-                # Replace plain name with link
-                link = f"{{{{ '/{lang}/skills/{cat_slug}/{slug}/' | relative_url }}}}"
-                linked_name = f"[{name_col}]({link})"
-                new_line = line.replace(f"| {name_col} |", f"| {linked_name} |", 1)
-                if new_line != line:
-                    lines[i] = new_line
-                    changed = True
-
-            if changed:
-                index_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-                print(f"  Updated index: {index_path}")
+        if changed:
+            table_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            print(f"  Updated index: {table_path}")
 
 
 # ---------------------------------------------------------------------------
@@ -1009,12 +1304,45 @@ def validate_docs(
                     print(f"  ERROR: skill dir missing: {skill_dir}")
                     errors += 1
 
-                # Check .skill file exists if download button is present
-                if "Download Skill Package" in text or "スキルパッケージをダウンロード" in text:
-                    if skill_packages_dir:
-                        skill_file = skill_packages_dir / f"{skill_name}.skill"
-                        if not skill_file.exists():
-                            print(f"  WARN: download button but no .skill file: {skill_file}")
+                has_pkg_button = "Download Skill Package" in text or "スキルパッケージをダウンロード" in text
+                has_src_button = "View Source on GitHub" in text or "GitHubでソースを見る" in text
+
+                if not has_src_button:
+                    print(f"  ERROR: missing GitHub source button: {md_file}")
+                    errors += 1
+
+                if "<!-- TODO:" in text:
+                    print(f"  ERROR: unfinished TODO marker remains: {md_file}")
+                    errors += 1
+
+                if "This page has not yet been translated into Japanese" in text:
+                    print(f"  ERROR: untranslated JA note remains: {md_file}")
+                    errors += 1
+
+                if skill_packages_dir:
+                    skill_file = skill_packages_dir / f"{skill_name}.skill"
+                    if has_pkg_button and not skill_file.exists():
+                        print(f"  ERROR: download button but no .skill file: {skill_file}")
+                        errors += 1
+                    if skill_file.exists() and not has_pkg_button:
+                        print(f"  ERROR: missing package download button: {md_file}")
+                        errors += 1
+
+    skill_names = sorted(p.name for p in skills_dir.iterdir() if p.is_dir() and (p / "SKILL.md").exists())
+    for skill_name in skill_names:
+        category = _get_category(skill_name)
+
+        for lang in ("en", "ja"):
+            page_path = docs_dir / lang / "skills" / category / f"{skill_name}.md"
+            if not page_path.exists():
+                print(f"  ERROR: missing docs page: {page_path}")
+                errors += 1
+
+        if skill_packages_dir:
+            skill_file = skill_packages_dir / f"{skill_name}.skill"
+            if not skill_file.exists():
+                print(f"  ERROR: missing .skill package: {skill_file}")
+                errors += 1
 
     if errors == 0:
         print("  Validation passed: no errors found.")
@@ -1158,6 +1486,7 @@ def main(argv: list[str] | None = None) -> int:
                 name,
                 skill_data,
                 nav_order,
+                resources,
                 category,
                 skill_packages_dir=skill_packages_dir,
             )

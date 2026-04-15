@@ -69,37 +69,78 @@ After reviewing this document, the reader should:
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### Purpose
+Clarify what you're trying to achieve and who will receive the document. This determines structure, depth, and tone.
+
+### Step 1: Define the Document Purpose
+
+Identify the primary objective:
+
+| Purpose Type | Description | Key Focus |
+|--------------|-------------|-----------|
+| **Decision Request** | Seeking approval or choice between options | Options, risks, recommendation |
+| **Status Report** | Informing on progress or situation | Metrics, trends, deviations |
+| **Proposal** | Advocating for an initiative or investment | Business case, ROI, timeline |
+| **Alert/Escalation** | Raising awareness of risk or issue | Impact, urgency, mitigation |
+
+### Step 2: Identify the Audience
+
+Understand your audience's perspective:
+
+| Audience | Time Available | Primary Concerns | Preferred Format |
+|----------|----------------|------------------|------------------|
+| CEO | Very limited | Strategic impact, risks | One-page summary |
+| Board of Directors | Limited | Governance, compliance, returns | Formal report |
+| Executive Committee | Moderate | Cross-functional impact | Meeting materials |
+| Investors | Moderate | Returns, growth, risks | Structured briefing |
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Creating materials for C-suite, board, or investors
+- Summarizing complex information for decision-makers
+- Preparing approval requests or investment proposals
+- Communicating strategic initiatives or operational updates
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+This skill generates **executive briefing documents** in Markdown format:
+- One-page executive summaries
+- Board of Directors reports
+- Management meeting materials
+- Investor briefing documents
+
+Documents are created using templates from `assets/` and follow the "So What? / Why Now? / What Next?" framework.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/executive-briefing-writer/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: action_recommendation_patterns.md, executive_communication_guide.md, data_visualization_guidelines.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/management/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
 
 ---
 
