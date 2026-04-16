@@ -19,6 +19,49 @@ description: |
 
 # Log Debugger
 
+## When to Use
+
+Use this skill when:
+- **Debugging application crashes** - analyzing stack traces, exceptions, and error logs
+- **Investigating production incidents** - finding root cause from system/application logs
+- **Troubleshooting intermittent issues** - identifying patterns in recurring errors
+- **Performing post-mortem analysis** - reconstructing timeline of events from logs
+- **Analyzing timeout or performance issues** - correlating logs across services
+- **Processing multi-source logs** - correlating events from app, web server, and database logs
+
+**DO NOT use** for organizational incident management (post-incident reviews, corrective action plans without log data) - use `incident-rca-specialist` instead.
+
+---
+
+## Prerequisites
+
+- **Python 3.8+** with standard library
+- **Optional**: `pyyaml` for custom configuration files
+- **Log files** in supported formats (plain text, JSON, syslog)
+
+---
+
+## Workflow
+
+1. **Provide log data** - File path, paste content, or stdin
+2. **Triage** - Claude identifies error severity and impact
+3. **Pattern Recognition** - Detects error patterns and frequency
+4. **Root Cause Analysis** - Applies 5 Whys, timeline, or Fishbone analysis
+5. **Resolution** - Provides fix recommendations and prevention strategies
+
+---
+
+## Output
+
+- **Summary Report** - Error counts, severity breakdown, affected time ranges
+- **Timeline** - Chronological sequence of significant events
+- **Top Error Patterns** - Most frequent errors with normalized messages
+- **Root Cause Analysis** - 5 Whys or Fishbone diagram identifying root cause
+- **Recommendations** - Immediate fixes and long-term prevention strategies
+- **RCA Report** - Full report using `assets/rca_report_template.md`
+
+---
+
 ## Overview
 
 このスキルは、システムログを体系的に分析し、エラーの根本原因を特定するデバッグ専門家です。

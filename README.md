@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (96 skills)
+├── skills/                 # All Claude Code skills (97 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (96 Skills)
+## Skill Catalog (97 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -139,7 +139,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (12 skills)
+### Documentation & Communication (13 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -155,6 +155,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
+| meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
 
 ### QA & Testing (11 skills)
 
@@ -2285,6 +2286,34 @@ Prepares comprehensive meeting assets including agendas, reference materials, de
 
 ---
 
+### 📝 Meeting Minutes Reviewer
+
+**File:** `skills/meeting-minutes-reviewer/`
+
+Reviews meeting minutes documents for completeness, action item clarity, decision documentation, and consistency with source materials. Generates structured feedback with specific improvement suggestions and quality scores across 5 dimensions.
+
+**When to use:**
+- After drafting meeting minutes and before distribution
+- When reviewing minutes created by others for quality assurance
+- When validating that minutes accurately reflect source materials (hearing sheets, transcripts)
+- When ensuring action items meet trackability standards
+- When preparing minutes for formal project documentation or audit trails
+
+**Key Components:**
+- `scripts/review_minutes.py` - Main review script with 5-dimension quality analysis
+- `references/review-criteria.md` - Detailed scoring criteria and quality standards
+- `references/meeting-minutes-checklist.md` - Complete checklist for meeting minutes
+
+**Key Features:**
+- 5-dimension scoring: Completeness (25%), Action Items (25%), Decisions (20%), Consistency (15%), Clarity (15%)
+- Action item validation: owner, deadline, description completeness
+- Decision documentation check: context, rationale, alternatives
+- Source material consistency verification (hearing sheets, agendas)
+- Vague language detection and clarity analysis
+- JSON and Markdown report output formats
+
+---
+
 ### 🎤 Fujisoft Presentation Creator
 
 **File:** `skill-packages/fujisoft-presentation-creator.skill`
@@ -3956,6 +3985,16 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### meeting-minutes-reviewer v1.0 (2026-03-26)
+- Review meeting minutes for completeness, action item clarity, and decision documentation
+- 5-dimension quality scoring: Completeness (25%), Action Items (25%), Decisions (20%), Consistency (15%), Clarity (15%)
+- Action item validation: owner, deadline, description completeness checks
+- Decision documentation validation: context, rationale, alternatives considered
+- Source material consistency verification (hearing sheets, agendas)
+- Vague language detection with specific suggestions
+- JSON and Markdown report output formats
+- CLI with `review_minutes.py` script
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
