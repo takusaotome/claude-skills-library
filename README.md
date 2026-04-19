@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (97 skills)
+├── skills/                 # All Claude Code skills (98 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (97 Skills)
+## Skill Catalog (98 Skills)
 
-### Business Strategy & Consulting (17 skills)
+### Business Strategy & Consulting (18 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -82,6 +82,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 | hearing-to-requirements-mapper | ヒアリングシート→要件定義書変換、ギャップ分析 | RTM, WBS Mapping, Ambiguity Detection, Bilingual |
+| ai-bpo-proposal-generator | 在米日系企業向けAI-BPO提案書作成 | Service Selection, ROI Analysis, Bilingual Proposals |
 
 ### Project Management (6 skills)
 
@@ -388,6 +389,54 @@ A comprehensive PMBOK®-aligned project management skill for professional projec
 - Traditional (Waterfall) project management
 - Agile project management with PMBOK
 - Hybrid approaches
+
+---
+
+### 🏢 AI-BPO Proposal Generator
+
+**File:** `skill-packages/ai-bpo-proposal-generator.skill`
+
+A comprehensive proposal generator for AI-powered BPO services tailored for Japanese companies operating in the US market.
+
+**When to use:**
+- Creating BPO service proposals for Japanese subsidiaries in the US (在米日系企業)
+- Developing AI-enhanced outsourcing offerings for business processes
+- Estimating ROI for AI implementation in back-office operations
+- Building implementation roadmaps for phased AI adoption
+- Generating bilingual (Japanese/English) proposal documents
+
+**Core Capabilities:**
+- ✅ Service module selection based on industry and pain points
+- ✅ ROI calculation with NPV, payback period, and 3-year projections
+- ✅ Phased implementation roadmap generation
+- ✅ Bilingual proposal document generation (JA/EN)
+- ✅ Industry-specific bundles with volume discounts
+
+**Key Features:**
+
+*Automated Scripts:*
+- `select_services.py` - Service module selection based on industry and pain points
+- `calculate_roi.py` - ROI calculation with current/future state cost analysis
+- `generate_roadmap.py` - Implementation roadmap with milestones
+- `generate_proposal.py` - Bilingual proposal document generator
+
+*Reference Guides:*
+- `service-catalog.md` - Complete AI-BPO service catalog with pricing (15 services, 3 bundles)
+- `client-intake-template.md` - Bilingual client requirements questionnaire
+- `roi-methodology.md` - ROI calculation methodology and benchmarks
+
+**Service Categories:**
+- Finance & Accounting (Invoice Processing, Expense Reports, Reconciliation, AR)
+- HR & Payroll (Onboarding, Time Tracking, Payroll Processing)
+- Customer Support (Ticket Routing, FAQ Automation)
+- Data Processing (Document Digitization, Data Entry)
+- Procurement (PO Processing, Vendor Management, Contract Analysis)
+
+**Example Use Cases:**
+- "Create a BPO proposal for ABC Manufacturing's US subsidiary"
+- "Calculate ROI for automating invoice processing (5000/month volume)"
+- "Generate an implementation roadmap starting April 2025"
+- "Build a bilingual proposal with full ROI analysis"
 
 ---
 
@@ -3985,6 +4034,16 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### ai-bpo-proposal-generator v1.0 (2026-04-19)
+- Generate AI-powered BPO service proposals for Japanese companies in the US market
+- Service module selection based on industry and pain points (15 service modules, 3 industry bundles)
+- ROI calculation with current/future state analysis, NPV, payback period
+- Phased implementation roadmap generation with milestones
+- Bilingual (Japanese/English) proposal document generation
+- Service categories: Finance & Accounting, HR & Payroll, Customer Support, Data Processing, Procurement
+- Client intake questionnaire template with 8 sections
+- Industry benchmarks for automation rates, error reduction, and cost savings
 
 ### meeting-minutes-reviewer v1.0 (2026-03-26)
 - Review meeting minutes for completeness, action item clarity, and decision documentation
