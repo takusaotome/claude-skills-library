@@ -133,6 +133,7 @@ npm install -g @mermaid-js/mermaid-cli
 |:-----|:-------|:-----|
 | `<!-- pagebreak -->` | fpdf2 | ページ区切りを挿入 |
 | `<!-- info-table -->` | fpdf2 | 次のテーブルをキーバリュー info-table スタイルで表示 |
+| `<!-- col-widths: 10,45,45 -->` | fpdf2 | 次のテーブルの列幅を指定（比率・%・mm を受付。ページ幅に正規化） |
 | `---` | fpdf2 | 水平線 |
 | ` ```mermaid ` | 両方 | Mermaid ダイアグラムを画像としてレンダリング |
 
@@ -211,6 +212,7 @@ gray テーマ（社内文書）を使用し、セクション間にページ区
 - **ダイアグラム付き技術文書**: Playwright モードで `--image-format svg` を指定し、高品質な出力を実現
 - **ページ区切り**: fpdf2 モードでは `<!-- pagebreak -->` でセクション間を区切る
 - **キーバリューテーブル**: fpdf2 モードではテーブルの前に `<!-- info-table -->` を記述して info-table スタイルを適用
+- **テーブル列幅の制御**: `<!-- col-widths: 10,45,45 -->` をテーブル直前に置くと、比率／％／mm で列幅を指定可能（自動幅計算を上書き）
 - **CJK フォント**: TrueType CJK フォント（UDEVGothic または Noto Sans JP）をインストールして文字化けを防止。Hiragino などの CFF アウトラインフォントはレンダリングの問題を引き起こす可能性あり。
 - **Mermaid プレビュー**: 変換前に [mermaid.live](https://mermaid.live/) でダイアグラムをプレビュー
 - **テーマ**: クライアント向け文書は `navy`、社内文書は `gray`
