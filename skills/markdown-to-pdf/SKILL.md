@@ -39,9 +39,7 @@ Use this skill when:
 - "Convert this design document with diagrams to PDF" → Playwright mode
 - "Export this Mermaid diagram as an image" → mermaid_to_image.py
 
-## Quick Start
-
-### Prerequisites
+## Prerequisites
 
 **For fpdf2 mode (professional PDFs):**
 ```bash
@@ -56,6 +54,31 @@ playwright install chromium
 # For Mermaid conversion:
 npm install -g @mermaid-js/mermaid-cli
 ```
+
+**Optional (for layout verification):**
+```bash
+pip install PyMuPDF
+```
+
+## Output
+
+| Mode | Output | Description |
+|------|--------|-------------|
+| fpdf2 | `.pdf` | Professional PDF with optional cover page, themed styling, headers/footers |
+| Playwright | `.pdf` | HTML/CSS-rendered PDF with embedded Mermaid diagrams |
+| mermaid_to_image | `.png` or `.svg` | Standalone Mermaid diagram image |
+
+**fpdf2 mode produces:**
+- A4 portrait PDF (210mm × 297mm)
+- Optional cover page with title, subtitle, metadata
+- Themed headers and footers on content pages
+- Styled tables (data tables with colored headers, info tables for key-value pairs)
+- Embedded Mermaid diagrams (converted to PNG)
+
+**Playwright mode produces:**
+- PDF rendered from HTML/CSS
+- Mermaid diagrams rendered inline (PNG or SVG)
+- Custom CSS styling support
 
 ## Task 1: Convert Markdown with Mermaid to PDF (Playwright mode)
 
