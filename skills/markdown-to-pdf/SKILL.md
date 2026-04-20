@@ -157,6 +157,7 @@ For detailed field reference, see `references/fpdf_styling_guide.md`.
 | `<!-- pagebreak -->` | Page break |
 | `---` | Horizontal rule |
 | `<!-- info-table -->` | Override next table to info_table style |
+| `<!-- col-widths: 10,45,45 -->` | Override next table's column widths (ratios, %, or mm) |
 
 ### Table Styles
 
@@ -171,6 +172,18 @@ For detailed field reference, see `references/fpdf_styling_guide.md`.
 | Phase 1 | $5,000 |
 | Phase 2 | TBD |
 ```
+
+**Column Widths Override:** Use `<!-- col-widths: ... -->` comment to control the next table's column widths. Accepts bare numbers (ratios), percentages, or `mm` units; values are normalized to the page content width. Applies to both data and info tables, and resets after the next table.
+
+```markdown
+<!-- col-widths: 10,45,45 -->
+| # | 項目 | 金額 |
+|---|------|------|
+| 1 | 初期費用 | $5,000 |
+| 2 | 月額費用 | $1,200 |
+```
+
+If the number of values differs from the column count, extra values are truncated and missing values are padded with the average of the provided ones.
 
 ### Themes
 

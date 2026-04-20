@@ -91,6 +91,31 @@ For key-value style tables, add `<!-- info-table -->` comment immediately before
 
 Info tables use the same styling engine but are visually suited for 2-column key-value layouts.
 
+### Column Widths Override
+
+By default, column widths are auto-calculated from content. To force specific widths, place a `<!-- col-widths: ... -->` comment immediately before the table:
+
+```markdown
+<!-- col-widths: 10,45,45 -->
+| # | 項目 | 金額 |
+|---|------|------|
+| 1 | 初期費用 | $5,000 |
+| 2 | 月額費用 | $1,200 |
+```
+
+**Accepted value formats:**
+- Bare numbers: `10,45,45` — interpreted as ratios, normalized to page content width
+- Percentages: `10%, 45%, 45%` — same as ratios (the `%` is stripped)
+- Millimeters: `20mm, 85mm, 85mm` — same treatment (the `mm` is stripped, values are still normalized to content width)
+
+**Behavior:**
+- Values are normalized so their sum equals the page content width (`CONTENT_WIDTH_MM`).
+- If fewer values than columns are provided, missing values are padded with the average of the supplied values.
+- If more values than columns are provided, extras are truncated.
+- Applies to both data and info tables.
+- The directive affects only the next table and resets automatically afterwards.
+- Can be combined with `<!-- info-table -->` (both comments on separate lines before the table).
+
 ## Page Breaks
 
 Use HTML comments for explicit page breaks:

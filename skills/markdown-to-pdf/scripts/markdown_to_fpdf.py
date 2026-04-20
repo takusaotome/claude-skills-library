@@ -372,9 +372,12 @@ class ProfessionalPDF(FPDF):
         self.set_line_width(0.2)
         self.ln(5)
 
-    def render_info_table(self, headers: List[str], rows: List[List[str]]):
+    def render_info_table(self, headers: List[str], rows: List[List[str]], col_widths_override=None):
         """Render a 2-column info table with alternating row colors."""
-        col_widths = _compute_col_widths(self, headers, rows)
+        if col_widths_override is not None:
+            col_widths = _apply_col_widths_override(col_widths_override, len(headers))
+        else:
+            col_widths = _compute_col_widths(self, headers, rows)
 
         header_style = FontFace(
             color=DeviceRGB(*[c / 255 for c in self.theme.table_header_fg]),
@@ -408,9 +411,14 @@ class ProfessionalPDF(FPDF):
                     row.cell(cell_val)
         self.ln(3)
 
-    def render_data_table(self, headers: List[str], rows: List[List[str]], col_aligns: List[str] = None):
+    def render_data_table(
+        self, headers: List[str], rows: List[List[str]], col_aligns: List[str] = None, col_widths_override=None
+    ):
         """Render a multi-column data table with header styling and column alignment."""
-        col_widths = _compute_col_widths(self, headers, rows)
+        if col_widths_override is not None:
+            col_widths = _apply_col_widths_override(col_widths_override, len(headers))
+        else:
+            col_widths = _compute_col_widths(self, headers, rows)
 
         # Default alignment: all left
         if not col_aligns:
@@ -499,6 +507,27 @@ class ProfessionalPDF(FPDF):
 # ============================================================
 
 
+def _apply_col_widths_override(values: List[float], num_cols: int) -> List[float]:
+    """Convert a list of relative width values (any unit) into mm widths summing to CONTENT_WIDTH_MM.
+
+    If len(values) != num_cols, pad or truncate to match.
+    """
+    if not values:
+        return [CONTENT_WIDTH_MM / num_cols] * num_cols
+    if len(values) < num_cols:
+        # pad with remaining share distributed equally
+        deficit = num_cols - len(values)
+        total_known = sum(values)
+        avg = total_known / len(values) if values else 1.0
+        values = values + [avg] * deficit
+    elif len(values) > num_cols:
+        values = values[:num_cols]
+    total = sum(values)
+    if total <= 0:
+        return [CONTENT_WIDTH_MM / num_cols] * num_cols
+    return [v / total * CONTENT_WIDTH_MM for v in values]
+
+
 def _compute_col_widths(pdf: FPDF, headers: List[str], rows: List[List[str]]) -> List[float]:
     """Compute proportional column widths based on content."""
     num_cols = len(headers)
@@ -536,11 +565,34 @@ class FPDFRenderer:
     def __init__(self, pdf: ProfessionalPDF, strict_mermaid: bool = True, debug_mermaid: bool = False):
         self.pdf = pdf
         self._next_table_style = "data"  # "data" or "info"
+        self._next_col_widths = None  # Optional[List[float]] — ratios for next table
         self._strict_mermaid = strict_mermaid
         self._debug_mermaid = debug_mermaid
         self._mermaid_success = 0
         self._mermaid_failure = 0
         self._mermaid_renderer = None  # lazy init — shared across document
+
+    @staticmethod
+    def _parse_col_widths_directive(text: str):
+        """Parse '<!-- col-widths: 10,45,45 -->' → [10.0, 45.0, 45.0].
+
+        Accepts bare numbers, percentages (10%), or numbers followed by 'mm'.
+        Returns None if parse fails.
+        """
+        import re as _re
+
+        m = _re.search(r"col-widths\s*:\s*([0-9.,\s%mM]+)", text)
+        if not m:
+            return None
+        raw = m.group(1)
+        parts = [p.strip().rstrip("%mM").strip() for p in raw.split(",") if p.strip()]
+        try:
+            values = [float(p) for p in parts]
+        except ValueError:
+            return None
+        if not values or any(v <= 0 for v in values):
+            return None
+        return values
 
     def render(self, tokens: List[Dict]):
         """Walk all top-level tokens."""
@@ -566,6 +618,14 @@ class FPDFRenderer:
                     i += 1
                     continue
 
+                # Col-widths directive: <!-- col-widths: 10,45,45 -->
+                if "col-widths" in stripped and "<!--" in stripped:
+                    cw = self._parse_col_widths_directive(stripped)
+                    if cw is not None:
+                        self._next_col_widths = cw
+                        i += 1
+                        continue
+
             # Also check block_html for comments
             if ttype == "block_html":
                 raw = token.get("raw", token.get("children", ""))
@@ -578,6 +638,12 @@ class FPDFRenderer:
                         self._next_table_style = "info"
                         i += 1
                         continue
+                    if "col-widths" in raw:
+                        cw = self._parse_col_widths_directive(raw)
+                        if cw is not None:
+                            self._next_col_widths = cw
+                            i += 1
+                            continue
 
             self._render_token(token)
             i += 1
@@ -699,12 +765,16 @@ class FPDFRenderer:
 
         # Determine style and reset
         style = self._next_table_style
+        col_widths_override = self._next_col_widths
         self._next_table_style = "data"
+        self._next_col_widths = None
 
         if style == "info":
-            self.pdf.render_info_table(headers, rows)
+            self.pdf.render_info_table(headers, rows, col_widths_override=col_widths_override)
         else:
-            self.pdf.render_data_table(headers, rows, col_aligns=normalized_aligns)
+            self.pdf.render_data_table(
+                headers, rows, col_aligns=normalized_aligns, col_widths_override=col_widths_override
+            )
 
     def _render_mermaid(self, code: str):
         """Render Mermaid diagram via MermaidRenderer (in-process).
