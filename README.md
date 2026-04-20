@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (97 skills)
+├── skills/                 # All Claude Code skills (98 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (97 Skills)
+## Skill Catalog (98 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -205,10 +205,11 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | change-management-consultant | 組織変革マネジメント、チェンジ管理 | Kotter 8-Step, Stakeholder Engagement |
 | talent-acquisition-specialist | JD作成、採用計画、面接評価 | JD Templates, Interview Evaluation |
 
-### Operations & Supply Chain (3 skills)
+### Operations & Supply Chain (4 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
+| email-inbox-triager | メール受信トレイの優先度分類・アクションプラン生成 | NLP Classification, VIP Detection, Daily Action Plans |
 | supply-chain-consultant | サプライチェーン最適化、在庫管理 | Supply Chain Modeling, Optimization |
 | production-schedule-optimizer | 製造施設の週次生産スケジュール最適化 | Greedy Bin-Packing, Staff Estimation, Shift Planning |
 | shift-planner | 従業員別シフト自動編成、カバレッジ検証 | Greedy Assignment, Fairness Metrics, 30-min Coverage |
@@ -3538,6 +3539,33 @@ Generates weekly employee shift schedules from roster and requirements using con
 **Scripts:**
 - `generate_shifts.py` - Shift generation CLI
 
+### 📧 Email Inbox Triager
+
+Intelligent email inbox triage skill that analyzes incoming emails, classifies by urgency and action-required status, and generates prioritized daily email action plans.
+
+**When to use:**
+- Requesting email inbox triage or prioritization
+- Asking "What emails need my attention today?"
+- Batch-processing unread emails into action categories
+- Identifying urgent emails requiring immediate response
+- Delegating or deferring low-priority messages
+- Generating daily email action plans
+
+**Key Features:**
+- NLP-based classification with urgency scoring (0-100)
+- 5 categories: urgent-response, response-needed, fyi-read, delegatable, archive
+- VIP sender/domain detection with configurable lists
+- Deadline keyword detection (EOD, ASAP, urgent, etc.)
+- Reply-expected and escalation signal detection
+- Time estimation per email for budget planning
+- Delegation target detection (finance, HR, IT, legal)
+- gogcli integration for Gmail data fetching
+- Daily action plan in Markdown and JSON formats
+
+**Scripts:**
+- `classify_emails.py` - NLP-based email classifier with urgency scoring
+- `generate_action_plan.py` - Converts classification to daily plan
+
 ---
 
 ### 🔍 Incident RCA Specialist
@@ -3985,6 +4013,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### email-inbox-triager v1.0 (2026-04-20)
+- Intelligent email inbox triage with NLP-based urgency classification
+- 5 action categories: urgent-response, response-needed, fyi-read, delegatable, archive
+- VIP sender/domain detection with configurable whitelist
+- Deadline, reply-expected, and escalation signal detection
+- Time estimation and budget-aware daily action plan generation
+- gogcli integration for Gmail data fetching
+- Markdown and JSON output formats
 
 ### meeting-minutes-reviewer v1.0 (2026-03-26)
 - Review meeting minutes for completeness, action item clarity, and decision documentation
