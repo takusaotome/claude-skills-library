@@ -15,7 +15,6 @@ Usage:
 """
 
 import argparse
-import os
 import sys
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -56,10 +55,10 @@ class MeetingConfig:
     time: str
     timezone: str = "UTC"
     duration_minutes: int = 60
-    attendees: list = field(default_factory=list)
-    objectives: list = field(default_factory=list)
+    attendees: list[Attendee] = field(default_factory=list)
+    objectives: list[str] = field(default_factory=list)
     language: str = "en"  # en, ja, or bilingual
-    agenda_items: list = field(default_factory=list)
+    agenda_items: list[AgendaItem] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         """Convert to dictionary for YAML serialization."""

@@ -1,6 +1,6 @@
 ---
 name: meeting-asset-preparer
-description: Prepare comprehensive meeting assets including agendas, reference materials, decision logs, and action items. Use when preparing for project meetings, cross-regional sessions, or creating bilingual (Japanese/English) meeting documentation.
+description: Prepare comprehensive meeting assets including agendas, reference materials, decision logs, and action items. Use when user says "prepare meeting", "create agenda", "meeting prep", "会議準備", or needs bilingual (Japanese/English) meeting documentation for cross-regional teams. Triggers include requests for decision log templates, action item tracking, or compiling reference materials from project estimates and specs.
 ---
 
 # Meeting Asset Preparer
