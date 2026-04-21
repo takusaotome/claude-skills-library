@@ -84,6 +84,7 @@ npm install -g @mermaid-js/mermaid-cli
 | **Page breaks** | `<!-- pagebreak -->` comment | CSS `page-break-before` |
 | **Dependencies** | `fpdf2`, `mistune`, `pyyaml` | `markdown2`, `playwright`, `chromium` |
 | **Confidential mark** | `--confidential` flag | Manual CSS |
+| **Paper size** | `--paper-size letter\|a4` (default: `letter`), also via `paper_size` in frontmatter | `--paper-size letter\|a4` (default: `letter`) |
 
 ### Choosing a mode
 
@@ -213,6 +214,7 @@ The skill will run `markdown_to_fpdf.py --theme gray --no-cover`, using `<!-- pa
 - **Page breaks**: Use `<!-- pagebreak -->` for clean section transitions in fpdf2 mode
 - **Key-value tables**: Use `<!-- info-table -->` before a table for info-table styling in fpdf2 mode
 - **Column widths**: Place `<!-- col-widths: 10,45,45 -->` before a table to override auto-calculated widths (accepts ratios, %, or mm)
+- **Paper size**: Defaults to US Letter (8.5 × 11 in). Override with `--paper-size a4` or set `paper_size: a4` in YAML frontmatter.
 - **CJK fonts**: Install TrueType CJK fonts (UDEVGothic or Noto Sans JP) to avoid garbled text. CFF-outline fonts like Hiragino can cause rendering issues.
 - **Mermaid preview**: Preview diagrams at [mermaid.live](https://mermaid.live/) before conversion
 - **Themes**: `navy` for client-facing documents, `gray` for internal documents

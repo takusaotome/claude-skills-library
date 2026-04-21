@@ -38,9 +38,29 @@ from themes import Theme, discover_fonts, get_theme
 
 # Constants
 FONT_FAMILY = "DocFont"
-PAGE_WIDTH_MM = 210
+
+# Paper sizes (width, height in mm + fpdf2 format string).
+# Default is US Letter (8.5" × 11"); A4 remains available via --paper-size.
+PAPER_SIZES = {
+    "letter": {"width": 215.9, "height": 279.4, "fpdf_format": "Letter"},
+    "a4": {"width": 210.0, "height": 297.0, "fpdf_format": "A4"},
+}
+DEFAULT_PAPER_SIZE = "letter"
+
 PAGE_MARGIN_MM = 10
-CONTENT_WIDTH_MM = PAGE_WIDTH_MM - 2 * PAGE_MARGIN_MM  # 190mm
+PAGE_WIDTH_MM = PAPER_SIZES[DEFAULT_PAPER_SIZE]["width"]
+PAGE_HEIGHT_MM = PAPER_SIZES[DEFAULT_PAPER_SIZE]["height"]
+CONTENT_WIDTH_MM = PAGE_WIDTH_MM - 2 * PAGE_MARGIN_MM
+
+
+def set_paper_size(size: str) -> None:
+    """Update module-level page dimensions for the given paper size."""
+    global PAGE_WIDTH_MM, PAGE_HEIGHT_MM, CONTENT_WIDTH_MM
+    if size not in PAPER_SIZES:
+        raise ValueError(f"Unknown paper size: {size}. Use one of {list(PAPER_SIZES.keys())}.")
+    PAGE_WIDTH_MM = PAPER_SIZES[size]["width"]
+    PAGE_HEIGHT_MM = PAPER_SIZES[size]["height"]
+    CONTENT_WIDTH_MM = PAGE_WIDTH_MM - 2 * PAGE_MARGIN_MM
 
 
 # ============================================================
@@ -137,8 +157,18 @@ def children_to_markdown(children: List[Dict]) -> str:
 class ProfessionalPDF(FPDF):
     """FPDF subclass for professional document rendering with theme support."""
 
-    def __init__(self, theme: Theme, frontmatter: Optional[Dict] = None, font_regular: str = "", font_bold: str = ""):
-        super().__init__(orientation="P", unit="mm", format="A4")
+    def __init__(
+        self,
+        theme: Theme,
+        frontmatter: Optional[Dict] = None,
+        font_regular: str = "",
+        font_bold: str = "",
+        paper_size: str = DEFAULT_PAPER_SIZE,
+    ):
+        if paper_size not in PAPER_SIZES:
+            raise ValueError(f"Unknown paper size: {paper_size}. Use one of {list(PAPER_SIZES.keys())}.")
+        super().__init__(orientation="P", unit="mm", format=PAPER_SIZES[paper_size]["fpdf_format"])
+        self.paper_size = paper_size
         self.theme = theme
         self.frontmatter = frontmatter or {}
         self._is_cover = False
@@ -282,7 +312,7 @@ class ProfessionalPDF(FPDF):
 
         # Bottom bar
         self.set_fill_color(*self.theme.primary)
-        self.rect(0, 289, PAGE_WIDTH_MM, 8, "F")
+        self.rect(0, PAGE_HEIGHT_MM - 8, PAGE_WIDTH_MM, 8, "F")
 
         self._is_cover = False
 
@@ -482,8 +512,8 @@ class ProfessionalPDF(FPDF):
         render_w = CONTENT_WIDTH_MM
         render_h = img_h_px * scale
 
-        # Max usable height on a page (A4=297mm, top/bottom margins ~20mm)
-        max_page_h = 297 - 20 - 20  # ~257mm
+        # Max usable height on a page (Letter=279.4mm / A4=297mm, top/bottom margins ~20mm each)
+        max_page_h = PAGE_HEIGHT_MM - 20 - 20
         if render_h > max_page_h:
             # Scale down to fit within max page height
             render_h = max_page_h
@@ -494,7 +524,7 @@ class ProfessionalPDF(FPDF):
             x = PAGE_MARGIN_MM
 
         # Check if image fits on remaining space of current page
-        available_h = 297 - self.get_y() - 15  # 15mm bottom margin
+        available_h = PAGE_HEIGHT_MM - self.get_y() - 15  # 15mm bottom margin
         if render_h > available_h:
             self.add_page()
 
@@ -834,6 +864,7 @@ def render_pdf(
     font_bold: Optional[str] = None,
     strict_mermaid: bool = True,
     debug_mermaid: bool = False,
+    paper_size: Optional[str] = None,
 ) -> str:
     """Render Markdown text to a professional PDF.
 
@@ -860,6 +891,10 @@ def render_pdf(
     effective_theme = theme_name or frontmatter.get("theme", "navy")
     theme = get_theme(effective_theme)
 
+    # Resolve paper size (CLI override > frontmatter > default)
+    effective_paper_size = (paper_size or frontmatter.get("paper_size", DEFAULT_PAPER_SIZE)).lower()
+    set_paper_size(effective_paper_size)
+
     # Apply overrides
     if confidential:
         frontmatter["confidential"] = True
@@ -870,7 +905,9 @@ def render_pdf(
     fr, fb = discover_fonts(font_regular, font_bold)
 
     # Create PDF
-    pdf = ProfessionalPDF(theme=theme, frontmatter=frontmatter, font_regular=fr, font_bold=fb)
+    pdf = ProfessionalPDF(
+        theme=theme, frontmatter=frontmatter, font_regular=fr, font_bold=fb, paper_size=effective_paper_size
+    )
     pdf.alias_nb_pages()
 
     # Cover page
@@ -909,6 +946,12 @@ def main():
     )
     parser.add_argument("--confidential", action="store_true", help="Mark document as confidential")
     parser.add_argument("--no-cover", action="store_true", help="Suppress cover page")
+    parser.add_argument(
+        "--paper-size",
+        choices=list(PAPER_SIZES.keys()),
+        default=None,
+        help=f"Paper size (default: {DEFAULT_PAPER_SIZE}; also honors 'paper_size' in YAML frontmatter)",
+    )
     parser.add_argument("--font-regular", default=None, help="Path to regular weight CJK font (.ttc/.ttf/.otf)")
     parser.add_argument("--font-bold", default=None, help="Path to bold weight CJK font (.ttc/.ttf/.otf)")
     parser.add_argument(
@@ -950,6 +993,7 @@ def main():
             font_bold=args.font_bold,
             strict_mermaid=not args.no_strict_mermaid,
             debug_mermaid=args.debug_mermaid,
+            paper_size=args.paper_size,
         )
         print(f"Generated: {output}")
 

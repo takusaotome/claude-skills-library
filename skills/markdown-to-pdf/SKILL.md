@@ -39,9 +39,7 @@ Use this skill when:
 - "Convert this design document with diagrams to PDF" → Playwright mode
 - "Export this Mermaid diagram as an image" → mermaid_to_image.py
 
-## Quick Start
-
-### Prerequisites
+## Prerequisites
 
 **For fpdf2 mode (professional PDFs):**
 ```bash
@@ -56,6 +54,33 @@ playwright install chromium
 # For Mermaid conversion:
 npm install -g @mermaid-js/mermaid-cli
 ```
+
+**Optional (for layout verification):**
+```bash
+pip install PyMuPDF
+```
+
+## Output
+
+| Mode | Output | Description |
+|------|--------|-------------|
+| fpdf2 | `.pdf` | Professional PDF with optional cover page, themed styling, headers/footers |
+| Playwright | `.pdf` | HTML/CSS-rendered PDF with embedded Mermaid diagrams |
+| mermaid_to_image | `.png` or `.svg` | Standalone Mermaid diagram image |
+
+**Default paper size:** US Letter (8.5 × 11 in / 215.9 × 279.4 mm), portrait orientation. Use `--paper-size a4` or set `paper_size: a4` in YAML frontmatter for A4 (210 × 297 mm).
+
+**fpdf2 mode produces:**
+- Letter portrait PDF (default) or A4 portrait PDF (`--paper-size a4`)
+- Optional cover page with title, subtitle, metadata
+- Themed headers and footers on content pages
+- Styled tables (data tables with colored headers, info tables for key-value pairs)
+- Embedded Mermaid diagrams (converted to PNG)
+
+**Playwright mode produces:**
+- Letter portrait PDF (default) or A4 portrait PDF (`--paper-size a4`)
+- Mermaid diagrams rendered inline (PNG or SVG)
+- Custom CSS styling support
 
 ## Task 1: Convert Markdown with Mermaid to PDF (Playwright mode)
 
@@ -76,6 +101,8 @@ npm install -g @mermaid-js/mermaid-cli
 **Image format:** `--image-format png|svg` (SVG recommended)
 
 **Background color:** `--background white|transparent|"#f0f0f0"`
+
+**Paper size:** `--paper-size letter|a4` (default: `letter`)
 
 **Custom styling:** `--css styles.css`
 
@@ -129,6 +156,7 @@ Add frontmatter at the top of the Markdown file to control cover page, theme, an
 title: 御見積書
 subtitle: AI プラットフォーム PoC サポート
 theme: navy
+paper_size: letter   # letter (default) | a4
 document_number: FSAI-2026-0001
 date: 2026年2月17日
 author: 山田 太郎
@@ -199,6 +227,7 @@ python scripts/markdown_to_fpdf.py input.md output.pdf [options]
 | Option | Description |
 |--------|-------------|
 | `--theme navy\|gray` | Color theme (default: from frontmatter or navy) |
+| `--paper-size letter\|a4` | Paper size (default: `letter`; also honors `paper_size` in YAML frontmatter) |
 | `--confidential` | Mark as confidential |
 | `--no-cover` | Suppress cover page |
 | `--font-regular PATH` | Custom regular font |
@@ -362,7 +391,7 @@ Use SVG format: `--image-format svg` (recommended)
 3. **Use `<!-- pagebreak -->`** for clean section transitions in fpdf2 mode
 4. **Use `<!-- info-table -->`** for key-value tables in fpdf2 mode
 5. **Preview Mermaid** at [mermaid.live](https://mermaid.live/) before conversion
-6. **Mermaid Gantt chart font sizes** → fpdf2 mode renders Mermaid at 1200px width then scales to A4 page width (190mm). To ensure readability, use `fontSize: 16` or larger in the `%%{init: ...}%%` block. Recommended settings for Gantt charts:
+6. **Mermaid Gantt chart font sizes** → fpdf2 mode renders Mermaid at 1200px width then scales to the page content width (Letter ≈ 195.9 mm, A4 = 190 mm). To ensure readability, use `fontSize: 16` or larger in the `%%{init: ...}%%` block. Recommended settings for Gantt charts:
    ```
    'gantt': { 'fontSize': 18, 'sectionFontSize': 20, 'barHeight': 30, 'leftPadding': 180 }
    ```

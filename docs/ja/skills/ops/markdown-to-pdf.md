@@ -84,6 +84,7 @@ npm install -g @mermaid-js/mermaid-cli
 | **ページ区切り** | `<!-- pagebreak -->` コメント | CSS `page-break-before` |
 | **依存パッケージ** | `fpdf2`, `mistune`, `pyyaml` | `markdown2`, `playwright`, `chromium` |
 | **機密マーク** | `--confidential` フラグ | CSS で手動設定 |
+| **用紙サイズ** | `--paper-size letter\|a4`（既定: `letter`）、フロントマターの `paper_size` も可 | `--paper-size letter\|a4`（既定: `letter`） |
 
 ### モードの選び方
 
@@ -213,6 +214,7 @@ gray テーマ（社内文書）を使用し、セクション間にページ区
 - **ページ区切り**: fpdf2 モードでは `<!-- pagebreak -->` でセクション間を区切る
 - **キーバリューテーブル**: fpdf2 モードではテーブルの前に `<!-- info-table -->` を記述して info-table スタイルを適用
 - **テーブル列幅の制御**: `<!-- col-widths: 10,45,45 -->` をテーブル直前に置くと、比率／％／mm で列幅を指定可能（自動幅計算を上書き）
+- **用紙サイズ**: 既定は US Letter（8.5 × 11 インチ）。`--paper-size a4` または YAML フロントマターの `paper_size: a4` で A4 に切り替え可能。
 - **CJK フォント**: TrueType CJK フォント（UDEVGothic または Noto Sans JP）をインストールして文字化けを防止。Hiragino などの CFF アウトラインフォントはレンダリングの問題を引き起こす可能性あり。
 - **Mermaid プレビュー**: 変換前に [mermaid.live](https://mermaid.live/) でダイアグラムをプレビュー
 - **テーマ**: クライアント向け文書は `navy`、社内文書は `gray`

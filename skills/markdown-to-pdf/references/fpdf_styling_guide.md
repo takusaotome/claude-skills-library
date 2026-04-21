@@ -13,6 +13,7 @@ The frontmatter block must appear at the top of the Markdown file, enclosed in `
 title: 御見積書
 subtitle: AI プラットフォーム PoC サポート
 theme: navy
+paper_size: letter   # letter (default, 8.5×11") | a4 (210×297 mm)
 document_number: FSAI-2026-0001
 date: 2026年2月17日
 author: 山田 太郎
@@ -31,6 +32,7 @@ header_text: "FSAI-2026-0001 | FujiSoft America, Inc."
 | `title` | string | (none) | Document title (cover page and metadata) |
 | `subtitle` | string | (none) | Subtitle shown below title on cover |
 | `theme` | string | `navy` | Color theme: `navy` or `gray` |
+| `paper_size` | string | `letter` | Paper size: `letter` (US, default) or `a4`. Overridden by CLI `--paper-size`. |
 | `document_number` | string | (none) | Document ID shown in header |
 | `date` | string | (none) | Issue date shown on cover |
 | `author` | string | (none) | Author name shown on cover |
