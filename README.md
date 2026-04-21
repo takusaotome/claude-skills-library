@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (97 skills)
+├── skills/                 # All Claude Code skills (98 skills)
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (97 Skills)
+## Skill Catalog (98 Skills)
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -157,7 +157,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
 | meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
 
-### QA & Testing (11 skills)
+### QA & Testing (12 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -166,6 +166,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | qa-bug-analyzer | バグデータ分析・品質トレンド | Quality Metrics, Trend Analysis |
 | uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
 | helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
+| email-triage-responder | 受信メールのトリアージ・優先度付け・返信ドラフト | Eisenhower Matrix, Topic Classification, Draft Generation |
 | cx-error-analyzer | CXエラーシナリオ分析・改善優先度付け | 6-Axis CX Scoring, Impact vs Effort Matrix |
 | skill-idea-miner | セッションログからスキルアイデアを自動抽出・スコアリング | Session Log Mining, LLM Scoring, Backlog Management |
 | skill-designer | アイデア仕様からスキル設計プロンプトを生成 | Design Prompt Generation, Repository Convention Compliance |
@@ -1855,6 +1856,60 @@ Generic helpdesk first-response skill for creating KB-based response drafts. Ada
 - "Handle this customer inquiry about error code 30001"
 - "Generate a Japanese response for this support request"
 - "Set up a KB-based helpdesk workflow for my product"
+
+---
+
+### 📧 Email Triage Responder
+
+**File:** `skills/email-triage-responder/SKILL.md`
+
+Analyze inbox emails to identify action-required items, prioritize by urgency/importance using the Eisenhower Matrix, classify by topic, and generate contextual draft responses.
+
+**When to use:**
+- Triaging a large inbox with many unread emails
+- Prioritizing which emails need immediate attention
+- Classifying emails by topic or sender type
+- Generating draft responses for common email types
+- Tracking response status across multiple emails
+
+**Core Capabilities:**
+- ✅ Urgency detection (time-sensitive language, deadlines, escalation markers)
+- ✅ Importance scoring (VIP senders, CC patterns, content signals)
+- ✅ Topic classification (client, vendor, internal, meeting, FYI)
+- ✅ Eisenhower Matrix quadrant assignment (Q1-Q4)
+- ✅ Contextual draft response generation (tone/language aware)
+- ✅ Response status tracking (pending, draft_ready, sent, delegated)
+
+**Workflow:**
+
+| Step | Description |
+|------|-------------|
+| Step 1 | Fetch unread emails via gogcli or MCP |
+| Step 2 | Parse and analyze (urgency, importance, topic) |
+| Step 3 | Generate priority matrix (4 quadrants) |
+| Step 4 | Draft contextual responses |
+| Step 5 | Track response status |
+| Step 6 | Generate summary report |
+
+**Priority Matrix:**
+
+| Quadrant | Urgency | Importance | Action |
+|----------|---------|------------|--------|
+| Q1 | High | High | Respond immediately |
+| Q2 | Low | High | Schedule focused time |
+| Q3 | High | Low | Delegate or quick reply |
+| Q4 | Low | Low | Batch process or archive |
+
+**Key Components:**
+- `scripts/triage_emails.py` - Main triage and draft generation script
+- `references/email-classification.md` - Topic taxonomy and urgency markers
+- `references/response-templates.md` - Draft response templates by category
+
+**Example Use Cases:**
+- "Triage my unread emails and show me what needs immediate attention"
+- "Generate draft responses for my Q1 and Q2 emails"
+- "Classify my inbox by topic and sender type"
+- "Track which emails I've responded to this week"
 
 ---
 
@@ -3985,6 +4040,17 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### email-triage-responder v1.0 (2026-04-21)
+- Email inbox triage and response draft generation skill
+- Urgency detection: time-sensitive keywords, deadlines, escalation markers
+- Importance scoring: VIP sender patterns, recipient position, content signals
+- Topic classification: 8 categories (client, vendor, internal, meeting, FYI, approval, escalation, delegation)
+- Eisenhower Matrix quadrant assignment (Q1-Q4 prioritization)
+- Contextual draft response generation with tone/language adaptation
+- Response status tracking: pending, draft_ready, sent, delegated, archived
+- JSON and Markdown report output formats
+- Integration with gogcli for Gmail and MCP for Outlook
 
 ### meeting-minutes-reviewer v1.0 (2026-03-26)
 - Review meeting minutes for completeness, action item clarity, and decision documentation
