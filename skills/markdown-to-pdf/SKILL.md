@@ -182,6 +182,7 @@ For detailed field reference, see `references/fpdf_styling_guide.md`.
 | `\| table \|` | Styled table (data_table by default) |
 | ` ```code``` ` | Code block (gray background) |
 | ` ```mermaid``` ` | Mermaid → PNG image (strict: fail on error, `--no-strict-mermaid`: fallback to code block) |
+| `> quote` | Block quote (left accent bar, light fill, italic text) |
 | `<!-- pagebreak -->` | Page break |
 | `---` | Horizontal rule |
 | `<!-- info-table -->` | Override next table to info_table style |

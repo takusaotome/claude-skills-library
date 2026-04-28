@@ -136,6 +136,7 @@ Supported Mermaid diagram types include flowcharts, sequence diagrams, Gantt cha
 | `<!-- info-table -->` | fpdf2 | Render the next table as key-value info-table style |
 | `<!-- col-widths: 10,45,45 -->` | fpdf2 | Override the next table's column widths (accepts ratios, %, or mm; normalized to page width) |
 | `---` | fpdf2 | Horizontal rule |
+| `> quote` | fpdf2 | Block quote with left accent bar, light fill, and italic text |
 | ` ```mermaid ` | Both | Render Mermaid diagram as image |
 
 ---

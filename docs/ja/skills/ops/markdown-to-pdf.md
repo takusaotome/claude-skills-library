@@ -136,6 +136,7 @@ npm install -g @mermaid-js/mermaid-cli
 | `<!-- info-table -->` | fpdf2 | 次のテーブルをキーバリュー info-table スタイルで表示 |
 | `<!-- col-widths: 10,45,45 -->` | fpdf2 | 次のテーブルの列幅を指定（比率・%・mm を受付。ページ幅に正規化） |
 | `---` | fpdf2 | 水平線 |
+| `> quote` | fpdf2 | ブロック引用（左側アクセントバー、淡色背景、イタリック表示） |
 | ` ```mermaid ` | 両方 | Mermaid ダイアグラムを画像としてレンダリング |
 
 ---
