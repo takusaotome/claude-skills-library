@@ -229,16 +229,35 @@ Use `package_skill.py` to create distributable `.zip` file. Validation runs auto
 
 #### Installation Commands
 
+**Recommended — use the bundled installer** (handles skills + matching agents in one shot, strips `__pycache__`/`.DS_Store`, supports dry-run and CI-friendly drift checks):
+
 ```bash
-# Install skill to user environment (CORRECT)
-cp -r ./skills/skill-name ~/.claude/skills/
+# Sync one skill (and the agent of the same name if it exists)
+make install SKILL=skill-name
+# or:  ./scripts/install_to_claude.sh skill-name
 
-# Remove __pycache__ if present
-rm -rf ~/.claude/skills/skill-name/scripts/__pycache__
+# Sync everything in the repo
+make install-all
 
-# Verify installation
-ls ~/.claude/skills/skill-name/SKILL.md
+# Diff-only check (CI-friendly; exits non-zero on drift)
+make check-all
+make check SKILL=skill-name
+
+# Preview without changing anything
+./scripts/install_to_claude.sh --dry-run skill-name
 ```
+
+**Manual fallback** (equivalent to what the script does for skills only):
+
+```bash
+cp -r ./skills/skill-name ~/.claude/skills/
+rm -rf ~/.claude/skills/skill-name/scripts/__pycache__
+ls ~/.claude/skills/skill-name/SKILL.md
+# Don't forget the matching agent, if any:
+cp ./agents/skill-name.md ~/.claude/agents/
+```
+
+The installer is the recommended path because it removes the destination directory before copying (so deletions in the repo are reflected) and it covers `agents/` too — a common forgetting point.
 
 #### WRONG Installation (DO NOT DO THIS)
 
