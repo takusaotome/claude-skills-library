@@ -55,18 +55,18 @@ Use this skill in the following scenarios:
 
 | # | Domain | Description | Routing Target |
 |---|--------|-------------|----------------|
-| 1 | Budget Planning & Management | Budget creation, zero-based budgeting, budget cycle | Reference: `references/第05回_その予算って根拠あるの_20250507.md` |
+| 1 | Budget Planning & Management | Budget creation, zero-based budgeting, budget cycle | Reference: `references/05_evidence-based-budgeting_20250507.md` |
 | 2 | Budget-Actual Variance Analysis | Variance calculation, favorable/unfavorable assessment | Skill: `ma-budget-actual-variance` |
-| 3 | Cost Accounting (Standard, ABC) | Standard costing, ABC, cost allocation methods | Skill: `ma-standard-cost-variance`, Reference: `references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` |
+| 3 | Cost Accounting (Standard, ABC) | Standard costing, ABC, cost allocation methods | Skill: `ma-standard-cost-variance`, Reference: `references/11_ABC-store-profitability_20251213.md` |
 | 4 | CVP / Break-Even Analysis | Break-even point, contribution margin, what-if | Skill: `ma-cvp-break-even` |
-| 5 | KPI Design & Performance Measurement | KPI framework, BSC, OKR, dashboard design | Reference: `references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md` |
-| 6 | Monthly Close Acceleration | Closing process optimization, early warning systems | Reference: `references/第07回_まだ先月分締まってないの_20250720.md` |
-| 7 | Make-or-Buy / Outsourcing Analysis | Differential cost-revenue analysis, outsourcing evaluation | Reference: `references/第10回_差額原価収益分析_20251104.md` |
+| 5 | KPI Design & Performance Measurement | KPI framework, BSC, OKR, dashboard design | Reference: `references/06_kpi-design-employee-engagement_20250611.md` |
+| 6 | Monthly Close Acceleration | Closing process optimization, early warning systems | Reference: `references/07_monthly-close-acceleration_20250720.md` |
+| 7 | Make-or-Buy / Outsourcing Analysis | Differential cost-revenue analysis, outsourcing evaluation | Reference: `references/10_differential-cost-analysis_20251104.md` |
 | 8 | Transfer Pricing | Inter-division pricing, arm's length principle | General guidance |
 | 9 | Investment Appraisal (NPV/IRR) | Capital budgeting, DCF, payback analysis | Skill: `financial-analyst` |
-| 10 | Segment / Division Reporting | Segment P&L, profitability by division/store | Reference: `references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` |
+| 10 | Segment / Division Reporting | Segment P&L, profitability by division/store | Reference: `references/11_ABC-store-profitability_20251213.md` |
 | 11 | Cash Flow Management | Cash conversion cycle, working capital optimization | General guidance |
-| 12 | Forecasting & Rolling Forecast | Rolling forecast, predictive analytics | Reference: `references/第03回_データドリブン経営とは_20250307.md` |
+| 12 | Forecasting & Rolling Forecast | Rolling forecast, predictive analytics | Reference: `references/03_data-driven-management_20250307.md` |
 
 ## Workflow 2: Analysis Routing
 
@@ -109,18 +109,18 @@ Output template: `assets/domain_classification_template_ja.md` (Japanese) or `as
 
 ### References (load into context for domain-specific guidance)
 
-- `references/第01回_決算で一喜一憂しないために_20241224.md` - Introduction to management accounting vs. financial accounting
-- `references/第02回_経営改善の強い味方〜その①管理会計_20250128.md` - Management accounting as a tool for business improvement
-- `references/第03回_データドリブン経営とは_20250307.md` - Data-driven management and forecasting fundamentals
-- `references/第04回_分析_20250408.md` - Analysis methodology foundations
-- `references/第05回_その予算って根拠あるの_20250507.md` - Evidence-based budgeting approaches
-- `references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md` - KPI design principles and employee engagement
-- `references/第07回_まだ先月分締まってないの_20250720.md` - Monthly close acceleration techniques
-- `references/第08回_予算実績差異分析_20250820.md` - Budget-actual variance analysis methodology
-- `references/第09回_損益分岐点って要は元を取るライン_20251005.md` - Break-even analysis fundamentals
-- `references/第10回_差額原価収益分析_20251104.md` - Differential cost-revenue analysis for make-or-buy decisions
-- `references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` - Activity-Based Costing and store-level profitability
-- `references/第12回_予定原価という考え方_20260122.md` - Standard cost (planned cost) concepts and variance analysis
+- `references/01_year-end-closing_20241224.md` - Introduction to management accounting vs. financial accounting
+- `references/02_management-accounting-business-improvement_20250128.md` - Management accounting as a tool for business improvement
+- `references/03_data-driven-management_20250307.md` - Data-driven management and forecasting fundamentals
+- `references/04_analysis_20250408.md` - Analysis methodology foundations
+- `references/05_evidence-based-budgeting_20250507.md` - Evidence-based budgeting approaches
+- `references/06_kpi-design-employee-engagement_20250611.md` - KPI design principles and employee engagement
+- `references/07_monthly-close-acceleration_20250720.md` - Monthly close acceleration techniques
+- `references/08_budget-actual-variance-analysis_20250820.md` - Budget-actual variance analysis methodology
+- `references/09_break-even-analysis_20251005.md` - Break-even analysis fundamentals
+- `references/10_differential-cost-analysis_20251104.md` - Differential cost-revenue analysis for make-or-buy decisions
+- `references/11_ABC-store-profitability_20251213.md` - Activity-Based Costing and store-level profitability
+- `references/12_standard-cost_20260122.md` - Standard cost (planned cost) concepts and variance analysis
 
 ### Related Skills (route to for specialized analysis)
 
@@ -165,7 +165,7 @@ Output template: `assets/domain_classification_template_ja.md` (Japanese) or `as
 
 **Classification**:
 - Domain: #5 KPI Design & Performance Measurement (Confidence: High)
-- Routing: Reference `references/第06回_従業員に好かれるKPIと嫌われるKPI_20250611.md`
+- Routing: Reference `references/06_kpi-design-employee-engagement_20250611.md`
 
 **Response**:
 - Load reference material on KPI design principles
