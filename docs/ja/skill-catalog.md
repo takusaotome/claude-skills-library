@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 108 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 109 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -45,9 +45,9 @@ permalink: /ja/skill-catalog/
 | [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) | インシデント RCA・是正措置計画 | 5 Whys、Fishbone、FTA |
 | [hidden-contract-investigator]({{ '/ja/skills/dev/hidden-contract-investigator/' | relative_url }}) | 既存コードの暗黙契約抽出・再利用リスク可視化 | 暗黙契約抽出、再利用リスク |
 | [safe-by-default-architect]({{ '/ja/skills/dev/safe-by-default-architect/' | relative_url }}) | 危険パターン禁止・安全デフォルト設計標準 | 安全デフォルト設計、パターン禁止 |
-| [multi-file-log-correlator]({{ '/ja/skills/dev/multi-file-log-correlator/' | relative_url }}) | 複数ログファイルの相関分析・統合タイムライン | クロスソース相関、ギャップ検出 |
-| [network-incident-analyzer]({{ '/ja/skills/dev/network-incident-analyzer/' | relative_url }}) | ネットワークログ分析・障害検出 | マルチフォーマット解析、異常検出 |
-| [codebase-onboarding-generator]({{ '/ja/skills/dev/codebase-onboarding-generator/' | relative_url }}) | コードベースからCLAUDE.md自動生成 | 8+言語対応、AI文脈ファイル |
+| [multi-file-log-correlator]({{ '/ja/skills/meta/multi-file-log-correlator/' | relative_url }}) | 複数ログファイルの相関分析・統合タイムライン | クロスソース相関、ギャップ検出 |
+| [network-incident-analyzer]({{ '/ja/skills/meta/network-incident-analyzer/' | relative_url }}) | ネットワークログ分析・障害検出 | マルチフォーマット解析、異常検出 |
+| [codebase-onboarding-generator]({{ '/ja/skills/meta/codebase-onboarding-generator/' | relative_url }}) | コードベースからCLAUDE.md自動生成 | 8+言語対応、AI文脈ファイル |
 
 ---
 
@@ -86,7 +86,7 @@ permalink: /ja/skill-catalog/
 
 ## オペレーション & ドキュメンテーション
 
-技術文書、プレゼン、ドキュメント変換、議事録の 21 スキル。
+技術文書、プレゼン、ドキュメント変換、議事録の 22 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -102,6 +102,7 @@ permalink: /ja/skill-catalog/
 | [presentation-reviewer]({{ '/ja/skills/ops/presentation-reviewer/' | relative_url }}) | プレゼン資料レビュー (聴衆視点) | 5 評価軸 |
 | [meeting-asset-preparer]({{ '/ja/skills/meta/meeting-asset-preparer/' | relative_url }}) | 会議アジェンダ・資料・アクション準備 | バイリンガル(JA/EN)、文脈統合 |
 | [meeting-minutes-writer]({{ '/ja/skills/meta/meeting-minutes-writer/' | relative_url }}) | 議事録生成＋自己レビューループ（最大3反復） | 5必須チェック、日付検証、HIGH指摘ガード |
+| [meeting-minutes-reviewer]({{ '/ja/skills/meta/meeting-minutes-reviewer/' | relative_url }}) | 既存議事録の完全性・アクション明瞭性・整合性レビュー | 5ディメンションスコアリング、重要度別指摘、ソース突合 |
 | [timezone-aware-event-tracker]({{ '/ja/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | マルチタイムゾーンイベント追跡・相関 | DST対応、マルチTZタイムライン |
 | [action-status-updater]({{ '/ja/skills/meta/action-status-updater/' | relative_url }}) | アクションアイテム自然言語更新追跡（JP/EN） | NLパース、YAML状態、daily-comms-ops連携 |
 | [email-triage-responder]({{ '/ja/skills/meta/email-triage-responder/' | relative_url }}) | メールトリアージ＋返信ドラフト生成 | Eisenhowerマトリクス、ドラフト生成、gogcli/Outlook |
