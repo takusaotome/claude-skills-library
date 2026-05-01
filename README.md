@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 102 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 106 dirs total
+├── skills/                 # 103 published skills (with SKILL.md) + 3 in-progress directories with only scripts/ — 106 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (102 Skills)
+## Skill Catalog (103 Skills)
 
-> Note: `skills/` contains 106 directories total — 102 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
+> Note: `skills/` contains 106 directories total — 103 published skills (with `SKILL.md`) listed below, plus 3 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`.
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -197,12 +197,13 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | pci-dss-compliance-consultant | PCI DSS v4準拠支援 | Gap Analysis, SAQ Selection |
 | financial-analyst | 財務分析・投資評価 | DCF, Comparable Analysis |
 
-### Vendor Management (3 skills)
+### Vendor Management (4 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | vendor-estimate-creator | 開発見積作成 | WBS, 4 Estimation Methods, ROI |
 | vendor-estimate-reviewer | ベンダー見積レビュー・妥当性評価 | 12 Review Dimensions, 60+ Risk Factors |
+| vendor-procurement-coordinator | RFQ送信〜見積受領〜クライアント見積作成の統合調整 | Email Automation, Response Tracking, Quote Comparison |
 | vendor-rfq-creator | RFQ（見積依頼書）作成 | 150+ Checklist Items |
 
 ### HR Management (2 skills)
@@ -913,6 +914,73 @@ A skill that transforms vague client requirements into comprehensive RFQ (Reques
 - Markdown形式のRFQ文書（すぐにベンダーに送付可能）
 - 構造化された見積書フォーマットテンプレート
 - チェックリストベースの品質確認レポート
+
+---
+
+### 📋 Vendor Procurement Coordinator（ベンダー調達コーディネーター）
+
+**File:** `skill-packages/vendor-procurement-coordinator.skill`
+
+RFQ作成・送信から、ベンダー回答追跡、見積比較、クライアント向け見積作成までのエンドツーエンドのベンダー調達ワークフローを統合管理するスキル。`vendor-rfq-creator`と`vendor-estimate-creator`スキルをオーケストレーションし、メール自動化とステータス追跡を追加。
+
+A skill that orchestrates the complete vendor procurement lifecycle from initial RFQ creation through vendor response tracking to final client-facing estimate generation. Integrates with existing vendor-rfq-creator and vendor-estimate-creator skills while adding email automation, response tracking, and procurement status management capabilities.
+
+**When to use:**
+- 単一プロジェクトで複数ベンダーへの見積依頼を管理するとき
+- ベンダーの見積回答と期限を追跡するとき
+- 受領したベンダー見積をクライアント向け見積に変換するとき
+- RFQ配信をベンダーメールリストに自動化するとき
+- エンドツーエンドの調達パイプラインを調整するとき
+
+**Core Capabilities:**
+- ✅ 調達プロジェクト初期化（ディレクトリ構造、設定ファイル作成）
+- ✅ ベンダー管理（追加、編集、削除、CSVインポート）
+- ✅ RFQメール送信（テンプレート、プレビュー/送信モード）
+- ✅ 回答追跡（見積受領ログ、ステータス管理、リマインダー）
+- ✅ 見積比較レポート（価格分析、納期比較、評価スコア）
+- ✅ クライアント見積作成（マークアップ適用、統合）
+
+**Key Features:**
+
+**8ステップ統合ワークフロー**:
+1. Initialize Procurement（調達プロジェクト初期化）
+2. Create RFQ（RFQ文書作成 - vendor-rfq-creator連携）
+3. Register Vendors（ベンダー登録）
+4. Send RFQ（RFQ送信）
+5. Track Responses（回答追跡）
+6. Compare Quotes（見積比較）
+7. Create Client Estimate（クライアント見積作成 - vendor-estimate-creator連携）
+8. Generate Report（調達レポート生成）
+
+**調達ステータス管理**:
+- プロジェクトステータス: initialized → rfq_sent → quotes_received → evaluation → completed
+- ベンダーステータス: pending → contacted → quote_received → selected/declined
+
+**メールテンプレート**:
+- RFQ送付メール（日本語/英語）
+- リマインダーメール（1週間前/3日前）
+
+**Bundled Resources:**
+- `references/procurement_workflow_guide.md`: 調達プロセスガイド（6フェーズ）
+- `references/vendor_evaluation_criteria.md`: ベンダー評価基準（6次元）
+- `assets/email_templates/`: メールテンプレート集
+
+**Use Cases:**
+- 複数ベンダーからの相見積取得と管理
+- 調達プロセスの標準化と監査証跡
+- ベンダー選定の公平性と透明性確保
+- クライアント向け見積作成の効率化
+
+**Best For:**
+- プロジェクトマネージャー（ベンダー選定担当）
+- 調達・購買部門
+- ITマネージャー
+- システム開発ディレクター
+
+**Output Format:**
+- YAML形式の調達ステータス（procurement.yaml）
+- Markdown形式のベンダー比較レポート
+- Markdown形式のクライアント見積書
 
 ---
 
@@ -4191,6 +4259,19 @@ Future skills planned for this library:
 - Design token extraction and management with category namespacing
 - Bidirectional traceability (decisions ↔ elements)
 - Markdown and JSON history report generation
+
+### vendor-procurement-coordinator v1.0 (2026-04-18)
+- End-to-end vendor procurement workflow coordination
+- Orchestrates vendor-rfq-creator and vendor-estimate-creator skills
+- Project initialization with standard directory structure (rfq/, quotes/, estimates/, communications/)
+- Vendor management (add, edit, remove, CSV import) with status tracking
+- Quote response logging with amount, currency, delivery date, validity period
+- Email template system (Japanese/English RFQ emails, reminder templates)
+- Vendor comparison report generation with price scoring and analysis
+- Procurement status tracking (project and vendor lifecycle states)
+- Timeline event logging for complete audit trail
+- Python CLI scripts: init_procurement.py, manage_vendors.py, track_responses.py, compare_quotes.py
+- YAML-based procurement configuration (procurement.yaml)
 
 ### meeting-minutes-reviewer v1.0 (2026-03-26)
 - Review meeting minutes for completeness, action item clarity, and decision documentation
