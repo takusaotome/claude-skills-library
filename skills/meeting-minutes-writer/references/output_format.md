@@ -14,7 +14,7 @@ This document defines the canonical structure, formatting rules, and ambiguity-h
 
 | No. | Action Item | Owner | Priority | Due Date | Notes |
 |-----|-------------|-------|----------|----------|-------|
-| 1   | ...         | ...   | 🔴/🟡/🟢 | YYYY/MM/DD or TBD | ... |
+| 1   | ...         | ...   | 🔴/🟡/🟢 | YYYY/MM/DD (Day of Week) or TBD | ... |
 
 **Priority Legend**
 - 🔴 High — critical / blocking

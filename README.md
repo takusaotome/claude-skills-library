@@ -2332,8 +2332,9 @@ Generates strategic-consultant-grade meeting minutes from transcripts or notes, 
 **Key Components:**
 - `references/output_format.md` - Canonical minutes structure, inference rules, ambiguity markers
 - `references/self_review_checklist.md` - 5 Mandatory Checks with severity model and iteration logic
-- `assets/minutes_template.md` - Blank meeting minutes template
-- `assets/findings_report_template.md` - Per-iteration findings report layout
+- `assets/minutes_template_en.md` - Blank meeting minutes template (English)
+- `assets/minutes_template_ja.md` - 議事録テンプレート（日本語）
+- `assets/findings_report_template.md` - Per-iteration findings report layout (bilingual EN + JA)
 
 **Key Features:**
 - 2-phase workflow: ultrathink Generation → Self-Review Loop (max 3 iterations)
@@ -4024,7 +4025,7 @@ Future skills planned for this library:
 - Severity model (HIGH/MEDIUM/LOW); HIGH findings blocking completion
 - Completion report surfaces remaining HIGH findings and `* To be confirmed` items after iteration 3
 - Complements meeting-minutes-reviewer (review-only) and video2minutes (transcribe→write)
-- Resources: output_format.md, self_review_checklist.md, minutes_template.md, findings_report_template.md
+- Resources: output_format.md, self_review_checklist.md, minutes_template_en.md, minutes_template_ja.md, findings_report_template.md (bilingual)
 
 ### meeting-minutes-reviewer v1.0 (2026-03-26)
 - Review meeting minutes for completeness, action item clarity, and decision documentation
