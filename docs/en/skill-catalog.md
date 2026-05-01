@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 96 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 97 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -85,7 +85,7 @@ All 96 skills organized by category. Skills with dedicated guide pages are shown
 
 ## Operations & Documentation
 
-12 skills for technical writing, presentations, document conversion, and meeting minutes.
+13 skills for technical writing, presentations, document conversion, and meeting minutes.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -100,6 +100,7 @@ All 96 skills organized by category. Skills with dedicated guide pages are shown
 | [operations-manual-creator]({{ '/en/skills/ops/operations-manual-creator/' | relative_url }}) | Operations manuals and SOPs | STEP Format, ANSI Z535 |
 | [presentation-reviewer]({{ '/en/skills/ops/presentation-reviewer/' | relative_url }}) | Presentation review from audience perspective | 5 Evaluation Axes |
 | [meeting-asset-preparer]({{ '/en/skills/meta/meeting-asset-preparer/' | relative_url }}) | Prepare meeting agendas, materials, and action items | Bilingual (JA/EN), Context Integration |
+| [meeting-minutes-writer]({{ '/en/skills/meta/meeting-minutes-writer/' | relative_url }}) | Generate meeting minutes with self-review loop (max 3 iterations) | 5 Mandatory Checks, Date Verification, HIGH-finding Guard |
 | [timezone-aware-event-tracker]({{ '/en/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | Track and correlate events across timezones | DST Handling, Multi-TZ Timeline |
 
 ---

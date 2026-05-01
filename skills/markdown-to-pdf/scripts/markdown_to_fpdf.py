@@ -402,6 +402,77 @@ class ProfessionalPDF(FPDF):
         self.set_line_width(0.2)
         self.ln(5)
 
+    def quote_block(self, paragraphs: List[str]):
+        """Render a block quote with left accent bar, light fill, and indented italic-styled text.
+
+        Args:
+            paragraphs: List of paragraph strings (already markdown-formatted).
+                        Each item becomes one paragraph inside the quote block.
+        """
+        if not paragraphs:
+            return
+
+        bar_w = 1.2  # accent bar width in mm
+        pad_l = 4.0  # left padding inside block (after bar)
+        pad_r = 3.0
+        pad_v = 2.5  # vertical padding (top and bottom)
+        line_h = 5.0
+        font_size = 9.5
+
+        # Calculate inner content width
+        inner_w = CONTENT_WIDTH_MM - bar_w - pad_l - pad_r
+
+        # Pre-measure: estimate total height by counting wrapped lines per paragraph
+        self.set_font(FONT_FAMILY, "I", font_size)
+        total_lines = 0
+        for p in paragraphs:
+            try:
+                # fpdf2 ≥2.7.4: dry_run=True, output="LINES" returns wrapped lines
+                wrapped = self.multi_cell(
+                    inner_w, line_h, p, markdown=True, dry_run=True, output="LINES", wrapmode="CHAR"
+                )
+                total_lines += max(1, len(wrapped))
+            except TypeError:
+                # Fallback for older fpdf2 versions
+                try:
+                    wrapped = self.multi_cell(inner_w, line_h, p, markdown=True, split_only=True, wrapmode="CHAR")
+                    total_lines += max(1, len(wrapped))
+                except Exception:
+                    total_lines += max(1, (len(p) // 60) + 1)
+            except Exception:
+                total_lines += max(1, (len(p) // 60) + 1)
+        # Add inter-paragraph spacing (small gap between paragraphs)
+        gap_lines = max(0, len(paragraphs) - 1) * 0.4
+        block_h = pad_v * 2 + (total_lines + gap_lines) * line_h
+
+        # Page break if not enough space
+        if self.get_y() + block_h > self.h - 25:
+            self.add_page()
+
+        y_start = self.get_y()
+
+        # Background fill (light gray)
+        self.set_fill_color(*self.theme.gray_light)
+        self.rect(PAGE_MARGIN_MM, y_start, CONTENT_WIDTH_MM, block_h, "F")
+
+        # Left accent bar (theme primary color)
+        self.set_fill_color(*self.theme.primary)
+        self.rect(PAGE_MARGIN_MM, y_start, bar_w, block_h, "F")
+
+        # Render text content
+        self.set_xy(PAGE_MARGIN_MM + bar_w + pad_l, y_start + pad_v)
+        self.set_font(FONT_FAMILY, "I", font_size)
+        self.set_text_color(*self.theme.text_dark)
+        for idx, p in enumerate(paragraphs):
+            self.set_x(PAGE_MARGIN_MM + bar_w + pad_l)
+            self.multi_cell(inner_w, line_h, p, markdown=True, align="L", wrapmode="CHAR")
+            if idx < len(paragraphs) - 1:
+                self.ln(line_h * 0.4)
+
+        # Move below the block
+        self.set_y(y_start + block_h)
+        self.ln(2)
+
     def render_info_table(self, headers: List[str], rows: List[List[str]], col_widths_override=None):
         """Render a 2-column info table with alternating row colors."""
         if col_widths_override is not None:
@@ -720,6 +791,9 @@ class FPDFRenderer:
         elif ttype == "table":
             self._render_table(token)
 
+        elif ttype == "block_quote":
+            self._render_block_quote(token)
+
         elif ttype == "thematic_break":
             self.pdf.horizontal_rule()
 
@@ -729,6 +803,39 @@ class FPDFRenderer:
 
         elif ttype == "blank_line":
             pass
+
+    def _render_block_quote(self, quote_token: Dict):
+        """Render a markdown block_quote (lines starting with `> `).
+
+        Mistune produces a block_quote token whose children are typically
+        paragraph tokens. Each paragraph becomes one entry in the
+        quote_block paragraphs list. Non-paragraph children (e.g. nested
+        lists) are flattened into markdown text as a best-effort fallback.
+        """
+        paragraphs: List[str] = []
+        for child in quote_token.get("children", []):
+            ctype = child.get("type")
+            if ctype == "paragraph":
+                paragraphs.append(children_to_markdown(child.get("children", [])))
+            elif ctype == "blank_line":
+                continue
+            elif ctype == "block_quote":
+                # Nested blockquote — render inline by recursion-like flattening
+                self._render_block_quote(child)
+            elif ctype == "list":
+                # Flatten list items into bullet-prefixed lines
+                items = self._extract_list_items(child)
+                for it in items:
+                    paragraphs.append(f"・ {it}")
+            elif ctype == "block_code":
+                raw = child.get("raw", child.get("children", ""))
+                if isinstance(raw, list):
+                    raw = extract_text(raw)
+                paragraphs.append(str(raw))
+            elif "children" in child and isinstance(child["children"], list):
+                paragraphs.append(children_to_markdown(child["children"]))
+        if paragraphs:
+            self.pdf.quote_block(paragraphs)
 
     def _extract_list_items(self, list_token: Dict) -> List[str]:
         items = []

@@ -130,6 +130,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | management-accounting-navigator | 1.0 | Management Accounting | 12 domain routing, COSO/IMA framework |
 | markdown-to-pdf | 2.0 | Documentation | markdown_to_pdf.py, fpdf2, Playwright, Mermaid |
 | meeting-asset-preparer | 1.0 | Meeting Documentation | prepare_meeting.py, Bilingual (JA/EN), Context Integration |
+| meeting-minutes-writer | 1.0 | Meeting Documentation | Generation + Self-Review Loop (max 3), 5 Mandatory Checks, Date Verification |
 | migration-validation-explorer | 2.0 | Data Migration QA | 4-Perspective hypothesis, Priority scoring |
 | multi-file-log-correlator | 1.0 | Log Analysis | correlate_logs.py, Cross-Source Correlation, Gap Detection |
 | network-diagnostics | 1.0 | Network Quality | network_diagnostics.py, Ping/Speed/HTTP/Traceroute |
@@ -228,16 +229,35 @@ Use `package_skill.py` to create distributable `.zip` file. Validation runs auto
 
 #### Installation Commands
 
+**Recommended — use the bundled installer** (handles skills + matching agents in one shot, strips `__pycache__`/`.DS_Store`, supports dry-run and CI-friendly drift checks):
+
 ```bash
-# Install skill to user environment (CORRECT)
-cp -r ./skills/skill-name ~/.claude/skills/
+# Sync one skill (and the agent of the same name if it exists)
+make install SKILL=skill-name
+# or:  ./scripts/install_to_claude.sh skill-name
 
-# Remove __pycache__ if present
-rm -rf ~/.claude/skills/skill-name/scripts/__pycache__
+# Sync everything in the repo
+make install-all
 
-# Verify installation
-ls ~/.claude/skills/skill-name/SKILL.md
+# Diff-only check (CI-friendly; exits non-zero on drift)
+make check-all
+make check SKILL=skill-name
+
+# Preview without changing anything
+./scripts/install_to_claude.sh --dry-run skill-name
 ```
+
+**Manual fallback** (equivalent to what the script does for skills only):
+
+```bash
+cp -r ./skills/skill-name ~/.claude/skills/
+rm -rf ~/.claude/skills/skill-name/scripts/__pycache__
+ls ~/.claude/skills/skill-name/SKILL.md
+# Don't forget the matching agent, if any:
+cp ./agents/skill-name.md ~/.claude/agents/
+```
+
+The installer is the recommended path because it removes the destination directory before copying (so deletions in the repo are reflected) and it covers `agents/` too — a common forgetting point.
 
 #### WRONG Installation (DO NOT DO THIS)
 

@@ -2,6 +2,9 @@
 Tests for the meeting asset preparer script.
 """
 
+import subprocess
+import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -221,3 +224,194 @@ class TestRoundTrip:
         assert restored.objectives == original.objectives
         assert len(restored.attendees) == len(original.attendees)
         assert restored.attendees[0].name == original.attendees[0].name
+        # Verify agenda_items are restored
+        assert len(restored.agenda_items) == len(original.agenda_items)
+        assert restored.agenda_items[0].topic == original.agenda_items[0].topic
+        assert restored.agenda_items[0].duration_minutes == original.agenda_items[0].duration_minutes
+        assert restored.agenda_items[0].presenter == original.agenda_items[0].presenter
+
+
+class TestCLI:
+    """Tests for CLI commands."""
+
+    @pytest.fixture
+    def script_path(self) -> Path:
+        """Get path to the prepare_meeting.py script."""
+        return Path(__file__).resolve().parents[1] / "prepare_meeting.py"
+
+    @pytest.fixture
+    def temp_dir(self, tmp_path: Path) -> Path:
+        """Create a temporary directory for test outputs."""
+        return tmp_path
+
+    def test_init_creates_config_file(self, script_path: Path, temp_dir: Path):
+        """Test that init command creates a valid config file."""
+        output_file = temp_dir / "meeting_config.yaml"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "init",
+                "--title",
+                "Test Meeting",
+                "--date",
+                "2026-04-15",
+                "--time",
+                "14:00",
+                "--timezone",
+                "JST",
+                "--attendees",
+                "Alice,Bob",
+                "--language",
+                "bilingual",
+                "--output",
+                str(output_file),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0
+        assert output_file.exists()
+        content = output_file.read_text()
+        assert "Test Meeting" in content
+        assert "2026-04-15" in content
+
+    def test_generate_agenda_creates_markdown(self, script_path: Path, temp_dir: Path):
+        """Test that generate-agenda creates a valid markdown file."""
+        # First create a config file
+        config_file = temp_dir / "config.yaml"
+        subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "init",
+                "--title",
+                "Sprint Review",
+                "--date",
+                "2026-04-15",
+                "--time",
+                "10:00",
+                "--language",
+                "en",
+                "--output",
+                str(config_file),
+            ],
+            capture_output=True,
+        )
+
+        # Generate agenda
+        agenda_file = temp_dir / "agenda.md"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "generate-agenda",
+                "--config",
+                str(config_file),
+                "--topics",
+                "Opening,Demo,Q&A",
+                "--durations",
+                "5,20,10",
+                "--output",
+                str(agenda_file),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0
+        assert agenda_file.exists()
+        content = agenda_file.read_text()
+        assert "Meeting Agenda" in content
+        assert "Opening" in content
+        assert "Demo" in content
+        assert "Q&A" in content
+
+    def test_create_decision_log_creates_template(self, script_path: Path, temp_dir: Path):
+        """Test that create-decision-log creates a valid template."""
+        config_file = temp_dir / "config.yaml"
+        subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "init",
+                "--title",
+                "Planning Session",
+                "--date",
+                "2026-04-20",
+                "--time",
+                "09:00",
+                "--output",
+                str(config_file),
+            ],
+            capture_output=True,
+        )
+
+        decision_log = temp_dir / "decisions.md"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "create-decision-log",
+                "--config",
+                str(config_file),
+                "--output",
+                str(decision_log),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0
+        assert decision_log.exists()
+        content = decision_log.read_text()
+        assert "Decision Log" in content
+        assert "Planning Session" in content
+
+    def test_create_action_items_creates_template(self, script_path: Path, temp_dir: Path):
+        """Test that create-action-items creates a valid template."""
+        config_file = temp_dir / "config.yaml"
+        subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "init",
+                "--title",
+                "Weekly Sync",
+                "--date",
+                "2026-04-21",
+                "--time",
+                "15:00",
+                "--output",
+                str(config_file),
+            ],
+            capture_output=True,
+        )
+
+        action_items = temp_dir / "actions.md"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(script_path),
+                "create-action-items",
+                "--config",
+                str(config_file),
+                "--output",
+                str(action_items),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0
+        assert action_items.exists()
+        content = action_items.read_text()
+        assert "Action Items" in content
+        assert "Weekly Sync" in content
+
+    def test_no_command_shows_help(self, script_path: Path):
+        """Test that running without command shows help."""
+        result = subprocess.run(
+            [sys.executable, str(script_path)],
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 1
+        assert "usage:" in result.stdout.lower() or "Meeting Asset Preparer" in result.stdout

@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (98 skills)
+├── skills/                 # 105 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 106 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,11 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (98 Skills)
+## Skill Catalog (105 Skills)
 
-### Business Strategy & Consulting (17 skills)
+> Note: `skills/` contains 106 directories total — 105 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+
+### Business Strategy & Consulting (18 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -82,11 +84,13 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 | hearing-to-requirements-mapper | ヒアリングシート→要件定義書変換、ギャップ分析 | RTM, WBS Mapping, Ambiguity Detection, Bilingual |
+| ai-bpo-proposal-generator | 在米日系企業向けAI-BPO提案書作成 | Service Selection, ROI Analysis, Bilingual Proposals |
 
-### Project Management (6 skills)
+### Project Management (7 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
+| action-status-updater | アクションアイテム状態管理、自然言語更新 | NL Parsing (JP/EN), Status Tracking, daily-comms-ops Integration |
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 | project-completeness-scorer | プロジェクト完成度評価、重み付きスコアリング | 5 Dimensions, Gap Analysis, 4 Templates |
@@ -139,7 +143,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (13 skills)
+### Documentation & Communication (17 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -153,9 +157,13 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | technical-spec-writer | 技術仕様書作成（画面/API/DB設計） | IEEE 830, Mermaid Diagrams, Traceability |
 | operations-manual-creator | 操作マニュアル・SOP作成 | STEP Format, ANSI Z535, Troubleshooting |
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
+| marp-layout-debugger | MARPレイアウト問題診断・自動修正 | Whitespace/Alignment/Bullet/Overflow/CSS Fix |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
 | meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
+| meeting-minutes-writer | 議事録生成＋自己レビューループ（最大3反復） | 5 Mandatory Checks, Date Verification, Action-Item Coverage |
+| internal-email-composer | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
+| iterative-design-assistant | デザイン反復履歴管理・文脈理解・一貫スタイリング | Design Decision Log, Contextual Reference Resolution, Token Management |
 
 ### QA & Testing (12 skills)
 
@@ -191,12 +199,13 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | pci-dss-compliance-consultant | PCI DSS v4準拠支援 | Gap Analysis, SAQ Selection |
 | financial-analyst | 財務分析・投資評価 | DCF, Comparable Analysis |
 
-### Vendor Management (3 skills)
+### Vendor Management (4 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
 | vendor-estimate-creator | 開発見積作成 | WBS, 4 Estimation Methods, ROI |
 | vendor-estimate-reviewer | ベンダー見積レビュー・妥当性評価 | 12 Review Dimensions, 60+ Risk Factors |
+| vendor-procurement-coordinator | RFQ送信〜見積受領〜クライアント見積作成の統合調整 | Email Automation, Response Tracking, Quote Comparison |
 | vendor-rfq-creator | RFQ（見積依頼書）作成 | 150+ Checklist Items |
 
 ### HR Management (2 skills)
@@ -320,6 +329,50 @@ A comprehensive data science workflow skill for analyzing tabular and time serie
 
 ---
 
+### 📋 Action Status Updater
+
+**File:** `skill-packages/action-status-updater.skill`
+
+A natural language action item tracking skill for managing status updates across communication channels.
+
+**When to use:**
+- Updating action item status via natural language (e.g., "Seanのメールには返信しておいた", "Delegated to Mike")
+- Marking items as completed, delegated, deferred, or in-progress
+- Tracking action items across email, Slack, meetings, and other channels
+- Generating action item status reports
+- Integrating with daily-comms-ops workflow
+
+**Core Capabilities:**
+- ✅ Natural language parsing for Japanese and English status updates
+- ✅ Intent detection (completed, delegated, deferred, in-progress)
+- ✅ Person and channel extraction from text
+- ✅ Persistent YAML state with full history tracking
+- ✅ Multiple export formats (daily-comms, slack, email)
+- ✅ Fuzzy matching for description and person names
+
+**Key Features:**
+
+*Automated Scripts:*
+- `action_status_updater.py` - CLI tool for action item management (init, add, update, report, export, list)
+- `nl_parser.py` - Natural language parsing module for Japanese/English
+
+*Reference Guides:*
+- `status_patterns.md` - Comprehensive patterns for intent detection and target extraction
+- `integration_guide.md` - Guide for daily-comms-ops workflow integration
+
+**Supported Update Patterns:**
+- Completed: 返信した, 完了, done, finished, sent
+- Delegated: 〜に依頼, delegated to, assigned to
+- Deferred: 延期, 来週, postponed, later
+- In-Progress: 対応中, working on, in progress
+
+**Example Use Cases:**
+- "Seanのメールには返信しておいた" → Marks Sean's email action as completed
+- "Delegated the report to Mike" → Marks report as delegated to Mike
+- "Lu対応予定" → Marks item as delegated to Lu
+
+---
+
 ### 📋 Project Manager
 
 **File:** `skill-packages/project-manager.skill`
@@ -389,6 +442,54 @@ A comprehensive PMBOK®-aligned project management skill for professional projec
 - Traditional (Waterfall) project management
 - Agile project management with PMBOK
 - Hybrid approaches
+
+---
+
+### 🏢 AI-BPO Proposal Generator
+
+**File:** `skill-packages/ai-bpo-proposal-generator.skill`
+
+A comprehensive proposal generator for AI-powered BPO services tailored for Japanese companies operating in the US market.
+
+**When to use:**
+- Creating BPO service proposals for Japanese subsidiaries in the US (在米日系企業)
+- Developing AI-enhanced outsourcing offerings for business processes
+- Estimating ROI for AI implementation in back-office operations
+- Building implementation roadmaps for phased AI adoption
+- Generating bilingual (Japanese/English) proposal documents
+
+**Core Capabilities:**
+- ✅ Service module selection based on industry and pain points
+- ✅ ROI calculation with NPV, payback period, and 3-year projections
+- ✅ Phased implementation roadmap generation
+- ✅ Bilingual proposal document generation (JA/EN)
+- ✅ Industry-specific bundles with volume discounts
+
+**Key Features:**
+
+*Automated Scripts:*
+- `select_services.py` - Service module selection based on industry and pain points
+- `calculate_roi.py` - ROI calculation with current/future state cost analysis
+- `generate_roadmap.py` - Implementation roadmap with milestones
+- `generate_proposal.py` - Bilingual proposal document generator
+
+*Reference Guides:*
+- `service-catalog.md` - Complete AI-BPO service catalog with pricing (15 services, 3 bundles)
+- `client-intake-template.md` - Bilingual client requirements questionnaire
+- `roi-methodology.md` - ROI calculation methodology and benchmarks
+
+**Service Categories:**
+- Finance & Accounting (Invoice Processing, Expense Reports, Reconciliation, AR)
+- HR & Payroll (Onboarding, Time Tracking, Payroll Processing)
+- Customer Support (Ticket Routing, FAQ Automation)
+- Data Processing (Document Digitization, Data Entry)
+- Procurement (PO Processing, Vendor Management, Contract Analysis)
+
+**Example Use Cases:**
+- "Create a BPO proposal for ABC Manufacturing's US subsidiary"
+- "Calculate ROI for automating invoice processing (5000/month volume)"
+- "Generate an implementation roadmap starting April 2025"
+- "Build a bilingual proposal with full ROI analysis"
 
 ---
 
@@ -863,6 +964,73 @@ A skill that transforms vague client requirements into comprehensive RFQ (Reques
 - Markdown形式のRFQ文書（すぐにベンダーに送付可能）
 - 構造化された見積書フォーマットテンプレート
 - チェックリストベースの品質確認レポート
+
+---
+
+### 📋 Vendor Procurement Coordinator（ベンダー調達コーディネーター）
+
+**File:** `skill-packages/vendor-procurement-coordinator.skill`
+
+RFQ作成・送信から、ベンダー回答追跡、見積比較、クライアント向け見積作成までのエンドツーエンドのベンダー調達ワークフローを統合管理するスキル。`vendor-rfq-creator`と`vendor-estimate-creator`スキルをオーケストレーションし、メール自動化とステータス追跡を追加。
+
+A skill that orchestrates the complete vendor procurement lifecycle from initial RFQ creation through vendor response tracking to final client-facing estimate generation. Integrates with existing vendor-rfq-creator and vendor-estimate-creator skills while adding email automation, response tracking, and procurement status management capabilities.
+
+**When to use:**
+- 単一プロジェクトで複数ベンダーへの見積依頼を管理するとき
+- ベンダーの見積回答と期限を追跡するとき
+- 受領したベンダー見積をクライアント向け見積に変換するとき
+- RFQ配信をベンダーメールリストに自動化するとき
+- エンドツーエンドの調達パイプラインを調整するとき
+
+**Core Capabilities:**
+- ✅ 調達プロジェクト初期化（ディレクトリ構造、設定ファイル作成）
+- ✅ ベンダー管理（追加、編集、削除、CSVインポート）
+- ✅ RFQメール送信（テンプレート、プレビュー/送信モード）
+- ✅ 回答追跡（見積受領ログ、ステータス管理、リマインダー）
+- ✅ 見積比較レポート（価格分析、納期比較、評価スコア）
+- ✅ クライアント見積作成（マークアップ適用、統合）
+
+**Key Features:**
+
+**8ステップ統合ワークフロー**:
+1. Initialize Procurement（調達プロジェクト初期化）
+2. Create RFQ（RFQ文書作成 - vendor-rfq-creator連携）
+3. Register Vendors（ベンダー登録）
+4. Send RFQ（RFQ送信）
+5. Track Responses（回答追跡）
+6. Compare Quotes（見積比較）
+7. Create Client Estimate（クライアント見積作成 - vendor-estimate-creator連携）
+8. Generate Report（調達レポート生成）
+
+**調達ステータス管理**:
+- プロジェクトステータス: initialized → rfq_sent → quotes_received → evaluation → completed
+- ベンダーステータス: pending → contacted → quote_received → selected/declined
+
+**メールテンプレート**:
+- RFQ送付メール（日本語/英語）
+- リマインダーメール（1週間前/3日前）
+
+**Bundled Resources:**
+- `references/procurement_workflow_guide.md`: 調達プロセスガイド（6フェーズ）
+- `references/vendor_evaluation_criteria.md`: ベンダー評価基準（6次元）
+- `assets/email_templates/`: メールテンプレート集
+
+**Use Cases:**
+- 複数ベンダーからの相見積取得と管理
+- 調達プロセスの標準化と監査証跡
+- ベンダー選定の公平性と透明性確保
+- クライアント向け見積作成の効率化
+
+**Best For:**
+- プロジェクトマネージャー（ベンダー選定担当）
+- 調達・購買部門
+- ITマネージャー
+- システム開発ディレクター
+
+**Output Format:**
+- YAML形式の調達ステータス（procurement.yaml）
+- Markdown形式のベンダー比較レポート
+- Markdown形式のクライアント見積書
 
 ---
 
@@ -1458,6 +1626,44 @@ An interactive skill that transforms bug discoveries during system testing into 
 **Bilingual Support:**
 - 日本語（デフォルト）: 対話、テンプレート、ガイド全て日本語対応
 - English: Full English template and workflow support
+
+---
+
+### 📧 Internal Email Composer
+
+**File:** `skills/internal-email-composer/SKILL.md`
+
+Generate professional internal email drafts for common coordination tasks in business environments. Creates culturally-appropriate bilingual (Japanese/English) emails with proper business tone.
+
+**When to use:**
+- Drafting internal emails to request vendor quote compilation
+- Forwarding RFQ documents to internal stakeholders
+- Delegating tasks to team members with clear instructions
+- Sending status update emails for ongoing projects
+- Composing follow-up emails for pending responses
+- Creating escalation emails for delayed deliverables
+
+**Core Capabilities:**
+- ✅ 6 email scenarios (Vendor RFQ, Task Delegation, Status Update, Follow-up, Escalation, Info Request)
+- ✅ Bilingual support (Japanese/English) with culturally-adapted content
+- ✅ 3 urgency levels with appropriate subject prefixes
+- ✅ Template engine with variable substitution
+- ✅ Business etiquette compliance (敬語, keigo for Japanese)
+
+**Key Components:**
+- `scripts/compose_email.py` - Main email composition script with CLI interface
+- `references/email-templates.md` - Template patterns for each email type
+- `references/business-etiquette-guide.md` - Cultural considerations for JA/EN emails
+
+**Output Formats:**
+- Markdown email draft with subject, greeting, body, closing, signature
+- JSON structure for programmatic integration
+
+**Example Use Cases:**
+- "Create a Japanese email to forward RFQ to procurement team"
+- "Draft a task delegation email for Q4 budget review"
+- "Compose a follow-up email for pending vendor quotes"
+- "Generate an escalation email about delayed deliverables"
 
 ---
 
@@ -2366,6 +2572,35 @@ Reviews meeting minutes documents for completeness, action item clarity, decisio
 - Source material consistency verification (hearing sheets, agendas)
 - Vague language detection and clarity analysis
 - JSON and Markdown report output formats
+
+---
+
+### 📝 Meeting Minutes Writer
+
+**File:** `skills/meeting-minutes-writer/`
+
+Generates strategic-consultant-grade meeting minutes from transcripts or notes, then runs a self-review loop (max 3 iterations) that checks for internal contradictions, action-item omissions, speaker-name errors, and date/day-of-week mistakes before reporting completion.
+
+**When to use:**
+- Converting raw meeting transcripts or notes into structured minutes
+- Producing executive-readable minutes (3-minute readability test)
+- Any time minutes must include verified dates and complete action items
+- When you need quality-gated output (zero findings or 3 iterations) before sharing
+
+**Key Components:**
+- `references/output_format.md` - Canonical minutes structure, inference rules, ambiguity markers
+- `references/self_review_checklist.md` - 5 Mandatory Checks with severity model and iteration logic
+- `assets/minutes_template_en.md` - Blank meeting minutes template (English)
+- `assets/minutes_template_ja.md` - 議事録テンプレート（日本語）
+- `assets/findings_report_template.md` - Per-iteration findings report layout (bilingual EN + JA)
+
+**Key Features:**
+- 2-phase workflow: ultrathink Generation → Self-Review Loop (max 3 iterations)
+- 5 Mandatory Checks: Internal Contradictions, Consistency, Action-Item Omissions, Speaker-Name Errors, Date/Day-of-Week Errors
+- MANDATORY date verification via `python3 -c "import datetime; ..."` (no memory-based dates)
+- Severity model: HIGH (blocks completion) / MEDIUM / LOW
+- Completion report surfaces remaining HIGH findings and `* To be confirmed` items
+- Complements `meeting-minutes-reviewer` (review-only) and `video2minutes` (transcribe-then-write)
 
 ---
 
@@ -3618,6 +3853,41 @@ Systematically analyzes incidents to identify root causes and develop corrective
 
 ---
 
+### 🔄 Iterative Design Assistant
+
+**File:** `skill-packages/iterative-design-assistant.skill`
+
+Tracks design iteration history for documents and presentations, understands context from previous change requests, and applies consistent styling decisions across multiple revision cycles.
+
+**When to use:**
+- User references a previous design decision ("前回も色で良いんだけど", "like last time")
+- Multiple revision cycles on the same document/presentation
+- Need to track which design elements were changed and why
+- Applying consistent styling across related documents
+- Reviewing design history to understand document evolution
+- User asks to "undo" or "revert" to a previous design state
+
+**Key Features:**
+- Session-local design decision log with JSON schema
+- 5 decision categories: color, typography, layout, content, style
+- Contextual reference resolution (Japanese/English patterns)
+- Design token extraction and management
+- Bidirectional traceability (decisions ↔ elements)
+- Markdown/JSON history report generation
+
+**Scripts:**
+- `design_log.py` - CLI for init, record, query, search, apply, history, token, resolve
+
+**References:**
+- `design-decision-methodology.md` - Best practices for tracking and applying design decisions
+
+**Example Use Cases:**
+- "Use the same blue as before" → Resolves to most recent color decision
+- "前回と同じフォントで" → Applies previous typography decision
+- "Generate a history of all design changes" → Markdown report with timeline
+
+---
+
 ### 📝 Technical Spec Writer
 
 Creates structured technical specifications bridging requirements and implementation. Generates screen designs, API specs, DB designs, sequence diagrams, and state transition diagrams with Mermaid.
@@ -3774,6 +4044,31 @@ Reviews presentation materials from the audience perspective, evaluating content
 - 5 evaluation axes: Content clarity, visual design, logical flow, engagement, technical compatibility
 - Audience perspective review methodology
 - Actionable improvement recommendations
+
+---
+
+### 🔧 MARP Layout Debugger
+
+**File:** `skills/marp-layout-debugger/`
+
+Diagnoses and fixes common MARP slide layout issues including whitespace problems, box alignment, bullet formatting inconsistencies, and CSS rendering issues. Provides visual diff comparisons and automated fixes.
+
+**When to use:**
+- MARP slides have unexpected whitespace or spacing issues
+- Box elements are misaligned or overlap incorrectly
+- Bullet points have inconsistent indentation or formatting
+- Content overflows slide boundaries
+- CSS styles render differently than expected
+- Need to validate MARP CSS against best practices
+
+**Key Features:**
+- 5 issue categories: Whitespace (WS), Alignment (AL), Bullets (BL), Overflow (OF), CSS (CS)
+- 16 specific issue types with severity classification and auto-fix capability
+- Automated fix application with safety-first approach (auto-fix vs manual review)
+- Visual diff report generation showing before/after comparison
+- Non-destructive analysis with backup support
+
+---
 
 ### wbs-review-assistant v1.0 (2026-03-19)
 - WBS Excel file review against requirements documents and hearing sheets
@@ -4041,6 +4336,57 @@ Future skills planned for this library:
 
 ## Version History
 
+### meeting-minutes-writer v1.0 (2026-04-30)
+- Generate meeting minutes from transcripts/notes with built-in self-review loop (max 3 iterations)
+- 5 Mandatory Checks per iteration: Internal Contradictions, Consistency, Action-Item Omissions, Speaker-Name Errors, Date/Day-of-Week Errors
+- MANDATORY date verification via `python3 -c "import datetime; ..."` — never memory-based
+- Severity model (HIGH/MEDIUM/LOW); HIGH findings blocking completion
+- Completion report surfaces remaining HIGH findings and `* To be confirmed` items after iteration 3
+- Complements meeting-minutes-reviewer (review-only) and video2minutes (transcribe→write)
+- Resources: output_format.md, self_review_checklist.md, minutes_template_en.md, minutes_template_ja.md, findings_report_template.md (bilingual)
+
+### internal-email-composer v1.0 (2026-04-17)
+- Compose professional internal emails for coordination tasks
+- 6 supported scenarios: vendor RFQ, task delegation, status update, follow-up, escalation, info request
+- Bilingual support (Japanese/English) with culturally-adapted content
+- Business etiquette compliance (敬語/keigo for Japanese, professional tone for English)
+- 3 urgency levels (normal, high, urgent) with appropriate subject prefixes
+- CLI script `compose_email.py` with JSON and Markdown output formats
+- Template engine with variable substitution for key points, deadlines, attachments
+- Comprehensive reference guides for email templates and business etiquette
+
+### iterative-design-assistant v1.0 (2026-03-29)
+- Session-local design decision log with JSON schema (schema v1.0)
+- 5 decision categories: color, typography, layout, content, style
+- CLI commands: init, record, query, search, apply, history, token, resolve
+- Contextual reference resolution for Japanese and English patterns
+- Design token extraction and management with category namespacing
+- Bidirectional traceability (decisions ↔ elements)
+- Markdown and JSON history report generation
+
+### vendor-procurement-coordinator v1.0 (2026-04-18)
+- End-to-end vendor procurement workflow coordination
+- Orchestrates vendor-rfq-creator and vendor-estimate-creator skills
+- Project initialization with standard directory structure (rfq/, quotes/, estimates/, communications/)
+- Vendor management (add, edit, remove, CSV import) with status tracking
+- Quote response logging with amount, currency, delivery date, validity period
+- Email template system (Japanese/English RFQ emails, reminder templates)
+- Vendor comparison report generation with price scoring and analysis
+- Procurement status tracking (project and vendor lifecycle states)
+- Timeline event logging for complete audit trail
+- Python CLI scripts: init_procurement.py, manage_vendors.py, track_responses.py, compare_quotes.py
+- YAML-based procurement configuration (procurement.yaml)
+
+### ai-bpo-proposal-generator v1.0 (2026-04-19)
+- Generate AI-powered BPO service proposals for Japanese companies in the US market
+- Service module selection based on industry and pain points (15 service modules, 3 industry bundles)
+- ROI calculation with current/future state analysis, NPV, payback period
+- Phased implementation roadmap generation with milestones
+- Bilingual (Japanese/English) proposal document generation
+- Service categories: Finance & Accounting, HR & Payroll, Customer Support, Data Processing, Procurement
+- Client intake questionnaire template with 8 sections
+- Industry benchmarks for automation rates, error reduction, and cost savings
+
 ### email-triage-responder v1.0 (2026-04-21)
 - Email inbox triage and response draft generation skill
 - Urgency detection: time-sensitive keywords, deadlines, escalation markers
@@ -4061,6 +4407,15 @@ Future skills planned for this library:
 - Vague language detection with specific suggestions
 - JSON and Markdown report output formats
 - CLI with `review_minutes.py` script
+
+### action-status-updater v1.0 (2026-04-04)
+- Natural language action item tracking for Japanese and English
+- Intent detection (completed, delegated, deferred, in-progress) with regex patterns
+- Person, channel, and keyword extraction from status updates
+- Persistent YAML state with full history tracking
+- CLI tool with init, add, update, report, export, and list commands
+- Integration guide for daily-comms-ops workflow
+- 52 tests covering NL parsing and state management
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
@@ -4235,6 +4590,13 @@ Future skills planned for this library:
 - Corrective action tracker with SMART criteria validation
 - Mermaid gantt timeline with TTD/TTR/TTM/TTRe metrics
 - Differentiated from log-debugger (organizational process focus vs log analysis)
+
+### marp-layout-debugger v1.0 (2026-04-03)
+- Diagnoses and fixes common MARP slide layout issues (whitespace, alignment, bullets, overflow, CSS)
+- 5 issue categories with 16 specific issue types (WS001-WS004, AL001-AL004, BL001-BL004, OF001-OF004, CS001-CS004)
+- Automated fix application with auto-fixable vs manual review classification
+- Visual diff report generation with before/after comparison
+- 3 Python scripts: analyze_marp_layout.py, fix_marp_layout.py, generate_diff_report.py
 
 ### presentation-reviewer v1.0 (2026-02-26)
 - 5 evaluation axes: content clarity, visual design, logical flow, engagement, Marp compatibility
