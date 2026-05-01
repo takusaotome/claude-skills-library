@@ -11,8 +11,7 @@ permalink: /ja/skills/management/business-plan-creator/
 # Business Plan Creator
 {: .no_toc }
 
-事業計画書を体系的に作成するスキル。新規事業、既存事業の拡大、スタートアップのピッチ資料、 社内新規プロジェクト提案など、あらゆる事業計画のドキュメントを構造化して作成する。 「事業計画」「ビジネスプラン」「business plan」「新規事業提案」「事業企画」「収支計画」 「プロジェクト提案書」「投資計画」「起業」「創業計画」などのキーワードが出たら必ずこのスキルを使用する。 事業のアイデア段階から、市場分析、競合分析、収支シミュレーション、リスク評価まで 包括的にカバーする。日本語・英語の両方に対応。
-
+Business Plan Creator に関する日本語ガイドです。`skills/business-plan-creator/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -31,18 +30,18 @@ permalink: /ja/skills/management/business-plan-creator/
 
 ## 1. 概要
 
-# 事業計画書作成スキル (Business Plan Creator)
-
-<!-- TODO: 翻訳 -->
+このページは **Business Plan Creator** スキルの日本語サマリーです。
+- スキル本体: `skills/business-plan-creator/SKILL.md`
+- 参照ガイド: 3 件
+- 補助スクリプト: 2 件
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **API Key:** None required
-- **Python 3.9+** recommended
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
 
 ---
 
@@ -50,55 +49,79 @@ permalink: /ja/skills/management/business-plan-creator/
 
 Invoke this skill by describing your analysis needs to Claude.
 
-<!-- TODO: 翻訳 -->
-
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/business-plan-creator/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. 補助スクリプトがある場合は小さな入力で実行し、出力形式を確認してから本番データへ広げます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **Business Plan Creator** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 補助スクリプトを使って定型処理や検証を実行したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 3 件を根拠にした判断材料
+- 補助スクリプト 2 件による補助出力や検証結果
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/business-plan-creator/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 補助スクリプトは本番データの前にサンプル入力で実行し、引数と出力先を確認してください。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/management/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/management/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
+- 引数や出力先の指定漏れが多いため、コマンド例をそのまま起点に調整すると安全です。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/business-plan-creator/references/financial-modeling.md`
 - `skills/business-plan-creator/references/frameworks.md`
 - `skills/business-plan-creator/references/industry-templates.md`
 
-**Scripts:**
+**補助スクリプト:**
 
 - `skills/business-plan-creator/scripts/generate_financial_scenarios.py`
 - `skills/business-plan-creator/scripts/generate_outline.py`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/management/business-plan-creator/' | relative_url }}) を参照してください。

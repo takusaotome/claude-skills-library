@@ -62,37 +62,59 @@ pip install pandas polars pyarrow
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+```
+1. Connect to DuckDB (in-memory or persistent)
+2. Load/query data files directly (CSV, Parquet, JSON)
+3. Transform and analyze using SQL
+4. Export results (DataFrame, file, or database)
+```
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- 大規模なCSV、Parquet、JSONファイルを直接クエリしたい
+- メモリに収まらない大きなデータセットを分析したい
+- SQLを使ってデータ変換やETLパイプラインを構築したい
+- pandas/Polarsと連携した高速なデータ処理を行いたい
+- ファイルベースのデータウェアハウスを構築したい
+- 複雑な分析クエリのパフォーマンスを最適化したい
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+- **Data Profile Report**: Markdown/JSON report with schema, statistics, quality metrics
+- **Query Results**: pandas/Polars DataFrame, Arrow table, or raw tuples
+- **Transformed Files**: Parquet, CSV, or JSON with optional compression/partitioning
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/duckdb-expert/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: duckdb_functions_reference.md, file_formats_guide.md, performance_tuning_guide.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: etl_pipeline.py, duckdb_analyzer.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/dev/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

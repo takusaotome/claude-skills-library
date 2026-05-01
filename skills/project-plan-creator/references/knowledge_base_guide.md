@@ -10,7 +10,7 @@ This skill includes a comprehensive PM knowledge base in the `references/` direc
 
 ### 1. Software & SaaS PM Best Practices Q&A (156KB)
 
-**File**: `20250703-Software & SaaS 業界のPMベストプラクティスQ&A-ppxYLyVn.md`
+**File**: `20250703-Software-SaaS-PM-best-practices-QA-ppxYLyVn.md`
 
 **32 comprehensive Q&A scenarios** covering:
 - **DevOps/CI/CD** (Q1-7, 19, 26-27): DevOps adoption, MVP strategy, silo elimination, CI/CD prioritization, automated testing, DevSecOps, canary releases
@@ -32,7 +32,7 @@ US IT industry-specific PM resources, regulatory considerations, and industry be
 
 ### 3. PMI Companion Standards for IT (48KB)
 
-**File**: `20250703-PMIコンパニオン標準と拡張ガイド（IT業界向け）-bwKcIXZS.md`
+**File**: `20250703-PMI-companion-and-extension-guides-IT-bwKcIXZS.md`
 
 PMI companion standards and extension guides tailored for IT industry projects.
 
@@ -40,7 +40,7 @@ PMI companion standards and extension guides tailored for IT industry projects.
 
 ### 4. Project Scheduling and Risk Management Deep Dive (36KB)
 
-**File**: `20250703-プロジェクトスケジューリングとリスク管理に関する詳細調査-TmSqtqVJ.md`
+**File**: `20250703-project-scheduling-and-risk-management-TmSqtqVJ.md`
 
 Detailed methodologies for:
 - Critical path method (CPM)
@@ -53,7 +53,7 @@ Detailed methodologies for:
 
 ### 5. PMBOK Edition Comparison (6th/7th/8th) (35KB)
 
-**File**: `20250703-PMBOK®ガイド第6版・第7版・第8版の構造・概念の比較調査-5Szb5Q8O.md`
+**File**: `20250703-PMBOK-Guide-6th-7th-8th-comparison-5Szb5Q8O.md`
 
 Structural and conceptual comparison across PMBOK editions, helping understand evolution of PM standards.
 
@@ -61,7 +61,7 @@ Structural and conceptual comparison across PMBOK editions, helping understand e
 
 ### 6. Framework Mapping: PMBOK vs. PRINCE2, ITIL 4, ISO 21502 (108KB)
 
-**File**: `20250703-PMBOK第6版・第7版とPRINCE2・ITIL 4・ISO 21502のマッピング比較-iUp9j_kf.md`
+**File**: `20250703-PMBOK-PRINCE2-ITIL4-ISO21502-mapping-iUp9j_kf.md`
 
 Cross-framework mapping showing alignment and differences between:
 - PMBOK 6th/7th Edition
@@ -81,7 +81,7 @@ Knowledge base architecture patterns for PM tools and AI-assisted project manage
 
 ### 8. PMP/PgMP Exam Outlines and Learning Roadmap (17KB)
 
-**File**: `20250703-PMPPgMP等の試験アウトラインと学習ロードマップ  -oTfpatOa.md`
+**File**: `20250703-PMP-PgMP-exam-outline-and-roadmap-oTfpatOa.md`
 
 PMP (Project Management Professional) and PgMP (Program Management Professional) certification guidance.
 

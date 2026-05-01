@@ -3,7 +3,7 @@ layout: default
 title: "Pricing Strategist"
 grand_parent: 日本語
 parent: プロジェクト・経営
-nav_order: 17
+nav_order: 18
 lang_peer: /en/skills/management/pricing-strategist/
 permalink: /ja/skills/management/pricing-strategist/
 ---
@@ -11,8 +11,7 @@ permalink: /ja/skills/management/pricing-strategist/
 # Pricing Strategist
 {: .no_toc }
 
-ITサービス・コンサルティング向け価格戦略設計スキル。価格モデル選定（Cost-plus、Value-based、Competitive、Subscription）、価格弾力性分析（Van Westendorp、Gabor-Granger、コンジョイント分析）、価格テスト設計（A/B、CBC）を支援。MSP、ITコンサルティング、SaaS、システム開発（受託開発）、ハードウェア販売向けに対応。トリガー：「価格戦略」「バリューベース価格」「価格弾力性」「価格テスト」「MSP価格設定」「SaaS価格」「開発見積もり価格」「ハードウェアマージン」等。
-
+Pricing Strategist に関する日本語ガイドです。`skills/pricing-strategist/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -31,36 +30,18 @@ ITサービス・コンサルティング向け価格戦略設計スキル。価
 
 ## 1. 概要
 
-This skill helps design optimal pricing strategies for IT services and consulting businesses. It guides you through pricing model selection, value-based pricing implementation, price elasticity analysis, and price testing design to maximize revenue and profitability.
-
-**Primary language**: Japanese (日本語)
-**Output format**: Markdown
-
-**Supported Service Types**:
-- MSP（マネージドサービス）
-- IT Consulting（ITコンサルティング）
-- SaaS（ソフトウェア・アズ・ア・サービス）
-- System Development（システム開発・受託開発）
-- Hardware Sales（ハードウェア・IT機器販売）
-
-Use this skill when:
-- 新製品・サービスの価格設定を行う
-- 価格モデル（Cost-plus, Value-based, Competitive, Subscription）を比較・選定する
-- 顧客の価格感度を分析したい（価格弾力性分析）
-- 価格テスト（A/B, コンジョイント分析）を設計する
-- 価格改定の根拠を作成する
-- 競合価格分析と自社ポジショニングを行う
-
-<!-- TODO: 翻訳 -->
+このページは **Pricing Strategist** スキルの日本語サマリーです。
+- スキル本体: `skills/pricing-strategist/SKILL.md`
+- 参照ガイド: 6 件
+- 補助スクリプト: なし
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **API Key:** None required
-- **Python 3.9+** recommended
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
 
 ---
 
@@ -73,49 +54,63 @@ Use this skill when:
 5. **IT Services Pricing Strategy**: 業種特化の価格戦略設計
 6. **Pricing Documentation**: 価格戦略書・提案書の作成
 
-<!-- TODO: 翻訳 -->
-
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/pricing-strategist/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. スキルの手順に沿って対話またはドキュメント作成を進めます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **Pricing Strategist** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 6 件を根拠にした判断材料
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/pricing-strategist/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/management/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/management/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/pricing-strategist/references/client_segmentation_guide.md`
 - `skills/pricing-strategist/references/it_services_pricing.md`
@@ -123,3 +118,9 @@ Use this skill when:
 - `skills/pricing-strategist/references/price_testing_guide.md`
 - `skills/pricing-strategist/references/pricing_models_guide.md`
 - `skills/pricing-strategist/references/value_based_pricing_methodology.md`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/management/pricing-strategist/' | relative_url }}) を参照してください。

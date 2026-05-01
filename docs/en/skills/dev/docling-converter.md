@@ -65,37 +65,61 @@ docling $ARGUMENTS
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+1. **入力確認**: ユーザーからファイルパスとオプションを受け取る
+2. **引数解析**: ファイルパスとオプション（`--to`, `--ocr-lang`, `--output`等）を解析
+3. **デフォルト設定**: `--to` が未指定の場合は `md`（Markdown）を使用
+4. **docling実行**: 解析した引数でコマンドを実行
+   ```bash
+   docling $ARGUMENTS
+   ```
+5. **結果報告**: 変換完了後、出力ファイルのパスをユーザーに報告
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- PDFをMarkdownやJSONに変換したい
+- スキャンされたPDFからテキストを抽出したい（OCR）
+- Word、PowerPoint、Excelドキュメントを変換したい
+- 画像からテキストを抽出したい
+- 複数のドキュメントを一括変換したい
+- URLからドキュメントを取得して変換したい
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+このスキルは **ファイル生成型** です。docling CLIを実行し、変換されたファイル（Markdown、JSON、YAML、HTML、テキスト等）を指定ディレクトリに出力します。
+
+- **デフォルト出力**: 入力ファイルと同じディレクトリに `.md` ファイルを生成
+- **カスタム出力**: `--output` オプションで出力先を指定可能
+- **複数形式**: `--to` を複数指定して複数形式を同時生成可能
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/docling-converter/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: docling_options.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/dev/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
 
 ---
 

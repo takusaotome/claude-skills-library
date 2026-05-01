@@ -55,37 +55,82 @@ CX Score = (Impact * 0.25) + (Frequency * 0.20) + (Recovery * 0.15)
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### Workflow 1: Error Scenario Inventory（エラーシナリオ棚卸し）
+
+Enumerate and classify all error scenarios in the target system or feature.
+
+1. **List all error scenarios** in the system or feature under analysis
+   - Review source code, API documentation, and existing error logs
+   - Interview stakeholders (developers, support, QA) for known error patterns
+   - Examine user feedback and support ticket data for unreported errors
+2. **Classify each error** into one of 6 categories:
+   - **Validation**: Input format, required fields, range limits
+   - **System**: Server errors, database failures, memory issues
+   - **Network**: Timeout, connection loss, DNS failure
+   - **Auth**: Authentication failure, session expiry, permission denied
+   - **Business Logic**: Rule violations, state conflicts, limit exceeded
+   - **External**: Third-party API failures, payment gateway errors, integration issues
+3. **Map each error to a user journey stage**:
+   - Discovery (browsing, searching)
+   - Onboarding (registration, initial setup)
+   - Core Task (primary feature usage)
+   - Checkout (purchase, submission, completion)
+   - Support (help, account management)
+4. **Assign error IDs**: ERR-001, ERR-002, ERR-003...
+5. **Capture current state** for each error:
+   - Current error message text (exact wording)
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- エラーシナリオの顧客体験を評価するとき
+- エラーメッセージの品質を改善するとき
+- エラー改善の優先順位を付けるとき
+- CX観点でのエラーハンドリング改善レポートを作成するとき
+- エラー体験の定量的評価を行うとき
+- 新機能リリース前にエラーシナリオのCXレビューを実施するとき
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+This skill provides **conversational guidance and analysis** rather than file generation. Outputs include:
+
+- Structured error scenario inventories with classifications
+- Multi-axis CX evaluation scores with rationale
+- Prioritized improvement recommendations (Quick Wins, Strategic Projects)
+- Before/after error message comparisons
+- ROI estimates and business impact projections
+
+When formal documentation is needed, use Workflow 5 to generate a comprehensive report using the provided templates.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/cx-error-analyzer/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: error_ux_best_practices.md, cx_metrics_reference.md, cx_evaluation_methodology.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/ops/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
 
 ---
 

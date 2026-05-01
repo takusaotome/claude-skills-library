@@ -91,37 +91,60 @@ Equipment Depreciation,overhead,5000,5000,1,1
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+1. **Validate Input Format**: Verify CSV structure and required columns
+2. **Classify Cost Items**: Confirm cost category assignments (material/labor/overhead)
+3. **Verify Standard Costs**: Ensure standard costs reflect current approved standards
+4. **Handle Edge Cases**: Address zero quantities, missing prices, and new items without standards
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **Monthly Cost Variance Reporting** - Analyze standard vs. actual cost differences for manufacturing operations
+- 「今月の原価差異を分析して」「標準原価との乖離を計算して」
+- **Cost Reduction Effectiveness Measurement** - Evaluate whether cost reduction initiatives achieved target
+- 「原価低減活動の効果を測定して」「コスト削減の進捗を確認して」
+- **Procurement Price Monitoring** - Track material price variances against standards
+- 「材料の価格差異を確認して」「仕入価格の変動を分析して」
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+The analysis produces a structured cost variance report containing:
+
+1. **Executive Summary**: Total variance by category, key highlights
+2. **Item-Level Detail**: Price variance, quantity variance, and total per item with calculation basis
+3. **Category Subtotals**: Aggregated variances by material/labor/overhead
+4. **Responsibility Matrix**: Variance amounts mapped to responsible departments
+5. **Root Cause Analysis**: Hypotheses and recommended actions for major variances
+
+Output template: `assets/cost_variance_report_template_ja.md` (Japanese) or `assets/cost_variance_report_template_en.md` (English)
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/ma-standard-cost-variance/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: 第11回_ABCで見える店舗別損益管理の真実_20251213.md, 第12回_予定原価という考え方_20260122.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/finance/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
 
 ---
 

@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (94 skills)
+├── skills/                 # 102 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 106 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (94 Skills)
+## Skill Catalog (102 Skills)
+
+> Note: `skills/` contains 106 directories total — 102 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -140,7 +142,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (12 skills)
+### Documentation & Communication (17 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -154,8 +156,13 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | technical-spec-writer | 技術仕様書作成（画面/API/DB設計） | IEEE 830, Mermaid Diagrams, Traceability |
 | operations-manual-creator | 操作マニュアル・SOP作成 | STEP Format, ANSI Z535, Troubleshooting |
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
+| marp-layout-debugger | MARPレイアウト問題診断・自動修正 | Whitespace/Alignment/Bullet/Overflow/CSS Fix |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
+| meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
+| meeting-minutes-writer | 議事録生成＋自己レビューループ（最大3反復） | 5 Mandatory Checks, Date Verification, Action-Item Coverage |
+| internal-email-composer | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
+| iterative-design-assistant | デザイン反復履歴管理・文脈理解・一貫スタイリング | Design Decision Log, Contextual Reference Resolution, Token Management |
 
 ### QA & Testing (11 skills)
 
@@ -1504,6 +1511,44 @@ An interactive skill that transforms bug discoveries during system testing into 
 
 ---
 
+### 📧 Internal Email Composer
+
+**File:** `skills/internal-email-composer/SKILL.md`
+
+Generate professional internal email drafts for common coordination tasks in business environments. Creates culturally-appropriate bilingual (Japanese/English) emails with proper business tone.
+
+**When to use:**
+- Drafting internal emails to request vendor quote compilation
+- Forwarding RFQ documents to internal stakeholders
+- Delegating tasks to team members with clear instructions
+- Sending status update emails for ongoing projects
+- Composing follow-up emails for pending responses
+- Creating escalation emails for delayed deliverables
+
+**Core Capabilities:**
+- ✅ 6 email scenarios (Vendor RFQ, Task Delegation, Status Update, Follow-up, Escalation, Info Request)
+- ✅ Bilingual support (Japanese/English) with culturally-adapted content
+- ✅ 3 urgency levels with appropriate subject prefixes
+- ✅ Template engine with variable substitution
+- ✅ Business etiquette compliance (敬語, keigo for Japanese)
+
+**Key Components:**
+- `scripts/compose_email.py` - Main email composition script with CLI interface
+- `references/email-templates.md` - Template patterns for each email type
+- `references/business-etiquette-guide.md` - Cultural considerations for JA/EN emails
+
+**Output Formats:**
+- Markdown email draft with subject, greeting, body, closing, signature
+- JSON structure for programmatic integration
+
+**Example Use Cases:**
+- "Create a Japanese email to forward RFQ to procurement team"
+- "Draft a task delegation email for Q4 budget review"
+- "Compose a follow-up email for pending vendor quotes"
+- "Generate an escalation email about delayed deliverables"
+
+---
+
 ### 🎯 ITIL 4 Consultant
 
 **File:** `itil4-consultant/`
@@ -2327,6 +2372,63 @@ Prepares comprehensive meeting assets including agendas, reference materials, de
 - Structured templates for agendas, decision logs, and action items
 - Time allocation in agendas for focused meetings
 - Meeting package generation with index document
+
+---
+
+### 📝 Meeting Minutes Reviewer
+
+**File:** `skills/meeting-minutes-reviewer/`
+
+Reviews meeting minutes documents for completeness, action item clarity, decision documentation, and consistency with source materials. Generates structured feedback with specific improvement suggestions and quality scores across 5 dimensions.
+
+**When to use:**
+- After drafting meeting minutes and before distribution
+- When reviewing minutes created by others for quality assurance
+- When validating that minutes accurately reflect source materials (hearing sheets, transcripts)
+- When ensuring action items meet trackability standards
+- When preparing minutes for formal project documentation or audit trails
+
+**Key Components:**
+- `scripts/review_minutes.py` - Main review script with 5-dimension quality analysis
+- `references/review-criteria.md` - Detailed scoring criteria and quality standards
+- `references/meeting-minutes-checklist.md` - Complete checklist for meeting minutes
+
+**Key Features:**
+- 5-dimension scoring: Completeness (25%), Action Items (25%), Decisions (20%), Consistency (15%), Clarity (15%)
+- Action item validation: owner, deadline, description completeness
+- Decision documentation check: context, rationale, alternatives
+- Source material consistency verification (hearing sheets, agendas)
+- Vague language detection and clarity analysis
+- JSON and Markdown report output formats
+
+---
+
+### 📝 Meeting Minutes Writer
+
+**File:** `skills/meeting-minutes-writer/`
+
+Generates strategic-consultant-grade meeting minutes from transcripts or notes, then runs a self-review loop (max 3 iterations) that checks for internal contradictions, action-item omissions, speaker-name errors, and date/day-of-week mistakes before reporting completion.
+
+**When to use:**
+- Converting raw meeting transcripts or notes into structured minutes
+- Producing executive-readable minutes (3-minute readability test)
+- Any time minutes must include verified dates and complete action items
+- When you need quality-gated output (zero findings or 3 iterations) before sharing
+
+**Key Components:**
+- `references/output_format.md` - Canonical minutes structure, inference rules, ambiguity markers
+- `references/self_review_checklist.md` - 5 Mandatory Checks with severity model and iteration logic
+- `assets/minutes_template_en.md` - Blank meeting minutes template (English)
+- `assets/minutes_template_ja.md` - 議事録テンプレート（日本語）
+- `assets/findings_report_template.md` - Per-iteration findings report layout (bilingual EN + JA)
+
+**Key Features:**
+- 2-phase workflow: ultrathink Generation → Self-Review Loop (max 3 iterations)
+- 5 Mandatory Checks: Internal Contradictions, Consistency, Action-Item Omissions, Speaker-Name Errors, Date/Day-of-Week Errors
+- MANDATORY date verification via `python3 -c "import datetime; ..."` (no memory-based dates)
+- Severity model: HIGH (blocks completion) / MEDIUM / LOW
+- Completion report surfaces remaining HIGH findings and `* To be confirmed` items
+- Complements `meeting-minutes-reviewer` (review-only) and `video2minutes` (transcribe-then-write)
 
 ---
 
@@ -3579,6 +3681,41 @@ Systematically analyzes incidents to identify root causes and develop corrective
 
 ---
 
+### 🔄 Iterative Design Assistant
+
+**File:** `skill-packages/iterative-design-assistant.skill`
+
+Tracks design iteration history for documents and presentations, understands context from previous change requests, and applies consistent styling decisions across multiple revision cycles.
+
+**When to use:**
+- User references a previous design decision ("前回も色で良いんだけど", "like last time")
+- Multiple revision cycles on the same document/presentation
+- Need to track which design elements were changed and why
+- Applying consistent styling across related documents
+- Reviewing design history to understand document evolution
+- User asks to "undo" or "revert" to a previous design state
+
+**Key Features:**
+- Session-local design decision log with JSON schema
+- 5 decision categories: color, typography, layout, content, style
+- Contextual reference resolution (Japanese/English patterns)
+- Design token extraction and management
+- Bidirectional traceability (decisions ↔ elements)
+- Markdown/JSON history report generation
+
+**Scripts:**
+- `design_log.py` - CLI for init, record, query, search, apply, history, token, resolve
+
+**References:**
+- `design-decision-methodology.md` - Best practices for tracking and applying design decisions
+
+**Example Use Cases:**
+- "Use the same blue as before" → Resolves to most recent color decision
+- "前回と同じフォントで" → Applies previous typography decision
+- "Generate a history of all design changes" → Markdown report with timeline
+
+---
+
 ### 📝 Technical Spec Writer
 
 Creates structured technical specifications bridging requirements and implementation. Generates screen designs, API specs, DB designs, sequence diagrams, and state transition diagrams with Mermaid.
@@ -3735,6 +3872,31 @@ Reviews presentation materials from the audience perspective, evaluating content
 - 5 evaluation axes: Content clarity, visual design, logical flow, engagement, technical compatibility
 - Audience perspective review methodology
 - Actionable improvement recommendations
+
+---
+
+### 🔧 MARP Layout Debugger
+
+**File:** `skills/marp-layout-debugger/`
+
+Diagnoses and fixes common MARP slide layout issues including whitespace problems, box alignment, bullet formatting inconsistencies, and CSS rendering issues. Provides visual diff comparisons and automated fixes.
+
+**When to use:**
+- MARP slides have unexpected whitespace or spacing issues
+- Box elements are misaligned or overlap incorrectly
+- Bullet points have inconsistent indentation or formatting
+- Content overflows slide boundaries
+- CSS styles render differently than expected
+- Need to validate MARP CSS against best practices
+
+**Key Features:**
+- 5 issue categories: Whitespace (WS), Alignment (AL), Bullets (BL), Overflow (OF), CSS (CS)
+- 16 specific issue types with severity classification and auto-fix capability
+- Automated fix application with safety-first approach (auto-fix vs manual review)
+- Visual diff report generation showing before/after comparison
+- Non-destructive analysis with backup support
+
+---
 
 ### wbs-review-assistant v1.0 (2026-03-19)
 - WBS Excel file review against requirements documents and hearing sheets
@@ -4002,6 +4164,44 @@ Future skills planned for this library:
 
 ## Version History
 
+### meeting-minutes-writer v1.0 (2026-04-30)
+- Generate meeting minutes from transcripts/notes with built-in self-review loop (max 3 iterations)
+- 5 Mandatory Checks per iteration: Internal Contradictions, Consistency, Action-Item Omissions, Speaker-Name Errors, Date/Day-of-Week Errors
+- MANDATORY date verification via `python3 -c "import datetime; ..."` — never memory-based
+- Severity model (HIGH/MEDIUM/LOW); HIGH findings blocking completion
+- Completion report surfaces remaining HIGH findings and `* To be confirmed` items after iteration 3
+- Complements meeting-minutes-reviewer (review-only) and video2minutes (transcribe→write)
+- Resources: output_format.md, self_review_checklist.md, minutes_template_en.md, minutes_template_ja.md, findings_report_template.md (bilingual)
+
+### internal-email-composer v1.0 (2026-04-17)
+- Compose professional internal emails for coordination tasks
+- 6 supported scenarios: vendor RFQ, task delegation, status update, follow-up, escalation, info request
+- Bilingual support (Japanese/English) with culturally-adapted content
+- Business etiquette compliance (敬語/keigo for Japanese, professional tone for English)
+- 3 urgency levels (normal, high, urgent) with appropriate subject prefixes
+- CLI script `compose_email.py` with JSON and Markdown output formats
+- Template engine with variable substitution for key points, deadlines, attachments
+- Comprehensive reference guides for email templates and business etiquette
+
+### iterative-design-assistant v1.0 (2026-03-29)
+- Session-local design decision log with JSON schema (schema v1.0)
+- 5 decision categories: color, typography, layout, content, style
+- CLI commands: init, record, query, search, apply, history, token, resolve
+- Contextual reference resolution for Japanese and English patterns
+- Design token extraction and management with category namespacing
+- Bidirectional traceability (decisions ↔ elements)
+- Markdown and JSON history report generation
+
+### meeting-minutes-reviewer v1.0 (2026-03-26)
+- Review meeting minutes for completeness, action item clarity, and decision documentation
+- 5-dimension quality scoring: Completeness (25%), Action Items (25%), Decisions (20%), Consistency (15%), Clarity (15%)
+- Action item validation: owner, deadline, description completeness checks
+- Decision documentation validation: context, rationale, alternatives considered
+- Source material consistency verification (hearing sheets, agendas)
+- Vague language detection with specific suggestions
+- JSON and Markdown report output formats
+- CLI with `review_minutes.py` script
+
 ### action-status-updater v1.0 (2026-04-04)
 - Natural language action item tracking for Japanese and English
 - Intent detection (completed, delegated, deferred, in-progress) with regex patterns
@@ -4184,6 +4384,13 @@ Future skills planned for this library:
 - Corrective action tracker with SMART criteria validation
 - Mermaid gantt timeline with TTD/TTR/TTM/TTRe metrics
 - Differentiated from log-debugger (organizational process focus vs log analysis)
+
+### marp-layout-debugger v1.0 (2026-04-03)
+- Diagnoses and fixes common MARP slide layout issues (whitespace, alignment, bullets, overflow, CSS)
+- 5 issue categories with 16 specific issue types (WS001-WS004, AL001-AL004, BL001-BL004, OF001-OF004, CS001-CS004)
+- Automated fix application with auto-fixable vs manual review classification
+- Visual diff report generation with before/after comparison
+- 3 Python scripts: analyze_marp_layout.py, fix_marp_layout.py, generate_diff_report.py
 
 ### presentation-reviewer v1.0 (2026-02-26)
 - 5 evaluation axes: content clarity, visual design, logical flow, engagement, Marp compatibility

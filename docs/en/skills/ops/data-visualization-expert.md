@@ -80,37 +80,89 @@ pip install matplotlib seaborn pandas numpy
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+Follow this systematic approach when creating visualizations:
+
+```
+1. Understand the Goal
+   ↓
+2. Analyze the Data
+   ↓
+3. Select Chart Type
+   ↓
+4. Choose Color Palette
+   ↓
+5. Apply Design Principles
+   ↓
+6. Add Context & Annotations
+   ↓
+7. Ensure Accessibility
+   ↓
+8. Review & Refine
+```
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **Chart Creation:** Creating any type of chart or graph
+- **Chart Selection:** Choosing the right visualization for your data
+- **Color Design:** Selecting color palettes and ensuring accessibility
+- **Dashboard Design:** Creating executive dashboards or operational monitors
+- **Visual Design:** Improving readability and aesthetic appeal
+- **Accessibility:** Ensuring visualizations work for colorblind viewers
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+This skill produces the following outputs:
+
+| Output Type | Format | Description |
+|-------------|--------|-------------|
+| **Chart Images** | PNG, PDF, SVG | Publication-quality visualizations (300 DPI default) |
+| **Dashboards** | PNG, PDF | Multi-chart layouts with KPI cards |
+| **Code Snippets** | Python | Ready-to-execute matplotlib/seaborn code |
+
+### Output Characteristics
+
+- **Resolution**: 300 DPI (configurable via `--dpi` flag)
+- **Color Mode**: RGB with white background
+- **Font Embedding**: Supported for PDF output
+- **File Naming**: User-specified via `--output` parameter
+
+### Example Output Locations
+
+```bash
+
+The full output details are documented in SKILL.md.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/data-visualization-expert/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: dashboard_design.md, chart_selection_guide.md, visualization_principles.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: create_visualization.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/ops/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

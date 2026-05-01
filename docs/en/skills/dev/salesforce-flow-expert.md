@@ -3,7 +3,7 @@ layout: default
 title: "Salesforce Flow Expert"
 grand_parent: English
 parent: Software Development
-nav_order: 27
+nav_order: 28
 lang_peer: /ja/skills/dev/salesforce-flow-expert/
 permalink: /en/skills/dev/salesforce-flow-expert/
 ---
@@ -51,37 +51,80 @@ python3 scripts/validate_flow.py MyFlow.flow-meta.xml --format markdown > valida
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+Follow this end-to-end workflow for error-free Flow implementation:
+
+**Phase 1: Design** (10-20 minutes)
+1. Determine Flow type using decision matrix (Capability 1)
+2. Sketch Flow logic on paper or whiteboard
+3. Define variables with proper naming conventions
+4. Identify data operations (Get, Create, Update, Delete)
+
+**Phase 2: Build** (30-60 minutes)
+5. Create Flow in Flow Builder (Setup → Flows → New Flow)
+6. Implement business logic following design patterns
+7. Test manually in sandbox with sample data
+8. Export Flow files (`.flow` and `.flow-meta.xml`)
+
+**Phase 3: Validate** (5 minutes)
+9. Run validation script:
+   ```bash
+   python3 scripts/validate_flow.py MyFlow.flow-meta.xml --format markdown > validation_report.md
+   ```
+10. Review validation report and fix all errors
+11. Re-run validation until clean (0 errors)
+
+**Phase 4: Deploy** (5-10 minutes)
+12. Deploy to sandbox with validation:
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **Flow Development**: Creating new Screen Flows, Record-Triggered Flows, Schedule-Triggered Flows, or Autolaunched Flows
+- **Error Prevention**: Validating Flows before deployment to catch reference errors, type mismatches, or undeclared variables
+- **Debugging**: Troubleshooting "Element not found", "Variable not declared", or type mismatch errors
+- **Deployment**: Deploying Flows to sandbox or production using sf CLI with proper error handling
+- **Optimization**: Identifying governor limit issues (DML in loops, SOQL in loops) and implementing bulkification patterns
+- **Metadata Management**: Generating or troubleshooting Flow-meta.xml files with correct structure and API versions
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+- A structured response or artifact aligned to the skill's workflow.
+- Reference support from 5 guide file(s).
+- Script-assisted execution using 4 helper command(s) where applicable.
+- Reusable output that can be reviewed, refined, and incorporated into a wider project workflow.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/salesforce-flow-expert/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: governor_limits_optimization.md, metadata_xml_reference.md, variable_reference_patterns.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: extract_flow_elements.py, validate_flow.py, generate_flow_metadata.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/dev/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

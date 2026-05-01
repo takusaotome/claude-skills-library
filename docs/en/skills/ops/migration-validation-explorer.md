@@ -150,37 +150,83 @@ python scripts/exploratory_profiler.py <data_file.xlsx>
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### Step 0: Preparation
+
+**0.1 Establish Mission:**
+- Identify business-critical flows (money, compliance, customer impact)
+- Define acceptance thresholds (allowable mismatch %, max missing refs)
+
+**0.2 Build Focus Catalog (>= 20 items):**
+> Load `references/focus_catalog.md` for the full category list
+
+Key buckets: Keys/IDs, Relationships, Normalization, Status/Stage, Ownership, Dates, Money, Volume/Dedup, Automation, Integrations, Reporting, Archiving
+
+**0.3 Run Initial Data Profiling:**
+```bash
+python scripts/exploratory_profiler.py <data_file.xlsx>
+```
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Mapping spec, validation plan, and validation report exist
+- You suspect **undiscovered issues** (coverage gaps, silent failures, edge cases)
+- Need to generate new validation angles beyond standard checklists
+- Want automated data profiling and hypothesis testing
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+**Per-cycle output:**
+```
+Cycle #: [n]
+Focus: [item]
+
+DIVERGE (4 perspectives):
+🏢 Domain: [2+ hypotheses]
+💻 Tech: [2+ hypotheses]
+🔍 Edge: [2+ hypotheses]
+📊 Stats: [2+ hypotheses]
+
+PRIORITIZE:
+[Top 3 by priority score]
+
+VERIFY:
+[Checks executed, results]
+
+CONVERGE:
+
+The full output details are documented in SKILL.md.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/migration-validation-explorer/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: hypothesis_generation_guide.md, lens_library.md, divergence_library.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: perspective_combiner.py, hypothesis_tester.py, exploratory_profiler.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/ops/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 
