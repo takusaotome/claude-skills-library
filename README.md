@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 99 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 103 dirs total
+├── skills/                 # 100 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 104 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (99 Skills)
+## Skill Catalog (100 Skills)
 
-> Note: `skills/` contains 103 directories total — 99 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
+> Note: `skills/` contains 104 directories total — 100 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -141,7 +141,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (15 skills)
+### Documentation & Communication (16 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -155,6 +155,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | technical-spec-writer | 技術仕様書作成（画面/API/DB設計） | IEEE 830, Mermaid Diagrams, Traceability |
 | operations-manual-creator | 操作マニュアル・SOP作成 | STEP Format, ANSI Z535, Troubleshooting |
 | presentation-reviewer | プレゼン資料レビュー（聴衆視点） | 5 Evaluation Axes, Marp Compatibility |
+| marp-layout-debugger | MARPレイアウト問題診断・自動修正 | Whitespace/Alignment/Bullet/Overflow/CSS Fix |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
 | meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
@@ -3791,6 +3792,31 @@ Reviews presentation materials from the audience perspective, evaluating content
 - Audience perspective review methodology
 - Actionable improvement recommendations
 
+---
+
+### 🔧 MARP Layout Debugger
+
+**File:** `skills/marp-layout-debugger/`
+
+Diagnoses and fixes common MARP slide layout issues including whitespace problems, box alignment, bullet formatting inconsistencies, and CSS rendering issues. Provides visual diff comparisons and automated fixes.
+
+**When to use:**
+- MARP slides have unexpected whitespace or spacing issues
+- Box elements are misaligned or overlap incorrectly
+- Bullet points have inconsistent indentation or formatting
+- Content overflows slide boundaries
+- CSS styles render differently than expected
+- Need to validate MARP CSS against best practices
+
+**Key Features:**
+- 5 issue categories: Whitespace (WS), Alignment (AL), Bullets (BL), Overflow (OF), CSS (CS)
+- 16 specific issue types with severity classification and auto-fix capability
+- Automated fix application with safety-first approach (auto-fix vs manual review)
+- Visual diff report generation showing before/after comparison
+- Non-destructive analysis with backup support
+
+---
+
 ### wbs-review-assistant v1.0 (2026-03-19)
 - WBS Excel file review against requirements documents and hearing sheets
 - Automatic gap detection with requirement traceability analysis
@@ -4259,6 +4285,13 @@ Future skills planned for this library:
 - Corrective action tracker with SMART criteria validation
 - Mermaid gantt timeline with TTD/TTR/TTM/TTRe metrics
 - Differentiated from log-debugger (organizational process focus vs log analysis)
+
+### marp-layout-debugger v1.0 (2026-04-03)
+- Diagnoses and fixes common MARP slide layout issues (whitespace, alignment, bullets, overflow, CSS)
+- 5 issue categories with 16 specific issue types (WS001-WS004, AL001-AL004, BL001-BL004, OF001-OF004, CS001-CS004)
+- Automated fix application with auto-fixable vs manual review classification
+- Visual diff report generation with before/after comparison
+- 3 Python scripts: analyze_marp_layout.py, fix_marp_layout.py, generate_diff_report.py
 
 ### presentation-reviewer v1.0 (2026-02-26)
 - 5 evaluation axes: content clarity, visual design, logical flow, engagement, Marp compatibility
