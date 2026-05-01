@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 100 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 104 dirs total
+├── skills/                 # 101 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 105 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (100 Skills)
+## Skill Catalog (101 Skills)
 
-> Note: `skills/` contains 104 directories total — 100 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
+> Note: `skills/` contains 105 directories total — 101 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -141,7 +141,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (16 skills)
+### Documentation & Communication (17 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -161,6 +161,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
 | meeting-minutes-writer | 議事録生成＋自己レビューループ（最大3反復） | 5 Mandatory Checks, Date Verification, Action-Item Coverage |
 | internal-email-composer | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
+| iterative-design-assistant | デザイン反復履歴管理・文脈理解・一貫スタイリング | Design Decision Log, Contextual Reference Resolution, Token Management |
 
 ### QA & Testing (11 skills)
 
@@ -3635,6 +3636,41 @@ Systematically analyzes incidents to identify root causes and develop corrective
 
 ---
 
+### 🔄 Iterative Design Assistant
+
+**File:** `skill-packages/iterative-design-assistant.skill`
+
+Tracks design iteration history for documents and presentations, understands context from previous change requests, and applies consistent styling decisions across multiple revision cycles.
+
+**When to use:**
+- User references a previous design decision ("前回も色で良いんだけど", "like last time")
+- Multiple revision cycles on the same document/presentation
+- Need to track which design elements were changed and why
+- Applying consistent styling across related documents
+- Reviewing design history to understand document evolution
+- User asks to "undo" or "revert" to a previous design state
+
+**Key Features:**
+- Session-local design decision log with JSON schema
+- 5 decision categories: color, typography, layout, content, style
+- Contextual reference resolution (Japanese/English patterns)
+- Design token extraction and management
+- Bidirectional traceability (decisions ↔ elements)
+- Markdown/JSON history report generation
+
+**Scripts:**
+- `design_log.py` - CLI for init, record, query, search, apply, history, token, resolve
+
+**References:**
+- `design-decision-methodology.md` - Best practices for tracking and applying design decisions
+
+**Example Use Cases:**
+- "Use the same blue as before" → Resolves to most recent color decision
+- "前回と同じフォントで" → Applies previous typography decision
+- "Generate a history of all design changes" → Markdown report with timeline
+
+---
+
 ### 📝 Technical Spec Writer
 
 Creates structured technical specifications bridging requirements and implementation. Generates screen designs, API specs, DB designs, sequence diagrams, and state transition diagrams with Mermaid.
@@ -4101,6 +4137,15 @@ Future skills planned for this library:
 - CLI script `compose_email.py` with JSON and Markdown output formats
 - Template engine with variable substitution for key points, deadlines, attachments
 - Comprehensive reference guides for email templates and business etiquette
+
+### iterative-design-assistant v1.0 (2026-03-29)
+- Session-local design decision log with JSON schema (schema v1.0)
+- 5 decision categories: color, typography, layout, content, style
+- CLI commands: init, record, query, search, apply, history, token, resolve
+- Contextual reference resolution for Japanese and English patterns
+- Design token extraction and management with category namespacing
+- Bidirectional traceability (decisions ↔ elements)
+- Markdown and JSON history report generation
 
 ### meeting-minutes-reviewer v1.0 (2026-03-26)
 - Review meeting minutes for completeness, action item clarity, and decision documentation
