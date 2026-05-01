@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 107 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 108 dirs total
+├── skills/                 # 108 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 109 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (107 Skills)
+## Skill Catalog (108 Skills)
 
-> Note: `skills/` contains 108 directories total — 107 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: `skills/` contains 109 directories total — 108 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -143,7 +143,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (19 skills)
+### Documentation & Communication (20 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -166,6 +166,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | iterative-design-assistant | デザイン反復履歴管理・文脈理解・一貫スタイリング | Design Decision Log, Contextual Reference Resolution, Token Management |
 | purchase-request-generator | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
+| multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 
 ### QA & Testing (12 skills)
 
@@ -2952,6 +2953,54 @@ Generate audit-ready internal control design documents from As-Is business proce
 
 ---
 
+### 📄 Multi-Format Document Optimizer
+
+**File:** `skill-packages/multi-format-document-optimizer.skill`
+
+Unified document optimization skill that chains docling-converter, imagemagick-expert, and markdown-to-pdf to create comprehensive document processing pipelines.
+
+**When to use:**
+- Converting PDF/DOCX/PPTX to optimized PDF with compressed images
+- Creating web-ready documents with WebP images from source documents
+- Generating print-ready PDFs with high-DPI images from mixed sources
+- Batch processing multiple documents through consistent optimization pipeline
+- Extracting, optimizing, and re-embedding images from existing documents
+- Converting scanned documents with OCR and image enhancement
+
+**Core Capabilities:**
+- ✅ Automatic format detection and pipeline routing
+- ✅ Quality presets (web, print, archive, minimal, custom)
+- ✅ Image optimization with configurable quality, DPI, and format
+- ✅ PDF image extraction and re-embedding
+- ✅ Batch processing with parallel workers
+- ✅ Document verification and quality assessment
+
+**Key Features:**
+
+*Automated Scripts:*
+- `document_optimizer.py` - Main CLI tool with analyze/convert/batch/optimize-images/verify commands
+
+*Reference Guides:*
+- `pipeline_guide.md` - Detailed pipeline configurations and customization options
+- `image_optimization_guide.md` - Image optimization strategies and quality settings
+
+**Quality Presets:**
+
+| Preset | Quality | DPI | Format | Use Case |
+|--------|---------|-----|--------|----------|
+| `web` | 80% | 96 | WebP | Online viewing, fast load |
+| `print` | 95% | 300 | PNG/JPEG | Professional printing |
+| `archive` | 90% | 150 | JPEG | Long-term storage |
+| `minimal` | 70% | 72 | WebP | Maximum compression |
+
+**Example Use Cases:**
+- "Convert this PPTX to PDF and optimize images for web"
+- "Make this scanned PDF smaller while keeping it readable"
+- "Batch process all documents in this folder for web publishing"
+- "Optimize this PDF's embedded images"
+
+---
+
 ## Installation
 
 ### Installing a Skill
@@ -4486,6 +4535,15 @@ Future skills planned for this library:
 - MARP presentation slides for management approval meetings
 - Sensitivity analysis with break-even and risk scenarios
 - Four scripts: generate_purchase_request.py, generate_cba.py, generate_vendor_comparison.py, generate_marp_slides.py
+
+### multi-format-document-optimizer v1.0 (2026-03-27)
+- Unified document optimization skill chaining docling, ImageMagick, and markdown-to-pdf
+- Automatic format detection and pipeline routing (pdf_optimize, docx_to_pdf, pptx_to_pdf, etc.)
+- Four quality presets: web (80%, 96dpi, WebP), print (95%, 300dpi), archive (90%, 150dpi), minimal (70%, 72dpi)
+- CLI commands: analyze, convert, batch, optimize-images, verify
+- PDF image extraction and re-embedding with PyMuPDF
+- Batch processing with configurable patterns and parallel workers
+- Document verification and quality assessment
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
