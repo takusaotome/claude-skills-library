@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 97 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 107 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -53,7 +53,7 @@ All 97 skills organized by category. Skills with dedicated guide pages are shown
 
 ## Project & Business
 
-23 skills for strategy, consulting, project management, and management accounting.
+24 skills for strategy, consulting, project management, and management accounting.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -80,12 +80,13 @@ All 97 skills organized by category. Skills with dedicated guide pages are shown
 | [wbs-review-assistant]({{ '/en/skills/management/wbs-review-assistant/' | relative_url }}) | Review WBS against requirements and hearing sheets | Excel Annotation, Traceability Matrix |
 | [project-completeness-scorer]({{ '/en/skills/meta/project-completeness-scorer/' | relative_url }}) | Evaluate project completeness with weighted 0-100 scoring | 5 Dimensions, Gap Analysis, Templates |
 | [project-kickoff-bootstrapper]({{ '/en/skills/meta/project-kickoff-bootstrapper/' | relative_url }}) | Bootstrap Claude project context and templates | CLAUDE.md Scaffolding, 15 Templates |
+| [ai-bpo-proposal-generator]({{ '/en/skills/management/ai-bpo-proposal-generator/' | relative_url }}) | Generate AI-powered BPO proposals for Japanese companies in US market | 15 Service Modules, ROI/NPV, Bilingual Proposals |
 
 ---
 
 ## Operations & Documentation
 
-13 skills for technical writing, presentations, document conversion, and meeting minutes.
+21 skills for technical writing, presentations, document conversion, and meeting minutes.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -102,6 +103,14 @@ All 97 skills organized by category. Skills with dedicated guide pages are shown
 | [meeting-asset-preparer]({{ '/en/skills/meta/meeting-asset-preparer/' | relative_url }}) | Prepare meeting agendas, materials, and action items | Bilingual (JA/EN), Context Integration |
 | [meeting-minutes-writer]({{ '/en/skills/meta/meeting-minutes-writer/' | relative_url }}) | Generate meeting minutes with self-review loop (max 3 iterations) | 5 Mandatory Checks, Date Verification, HIGH-finding Guard |
 | [timezone-aware-event-tracker]({{ '/en/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | Track and correlate events across timezones | DST Handling, Multi-TZ Timeline |
+| [action-status-updater]({{ '/en/skills/meta/action-status-updater/' | relative_url }}) | Track action items via natural-language updates (JP/EN) | NL Parsing, YAML State, daily-comms-ops Integration |
+| [email-triage-responder]({{ '/en/skills/meta/email-triage-responder/' | relative_url }}) | Inbox triage with urgency scoring + draft replies | Eisenhower Matrix, Draft Generation, gogcli/Outlook |
+| [internal-email-composer]({{ '/en/skills/meta/internal-email-composer/' | relative_url }}) | Compose professional internal emails (vendor RFQ/delegation/update) | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
+| [iterative-design-assistant]({{ '/en/skills/meta/iterative-design-assistant/' | relative_url }}) | Track design iteration history and apply consistent styling | Design Decision Log, Token Management |
+| [japanese-enterprise-doc-formatter]({{ '/en/skills/ops/japanese-enterprise-doc-formatter/' | relative_url }}) | Format documents for Japanese ringi/purchase/proposal workflows | Keigo Levels, 5 Document Types, Bilingual |
+| [marp-layout-debugger]({{ '/en/skills/meta/marp-layout-debugger/' | relative_url }}) | Diagnose and fix MARP slide layout issues | Whitespace/Alignment/Bullet/CSS Fix Catalog |
+| [multi-format-document-optimizer]({{ '/en/skills/ops/multi-format-document-optimizer/' | relative_url }}) | Unified document pipeline (docling+ImageMagick+markdown-to-pdf) | 4 Quality Presets, Batch Processing, PDF Image Optimization |
+| [purchase-request-generator]({{ '/en/skills/management/purchase-request-generator/' | relative_url }}) | Generate purchase requests with cost-benefit analysis | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
 
 ---
 
@@ -128,7 +137,7 @@ All 97 skills organized by category. Skills with dedicated guide pages are shown
 
 ## QA, Testing & Vendor Management
 
-14 skills for quality assurance, testing, vendor evaluation, and customer experience.
+15 skills for quality assurance, testing, vendor evaluation, and customer experience.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -146,6 +155,7 @@ All 97 skills organized by category. Skills with dedicated guide pages are shown
 | [production-parity-test-designer]({{ '/en/skills/meta/production-parity-test-designer/' | relative_url }}) | Design production-parity test hierarchies | Test Hierarchy Design, Production Parity |
 | [skill-designer]({{ '/en/skills/meta/skill-designer/' | relative_url }}) | Design new Claude skills from idea specifications | Convention Compliance, Prompt Generation |
 | [skill-idea-miner]({{ '/en/skills/meta/skill-idea-miner/' | relative_url }}) | Mine session logs for skill idea candidates | LLM Scoring, Backlog Management |
+| [vendor-procurement-coordinator]({{ '/en/skills/meta/vendor-procurement-coordinator/' | relative_url }}) | End-to-end vendor procurement workflow orchestration | RFQ→Email→Tracking, Vendor Lifecycle States |
 
 ---
 

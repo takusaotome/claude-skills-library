@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 97 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 107 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -53,7 +53,7 @@ permalink: /ja/skill-catalog/
 
 ## プロジェクト & ビジネス
 
-戦略、コンサルティング、プロジェクト管理、管理会計の 23 スキル。
+戦略、コンサルティング、プロジェクト管理、管理会計の 24 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -80,12 +80,13 @@ permalink: /ja/skill-catalog/
 | [wbs-review-assistant]({{ '/ja/skills/management/wbs-review-assistant/' | relative_url }}) | WBS・要件ドキュメント照合レビュー | Excelアノテーション、トレーサビリティ |
 | [project-completeness-scorer]({{ '/ja/skills/meta/project-completeness-scorer/' | relative_url }}) | プロジェクト完成度評価 (0-100) | 5軸評価、Gap分析、テンプレート |
 | [project-kickoff-bootstrapper]({{ '/ja/skills/meta/project-kickoff-bootstrapper/' | relative_url }}) | Claude用プロジェクトkickoff文脈導入 | CLAUDE.mdスキャフォールド、15テンプレート |
+| [ai-bpo-proposal-generator]({{ '/ja/skills/management/ai-bpo-proposal-generator/' | relative_url }}) | AI活用BPO提案書生成（米国市場向け日系企業） | 15サービスモジュール、ROI/NPV、バイリンガル提案 |
 
 ---
 
 ## オペレーション & ドキュメンテーション
 
-技術文書、プレゼン、ドキュメント変換、議事録の 13 スキル。
+技術文書、プレゼン、ドキュメント変換、議事録の 21 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -102,6 +103,14 @@ permalink: /ja/skill-catalog/
 | [meeting-asset-preparer]({{ '/ja/skills/meta/meeting-asset-preparer/' | relative_url }}) | 会議アジェンダ・資料・アクション準備 | バイリンガル(JA/EN)、文脈統合 |
 | [meeting-minutes-writer]({{ '/ja/skills/meta/meeting-minutes-writer/' | relative_url }}) | 議事録生成＋自己レビューループ（最大3反復） | 5必須チェック、日付検証、HIGH指摘ガード |
 | [timezone-aware-event-tracker]({{ '/ja/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | マルチタイムゾーンイベント追跡・相関 | DST対応、マルチTZタイムライン |
+| [action-status-updater]({{ '/ja/skills/meta/action-status-updater/' | relative_url }}) | アクションアイテム自然言語更新追跡（JP/EN） | NLパース、YAML状態、daily-comms-ops連携 |
+| [email-triage-responder]({{ '/ja/skills/meta/email-triage-responder/' | relative_url }}) | メールトリアージ＋返信ドラフト生成 | Eisenhowerマトリクス、ドラフト生成、gogcli/Outlook |
+| [internal-email-composer]({{ '/ja/skills/meta/internal-email-composer/' | relative_url }}) | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/ENバイリンガル、6シナリオ、ビジネスエチケット |
+| [iterative-design-assistant]({{ '/ja/skills/meta/iterative-design-assistant/' | relative_url }}) | デザイン反復履歴管理・文脈理解・一貫スタイリング | デザイン決定ログ、トークン管理 |
+| [japanese-enterprise-doc-formatter]({{ '/ja/skills/ops/japanese-enterprise-doc-formatter/' | relative_url }}) | 日本企業向け稟議書・購入申請書・提案書フォーマット | 敬語レベル、5文書タイプ、バイリンガル |
+| [marp-layout-debugger]({{ '/ja/skills/meta/marp-layout-debugger/' | relative_url }}) | MARPスライドレイアウト診断・自動修正 | Whitespace/Alignment/Bullet/CSS Fix |
+| [multi-format-document-optimizer]({{ '/ja/skills/ops/multi-format-document-optimizer/' | relative_url }}) | ドキュメント変換・画像最適化パイプライン統合 | 4品質プリセット、バッチ処理、PDF画像最適化 |
+| [purchase-request-generator]({{ '/ja/skills/management/purchase-request-generator/' | relative_url }}) | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback、ベンダー比較、MARPスライド |
 
 ---
 
@@ -128,7 +137,7 @@ permalink: /ja/skill-catalog/
 
 ## QA、テスト & ベンダー管理
 
-品質保証、テスト、ベンダー評価、顧客体験の 14 スキル。
+品質保証、テスト、ベンダー評価、顧客体験の 15 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -146,6 +155,7 @@ permalink: /ja/skill-catalog/
 | [production-parity-test-designer]({{ '/ja/skills/meta/production-parity-test-designer/' | relative_url }}) | 本番同等テスト階層設計・盲点排除 | テスト階層設計、本番同等 |
 | [skill-designer]({{ '/ja/skills/meta/skill-designer/' | relative_url }}) | Claudeスキル設計 | 規約準拠、プロンプト生成 |
 | [skill-idea-miner]({{ '/ja/skills/meta/skill-idea-miner/' | relative_url }}) | セッションログからスキルアイデア抽出 | LLMスコアリング、バックログ管理 |
+| [vendor-procurement-coordinator]({{ '/ja/skills/meta/vendor-procurement-coordinator/' | relative_url }}) | ベンダー調達ワークフロー一気通貫オーケストレーション | RFQ→メール→追跡、ベンダーライフサイクル |
 
 ---
 

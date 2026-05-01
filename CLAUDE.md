@@ -78,7 +78,9 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 
 | Skill | Version | Domain | Key Components |
 |-------|---------|--------|----------------|
+| action-status-updater | 1.0 | Action Tracking | NL parsing (JP/EN), YAML state, daily-comms-ops integration |
 | ai-adoption-consultant | 1.0 | AI/LLM Adoption Strategy | 27 reference files, ROI analysis, 5-step workflow |
+| ai-bpo-proposal-generator | 1.0 | BPO Proposals | 15 service modules, ROI/NPV/payback, bilingual proposals |
 | ai-text-humanizer | 1.0 | Text Processing | 6-Pattern Detection, 0-100 Scoring, 3 Humanization Techniques |
 | audit-control-designer | 1.0 | Audit Control Design | 7 reference files, control templates, SoD, KPIs, materiality |
 | audit-doc-checker | 1.0 | Audit Quality Review | check_rules.md (12 categories), scoring_model.md |
@@ -106,6 +108,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | docling-converter | 1.0 | Document Conversion | PDF, DOCX, PPTX, Markdown conversion |
 | dual-axis-skill-reviewer | 1.0 | Skill Quality Review | run_dual_axis_review.py, 5-dimension auto scoring, LLM merge |
 | duckdb-expert | 1.0 | Data Analytics | SQL Optimization, CSV/Parquet/JSON |
+| email-triage-responder | 1.0 | Email Triage | Eisenhower matrix, draft generation, status tracking, gogcli/Outlook |
 | esg-reporter | 1.0 | ESG Reporting | GRI, SASB, TCFD, CDP standards |
 | executive-briefing-writer | 1.0 | Executive Communication | Board Reports, So What Analysis |
 | ffmpeg-expert | 1.0 | Media Processing | Video/Audio encoding, filters, streaming |
@@ -117,9 +120,12 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | imagemagick-expert | 1.0 | Image Processing | Convert, Resize, Effects, Batch |
 | incident-rca-specialist | 1.0 | Incident Management | 5 Whys, Fishbone, FTA, 3D Prevention, bilingual templates |
 | internal-audit-assistant | 1.0 | Internal Audit | IIA Standards, Audit Planning, Sampling Methods |
+| internal-email-composer | 1.0 | Email Composition | 6 scenarios, JA/EN bilingual, business etiquette, 3 urgency levels |
 | iso-implementation-guide | 1.0 | ISO Standards | ISO 9001, 27001, 22301, Gap Analysis |
 | it-system-roi-analyzer | 1.0 | IT Investment | ROI, TCO, NPV, Payback Period |
+| iterative-design-assistant | 1.0 | Design Iteration | Decision log (JSON v1.0), 5 categories, contextual reference resolution |
 | itil4-consultant | 1.0 | IT Service Management | 34 Practices, Maturity Assessment, 5 workflows |
+| japanese-enterprise-doc-formatter | 1.0 | JP Enterprise Docs | 5 doc types (稟議/購入申請/提案), 4 keigo levels, section validation |
 | kpi-designer | 1.0 | Performance Management | SMART KPIs, BSC, OKR, Dashboard Design |
 | lean-six-sigma-consultant | 1.0 | Process Improvement | DMAIC, Value Stream Mapping, All Belt Levels |
 | log-debugger | 1.0 | Log Analysis, Debugging | 4-Phase Framework, Log Patterns, RCA |
@@ -129,10 +135,12 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | ma-standard-cost-variance | 1.0 | Management Accounting | Standard cost variance, price/quantity decomposition |
 | management-accounting-navigator | 1.0 | Management Accounting | 12 domain routing, COSO/IMA framework |
 | markdown-to-pdf | 2.0 | Documentation | markdown_to_pdf.py, fpdf2, Playwright, Mermaid |
+| marp-layout-debugger | 1.0 | Presentation Debug | MARP CSS fix catalog, layout pattern detection, diff reports |
 | meeting-asset-preparer | 1.0 | Meeting Documentation | prepare_meeting.py, Bilingual (JA/EN), Context Integration |
 | meeting-minutes-writer | 1.0 | Meeting Documentation | Generation + Self-Review Loop (max 3), 5 Mandatory Checks, Date Verification |
 | migration-validation-explorer | 2.0 | Data Migration QA | 4-Perspective hypothesis, Priority scoring |
 | multi-file-log-correlator | 1.0 | Log Analysis | correlate_logs.py, Cross-Source Correlation, Gap Detection |
+| multi-format-document-optimizer | 1.0 | Document Pipeline | docling+ImageMagick+markdown-to-pdf chain, 4 quality presets |
 | network-diagnostics | 1.0 | Network Quality | network_diagnostics.py, Ping/Speed/HTTP/Traceroute |
 | network-incident-analyzer | 1.0 | Network Analysis | analyze_network_logs.py, Multi-Format Parsing, Anomaly Detection |
 | office-script-expert | 1.0 | Office Scripts | ExcelScript API, 13 Bug Patterns, Testing |
@@ -143,10 +151,11 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | pricing-strategist | 1.0 | Pricing Strategy | Value-Based, Competitive, Price Testing |
 | production-parity-test-designer | 1.0 | Test Design | Test Tier Allocation, Smoke Suite, Adversarial Regression |
 | production-schedule-optimizer | 1.0 | Manufacturing Scheduling | Greedy Bin-Packing, Staff Estimation, PSO alerts |
-| project-manager | 1.0 | Project Management | project_health_check.py, PMBOK, EVM analysis |
 | project-completeness-scorer | 1.0 | Project QA | score_project.py, 5 Dimensions, Weighted 0-100 Scoring |
 | project-kickoff-bootstrapper | 1.0 | Project Bootstrap | CLAUDE.md scaffolding, 15 templates, 3 install profiles |
+| project-manager | 1.0 | Project Management | project_health_check.py, PMBOK, EVM analysis |
 | project-plan-creator | 1.0 | Project Planning | Charter, WBS, Gantt, RACI, 5 Mermaid diagrams |
+| purchase-request-generator | 1.0 | Purchase Requests | ROI/NPV/payback, weighted vendor comparison, MARP slides |
 | qa-bug-analyzer | 1.0 | QA Testing | Quality Metrics, Trend Analysis |
 | render-cli-expert | 1.0 | Cloud Deployment | Deploys, Logs, SSH, PostgreSQL |
 | safe-by-default-architect | 1.0 | Architecture Standards | Safe Pattern Catalog, Forbidden-to-Safe Mapping, Static Rules |
@@ -155,22 +164,23 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | salesforce-flow-expert | 1.0 | Salesforce Flow | Validation, Metadata Gen, Deploy |
 | salesforce-report-creator | 1.0 | Salesforce Reports | Report Types, REST/Metadata API |
 | shift-planner | 1.0 | Employee Scheduling | Greedy Assignment, 30-min coverage, fairness metrics |
+| skill-designer | 1.0 | Skill Pipeline | Design Prompt Generation, Convention Compliance |
+| skill-idea-miner | 1.0 | Skill Pipeline | Session Log Mining, LLM Scoring, Backlog |
 | sox-expert | 1.0 | Audio Processing | Audio Effects, Format Conversion, Spectrogram |
 | strategic-planner | 1.0 | Business Strategy | SWOT, PEST, Porter 5F, Scenario Planning |
 | streamlit-expert | 1.0 | Web Development | OIDC Auth, Plotly/Altair, Caching |
 | supply-chain-consultant | 1.0 | Supply Chain | Supply Chain Modeling, Optimization, S&OP |
 | talent-acquisition-specialist | 1.0 | HR/Recruitment | JD Templates, Interview Evaluation, Onboarding |
 | tdd-developer | 1.0 | Software Development | Red-Green-Refactor, pytest patterns |
-| timezone-aware-event-tracker | 1.0 | Timezone Event Tracking | DST Handling, Multi-TZ Timeline, Event Correlation |
 | technical-spec-writer | 1.0 | Technical Documentation | IEEE 830, Mermaid Diagrams, API/DB/Screen Design |
+| timezone-aware-event-tracker | 1.0 | Timezone Event Tracking | DST Handling, Multi-TZ Timeline, Event Correlation |
 | uat-testcase-generator | 1.0 | QA Testing | generate_uat_testcases.py, Excel generation |
 | vendor-estimate-creator | 1.0 | Cost Estimation | WBS, 4 Estimation Methods, ROI |
 | vendor-estimate-reviewer | 1.0 | Vendor Management | 12 Review Dimensions, 60+ Risk Factors |
+| vendor-procurement-coordinator | 1.0 | Procurement | RFQ→email→tracking orchestration, vendor lifecycle states |
 | vendor-rfq-creator | 1.0 | RFQ Creation | 150+ Checklist Items |
 | video2minutes | 1.0 | Media Processing | Transcription, Meeting Minutes |
 | yt-dlp-expert | 1.0 | Media Download | 1000+ Sites, Subtitles, Formats |
-| skill-idea-miner | 1.0 | Skill Pipeline | Session Log Mining, LLM Scoring, Backlog |
-| skill-designer | 1.0 | Skill Pipeline | Design Prompt Generation, Convention Compliance |
 
 ## Skill Development Workflow
 
