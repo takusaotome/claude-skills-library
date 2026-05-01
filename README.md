@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 101 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 105 dirs total
+├── skills/                 # 102 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 106 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (101 Skills)
+## Skill Catalog (102 Skills)
 
-> Note: `skills/` contains 105 directories total — 101 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
+> Note: `skills/` contains 106 directories total — 102 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -85,10 +85,11 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 | hearing-to-requirements-mapper | ヒアリングシート→要件定義書変換、ギャップ分析 | RTM, WBS Mapping, Ambiguity Detection, Bilingual |
 
-### Project Management (6 skills)
+### Project Management (7 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
+| action-status-updater | アクションアイテム状態管理、自然言語更新 | NL Parsing (JP/EN), Status Tracking, daily-comms-ops Integration |
 | project-manager | PMBOK準拠PM、EVM分析、リスク管理 | 10 Knowledge Areas, EVM Metrics |
 | project-plan-creator | プロジェクト計画書・WBS・ガント作成 | Charter, WBS, Gantt, RACI |
 | project-completeness-scorer | プロジェクト完成度評価、重み付きスコアリング | 5 Dimensions, Gap Analysis, 4 Templates |
@@ -322,6 +323,50 @@ A comprehensive data science workflow skill for analyzing tabular and time serie
 - Financial data analysis (technical indicators, ratios)
 - E-commerce analytics (RFM, CLV, conversion metrics)
 - Healthcare metrics (BMI, risk scores)
+
+---
+
+### 📋 Action Status Updater
+
+**File:** `skill-packages/action-status-updater.skill`
+
+A natural language action item tracking skill for managing status updates across communication channels.
+
+**When to use:**
+- Updating action item status via natural language (e.g., "Seanのメールには返信しておいた", "Delegated to Mike")
+- Marking items as completed, delegated, deferred, or in-progress
+- Tracking action items across email, Slack, meetings, and other channels
+- Generating action item status reports
+- Integrating with daily-comms-ops workflow
+
+**Core Capabilities:**
+- ✅ Natural language parsing for Japanese and English status updates
+- ✅ Intent detection (completed, delegated, deferred, in-progress)
+- ✅ Person and channel extraction from text
+- ✅ Persistent YAML state with full history tracking
+- ✅ Multiple export formats (daily-comms, slack, email)
+- ✅ Fuzzy matching for description and person names
+
+**Key Features:**
+
+*Automated Scripts:*
+- `action_status_updater.py` - CLI tool for action item management (init, add, update, report, export, list)
+- `nl_parser.py` - Natural language parsing module for Japanese/English
+
+*Reference Guides:*
+- `status_patterns.md` - Comprehensive patterns for intent detection and target extraction
+- `integration_guide.md` - Guide for daily-comms-ops workflow integration
+
+**Supported Update Patterns:**
+- Completed: 返信した, 完了, done, finished, sent
+- Delegated: 〜に依頼, delegated to, assigned to
+- Deferred: 延期, 来週, postponed, later
+- In-Progress: 対応中, working on, in progress
+
+**Example Use Cases:**
+- "Seanのメールには返信しておいた" → Marks Sean's email action as completed
+- "Delegated the report to Mike" → Marks report as delegated to Mike
+- "Lu対応予定" → Marks item as delegated to Lu
 
 ---
 
@@ -4156,6 +4201,15 @@ Future skills planned for this library:
 - Vague language detection with specific suggestions
 - JSON and Markdown report output formats
 - CLI with `review_minutes.py` script
+
+### action-status-updater v1.0 (2026-04-04)
+- Natural language action item tracking for Japanese and English
+- Intent detection (completed, delegated, deferred, in-progress) with regex patterns
+- Person, channel, and keyword extraction from status updates
+- Persistent YAML state with full history tracking
+- CLI tool with init, add, update, report, export, and list commands
+- Integration guide for daily-comms-ops workflow
+- 52 tests covering NL parsing and state management
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
