@@ -32,6 +32,8 @@ Generate strategic-consultant-grade meeting minutes from transcripts or notes, t
 
 This skill turns raw meeting content (transcripts, notes, recordings transcribed elsewhere) into concise, scannable meeting minutes that an executive can absorb in three minutes. After producing a draft, it runs a structured **self-review loop** — up to three iterations — that runs five mandatory checks against the draft and the source. The skill only reports completion when a review iteration returns **zero findings** or **three iterations** have been exhausted, and it surfaces any HIGH-severity findings still open after the third iteration.
 
+**Languages supported**: Japanese and English are both first-class output languages. The skill matches the source language automatically — Japanese transcript → Japanese minutes (with 会議情報 / アクションアイテム / 決定事項 headings), English transcript → English minutes. Bilingual meetings use the majority language for headings while preserving names, quoted statements, and technical terms verbatim.
+
 It complements two adjacent skills:
 - `meeting-minutes-reviewer` — review-only (use when minutes already exist)
 - `video2minutes` — transcribes video first, then can hand off to this skill
@@ -192,5 +194,6 @@ Each review iteration produces a Findings Report listing every finding with seve
 
 **Assets:**
 
-- `skills/meeting-minutes-writer/assets/minutes_template.md` — blank meeting minutes template
-- `skills/meeting-minutes-writer/assets/findings_report_template.md` — per-iteration findings report layout
+- `skills/meeting-minutes-writer/assets/minutes_template_en.md` — blank meeting minutes template (English)
+- `skills/meeting-minutes-writer/assets/minutes_template_ja.md` — meeting minutes template (Japanese)
+- `skills/meeting-minutes-writer/assets/findings_report_template.md` — per-iteration findings report layout (bilingual EN + JA)

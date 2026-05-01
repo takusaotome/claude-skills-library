@@ -51,12 +51,22 @@ Severity:
 **Question**: Did we capture every commitment from the source?
 
 **Source phrases that MUST become action items**:
-- "I'll do X" / "やっておきます" / "対応します"
-- "We should X" / "Xすべき" / "Xした方がいい"
-- "Let's X by [date]" / "[date]までにXしましょう"
-- "Need to check / investigate / confirm" / "確認します" / "調べます"
-- "Follow up with [person]" / "[person]にフォローします"
-- "TODO: X" / "宿題:" / "持ち帰り:"
+
+English:
+- "I'll do X" / "I will X" / "I can take that"
+- "We should X" / "we ought to X" / "let's X"
+- "Let's X by [date]" / "X by EOW / by next Tuesday"
+- "Need to check / investigate / confirm / verify"
+- "Follow up with [person]" / "circle back on X"
+- "TODO: X" / "AI: [person] to X"
+
+Japanese (日本語):
+- 「やっておきます」「やります」「対応します」「進めます」「巻き取ります」
+- 「Xすべき」「Xしたほうがいい」「Xしましょう」
+- 「[date]までにXします」「来週までに」「次回までに」「月内に」
+- 「確認します」「調べます」「検証します」「裏取りします」
+- 「[person]にフォローします」「[person]に連絡します」「持ち帰り」「宿題」
+- 「TODO」「ToDo」「課題」「未決事項」「アクション」
 
 **Look for**:
 - [ ] Commitments mentioned in the source but not in the Action Items table
@@ -82,6 +92,13 @@ Severity:
 - [ ] Department / role used as a name when an individual is identified in the source
 - [ ] Romanization inconsistency (e.g. "Sato" vs "Satoh")
 
+**Japanese-specific patterns to watch (日本語固有の注意点)**:
+- 「田中」「田中さん」「田中課長」「田中部長」など敬称・役職の揺れ
+- 漢字／ひらがな／カタカナ／ローマ字の表記揺れ（「斎藤」「斉藤」「サイトウ」「Saito」「Saitoh」）
+- 同姓 attendee がいる場合、姓のみだと曖昧になるので fullname または役職併記を維持する
+- 敬語表現で発言者が省略された箇所（「〜だそうです」「〜とのことです」）の attribution 漏れ
+- 出席者一覧と登場発言者リストの差分（「[name] については議事録に出ているが attendees に含まれていない」など）
+
 **How to fix**: Pick one canonical form per person (preferring the source's own spelling) and apply globally. If the source itself is inconsistent, choose one form and add a note.
 
 ---
@@ -106,6 +123,13 @@ Compare the printed day-of-week against what the draft says.
 - [ ] Time-zone conversion errors (ET ↔ JST: +13h summer / +14h winter)
 - [ ] Dates earlier than the meeting date used for future deadlines
 - [ ] DST boundary errors (US DST ends 1st Sun of Nov; JP has no DST)
+
+**Japanese-specific date patterns (日本語固有の日付表現)**:
+- 「来週火曜」「再来週」「月末」「来月初」などの相対表現が会議日に対して正しく解決されているか
+- 和暦表記（「令和○年」「平成」）→西暦変換が正しいか（令和8年 = 2026年）
+- 「○月○日（火）」の曜日表記が `python3 -c "import datetime..."` 検証と一致しているか
+- 「金曜まで」「金曜中に」が EOD/EOW どちらの解釈か明示されているか
+- 「JST」「日本時間」「現地時間」の使い分けが一貫しているか
 
 **How to fix**: Recompute the correct date and update both the date and day-of-week fields.
 

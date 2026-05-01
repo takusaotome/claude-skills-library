@@ -1,6 +1,6 @@
 ---
 name: meeting-minutes-writer
-description: Generate strategic-consultant-grade meeting minutes from transcripts or notes, then run a self-review loop (max 3 iterations) that checks for internal contradictions, action-item omissions, speaker-name errors, and date/day-of-week mistakes before reporting completion. Use this skill whenever the user asks to draft meeting minutes, summarize a transcript, or document a meeting discussion.
+description: Generate strategic-consultant-grade meeting minutes from transcripts or notes in Japanese OR English (matching the source language), then run a self-review loop (max 3 iterations) that checks for internal contradictions, action-item omissions, speaker-name errors, and date/day-of-week mistakes before reporting completion. Use this skill whenever the user asks to draft meeting minutes, summarize a transcript, or document a meeting discussion — including Japanese-language transcripts (議事録 / 会議メモ / 文字起こし) and English-language transcripts.
 ---
 
 # Meeting Minutes Writer
@@ -16,6 +16,8 @@ Trigger this skill when the user:
 - Asks to "format / clean up / structure" meeting notes
 - Provides a `<<Transcript>>` block, raw chat log, or recording transcript
 - Wants action items and decisions extracted from a discussion
+
+**Languages supported**: Japanese and English are both first-class. The skill matches the source language by default — Japanese transcript → Japanese minutes, English transcript → English minutes. See the **Language Handling** section below for the full policy and mixed-language behavior.
 
 ## When NOT to Use
 
@@ -105,7 +107,12 @@ If iteration 3 ends with HIGH-severity findings still open, do **not** silently 
 
 ## Output Format
 
-The minutes follow this exact structure (full template: `assets/minutes_template.md`):
+The minutes follow the canonical structure below. Two language-specific templates ship with the skill — pick the one matching the source language:
+
+- **English source** → `assets/minutes_template_en.md`
+- **Japanese source** → `assets/minutes_template_ja.md`
+
+### English structure
 
 ```markdown
 ### 1. Meeting Information
@@ -123,9 +130,59 @@ The minutes follow this exact structure (full template: `assets/minutes_template
 #### Notes for Future Meetings / Other
 ```
 
-Priority legend: 🔴 High (blocking) / 🟡 Medium (should do) / 🟢 Low (nice to have).
+### Japanese structure (日本語構造)
+
+```markdown
+### 1. 会議情報
+- **会議名**: ...
+- **開催日**: YYYY/MM/DD（曜日）
+- **出席者**: ...
+
+### 2. アクションアイテム
+| No. | アクション | 担当 | 優先度 | 期日 | 備考 |
+|-----|-----------|------|--------|------|------|
+
+### 3. 会議内容
+#### 決定事項
+#### 主要トピック・議論内容
+#### 次回以降への持ち越し・その他
+```
+
+Priority legend (both languages): 🔴 High (blocking / クリティカル) / 🟡 Medium (should do / 重要) / 🟢 Low (nice to have / あれば良い).
 
 See `references/output_format.md` for full formatting rules, inference rules, and ambiguity handling.
+
+## Language Handling
+
+Both Japanese and English are supported as first-class output languages. The skill **matches the source language by default**.
+
+### Detection rules
+1. If the source has a clear majority language (>70% characters), use that language for the entire output (minutes + findings report + completion report).
+2. If the source is **mixed** (e.g. Japanese discussion with English technical terms, or bilingual cross-regional meeting):
+   - Use the language with more substantive content for the section headings and connective text.
+   - Preserve technical terms, product names, quoted statements, and proper nouns in their original form (do **not** translate "API" → "API（アプリケーション・プログラミング・インタフェース）" or "田中さん" → "Mr. Tanaka").
+3. If the user explicitly requests an output language ("英語で作って" / "in Japanese please"), follow the explicit request and override auto-detection.
+
+### What the language choice controls
+- Section headings (Meeting Information vs. 会議情報, etc.) — pick the matching template
+- Action verb conventions in action items
+- Ambiguity markers — `* To be confirmed` (EN) / `* 要確認` (JA)
+- Findings Report — use the matching half of `assets/findings_report_template.md`
+- Completion Report wording
+
+### What the language choice does NOT control
+- Names of people, products, companies — always preserve verbatim from source
+- Direct quotes — keep the original language; do not translate
+- Date format — always `YYYY/MM/DD (Day of Week)` numerically; "(Mon)" or "（月）" depending on output language
+- Time-zone abbreviations (JST, ET, UTC) — keep ASCII
+
+### Self-review in matching language
+The 5 Mandatory Checks must be run with the source-language patterns active:
+
+- **Action-item phrases (JA)**: 「やります」「対応します」「確認します」「調べます」「フォローします」「持ち帰り」「宿題」「TODO」
+- **Action-item phrases (EN)**: "I'll do", "we should", "let's check", "need to investigate", "follow up", "TODO"
+- **Speaker-name errors**: be especially careful with JA honorifics (「さん」「様」「課長」) and JA↔Romaji inconsistency (「田中さん」 vs "Tanaka-san" vs "Tanaka")
+- **Date format errors**: also check JA-specific formats like "令和○年" / "○月○日" / "来週火曜" before normalizing
 
 ## Examples
 
@@ -157,6 +214,28 @@ See `references/output_format.md` for full formatting rules, inference rules, an
 1. Iteration 1 → 5 findings; iteration 2 → 2 remaining + 1 new; iteration 3 → 1 HIGH still open (a date that the source itself contradicts).
 2. Report: 3 iterations run, 6 findings fixed total, **1 HIGH finding remains** (transcript itself is ambiguous about whether the launch is 2026-05-15 Friday or 2026-05-16 Saturday — flagged for user resolution).
 
+### Example 4: 日本語トランスクリプト
+
+**ユーザー**: 「今日の定例の文字起こしです、議事録にしてください: <<Transcript>>...<<End>>」
+
+**スキルの挙動**:
+1. ソース言語が日本語と判定 → `assets/minutes_template_ja.md` を採用
+2. 日本語で議事録ドラフトを生成（「会議情報」「アクションアイテム」「決定事項」など日本語見出し）
+3. 第1反復のレビューで3件検出: (a)「田中さん」と「田中課長」の表記揺れ、(b) 山田氏が「来週金曜までに」と発言した箇所が期日空欄、(c) 「5/15(金)」と書いてあるが実際は木曜
+4. 修正後、第2反復で0件 → クリーンパス
+5. 完了報告（日本語）: 反復2回、修正3件、出力ファイル `議事録_2026-04-30.md`、要手動確認項目なし
+
+### Example 5: バイリンガル会議
+
+**User**: "Cross-regional standup, mixed JP/EN. Please write minutes."
+
+**Skill behavior**:
+1. Detect majority language (e.g. 60% English) → use English template
+2. Preserve Japanese names verbatim ("田中さん", not "Mr. Tanaka") and English technical terms verbatim
+3. Quoted statements kept in original language: > "じゃあ来週まで" / > "Let's verify by EOW"
+4. Run review loop in English; speaker-name check pays special attention to JP honorifics
+5. Completion report in English; flag any `* To be confirmed` items including any JP-specific terms the user should sanity-check
+
 ## Resources
 
 ### references/
@@ -164,8 +243,9 @@ See `references/output_format.md` for full formatting rules, inference rules, an
 - `self_review_checklist.md` — detailed criteria for each of the 5 mandatory checks
 
 ### assets/
-- `minutes_template.md` — blank meeting minutes template (Markdown)
-- `findings_report_template.md` — findings report template for each review iteration
+- `minutes_template_en.md` — blank meeting minutes template (English)
+- `minutes_template_ja.md` — 議事録テンプレート（日本語）
+- `findings_report_template.md` — findings report template (bilingual, EN + JA layouts)
 
 ## Best Practices
 

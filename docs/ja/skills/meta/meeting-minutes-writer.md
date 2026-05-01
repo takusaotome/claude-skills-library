@@ -32,6 +32,8 @@ permalink: /ja/skills/meta/meeting-minutes-writer/
 
 このスキルは、生のミーティング素材（トランスクリプト、メモ、別ツールで起こした録音テキストなど）を、エグゼクティブが3分で把握できる構造化議事録に変換します。ドラフト生成後は、ソース素材とドラフト自身を突き合わせる**自己レビューループ（最大3反復）**を実行し、5つの必須チェックを通過するか3反復が尽きるまで繰り返したうえで完了報告します。完了時にHIGH指摘が残っている場合は、その項目を明示的にフラグします。
 
+**対応言語**: 日本語と英語の両方を一級市民として扱います。ソース言語に合わせて出力言語を自動決定し、日本語素材→日本語議事録（「会議情報」「アクションアイテム」「決定事項」など日本語見出し）、英語素材→英語議事録を生成します。バイリンガル会議の場合は多数派言語を採用し、固有名詞・引用・技術用語は元の言語のまま保持します。
+
 近接するスキルとの位置づけ:
 - `meeting-minutes-reviewer` — レビュー専用（既存議事録の品質評価）
 - `video2minutes` — 動画→文字起こし。生成時に本スキルへ渡せます
@@ -193,8 +195,9 @@ while iteration <= 3:
 
 **アセット:**
 
-- `skills/meeting-minutes-writer/assets/minutes_template.md` — 空の議事録テンプレート
-- `skills/meeting-minutes-writer/assets/findings_report_template.md` — 反復ごとの指摘レポートのテンプレート
+- `skills/meeting-minutes-writer/assets/minutes_template_ja.md` — 議事録テンプレート（日本語）
+- `skills/meeting-minutes-writer/assets/minutes_template_en.md` — 議事録テンプレート（英語）
+- `skills/meeting-minutes-writer/assets/findings_report_template.md` — 反復ごとの指摘レポートテンプレート（日英バイリンガル）
 
 ---
 

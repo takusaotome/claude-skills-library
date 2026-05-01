@@ -105,8 +105,54 @@ A reader unfamiliar with the meeting should be able to extract:
 
 ## Language
 
-- Match the source language by default (Japanese transcript → Japanese minutes; English transcript → English minutes).
-- Mixed-language source → use the language with the most coverage; preserve quoted technical terms.
+Both **Japanese and English** are first-class output languages. Pick the matching template before generating:
+
+- Japanese source → `assets/minutes_template_ja.md`
+- English source → `assets/minutes_template_en.md`
+
+### Detection
+- Majority language (>70% chars) → use that language end-to-end
+- Mixed-language source (cross-regional bilingual meeting, JP discussion + EN tech terms) → use the language with the most substantive coverage for headings/connective text; preserve quoted statements, names, and technical terms verbatim
+- Explicit user request ("英語で" / "in Japanese") → override auto-detection
+
+### Translation policy
+- **Do NOT translate**: people names, product names, company names, direct quotes, technical acronyms (API/SaaS/etc.), time-zone abbreviations
+- **DO translate**: section headings, ambiguity markers (`* To be confirmed` ↔ `* 要確認`), priority labels (High ↔ 高), connective narrative
+
+### Date format by language
+- English: `2026/05/15 (Fri)` — three-letter day abbreviation in parentheses
+- Japanese: `2026/05/15（金）` — single-character day inside full-width parentheses
+- Time-zone codes (JST, ET, UTC) stay ASCII in both languages
+
+### Headings cross-reference
+
+| English | 日本語 |
+|---------|--------|
+| Meeting Information | 会議情報 |
+| Meeting Name | 会議名 |
+| Date | 開催日 |
+| Attendees | 出席者 |
+| Action Items | アクションアイテム |
+| Action Item | アクション |
+| Owner | 担当 |
+| Priority | 優先度 |
+| Due Date | 期日 |
+| Notes | 備考 |
+| Meeting Details | 会議内容 |
+| Decisions Made | 決定事項 |
+| Key Topics and Discussion Points | 主要トピック・議論内容 |
+| Background | 背景 |
+| Key Points | キーポイント |
+| Notes for Future Meetings / Other | 次回以降への持ち越し・その他 |
+
+### Ambiguity markers cross-reference
+
+| English | 日本語 |
+|---------|--------|
+| `* To be confirmed` | `* 要確認` |
+| `[Details unclear]` | `[詳細不明]` |
+| `(To be confirmed)` | `（要確認）` |
+| `Deadline not set` | `期日未設定` |
 
 ## Example Cell Renderings
 
