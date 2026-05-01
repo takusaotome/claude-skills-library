@@ -12,7 +12,7 @@ import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 try:
     import qrcode
@@ -97,7 +97,7 @@ def generate_vcard(
 
 def generate_qr_code(
     data: str,
-    output_path: str | Path,
+    output_path: Union[str, Path],
     box_size: int = 10,
     border: int = 4,
     fill_color: str = "black",
@@ -167,8 +167,8 @@ def generate_qr_code(
 
 
 def process_batch_csv(
-    csv_path: str | Path,
-    output_dir: str | Path,
+    csv_path: Union[str, Path],
+    output_dir: Union[str, Path],
     defaults: dict[str, Any],
 ) -> list[dict[str, Any]]:
     """Process batch QR code generation from CSV file."""
@@ -214,8 +214,8 @@ def process_batch_csv(
 
 
 def process_batch_json(
-    json_path: str | Path,
-    output_dir: str | Path,
+    json_path: Union[str, Path],
+    output_dir: Union[str, Path],
     defaults: dict[str, Any],
 ) -> list[dict[str, Any]]:
     """Process batch QR code generation from JSON file."""
