@@ -13,6 +13,7 @@ The frontmatter block must appear at the top of the Markdown file, enclosed in `
 title: 御見積書
 subtitle: AI プラットフォーム PoC サポート
 theme: navy
+paper_size: letter   # letter (default, 8.5×11") | a4 (210×297 mm)
 document_number: FSAI-2026-0001
 date: 2026年2月17日
 author: 山田 太郎
@@ -31,6 +32,7 @@ header_text: "FSAI-2026-0001 | FujiSoft America, Inc."
 | `title` | string | (none) | Document title (cover page and metadata) |
 | `subtitle` | string | (none) | Subtitle shown below title on cover |
 | `theme` | string | `navy` | Color theme: `navy` or `gray` |
+| `paper_size` | string | `letter` | Paper size: `letter` (US, default) or `a4`. Overridden by CLI `--paper-size`. |
 | `document_number` | string | (none) | Document ID shown in header |
 | `date` | string | (none) | Issue date shown on cover |
 | `author` | string | (none) | Author name shown on cover |
@@ -90,6 +92,31 @@ For key-value style tables, add `<!-- info-table -->` comment immediately before
 ```
 
 Info tables use the same styling engine but are visually suited for 2-column key-value layouts.
+
+### Column Widths Override
+
+By default, column widths are auto-calculated from content. To force specific widths, place a `<!-- col-widths: ... -->` comment immediately before the table:
+
+```markdown
+<!-- col-widths: 10,45,45 -->
+| # | 項目 | 金額 |
+|---|------|------|
+| 1 | 初期費用 | $5,000 |
+| 2 | 月額費用 | $1,200 |
+```
+
+**Accepted value formats:**
+- Bare numbers: `10,45,45` — interpreted as ratios, normalized to page content width
+- Percentages: `10%, 45%, 45%` — same as ratios (the `%` is stripped)
+- Millimeters: `20mm, 85mm, 85mm` — same treatment (the `mm` is stripped, values are still normalized to content width)
+
+**Behavior:**
+- Values are normalized so their sum equals the page content width (`CONTENT_WIDTH_MM`).
+- If fewer values than columns are provided, missing values are padded with the average of the supplied values.
+- If more values than columns are provided, extras are truncated.
+- Applies to both data and info tables.
+- The directive affects only the next table and resets automatically afterwards.
+- Can be combined with `<!-- info-table -->` (both comments on separate lines before the table).
 
 ## Page Breaks
 

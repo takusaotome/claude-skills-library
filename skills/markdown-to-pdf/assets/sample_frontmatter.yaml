@@ -5,6 +5,7 @@
 # title: 御見積書
 # subtitle: AI プラットフォーム PoC サポート
 # theme: navy
+# paper_size: letter          # letter (default, 8.5×11") | a4 (210×297 mm)
 # document_number: FSAI-2026-0001
 # date: 2026年2月17日
 # author: 山田 太郎

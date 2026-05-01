@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (98 skills)
+├── skills/                 # 99 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 103 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (98 Skills)
+## Skill Catalog (99 Skills)
+
+> Note: `skills/` contains 103 directories total — 99 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -139,7 +141,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (14 skills)
+### Documentation & Communication (15 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -156,6 +158,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
 | meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
+| meeting-minutes-writer | 議事録生成＋自己レビューループ（最大3反復） | 5 Mandatory Checks, Date Verification, Action-Item Coverage |
 | internal-email-composer | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
 
 ### QA & Testing (11 skills)
@@ -2353,6 +2356,35 @@ Reviews meeting minutes documents for completeness, action item clarity, decisio
 
 ---
 
+### 📝 Meeting Minutes Writer
+
+**File:** `skills/meeting-minutes-writer/`
+
+Generates strategic-consultant-grade meeting minutes from transcripts or notes, then runs a self-review loop (max 3 iterations) that checks for internal contradictions, action-item omissions, speaker-name errors, and date/day-of-week mistakes before reporting completion.
+
+**When to use:**
+- Converting raw meeting transcripts or notes into structured minutes
+- Producing executive-readable minutes (3-minute readability test)
+- Any time minutes must include verified dates and complete action items
+- When you need quality-gated output (zero findings or 3 iterations) before sharing
+
+**Key Components:**
+- `references/output_format.md` - Canonical minutes structure, inference rules, ambiguity markers
+- `references/self_review_checklist.md` - 5 Mandatory Checks with severity model and iteration logic
+- `assets/minutes_template_en.md` - Blank meeting minutes template (English)
+- `assets/minutes_template_ja.md` - 議事録テンプレート（日本語）
+- `assets/findings_report_template.md` - Per-iteration findings report layout (bilingual EN + JA)
+
+**Key Features:**
+- 2-phase workflow: ultrathink Generation → Self-Review Loop (max 3 iterations)
+- 5 Mandatory Checks: Internal Contradictions, Consistency, Action-Item Omissions, Speaker-Name Errors, Date/Day-of-Week Errors
+- MANDATORY date verification via `python3 -c "import datetime; ..."` (no memory-based dates)
+- Severity model: HIGH (blocks completion) / MEDIUM / LOW
+- Completion report surfaces remaining HIGH findings and `* To be confirmed` items
+- Complements `meeting-minutes-reviewer` (review-only) and `video2minutes` (transcribe-then-write)
+
+---
+
 ### 🎤 Fujisoft Presentation Creator
 
 **File:** `skill-packages/fujisoft-presentation-creator.skill`
@@ -4024,6 +4056,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### meeting-minutes-writer v1.0 (2026-04-30)
+- Generate meeting minutes from transcripts/notes with built-in self-review loop (max 3 iterations)
+- 5 Mandatory Checks per iteration: Internal Contradictions, Consistency, Action-Item Omissions, Speaker-Name Errors, Date/Day-of-Week Errors
+- MANDATORY date verification via `python3 -c "import datetime; ..."` — never memory-based
+- Severity model (HIGH/MEDIUM/LOW); HIGH findings blocking completion
+- Completion report surfaces remaining HIGH findings and `* To be confirmed` items after iteration 3
+- Complements meeting-minutes-reviewer (review-only) and video2minutes (transcribe→write)
+- Resources: output_format.md, self_review_checklist.md, minutes_template_en.md, minutes_template_ja.md, findings_report_template.md (bilingual)
 
 ### internal-email-composer v1.0 (2026-04-17)
 - Compose professional internal emails for coordination tasks
