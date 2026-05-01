@@ -54,37 +54,95 @@ python3 scripts/analyze_codebase.py \
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### Step 1: Analyze Codebase Structure
+
+Run the codebase analyzer to detect project type, directory structure, and key files.
+
+```bash
+python3 scripts/analyze_codebase.py \
+  --path /path/to/project \
+  --output analysis.json
+```
+
+The analyzer detects:
+- Project type (Python, Node.js, Java, Go, Rust, etc.)
+- Package manager and dependency files
+- Build and test configuration
+- Directory conventions (src/, lib/, tests/, etc.)
+- Key configuration files (.gitignore, CI configs, etc.)
+
+### Step 2: Extract Common Commands
+
+Parse package.json, Makefile, pyproject.toml, or other build files to extract:
+- Build commands
+- Test commands
+- Lint/format commands
+- Development server commands
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Setting up Claude Code for a new project that lacks CLAUDE.md
+- Generating initial project documentation for AI assistants
+- Refreshing outdated CLAUDE.md files after significant project changes
+- Creating standardized onboarding documentation for team codebases
+- Analyzing unfamiliar codebases to understand structure and conventions
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+### JSON Analysis Report
+
+```json
+{
+  "schema_version": "1.1",
+  "project_name": "example-project",
+  "project_type": "python",
+  "detected_at": "2024-01-15T10:30:00Z",
+  "structure": {
+    "root_files": ["README.md", "pyproject.toml", ".gitignore"],
+    "directories": {
+      "src": "Source code",
+      "tests": "Test files",
+      "docs": "Documentation"
+    }
+  },
+  "commands": {
+    "build": ["pip install -e ."],
+
+The full output details are documented in SKILL.md.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/codebase-onboarding-generator/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: claude-md-best-practices.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: analyze_codebase.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/meta/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

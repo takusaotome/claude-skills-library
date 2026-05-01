@@ -17,18 +17,30 @@ Skills for code review, testing, data science, cloud operations, and debugging. 
 | [codex-reviewer]({{ '/en/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codex integration for code review | GPT-5.1-Codex-Max Integration |
 | [critical-code-reviewer]({{ '/en/skills/dev/critical-code-reviewer/' | relative_url }}) | Multi-persona parallel code review | 4-Persona Review (Veteran/TDD/CleanCode/BugHunter) |
 | [data-scientist]({{ '/en/skills/dev/data-scientist/' | relative_url }}) | Data analysis, ML, and time-series forecasting | Auto EDA, Model Comparison, Time Series |
-| data-visualization-expert | Data visualization and chart design | 30+ Chart Types, Accessibility |
+| [data-visualization-expert]({{ '/en/skills/ops/data-visualization-expert/' | relative_url }}) | Data visualization and chart design | 30+ Chart Types, Accessibility |
 | [design-implementation-reviewer]({{ '/en/skills/dev/design-implementation-reviewer/' | relative_url }}) | Design-implementation consistency review | Bug Hunting, Correctness Focus |
 | [duckdb-expert]({{ '/en/skills/dev/duckdb-expert/' | relative_url }}) | Large-scale data analytics with DuckDB | SQL Optimization, CSV/Parquet/JSON |
 | [log-debugger]({{ '/en/skills/dev/log-debugger/' | relative_url }}) | Log analysis, RCA, and debugging | 4-Phase Framework, Log Patterns |
 | [streamlit-expert]({{ '/en/skills/dev/streamlit-expert/' | relative_url }}) | Streamlit web app development | OIDC Auth, Plotly/Altair, Caching |
 | [tdd-developer]({{ '/en/skills/dev/tdd-developer/' | relative_url }}) | Test-driven development workflow | Red-Green-Refactor Cycle |
-| it-system-roi-analyzer | IT investment ROI and TCO analysis | ROI, TCO, NPV, Payback Period |
+| [it-system-roi-analyzer]({{ '/en/skills/finance/it-system-roi-analyzer/' | relative_url }}) | IT investment ROI and TCO analysis | ROI, TCO, NPV, Payback Period |
 | [aws-cli-expert]({{ '/en/skills/dev/aws-cli-expert/' | relative_url }}) | AWS CLI command generation | EC2, S3, Lambda, IAM |
 | [render-cli-expert]({{ '/en/skills/dev/render-cli-expert/' | relative_url }}) | Render CLI deployment management | Deploys, Logs, PostgreSQL |
 | [gogcli-expert]({{ '/en/skills/dev/gogcli-expert/' | relative_url }}) | Google Workspace CLI operations | 13 Services, OAuth2, Multi-Account |
 | [network-diagnostics]({{ '/en/skills/dev/network-diagnostics/' | relative_url }}) | Network quality diagnostics | Ping/Speed/HTTP/Traceroute |
 | [office-script-expert]({{ '/en/skills/dev/office-script-expert/' | relative_url }}) | Office Scripts (Excel Online) development | ExcelScript API, 13 Bug Patterns |
-| incident-rca-specialist | Incident RCA and corrective action planning | 5 Whys, Fishbone, FTA, 3D Prevention |
+| [incident-rca-specialist]({{ '/en/skills/ops/incident-rca-specialist/' | relative_url }}) | Incident RCA and corrective action planning | 5 Whys, Fishbone, FTA, 3D Prevention |
 | [hidden-contract-investigator]({{ '/en/skills/dev/hidden-contract-investigator/' | relative_url }}) | Extract implicit contracts from existing code | 6-Category Mismatch Taxonomy, Reuse Risk Classification |
 | [safe-by-default-architect]({{ '/en/skills/dev/safe-by-default-architect/' | relative_url }}) | Convert dangerous patterns into safe defaults | Safe Pattern Catalog, Forbidden-to-Safe Mapping, Static Rules |
+| [critical-document-reviewer]({{ '/en/skills/dev/critical-document-reviewer/' | relative_url }}) | Multi-persona document review | 6-Persona Review |
+| [docling-converter]({{ '/en/skills/dev/docling-converter/' | relative_url }}) | Document format conversion | PDF, DOCX, PPTX, Markdown |
+| [ffmpeg-expert]({{ '/en/skills/dev/ffmpeg-expert/' | relative_url }}) | Video and audio processing with FFmpeg | Encoding, Filters, Streaming |
+| [imagemagick-expert]({{ '/en/skills/dev/imagemagick-expert/' | relative_url }}) | Image processing with ImageMagick | Convert, Resize, Effects, Batch |
+| [qr-code-generator]({{ '/en/skills/dev/qr-code-generator/' | relative_url }}) | QR code image generation from text/URL/vCard | Customization, Batch Generation |
+| [salesforce-cli-expert]({{ '/en/skills/dev/salesforce-cli-expert/' | relative_url }}) | Salesforce CLI command generation | SOQL, Metadata, Security Audit |
+| [salesforce-expert]({{ '/en/skills/dev/salesforce-expert/' | relative_url }}) | Salesforce development and operations | Sharing, Apex, LWC, Architecture |
+| [salesforce-flow-expert]({{ '/en/skills/dev/salesforce-flow-expert/' | relative_url }}) | Flow implementation, validation, deploy | Validation, Metadata Gen |
+| [salesforce-report-creator]({{ '/en/skills/dev/salesforce-report-creator/' | relative_url }}) | Report creation via SF CLI | Report Types, REST/Metadata API |
+| [sox-expert]({{ '/en/skills/dev/sox-expert/' | relative_url }}) | Audio processing with SoX | Audio Effects, Format Conversion |
+| [video2minutes]({{ '/en/skills/dev/video2minutes/' | relative_url }}) | Video transcription and meeting minutes | Transcription, Meeting Minutes |
+| [yt-dlp-expert]({{ '/en/skills/dev/yt-dlp-expert/' | relative_url }}) | Video download with yt-dlp | 1000+ Sites, Subtitles, Formats |

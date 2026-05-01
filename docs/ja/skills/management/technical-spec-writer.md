@@ -3,7 +3,7 @@ layout: default
 title: "Technical Spec Writer"
 grand_parent: 日本語
 parent: プロジェクト・経営
-nav_order: 22
+nav_order: 24
 lang_peer: /en/skills/management/technical-spec-writer/
 permalink: /ja/skills/management/technical-spec-writer/
 ---
@@ -11,8 +11,7 @@ permalink: /ja/skills/management/technical-spec-writer/
 # Technical Spec Writer
 {: .no_toc }
 
-要件定義と実装の間を埋める技術仕様書を体系的に作成するスキル。 画面設計、API設計、DB設計、シーケンス図、状態遷移図をMermaid形式で生成し、 IEEE 830/ISO 29148準拠の仕様書を出力する。Use when creating functional specifications, API design documents, database design documents, screen design specifications, or sequence/state diagrams from requirements. Triggers: "technical specification", "functional spec", "API design", "database design", "screen design", "画面設計書", "API設計書", "DB設計書", "技術仕様書", "シーケンス図", "状態遷移図"
-
+Technical Spec Writer に関する日本語ガイドです。`skills/technical-spec-writer/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -31,18 +30,18 @@ permalink: /ja/skills/management/technical-spec-writer/
 
 ## 1. 概要
 
-This skill bridges the gap between requirements definition (BRD/User Stories) and implementation by producing structured, standards-compliant technical specification documents. It generates screen designs, API specifications, database designs, sequence diagrams, and state transition diagrams using Mermaid notation, following IEEE 830 and ISO/IEC/IEEE 29148 standards.
-
-<!-- TODO: 翻訳 -->
+このページは **Technical Spec Writer** スキルの日本語サマリーです。
+- スキル本体: `skills/technical-spec-writer/SKILL.md`
+- 参照ガイド: 4 件
+- 補助スクリプト: なし
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **API Key:** None required
-- **Python 3.9+** recommended
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
 
 ---
 
@@ -52,51 +51,71 @@ This skill bridges the gap between requirements definition (BRD/User Stories) an
 
 **Purpose**: Gather and structure input requirements to determine document scope.
 
-<!-- TODO: 翻訳 -->
-
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/technical-spec-writer/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. スキルの手順に沿って対話またはドキュメント作成を進めます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **Technical Spec Writer** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 4 件を根拠にした判断材料
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/technical-spec-writer/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/management/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/management/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/technical-spec-writer/references/api_design_guide.md`
 - `skills/technical-spec-writer/references/db_design_guide.md`
 - `skills/technical-spec-writer/references/mermaid_diagram_patterns.md`
 - `skills/technical-spec-writer/references/spec_writing_standards.md`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/management/technical-spec-writer/' | relative_url }}) を参照してください。

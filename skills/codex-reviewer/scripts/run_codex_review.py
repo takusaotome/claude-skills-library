@@ -3,7 +3,7 @@
 Codex Review Runner
 
 OpenAI Codex CLIを使用してコードやドキュメントのレビューを実行するスクリプト。
-最新のエージェント型コーディングモデル GPT-5.3-Codex を高推論モード(high)で呼び出します。
+GPT-5.4 モデルを high 推論モードで呼び出します。
 
 Usage:
     python3 run_codex_review.py --type code --target src/ --output ./reviews
@@ -115,29 +115,28 @@ FOCUS_PROMPTS = {
 
 # プロファイル別のデフォルト設定
 PROFILES = {
-    "quick-review": {"model": "gpt-5-codex", "reasoning": "medium", "description": "軽量レビュー（高速）"},
-    "deep-review": {"model": "gpt-5.3-codex", "reasoning": "xhigh", "description": "標準レビュー（推奨）"},
+    "quick-review": {"model": "gpt-5.4", "reasoning": "medium", "description": "軽量レビュー（高速）"},
+    "deep-review": {"model": "gpt-5.4", "reasoning": "high", "description": "標準レビュー（推奨）"},
 }
 
 # レビュータイプ別のデフォルトモデル設定
-# コードレビュー/テストはgpt-5.3-codex、ドキュメント/設計はgpt-5.3-thinking
-# gpt-5.3系はすべてxhigh推論を使用
+# 全タイプで gpt-5.4 + high推論 を使用
 TYPE_MODEL_DEFAULTS = {
     "code": {
-        "model": "gpt-5.3-codex",
-        "reasoning": "xhigh",
-        "description": "コードレビュー向け（エージェント型コーディングモデル）",
+        "model": "gpt-5.4",
+        "reasoning": "high",
+        "description": "コードレビュー向け",
     },
     "document": {
-        "model": "gpt-5.3-thinking",
-        "reasoning": "xhigh",
-        "description": "ドキュメントレビュー向け（深い推論モデル）",
+        "model": "gpt-5.4",
+        "reasoning": "high",
+        "description": "ドキュメントレビュー向け",
     },
-    "design": {"model": "gpt-5.3-thinking", "reasoning": "xhigh", "description": "設計レビュー向け（深い推論モデル）"},
+    "design": {"model": "gpt-5.4", "reasoning": "high", "description": "設計レビュー向け"},
     "test": {
-        "model": "gpt-5.3-codex",
-        "reasoning": "xhigh",
-        "description": "テストレビュー向け（エージェント型コーディングモデル）",
+        "model": "gpt-5.4",
+        "reasoning": "high",
+        "description": "テストレビュー向け",
     },
 }
 
@@ -173,7 +172,7 @@ def build_prompt(
 def generate_output_filename(review_type: str, target: str, output_dir: str) -> str:
     """出力ファイル名を生成"""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    target_name = Path(target).stem if Path(target).is_file() else Path(target).name
+    target_name = Path(target).stem if Path(target).suffix else Path(target).name
     filename = f"{review_type}_review_{target_name}_{timestamp}.md"
     return str(Path(output_dir) / filename)
 
@@ -261,14 +260,21 @@ def run_codex_review(
             cmd,
             capture_output=True,
             text=True,
+            stdin=subprocess.DEVNULL,
             timeout=600,  # 10分タイムアウト
         )
 
-        if result.returncode == 0:
-            return True, output_file
-        else:
+        if result.returncode != 0:
             error_msg = result.stderr if result.stderr else result.stdout
             return False, f"Codex実行エラー: {error_msg}"
+
+        # 出力ファイルの検証（exitcode=0でもモデルエラーで空の場合がある）
+        output_path = Path(output_file)
+        if not output_path.exists() or output_path.stat().st_size == 0:
+            error_msg = result.stderr if result.stderr else result.stdout
+            return False, f"レビュー結果が空です（モデルエラーの可能性）: {error_msg}"
+
+        return True, output_file
 
     except subprocess.TimeoutExpired:
         return False, "タイムアウト: レビューに10分以上かかりました"
@@ -297,15 +303,15 @@ def main():
   # カスタムプロンプトでレビュー
   python3 run_codex_review.py --type code --target src/ --output ./reviews --custom-prompt "APIエンドポイントのセキュリティを確認してください。対象: {target}"
 
-レビュータイプ別デフォルトモデル（すべてxhigh推論）:
-  code     : gpt-5.3-codex (xhigh)    - エージェント型コーディングモデル
-  document : gpt-5.3-thinking (xhigh) - 深い推論モデル
-  design   : gpt-5.3-thinking (xhigh) - 深い推論モデル
-  test     : gpt-5.3-codex (xhigh)    - エージェント型コーディングモデル
+レビュータイプ別デフォルトモデル（すべてhigh推論）:
+  code     : gpt-5.4 (high)
+  document : gpt-5.4 (high)
+  design   : gpt-5.4 (high)
+  test     : gpt-5.4 (high)
 
 利用可能なプロファイル（--profileで明示指定時）:
-  deep-review   : gpt-5.3-codex, xhigh（推奨）
-  quick-review  : gpt-5-codex, medium（高速）
+  deep-review   : gpt-5.4, high（推奨）
+  quick-review  : gpt-5.4, medium（高速）
         """,
     )
 

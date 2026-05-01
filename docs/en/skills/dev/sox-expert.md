@@ -3,7 +3,7 @@ layout: default
 title: "SoX Expert"
 grand_parent: English
 parent: Software Development
-nav_order: 29
+nav_order: 30
 lang_peer: /ja/skills/dev/sox-expert/
 permalink: /en/skills/dev/sox-expert/
 ---
@@ -104,37 +104,79 @@ soxi --version
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### Workflow 1: フォーマット変換
+
+```
+1. 入力ファイル確認（soxi） → 2. 出力形式の選択 → 3. 品質設定 → 4. 変換実行
+```
+
+**Step 1: 入力ファイルの確認**
+
+```bash
+# 詳細情報を確認
+soxi input.wav
+
+# 特定項目のみ取得
+soxi -r input.wav   # サンプルレート
+soxi -c input.wav   # チャンネル数
+soxi -b input.wav   # ビット深度
+soxi -d input.wav   # 再生時間
+soxi -D input.wav   # 再生時間（秒）
+```
+
+**Step 2: 基本変換**
+
+```bash
+# 最もシンプルな変換（自動設定）
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- 音声フォーマットを変換したい（WAV, MP3, FLAC, OGG, AIFF等）
+- 音声をトリミング・カットしたい
+- 複数の音声ファイルを結合したい
+- 音声にフェードイン/アウトを追加したい
+- ノイズを除去したい
+- 音量を正規化（ノーマライズ）したい
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+- A structured response or artifact aligned to the skill's workflow.
+- Reference support from 4 guide file(s).
+- Script-assisted execution using 1 helper command(s) where applicable.
+- Reusable output that can be reviewed, refined, and incorporated into a wider project workflow.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/sox-expert/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: troubleshooting.md, effects_guide.md, format_conversion.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: soxi_analyzer.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/dev/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

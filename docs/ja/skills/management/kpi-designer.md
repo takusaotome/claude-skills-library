@@ -3,7 +3,7 @@ layout: default
 title: "KPI Designer"
 grand_parent: 日本語
 parent: プロジェクト・経営
-nav_order: 14
+nav_order: 15
 lang_peer: /en/skills/management/kpi-designer/
 permalink: /ja/skills/management/kpi-designer/
 ---
@@ -11,11 +11,7 @@ permalink: /ja/skills/management/kpi-designer/
 # KPI Designer
 {: .no_toc }
 
-KPI体系設計とOKR策定支援スキル。ビジネス目標に整合したKPI設計、バランススコアカード、OKRフレームワーク、
-ダッシュボード設計を提供。SMART原則、リーディング/ラギング指標の選定を支援。
-Use when designing KPI frameworks, implementing OKR methodology, or creating performance measurement systems.
-Triggers: "KPI design", "OKR", "performance metrics", "balanced scorecard", "dashboard design", "measurement framework".
-
+KPI Designer に関する日本語ガイドです。`skills/kpi-designer/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -34,86 +30,111 @@ Triggers: "KPI design", "OKR", "performance metrics", "balanced scorecard", "das
 
 ## 1. 概要
 
-This skill provides expert guidance for designing comprehensive KPI frameworks and implementing OKR (Objectives and Key Results) methodologies. Aligns metrics with strategic objectives and creates actionable measurement systems.
-
-**Primary language**: Japanese (default), English supported
-**Frameworks**: Balanced Scorecard, OKR, KPI Pyramid, SMART criteria
-**Output format**: KPI frameworks, OKR sheets, dashboard designs, metric definitions
-
-Use this skill when:
-- Designing KPI frameworks for organizations or departments
-- Implementing OKR methodology
-- Creating balanced scorecards
-- Designing performance dashboards
-- Aligning metrics with strategy
-- Improving data-driven decision making
-
----
-
-<!-- TODO: 翻訳 -->
+このページは **KPI Designer** スキルの日本語サマリーです。
+- スキル本体: `skills/kpi-designer/SKILL.md`
+- 参照ガイド: 2 件
+- 補助スクリプト: 1 件
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **API Key:** None required
-- **Python 3.9+** recommended
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
+- 詳細な実行条件は英語版ガイドまたは `SKILL.md` を参照してください。
 
 ---
 
 ## 3. クイックスタート
 
 ```bash
-Strategic Objective: Increase market share from 15% to 20% in 2026
+1. Gather Requirements  ──→  2. Design Framework  ──→  3. Define KPIs
+       │                            │                        │
+       ▼                            ▼                        ▼
+   - Objectives               - Select framework        - SMART validation
+   - Industry context         - BSC / OKR / Pyramid     - Leading/Lagging mix
+   - Stakeholder level        - Hierarchy design        - Owner assignment
 
-Success Factors:
-- Customer acquisition
-- Product innovation
-- Operational efficiency
+4. Generate Deliverables  ──→  5. Review & Refine
+       │                              │
+       ▼                              ▼
+   - KPI Framework Doc            - Stakeholder feedback
+   - OKR Template                 - Alignment check
+   - Dashboard Spec               - Data feasibility
 ```
-
-<!-- TODO: 翻訳 -->
 
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/kpi-designer/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. 補助スクリプトがある場合は小さな入力で実行し、出力形式を確認してから本番データへ広げます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **KPI Designer** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 補助スクリプトを使って定型処理や検証を実行したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 2 件を根拠にした判断材料
+- 補助スクリプト 1 件による補助出力や検証結果
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/kpi-designer/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 補助スクリプトは本番データの前にサンプル入力で実行し、引数と出力先を確認してください。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/management/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/management/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
+- 引数や出力先の指定漏れが多いため、コマンド例をそのまま起点に調整すると安全です。
 
 ---
 
 ## 10. リファレンス
 
-This skill uses built-in Claude capabilities without external scripts or references.
+**参照ガイド:**
+
+- `skills/kpi-designer/references/industry-kpis.md`
+- `skills/kpi-designer/references/kpi-methodology.md`
+
+**補助スクリプト:**
+
+- `skills/kpi-designer/scripts/generate_kpi_framework.py`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/management/kpi-designer/' | relative_url }}) を参照してください。

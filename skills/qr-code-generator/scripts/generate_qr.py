@@ -12,7 +12,7 @@ import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 try:
     import qrcode
@@ -59,12 +59,12 @@ def parse_color(color_str: str) -> str:
 
 def generate_vcard(
     name: str,
-    phone: str | None = None,
-    email: str | None = None,
-    org: str | None = None,
-    title: str | None = None,
-    url: str | None = None,
-    address: str | None = None,
+    phone: Optional[str] = None,
+    email: Optional[str] = None,
+    org: Optional[str] = None,
+    title: Optional[str] = None,
+    url: Optional[str] = None,
+    address: Optional[str] = None,
 ) -> str:
     """Generate vCard 3.0 formatted string."""
     parts = name.split(" ", 1)

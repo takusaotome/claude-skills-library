@@ -56,37 +56,74 @@ This skill provides a structured methodology for reviewing business contracts fr
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+**Purpose**: Quickly assess the contract and determine the appropriate review depth.
+**Duration**: 15-30 minutes
+
+### Step 1.1: Contract Classification
+
+Identify the contract type and gather basic information:
+
+```markdown
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Reviewing vendor contracts before signing
+- Evaluating NDAs and confidentiality agreements
+- Analyzing Master Service Agreements (MSAs)
+- Reviewing Service Level Agreements (SLAs)
+- Evaluating software license terms
+- Preparing for contract negotiations
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+This skill produces the following outputs:
+
+| Output | Format | Description |
+|--------|--------|-------------|
+| **Analysis Report** | Markdown (.md) | Comprehensive contract review report with risk assessment |
+| **Risk Score** | 0-100 integer | Quantified overall contract risk level |
+| **Red Flag List** | Table | Prioritized list of identified issues with recommendations |
+| **Clause Coverage** | Checklist | Summary of present/missing standard clauses |
+| **Negotiation Summary** | Structured list | Deal breakers, high priority items, and acceptable terms |
+
+**Report Sections**:
+1. Contract Overview (type, parties, term, key terms)
+2. Risk Assessment (score, level, red flags)
+3. Clause Coverage (present/missing analysis)
+4. Recommendations (prioritized action items)
+5. Negotiation Guidance (alternative language, talking points)
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/contract-reviewer/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: red_flag_patterns.md, clause_analysis_guide.md, contract_review_methodology.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: analyze_contract.py, pattern_definitions.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/management/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

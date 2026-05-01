@@ -3,7 +3,7 @@ layout: default
 title: "Project Manager"
 grand_parent: English
 parent: Project & Business
-nav_order: 18
+nav_order: 20
 lang_peer: /ja/skills/management/project-manager/
 permalink: /en/skills/management/project-manager/
 ---
@@ -70,37 +70,80 @@ FR-001: User Login
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+Use this workflow when starting a new project or phase requiring detailed requirements documentation.
+
+### Step 1: Understand Project Context
+
+**Ask these questions:**
+1. What business problem are we solving?
+2. Who are the key stakeholders?
+3. What are the business goals and success criteria?
+4. What are the constraints (budget, timeline, resources)?
+5. Are there regulatory or compliance requirements?
+
+### Step 2: Gather Requirements
+
+**Information Gathering Methods:**
+- **Interviews**: One-on-one with stakeholders
+- **Workshops**: Facilitated group sessions
+- **Surveys**: Structured questionnaires
+- **Document Analysis**: Review existing documentation
+- **Observation**: Watch current processes
+- **Prototyping**: Show mockups to elicit feedback
+
+**Use the Requirements Definition Template** from `assets/requirements_definition_template.md`
+
+### Step 3: Document Requirements
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **Define Requirements**: "Create a requirements definition document for our CRM implementation project"
+- **Review Project Plans**: "Review this project plan and identify risks and missing elements"
+- **Generate Progress Reports**: "Create a monthly progress report with EVM analysis"
+- **Conduct Risk Analysis**: "Perform a comprehensive risk assessment for this project"
+- **Estimate Costs**: "Estimate project costs using bottom-up estimation approach"
+- **Assess Project Health**: "Analyze current project health based on these metrics"
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+- A structured response or artifact aligned to the skill's workflow.
+- Reference support from 2 guide file(s).
+- Script-assisted execution using 1 helper command(s) where applicable.
+- Reusable output that can be reviewed, refined, and incorporated into a wider project workflow.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/project-manager/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: risk_management_guide.md, pmbok_knowledge_areas.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: project_health_check.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/management/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 
