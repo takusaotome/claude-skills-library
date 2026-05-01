@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 96 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 97 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -85,7 +85,7 @@ permalink: /ja/skill-catalog/
 
 ## オペレーション & ドキュメンテーション
 
-技術文書、プレゼン、ドキュメント変換、議事録の 12 スキル。
+技術文書、プレゼン、ドキュメント変換、議事録の 13 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -100,6 +100,7 @@ permalink: /ja/skill-catalog/
 | [operations-manual-creator]({{ '/ja/skills/ops/operations-manual-creator/' | relative_url }}) | 操作マニュアル・SOP 作成 | STEP フォーマット、ANSI Z535 |
 | [presentation-reviewer]({{ '/ja/skills/ops/presentation-reviewer/' | relative_url }}) | プレゼン資料レビュー (聴衆視点) | 5 評価軸 |
 | [meeting-asset-preparer]({{ '/ja/skills/meta/meeting-asset-preparer/' | relative_url }}) | 会議アジェンダ・資料・アクション準備 | バイリンガル(JA/EN)、文脈統合 |
+| [meeting-minutes-writer]({{ '/ja/skills/meta/meeting-minutes-writer/' | relative_url }}) | 議事録生成＋自己レビューループ（最大3反復） | 5必須チェック、日付検証、HIGH指摘ガード |
 | [timezone-aware-event-tracker]({{ '/ja/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | マルチタイムゾーンイベント追跡・相関 | DST対応、マルチTZタイムライン |
 
 ---
