@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 99 published skills (with SKILL.md) + 5 in-progress directories with only scripts/ — 104 dirs total
+├── skills/                 # 100 published skills (with SKILL.md) + 4 in-progress directories with only scripts/ — 104 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (99 Skills)
+## Skill Catalog (100 Skills)
 
-> Note: `skills/` contains 104 directories total — 99 published skills (with `SKILL.md`) listed below, plus 5 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `internal-email-composer`, `vendor-procurement-coordinator`.
+> Note: `skills/` contains 104 directories total — 100 published skills (with `SKILL.md`) listed below, plus 4 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `vendor-procurement-coordinator`.
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -141,7 +141,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (15 skills)
+### Documentation & Communication (16 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -160,6 +160,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
 | meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
 | meeting-minutes-writer | 議事録生成＋自己レビューループ（最大3反復） | 5 Mandatory Checks, Date Verification, Action-Item Coverage |
+| internal-email-composer | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
 
 ### QA & Testing (11 skills)
 
@@ -1461,6 +1462,44 @@ An interactive skill that transforms bug discoveries during system testing into 
 **Bilingual Support:**
 - 日本語（デフォルト）: 対話、テンプレート、ガイド全て日本語対応
 - English: Full English template and workflow support
+
+---
+
+### 📧 Internal Email Composer
+
+**File:** `skills/internal-email-composer/SKILL.md`
+
+Generate professional internal email drafts for common coordination tasks in business environments. Creates culturally-appropriate bilingual (Japanese/English) emails with proper business tone.
+
+**When to use:**
+- Drafting internal emails to request vendor quote compilation
+- Forwarding RFQ documents to internal stakeholders
+- Delegating tasks to team members with clear instructions
+- Sending status update emails for ongoing projects
+- Composing follow-up emails for pending responses
+- Creating escalation emails for delayed deliverables
+
+**Core Capabilities:**
+- ✅ 6 email scenarios (Vendor RFQ, Task Delegation, Status Update, Follow-up, Escalation, Info Request)
+- ✅ Bilingual support (Japanese/English) with culturally-adapted content
+- ✅ 3 urgency levels with appropriate subject prefixes
+- ✅ Template engine with variable substitution
+- ✅ Business etiquette compliance (敬語, keigo for Japanese)
+
+**Key Components:**
+- `scripts/compose_email.py` - Main email composition script with CLI interface
+- `references/email-templates.md` - Template patterns for each email type
+- `references/business-etiquette-guide.md` - Cultural considerations for JA/EN emails
+
+**Output Formats:**
+- Markdown email draft with subject, greeting, body, closing, signature
+- JSON structure for programmatic integration
+
+**Example Use Cases:**
+- "Create a Japanese email to forward RFQ to procurement team"
+- "Draft a task delegation email for Q4 budget review"
+- "Compose a follow-up email for pending vendor quotes"
+- "Generate an escalation email about delayed deliverables"
 
 ---
 
@@ -4052,6 +4091,16 @@ Future skills planned for this library:
 - Completion report surfaces remaining HIGH findings and `* To be confirmed` items after iteration 3
 - Complements meeting-minutes-reviewer (review-only) and video2minutes (transcribe→write)
 - Resources: output_format.md, self_review_checklist.md, minutes_template_en.md, minutes_template_ja.md, findings_report_template.md (bilingual)
+
+### internal-email-composer v1.0 (2026-04-17)
+- Compose professional internal emails for coordination tasks
+- 6 supported scenarios: vendor RFQ, task delegation, status update, follow-up, escalation, info request
+- Bilingual support (Japanese/English) with culturally-adapted content
+- Business etiquette compliance (敬語/keigo for Japanese, professional tone for English)
+- 3 urgency levels (normal, high, urgent) with appropriate subject prefixes
+- CLI script `compose_email.py` with JSON and Markdown output formats
+- Template engine with variable substitution for key points, deadlines, attachments
+- Comprehensive reference guides for email templates and business etiquette
 
 ### meeting-minutes-reviewer v1.0 (2026-03-26)
 - Review meeting minutes for completeness, action item clarity, and decision documentation
