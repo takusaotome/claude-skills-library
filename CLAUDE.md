@@ -130,6 +130,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | management-accounting-navigator | 1.0 | Management Accounting | 12 domain routing, COSO/IMA framework |
 | markdown-to-pdf | 2.0 | Documentation | markdown_to_pdf.py, fpdf2, Playwright, Mermaid |
 | meeting-asset-preparer | 1.0 | Meeting Documentation | prepare_meeting.py, Bilingual (JA/EN), Context Integration |
+| meeting-minutes-writer | 1.0 | Meeting Documentation | Generation + Self-Review Loop (max 3), 5 Mandatory Checks, Date Verification |
 | migration-validation-explorer | 2.0 | Data Migration QA | 4-Perspective hypothesis, Priority scoring |
 | multi-file-log-correlator | 1.0 | Log Analysis | correlate_logs.py, Cross-Source Correlation, Gap Detection |
 | network-diagnostics | 1.0 | Network Quality | network_diagnostics.py, Ping/Speed/HTTP/Traceroute |
