@@ -46,10 +46,10 @@ This skill leverages 4 comprehensive ITIL 4 knowledge documents located in `refe
 
 | Resource | Description |
 |----------|-------------|
-| `ITIL 4ファンデーションの概要と主要ポイント.md` | SVS, 4 Dimensions, 7 Guiding Principles, SVC, 34 Practices overview |
-| `ITIL 4 一般的マネジメントプラクティス詳細ガイド.md` | 14 General Management Practices detailed guide |
-| `ITIL 4 サービスマネジメントプラクティス詳細ガイド.md` | 17 Service Management Practices detailed guide |
-| `ITIL 4 技術的マネジメントプラクティス ― 詳細解説.md` | 3 Technical Management Practices detailed guide |
+| `ITIL4-foundation-overview.md` | SVS, 4 Dimensions, 7 Guiding Principles, SVC, 34 Practices overview |
+| `ITIL4-general-management-practices.md` | 14 General Management Practices detailed guide |
+| `ITIL4-service-management-practices.md` | 17 Service Management Practices detailed guide |
+| `ITIL4-technical-management-practices.md` | 3 Technical Management Practices detailed guide |
 
 ## Workflow
 
@@ -69,7 +69,7 @@ See **Core Workflows** section below for detailed step-by-step guidance.
 
 This skill leverages 4 comprehensive knowledge documents:
 
-### 1. ITIL 4 Foundation Overview (`references/ITIL 4ファンデーションの概要と主要ポイント.md`)
+### 1. ITIL 4 Foundation Overview (`references/ITIL4-foundation-overview.md`)
 - Service Value System (SVS)
 - 4 Dimensions of Service Management
 - 7 Guiding Principles
@@ -77,7 +77,7 @@ This skill leverages 4 comprehensive knowledge documents:
 - Continual Improvement Model - 7 steps
 - Overview of 34 Practices
 
-### 2. General Management Practices (`references/ITIL 4 一般的マネジメントプラクティス詳細ガイド.md`)
+### 2. General Management Practices (`references/ITIL4-general-management-practices.md`)
 **14 Practices**:
 1. Architecture Management
 2. Continual Improvement
@@ -94,7 +94,7 @@ This skill leverages 4 comprehensive knowledge documents:
 13. Supplier Management
 14. Workforce & Talent Management
 
-### 3. Service Management Practices (`references/ITIL 4 サービスマネジメントプラクティス詳細ガイド.md`)
+### 3. Service Management Practices (`references/ITIL4-service-management-practices.md`)
 **17 Practices**:
 1. Availability Management
 2. Business Analysis
@@ -114,7 +114,7 @@ This skill leverages 4 comprehensive knowledge documents:
 16. Service Request Management
 17. Service Validation & Testing
 
-### 4. Technical Management Practices (`references/ITIL 4 技術的マネジメントプラクティス ― 詳細解説.md`)
+### 4. Technical Management Practices (`references/ITIL4-technical-management-practices.md`)
 **3 Practices**:
 1. Deployment Management
 2. Infrastructure & Platform Management
