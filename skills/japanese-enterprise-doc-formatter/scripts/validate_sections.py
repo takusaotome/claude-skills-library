@@ -199,8 +199,13 @@ def extract_sections_from_markdown(content: str) -> list[str]:
             section_name = match.group(1).strip()
             sections.append(section_name)
 
-    # Also look for table headers that might indicate sections
-    table_pattern = r"\|\s*([^|]+)\s*\|"
+    # Also look for table headers that might indicate sections.
+    # Important: exclude newline from the cell character class so a cell pattern
+    # cannot span across rows (the `|\n|` between two rows would otherwise
+    # consume the leading `|` of the next row, making every other row's first
+    # cell unreachable to subsequent matches — that previously dropped rows
+    # like 起案日 / 起案部署 from the extracted set).
+    table_pattern = r"\|\s*([^|\n]+?)\s*\|"
     for match in re.finditer(table_pattern, content):
         cell = match.group(1).strip()
         if cell and cell not in ["---", "項目", "内容", "金額", "日付"]:

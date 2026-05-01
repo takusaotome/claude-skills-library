@@ -132,6 +132,6 @@ The skill produces structured output following the conventions in its templates 
 
 **Assets:**
 
-- `skills/vendor-procurement-coordinator/assets/reminder_email.md`
-- `skills/vendor-procurement-coordinator/assets/rfq_email_en.md`
-- `skills/vendor-procurement-coordinator/assets/rfq_email_ja.md`
+- `skills/vendor-procurement-coordinator/assets/email_templates/reminder_email.md`
+- `skills/vendor-procurement-coordinator/assets/email_templates/rfq_email_en.md`
+- `skills/vendor-procurement-coordinator/assets/email_templates/rfq_email_ja.md`

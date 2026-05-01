@@ -132,9 +132,9 @@ curl -L -o vendor-procurement-coordinator.skill https://github.com/takusaotome/c
 
 **アセット:**
 
-- `skills/vendor-procurement-coordinator/assets/reminder_email.md`
-- `skills/vendor-procurement-coordinator/assets/rfq_email_en.md`
-- `skills/vendor-procurement-coordinator/assets/rfq_email_ja.md`
+- `skills/vendor-procurement-coordinator/assets/email_templates/reminder_email.md`
+- `skills/vendor-procurement-coordinator/assets/email_templates/rfq_email_en.md`
+- `skills/vendor-procurement-coordinator/assets/email_templates/rfq_email_ja.md`
 
 ---
 

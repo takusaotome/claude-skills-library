@@ -178,7 +178,9 @@ python3 scripts/generate_proposal.py \
 - `references/service-catalog.md` -- Complete AI-BPO service catalog with pricing
 - `references/client-intake-template.md` -- Client requirements questionnaire
 - `references/roi-methodology.md` -- ROI calculation methodology and benchmarks
-- `assets/proposal-template-bilingual.md` -- Bilingual proposal template
+<!-- proposal-template-bilingual.md was referenced but never shipped; the template
+     is generated dynamically by generate_proposal.py instead. -->
+
 
 ## Key Principles
 

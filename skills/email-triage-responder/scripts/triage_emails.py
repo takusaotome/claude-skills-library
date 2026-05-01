@@ -484,7 +484,14 @@ def generate_markdown_report(report: TriageReport) -> str:
     }
 
     for email in report.emails:
-        q = email.get("quadrant", email.quadrant if isinstance(email, EmailAnalysis) else "Q4")
+        # `email` may be either an EmailAnalysis dataclass (typical when called
+        # programmatically) or a plain dict (when reloaded from JSON). Branch
+        # on the type before reaching for `.get(...)` — the previous code did
+        # the dict-only call first and crashed on the dataclass path.
+        if isinstance(email, EmailAnalysis):
+            q = email.quadrant
+        else:
+            q = email.get("quadrant", "Q4")
         if q in quadrants:
             quadrants[q][1].append(email)
 

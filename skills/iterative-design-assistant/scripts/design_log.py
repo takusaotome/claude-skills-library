@@ -88,8 +88,11 @@ def cmd_init(args: argparse.Namespace) -> int:
     }
 
     save_log(log_path, log_data)
-    print(f"Initialized design session: {session_id}")
-    print(f"Log file: {log_path}")
+    # Status messages go to stderr so they don't mix with downstream JSON
+    # output when commands are chained in the same Python process (see
+    # test_history_json_output for the failure mode this guards against).
+    print(f"Initialized design session: {session_id}", file=sys.stderr)
+    print(f"Log file: {log_path}", file=sys.stderr)
     return 0
 
 

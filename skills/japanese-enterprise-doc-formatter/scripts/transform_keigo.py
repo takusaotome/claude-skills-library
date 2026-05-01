@@ -172,12 +172,24 @@ def apply_transformation_rules(text: str, target_level: KeigoLevel) -> tuple[str
         rule for rule in TRANSFORMATION_RULES if get_level_hierarchy(rule.level) <= get_level_hierarchy(target_level)
     ]
 
-    # Sort by level (apply higher level rules first)
-    applicable_rules.sort(key=lambda r: get_level_hierarchy(r.level), reverse=True)
+    # Apply rules low-level -> high-level so a chain like
+    #     する -> します -> いたします -> させていただきます
+    # actually advances all the way to the requested level. Sorting in the
+    # other direction would apply HIGHEST first, find no match, then drop
+    # back to STANDARD and stop one level short of the target.
+    applicable_rules.sort(key=lambda r: get_level_hierarchy(r.level))
 
     for rule in applicable_rules:
-        if re.search(rule.pattern, result):
-            new_result = re.sub(rule.pattern, rule.replacement, result)
+        # Rules use `$` to anchor at end-of-clause but real Japanese text is
+        # punctuated with 。 or 、 between clauses (and may run on a single line),
+        # so `$` would only match at the very end of the buffer. Rewrite a
+        # trailing `$` into a lookahead that fires at sentence punctuation,
+        # newlines, OR end-of-string so each clause is transformed in turn.
+        pattern = rule.pattern
+        if pattern.endswith("$"):
+            pattern = pattern[:-1] + r"(?=[。\n]|$)"
+        if re.search(pattern, result):
+            new_result = re.sub(pattern, rule.replacement, result)
             if new_result != result:
                 transformations_applied.append(
                     {

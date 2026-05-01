@@ -38,8 +38,12 @@ Identify the document type and extract key information from the user's input:
 - Bilingual requirement: Japanese only / Japanese + English summary
 
 ```bash
-python3 scripts/analyze_document.py \
-  --input "user_content.txt" \
+# Doc-type detection is handled by validate_sections.py via the --doc-type
+# flag (and by format_document.py's heuristics). A standalone
+# analyze_document.py was planned but never shipped — use the workflow below.
+python3 scripts/validate_sections.py \
+  --input user_content.md \
+  --doc-type ringi \
   --output analysis.json
 ```
 
@@ -179,8 +183,7 @@ Produce the final document in requested format:
 
 ## Resources
 
-- `scripts/analyze_document.py` -- Analyzes input content and determines document type
-- `scripts/validate_sections.py` -- Validates required sections for document type
+- `scripts/validate_sections.py` -- Validates required sections for document type (also handles type detection)
 - `scripts/transform_keigo.py` -- Applies keigo transformation to text
 - `scripts/format_document.py` -- Generates formatted document output
 - `references/document_types.md` -- Document type specifications and requirements
