@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 105 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 106 dirs total
+├── skills/                 # 106 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 107 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (105 Skills)
+## Skill Catalog (106 Skills)
 
-> Note: `skills/` contains 106 directories total — 105 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: `skills/` contains 107 directories total — 106 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -143,7 +143,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (17 skills)
+### Documentation & Communication (18 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -164,6 +164,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | meeting-minutes-writer | 議事録生成＋自己レビューループ（最大3反復） | 5 Mandatory Checks, Date Verification, Action-Item Coverage |
 | internal-email-composer | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
 | iterative-design-assistant | デザイン反復履歴管理・文脈理解・一貫スタイリング | Design Decision Log, Contextual Reference Resolution, Token Management |
+| purchase-request-generator | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
 
 ### QA & Testing (12 skills)
 
@@ -2617,6 +2618,35 @@ Creates professional presentations following FUJISOFT America's slide template s
 
 ---
 
+### 📝 Purchase Request Generator
+
+**File:** `skills/purchase-request-generator/`
+
+Generates structured IT/hardware purchase request documents from informal requirements. Transforms product details, pricing, and justification notes into formal approval documents including cost-benefit analysis, ROI justification, vendor comparison matrices, and MARP presentation slides suitable for management approval workflows.
+
+**When to use:**
+- Creating formal purchase requests from informal product/price specifications
+- Generating cost-benefit analysis for IT equipment or software purchases
+- Building ROI justification documents for budget approvals
+- Comparing multiple vendors for procurement decisions
+- Preparing MARP presentation slides for purchase approval meetings
+
+**Key Components:**
+- `scripts/generate_purchase_request.py` - Generate formal purchase request documents
+- `scripts/generate_cba.py` - Generate cost-benefit analysis with ROI/NPV calculations
+- `scripts/generate_vendor_comparison.py` - Create vendor comparison matrices
+- `scripts/generate_marp_slides.py` - Generate MARP presentation slides
+- `references/purchase_request_guide.md` - Best practices for purchase justifications
+
+**Key Features:**
+- ROI, NPV, and payback period calculations
+- Weighted vendor comparison matrices
+- MARP-formatted presentation slides
+- Sensitivity analysis and risk scenarios
+- Professional document formatting for management approval
+
+---
+
 ### 📊 Office Script Expert
 
 **File:** `skills/office-script-expert/`
@@ -4416,6 +4446,14 @@ Future skills planned for this library:
 - CLI tool with init, add, update, report, export, and list commands
 - Integration guide for daily-comms-ops workflow
 - 52 tests covering NL parsing and state management
+
+### purchase-request-generator v1.0 (2026-03-30)
+- Generate formal IT/hardware purchase request documents from informal specifications
+- Cost-benefit analysis with ROI, NPV, and payback period calculations
+- Weighted vendor comparison matrices with scoring and ranking
+- MARP presentation slides for management approval meetings
+- Sensitivity analysis with break-even and risk scenarios
+- Four scripts: generate_purchase_request.py, generate_cba.py, generate_vendor_comparison.py, generate_marp_slides.py
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
