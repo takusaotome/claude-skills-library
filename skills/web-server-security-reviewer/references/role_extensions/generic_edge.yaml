@@ -1,0 +1,72 @@
+# generic_edge.yaml — エッジ / 支店サーバ向け追加観点（v1 スケルトン）
+#
+# 状態: スケルトン。代表 check 配置済。本番運用には拡充推奨。
+# 実行コマンドは command_reference.yaml が正本（command_refs で参照）。
+
+extension_id: "generic_edge"
+description: |
+  エッジサーバ（支店、店舗、現場設置の物理 / 仮想サーバ）向け追加観点。
+  物理サーバ、PII 蓄積、ローカルストレージ、VPN クライアント、長期未再起動等。
+
+applicable_roles: ["edge"]
+
+checks:
+  - id: "EDGE.1"
+    title: "ローカル PII 蓄積（顧客データのローカル保管、保持期間ポリシー）"
+    axis: "A2"
+    role_applicability: ["edge"]
+    default_severity: "High"
+    severity_conditions:
+      escalation:
+        - "regulated 環境（PCI DSS / HIPAA / GDPR）→ Critical"
+        - "削除ポリシー不在 + 容量増加トレンド → P0 化"
+    command_refs: ["EDGE.1.pii_storage"]
+    expected: "PII（個人情報、撮影画像、署名等）に保持期間ポリシーあり、自動削除機構稼働"
+    template_finding_id: "TPL-EDGE-PII-RETENTION"
+    masking_required: false
+    sensitivity: "conditional"
+
+  - id: "EDGE.2"
+    title: "VPN クライアント設定ファイルの存在と権限"
+    axis: "A6"
+    role_applicability: ["edge"]
+    default_severity: "High"
+    severity_conditions:
+      escalation:
+        - "公開サーバへの中継経路 → Critical（漏洩時に侵害連鎖）"
+    command_refs: ["EDGE.2.vpn_config_meta"]
+    expected: "VPN 認証情報がファイルに平文保存されていない（Secrets Manager / Vault 利用）"
+    template_finding_id: "TPL-VPN-CRED-PLAINTEXT"
+    masking_required: true
+    sensitivity: "conditional_sensitive"
+    notes: |
+      ファイル本文（認証情報の値）の確認が必要な場合は exceptional_sensitive_read 区分で
+      別途二重承認のうえ実施。本 check はメタデータ（存在・権限）のみ。
+
+  - id: "EDGE.3"
+    title: "VPN プロセス重複稼働の検出"
+    axis: "A5"
+    role_applicability: ["edge"]
+    default_severity: "Medium"
+    command_refs: ["EDGE.3.vpn_process_count"]
+    expected: "VPN プロセスが期待数通り（通常 1）"
+    template_finding_id: "TPL-VPN-PROCESS-DUP"
+    masking_required: false
+    sensitivity: "allowed"
+
+  - id: "EDGE.4"
+    title: "タイムゾーン不統一（複数エッジで運用時）"
+    axis: "A9"
+    role_applicability: ["edge"]
+    default_severity: "Low"
+    command_refs: ["EDGE.4.timezone"]
+    expected: "TZ がプロジェクト標準と一致（または意図的に拠点別 TZ）"
+    template_finding_id: "TPL-TZ-INCONSISTENT"
+    masking_required: false
+    sensitivity: "allowed"
+
+# 拡充 TODO:
+# EDGE.5 物理サーバのファームウェア / IPMI / BMC 露出（v1 範囲外、Phase 2）
+# EDGE.6 ローカル DB（SQLite 等）のバックアップポリシー
+# EDGE.7 オフライン時の挙動（ネットワーク断絶時のデータ蓄積上限）
+# EDGE.8 月次 / 週次バッチの作成元の特定

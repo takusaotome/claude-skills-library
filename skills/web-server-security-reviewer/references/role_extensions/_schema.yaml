@@ -1,0 +1,79 @@
+# _schema.yaml — role_extensions/<role>.yaml 共通 schema
+#
+# 全 role_extensions YAML はこの schema に準拠する。
+# checklist_9axes.yaml の各 check も同じ schema に従う。
+# schema_validation.md の Python 検証で必須キーを cross-check。
+
+version: "1.1"
+changelog:
+  - "1.1: command_refs を必須化、verification は廃止（command_reference.yaml が実行コマンドの正本）"
+  - "1.0: initial"
+
+# 必須トップレベルキー（role_extensions のみ）
+required_top_level:
+  - extension_id          # string、ファイル名と一致（例: generic_public_facing）
+  - description           # string、人間向け説明（複数行可）
+  - applicable_roles      # array<string>、target_profile.role に含まれる値
+  - checks                # array<check>、最低 1 つ
+
+# 各 check の必須キー（checklist_9axes.yaml の check と同一 schema）
+required_check_keys:
+  - id                    # <ROLE_PREFIX>.<連番> 例: PUBLIC.1
+  - title                 # 短い見出し
+  - axis                  # A1..A9（必須、9 観点へのマッピング）
+  - role_applicability    # array<string>
+  - default_severity      # Critical|High|Medium|Low
+  - command_refs          # array<cmd_id>、command_reference.yaml の cmd_id を参照（必須、空でも array で）
+  - expected              # 期待値
+  - template_finding_id   # TPL-<CATEGORY>-<NAME>、finding_taxonomy.md 参照
+  - masking_required      # bool
+  - sensitivity           # allowed|conditional|conditional_sensitive|ask-first|exceptional_sensitive_read
+
+# 任意キー
+optional_check_keys:
+  - severity_conditions   # {escalation: [], degradation: []}
+  - threshold             # string
+  - purpose_constraints   # array<string>、用途限定（例: curl -k は外部到達性確認のみ）
+  - related_commands      # object、関連コマンド参照
+  - notes                 # string、補足
+
+# 廃止キー（v1.1 以降使用しない）
+deprecated_keys:
+  - verification          # → command_refs に置換。実行コマンドは command_reference.yaml が正本
+
+# Finding ID namespace（プロジェクト側で定義）
+finding_id_format: "<ROLE>-F<3 桁連番>"
+finding_id_examples:
+  - "PUBLIC-F001"
+  - "INTERNAL-F042"
+  - "EDGE-F125"
+  - "API_GW-F003"
+
+# 拡張ファイル追加時の手順（SKILL.md §9 参照）:
+#   1. references/role_extensions/<role_name>.yaml を新規作成
+#   2. extension_id, description, applicable_roles, checks を必須記述
+#   3. 各 check は本 schema に準拠（command_refs 必須）
+#   4. command_refs で参照する cmd_id を command_reference.yaml に追加（または既存を参照）
+#   5. target_profile.yaml の scope.role_extensions に追加
+#   6. schema_validation.md の Python 検証で PASS を確認
+
+# サンプル check 構造（参考）
+sample_check:
+  id: "PUBLIC.1"
+  title: "外部到達性検証（loopback + Host ヘッダ → 外部 curl）"
+  axis: "A4"
+  role_applicability: ["public_facing"]
+  default_severity: "High"
+  severity_conditions:
+    escalation:
+      - "機密ファイル本文が外部到達可能 → Critical (C1 成立)"
+    degradation:
+      - "前段 WAF で動作確認済 → Medium"
+  command_refs: ["A4.5"]
+  expected: "機密ファイルへ HTTP 200 で到達不可"
+  template_finding_id: "TPL-WEB-ROOT-LEAK"
+  masking_required: true
+  sensitivity: "conditional_sensitive"
+  purpose_constraints:
+    - "外部到達性 / HTTP status / レスポンスサイズ確認のみ"
+    - "TLS 証明書品質評価には A9.1 を使う"

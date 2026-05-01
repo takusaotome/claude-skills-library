@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 107 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 108 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -137,7 +137,7 @@ permalink: /ja/skill-catalog/
 
 ## QA、テスト & ベンダー管理
 
-品質保証、テスト、ベンダー評価、顧客体験の 15 スキル。
+品質保証、テスト、ベンダー評価、顧客体験の 16 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -156,6 +156,7 @@ permalink: /ja/skill-catalog/
 | [skill-designer]({{ '/ja/skills/meta/skill-designer/' | relative_url }}) | Claudeスキル設計 | 規約準拠、プロンプト生成 |
 | [skill-idea-miner]({{ '/ja/skills/meta/skill-idea-miner/' | relative_url }}) | セッションログからスキルアイデア抽出 | LLMスコアリング、バックログ管理 |
 | [vendor-procurement-coordinator]({{ '/ja/skills/meta/vendor-procurement-coordinator/' | relative_url }}) | ベンダー調達ワークフロー一気通貫オーケストレーション | RFQ→メール→追跡、ベンダーライフサイクル |
+| [web-server-security-reviewer]({{ '/ja/skills/meta/web-server-security-reviewer/' | relative_url }}) | Web サーバ Phase 1 設定セキュリティレビュー（nginx/apache、Linux 中心） | 9 観点チェックリスト、6 階層ガード、MANIFEST 整合性、Read-Only |
 
 ---
 

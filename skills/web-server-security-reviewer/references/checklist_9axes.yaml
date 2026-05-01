@@ -1,0 +1,276 @@
+# checklist_9axes.yaml — 9 観点チェックリスト（v1 スケルトン）
+#
+# 状態: スケルトン。各 axis に最低 1 つの例 check を配置済。
+#       本番運用には 9 観点 × 4-6 check（合計 40-50 項目）への拡充が必要。
+#
+# 重要：実行コマンドの正本は command_reference.yaml
+#   - 本ファイルでは command_refs: [<cmd_id>] で参照
+#   - 同じコマンドが両方に直書きされ乖離するのを防ぐ
+#   - command_reference にない cmd_id を参照したら schema_validation 側で検出
+#
+# Schema (各 check に必須):
+#   id: <axis_prefix>.<連番>           # 例: A1.1
+#   title: string
+#   axis: A1..A9
+#   role_applicability: array
+#   default_severity: Critical|High|Medium|Low
+#   command_refs: array<cmd_id>        # command_reference.yaml の cmd_id 参照（必須）
+#   expected: string
+#   template_finding_id: TPL-<CATEGORY>-<NAME>  # finding_taxonomy.md 参照
+#   masking_required: bool
+#   sensitivity: allowed|conditional|conditional_sensitive|ask-first|exceptional_sensitive_read
+#
+# 任意キー:
+#   severity_conditions: {escalation: [], degradation: []}
+#   threshold: string
+#   purpose_constraints: array<string>
+#   notes: string
+
+version: "1.0-skeleton"
+status: "skeleton — see _schema and finding_taxonomy.md to expand"
+
+axes:
+  - id: A1
+    name: "OS・カーネル"
+    description: "OS バージョン、カーネルパッチ、サポート期限"
+    checks:
+      - id: A1.1
+        title: "EOL OS / ベンダーサポート終了"
+        axis: A1
+        role_applicability: ["all"]
+        default_severity: "High"
+        severity_conditions:
+          escalation:
+            - "active_incident=true かつ active CVE 紐付けあり → Critical"
+          degradation:
+            - "ESM 契約済かつ動作確認済 → Medium"
+        command_refs: ["A1.1"]
+        expected: "Vendor サポート期間内"
+        template_finding_id: "TPL-OS-EOL"
+        masking_required: false
+        sensitivity: "allowed"
+
+      - id: A1.2
+        title: "長期未再起動（カーネルパッチ未適用疑い）"
+        axis: A1
+        role_applicability: ["all"]
+        default_severity: "High"
+        command_refs: ["A1.2"]
+        expected: "180 日以内に再起動"
+        threshold: "180 days"
+        template_finding_id: "TPL-OS-LONG-UPTIME"
+        masking_required: false
+        sensitivity: "allowed"
+
+  - id: A2
+    name: "リソース"
+    description: "ディスク使用率、メモリ、ログディレクトリ累積"
+    checks:
+      - id: A2.1
+        title: "ディスク使用率閾値超過"
+        axis: A2
+        role_applicability: ["all"]
+        default_severity: "Medium"
+        severity_conditions:
+          escalation:
+            - "Service Criticality≥business_critical かつ >90% → Critical"
+            - "業務クリティカルパーティション >85% → Critical"
+            - "直近 24h で >5 ポイント急上昇 → Critical"
+        command_refs: ["A2.1"]
+        expected: "全パーティション <70%"
+        threshold: ">70%: Medium, >85%: High, >90%: Critical (业务クリティカル時)"
+        template_finding_id: "TPL-DISK-HIGH-USAGE"
+        masking_required: false
+        sensitivity: "allowed"
+
+      - id: A2.2
+        title: "大容量ディレクトリの特定（ログ累積疑い）"
+        axis: A2
+        role_applicability: ["all"]
+        default_severity: "Medium"
+        command_refs: ["A2.2"]
+        expected: "想定外の大容量ディレクトリなし"
+        template_finding_id: "TPL-LOG-ROTATE-MISSING"
+        masking_required: false
+        sensitivity: "conditional"
+
+  - id: A3
+    name: "ログ設定"
+    description: "ログローテーション、journald 設定、削除スクリプトの動作"
+    checks:
+      - id: A3.1
+        title: "ログローテーション未設定"
+        axis: A3
+        role_applicability: ["all"]
+        default_severity: "High"
+        severity_conditions:
+          escalation:
+            - "現にディスク逼迫中 + business_critical → Critical"
+            - "過去 30 日に同種インシデント発生 → Critical"
+        command_refs: ["A3.1"]
+        expected: "対象ログがすべて logrotate.d または framework 側でローテ管理"
+        template_finding_id: "TPL-LOG-ROTATE-MISSING"
+        masking_required: false
+        sensitivity: "conditional"
+
+      - id: A3.10
+        title: "ログの過去傾向確認（時間窓制限）"
+        axis: A3
+        role_applicability: ["all"]
+        default_severity: "Low"
+        command_refs: ["A3.10"]
+        expected: "想定外の頻発エラー / 異常パターンなし"
+        template_finding_id: "TPL-LOG-CLEANUP-SILENT-FAIL"
+        masking_required: true
+        sensitivity: "conditional_sensitive"
+        notes: "journalctl の出力にはサービス Environment 値などが含まれる場合あり"
+
+  - id: A4
+    name: "ネットワーク"
+    description: "ホスト FW、ポート、TLS、Web ドキュメントルート"
+    checks:
+      - id: A4.1
+        title: "リッスンポート確認"
+        axis: A4
+        role_applicability: ["all"]
+        default_severity: "Low"
+        command_refs: ["A4.1"]
+        expected: "想定外のポート開放なし"
+        template_finding_id: "TPL-NET-BIND-WILDCARD"
+        masking_required: false
+        sensitivity: "allowed"
+
+      - id: A4.5
+        title: "Web ドキュメントルート設定不備（機密ファイル直接配信）"
+        axis: A4
+        role_applicability: ["public_facing", "internal"]
+        default_severity: "High"
+        severity_conditions:
+          escalation:
+            - "外部到達経路立証済 + 機密本文取得可能 → Critical (C1 成立)"
+        command_refs: ["A4.5"]
+        expected: "機密ファイル (.env, db-config.json 等) へ HTTP 200 で到達不可"
+        template_finding_id: "TPL-WEB-ROOT-LEAK"
+        masking_required: true
+        sensitivity: "conditional_sensitive"
+        purpose_constraints:
+          - "外部到達性 / HTTP status / レスポンスサイズ確認のみ"
+          - "TLS 証明書品質評価には A9.1 (openssl s_client) を使う"
+
+  - id: A5
+    name: "サービス・プロセス"
+    description: "アプリ実行ユーザ、ランタイム EOL、配置パス"
+    checks:
+      - id: A5.1
+        title: "アプリプロセスの実行ユーザ確認（root 実行検出）"
+        axis: A5
+        role_applicability: ["all"]
+        default_severity: "High"
+        severity_conditions:
+          escalation:
+            - "EOL ランタイム + 0.0.0.0 バインド + 外部到達 → Critical (C3 観測 3 点立証)"
+        command_refs: ["A5.1"]
+        expected: "アプリプロセスが非 root ユーザで稼働"
+        template_finding_id: "TPL-APP-ROOT-EXEC"
+        masking_required: false
+        sensitivity: "allowed"
+
+  - id: A6
+    name: "認証・アクセス制御"
+    description: "SSH、sudoers、SELinux/AppArmor、秘密ファイル権限"
+    checks:
+      - id: A6.1
+        title: "SELinux / AppArmor 状態確認"
+        axis: A6
+        role_applicability: ["all"]
+        default_severity: "High"
+        command_refs: ["A6.1"]
+        expected: "SELinux=Enforcing or AppArmor=enabled"
+        template_finding_id: "TPL-MAC-DISABLED"
+        masking_required: false
+        sensitivity: "allowed"
+
+      - id: A6.10
+        title: "world-readable な秘密ファイル特定"
+        axis: A6
+        role_applicability: ["all"]
+        default_severity: "High"
+        command_refs: ["A6.10"]
+        expected: "秘密設定ファイルが他者読取不可（mode 600 or 640）"
+        template_finding_id: "TPL-SECRET-WORLD-READABLE"
+        masking_required: false
+        sensitivity: "conditional"
+
+  - id: A7
+    name: "監視"
+    description: "監視エージェント、閾値アラート"
+    checks:
+      - id: A7.1
+        title: "監視エージェントの稼働確認"
+        axis: A7
+        role_applicability: ["all"]
+        default_severity: "Medium"
+        severity_conditions:
+          escalation:
+            - "public_facing かつ active_incident 連動可能性あり → High"
+        command_refs: ["A7.1"]
+        expected: "少なくとも 1 つの監視エージェントが active"
+        template_finding_id: "TPL-MONITORING-ABSENT"
+        masking_required: false
+        sensitivity: "allowed"
+
+  - id: A8
+    name: "バックアップ"
+    description: "バックアップ取得、リストアテスト"
+    checks:
+      - id: A8.1
+        title: "バックアップジョブ検出"
+        axis: A8
+        role_applicability: ["all"]
+        default_severity: "Medium"
+        command_refs: ["A8.1"]
+        expected: "定期バックアップジョブの存在 + バックアップ先の更新時刻"
+        template_finding_id: "TPL-BACKUP-ABSENT"
+        masking_required: false
+        sensitivity: "allowed"
+
+  - id: A9
+    name: "証明書・時刻同期"
+    description: "TLS 証明書、NTP/chronyd、タイムゾーン"
+    checks:
+      - id: A9.1
+        title: "TLS 証明書品質と期限"
+        axis: A9
+        role_applicability: ["public_facing", "internal"]
+        default_severity: "Medium"
+        severity_conditions:
+          escalation:
+            - "30 日以内 → High、有効期限切れ → Critical"
+        command_refs: ["A9.1"]
+        expected: "残期間 90 日以上 + 信頼チェーン構築可能"
+        template_finding_id: "TPL-TLS-CERT-EXPIRY"
+        masking_required: false
+        sensitivity: "allowed"
+
+      - id: A9.2
+        title: "NTP デーモン稼働確認"
+        axis: A9
+        role_applicability: ["all"]
+        default_severity: "Low"
+        command_refs: ["A9.2"]
+        expected: "いずれかの NTP デーモンが active"
+        template_finding_id: "TPL-NTP-INACTIVE"
+        masking_required: false
+        sensitivity: "allowed"
+
+# 拡充 TODO（v1 完成までに追加）:
+# A1: A1.3 OS 世代不統一（複数サーバ比較時）
+# A2: 別 cmd_id 追加（特定アプリディレクトリの容量推移）
+# A3: A3.2 journald 無制限、A3.3 削除スクリプト無言失敗、A3.4 debug ログ本番残置
+# A4: A4.2 0.0.0.0 バインド、A4.3 TLS 旧版（nginx -T 確認）、A4.4 セキュリティヘッダ欠如、A4.6 .git 残置、
+#     A4.7 セッションシークレット弱、A4.8 Cookie 属性欠如
+# A5: A5.2 EOL ランタイム、A5.3 FHS 違反
+# A6: A6.2 認証情報平文、A6.3 root SSH、A6.4 sudoers NOPASSWD、A6.5 X11Forwarding、A6.6 AllowUsers 未設定
+# A7: A7.2 死活監視・閾値アラート未設定
+# A8: A8.2 リストアテスト未実施
+# A9: A9.3 TZ 不統一、A9.4 旧証明書残置

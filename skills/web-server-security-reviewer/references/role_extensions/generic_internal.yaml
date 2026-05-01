@@ -1,0 +1,51 @@
+# generic_internal.yaml — 内部 Web サーバ向け追加観点（v1 スケルトン）
+#
+# 状態: スケルトン。代表 check 配置済。本番運用には拡充推奨。
+# 実行コマンドは command_reference.yaml が正本（command_refs で参照）。
+
+extension_id: "generic_internal"
+description: |
+  内部用 Web サーバ（社内ネットワーク、踏み台経由アクセス前提）向け追加観点。
+  踏み台、内部認証、監視同居、内部 VPN 終端等。
+
+applicable_roles: ["internal"]
+
+checks:
+  - id: "INTERNAL.1"
+    title: "リッスンバインド範囲の確認（外部到達不可の検証）"
+    axis: "A4"
+    role_applicability: ["internal"]
+    default_severity: "High"
+    command_refs: ["A4.1"]
+    expected: "0.0.0.0 / [::] バインドが想定範囲内（内部 IF のみ）"
+    template_finding_id: "TPL-INTERNAL-EXPOSED"
+    masking_required: false
+    sensitivity: "allowed"
+
+  - id: "INTERNAL.2"
+    title: "踏み台経由アクセス前提の確認（sshd_config の AllowUsers / Match）"
+    axis: "A6"
+    role_applicability: ["internal"]
+    default_severity: "Medium"
+    command_refs: ["INTERNAL.2.sshd_allow"]
+    expected: "AllowUsers / Match で接続元制限"
+    template_finding_id: "TPL-BASTION-NOT-ENFORCED"
+    masking_required: false
+    sensitivity: "conditional"
+
+  - id: "INTERNAL.3"
+    title: "監視サーバ同居（踏み台同居の場合のリスク）"
+    axis: "A7"
+    role_applicability: ["internal"]
+    default_severity: "Low"
+    command_refs: ["INTERNAL.3.zabbix_target"]
+    expected: "監視サーバが踏み台と分離"
+    template_finding_id: "TPL-MONITORING-COLOCATED"
+    masking_required: true
+    sensitivity: "conditional_sensitive"
+
+# 拡充 TODO:
+# INTERNAL.4 内部認証情報の保管（VPN/IAM 連携）
+# INTERNAL.5 内部 VPN 終端の同居判定
+# INTERNAL.6 サービスアカウントの権限最小化
+# INTERNAL.7 内部 PKI（社内 CA）の証明書チェーン確認

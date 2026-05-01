@@ -1,0 +1,65 @@
+# generic_public_facing.yaml — 公開 Web サーバ向け追加観点（v1 スケルトン）
+#
+# 状態: スケルトン。代表 check 配置済。本番運用には拡充推奨。
+# 実行コマンドは command_reference.yaml が正本（command_refs で参照）。
+
+extension_id: "generic_public_facing"
+description: |
+  公開 Web サーバ（インターネット直接公開）向け追加観点。
+  外部到達性、WAF、rate limit、TLS 強度、セキュリティヘッダ、DDoS 対策等。
+
+applicable_roles: ["public_facing"]
+
+checks:
+  - id: "PUBLIC.1"
+    title: "外部到達性検証（loopback + Host ヘッダ → 外部到達経路）"
+    axis: "A4"
+    role_applicability: ["public_facing"]
+    default_severity: "High"
+    severity_conditions:
+      escalation:
+        - "機密ファイル本文が外部到達可能 → Critical (C1 成立)"
+      degradation:
+        - "前段 WAF で動作確認済 → Medium"
+    command_refs: ["A4.5"]
+    expected: "機密ファイルへ HTTP 200 で到達不可"
+    template_finding_id: "TPL-WEB-ROOT-LEAK"
+    masking_required: true
+    sensitivity: "conditional_sensitive"
+    purpose_constraints:
+      - "外部到達性 / HTTP status / レスポンスサイズ確認のみ"
+
+  - id: "PUBLIC.2"
+    title: "WAF 設定確認（受動的・本番への能動テストは禁止）"
+    axis: "A4"
+    role_applicability: ["public_facing"]
+    default_severity: "Medium"
+    command_refs: ["PUBLIC.2.config"]
+    expected: |
+      WAF（mod_security / AWS WAF / Cloudflare 等）が設定上有効化されている。
+      WAF 動作の能動テスト（疑似攻撃）は本スキルの範囲外（read-only 設定レビューのため）。
+      動作確認が必要な場合は、立会者承認のうえステージング環境で実施するか、別ツール（OWASP ZAP 等）を使う。
+    template_finding_id: "TPL-NET-WAF-INACTIVE"
+    masking_required: false
+    sensitivity: "conditional"
+    notes: |
+      v0 では curl -A 'sqlmap' のような擬似攻撃検証を含めていたが、本番 WAF/IDS 監視への誤検知リスクがあるため、
+      本スキルの範囲外とした。設定確認のみに限定し、能動テストは別フェーズ・別ツール・別環境で実施。
+
+  - id: "PUBLIC.3"
+    title: "rate limit 設定確認（nginx limit_req_zone / apache mod_ratelimit）"
+    axis: "A4"
+    role_applicability: ["public_facing"]
+    default_severity: "Medium"
+    command_refs: ["PUBLIC.3.rate_limit"]
+    expected: "重要エンドポイント（auth, login, search, api 等）に rate limit 設定あり"
+    template_finding_id: "TPL-NET-RATE-LIMIT-MISSING"
+    masking_required: false
+    sensitivity: "conditional"
+
+# 拡充 TODO:
+# PUBLIC.4 セキュリティヘッダ完全性（HSTS、CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy）
+# PUBLIC.5 TLS 強度（Mozilla Intermediate 準拠、HSTS preload）
+# PUBLIC.6 DDoS 対策（CloudFront、Cloudflare 等の前段確認）
+# PUBLIC.7 fail2ban 等の侵入検知ツール
+# PUBLIC.8 server_tokens off

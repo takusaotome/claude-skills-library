@@ -1,0 +1,76 @@
+# target_profile.yaml — Web Server Security Review Input Contract
+# v5 schema. See references/input_contract.md for full spec.
+
+review_id: "<PROJECT>-REVIEW-<YYYY-MMDD>-<NN>"
+# 例: ACME-REVIEW-2026-0501-01
+
+target:
+  hostname: "<対象 hostname>"
+  fqdn: "<公開 FQDN または '' （内部用途で空）>"
+  role: "public_facing"  # public_facing | internal | edge | <custom>
+  os_family: "rhel"      # rhel | debian  （windows は v1 hard fail）
+  os_version: "<例: Rocky Linux 9.5>"
+  web_server: "nginx"    # nginx | apache | none  （iis は v1 hard fail）
+  app_runtime: "<例: nodejs-v20.10.0, python-3.11, none>"
+  host_fingerprint:
+    machine_id: "<sha256 of /etc/machine-id, または raw machine-id>"
+    primary_ipv4: "<内部 IP>"
+    ssh_host_key_sha256: "<SSH ホスト鍵の sha256 fingerprint>"
+    timezone: "<例: America/Los_Angeles, Asia/Tokyo>"
+
+connection_mode: "ssh_direct"  # ssh_direct | offline_evidence
+
+# ssh_direct 時のみ必須
+ssh:
+  bastion: "<踏み台 hostname or null>"
+  user: "<read-only 推奨ユーザ名>"
+  approved_by: "<立会者氏名>"
+  approved_at: "<ISO8601、例: 2026-04-30T21:00:00-07:00>"
+
+evidence:
+  collected_by: "<採取者氏名>"
+  collection_started_at: "<ISO8601>"
+  collection_completed_at: "<ISO8601>"
+  evidence_dir: "<例: ./review_<id>/evidence/>"
+  raw_evidence_store: "<例: s3://acme-security/raw/<review_id>/ または社内セキュア共有 path>"
+  authenticity_level: "external_channel"
+  # attestation_only | external_channel | gpg_signed | ssh_signed
+  source_confidence: "high"  # high | medium | low
+  source_confidence_reason: "<信頼度の根拠、例: SSH 直接接続 + 立会者承認 + manifest 検証済 + 採取者本人がレビュー実施>"
+  masking_at_collection: true  # 採取時マスク有無
+
+scope:
+  axes_in_scope: ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9"]
+  role_extensions: ["generic_public_facing"]
+  # 利用可能: generic_public_facing | generic_internal | generic_edge | <project-specific>
+  out_of_scope:
+    - "Phase 2 コードレビュー"
+    - "ペネトレーションテスト"
+    - "<その他項目>"
+
+incident_context:
+  active_incident: false
+  incident_id: ""              # active なら必須
+  incident_summary: ""         # active なら必須
+
+retention:
+  raw_retention_days: 90
+  owner: "<retention 責任者氏名>"
+  delete_after: "<ISO8601、collection_completed_at + raw_retention_days で算出>"
+  access_approvers:
+    - "<立会者氏名>"
+    - "<シークレットオーナー氏名>"
+  rotation_dependencies:
+    - "<例: VPN 認証情報ローテーション完了確認>"
+    - "<例: DB 認証情報ローテーション完了確認>"
+  early_deletion_conditions:
+    - "<例: シークレットローテーション完了 かつ レビュー成果物確定後>"
+
+# exceptional_sensitive_read 実施時のみ追加（複数可）
+exceptional_approvals: []
+# - command: "sudo cat /etc/sudoers"
+#   purpose: "NOPASSWD 行確認"
+#   approved_by_witness: "<立会者氏名>"
+#   approved_by_secret_owner: "<シークレットオーナー氏名>"
+#   approved_at: "<ISO8601>"
+#   raw_storage_path: "raw_evidence_store/raw_outputs/sudoers.txt"

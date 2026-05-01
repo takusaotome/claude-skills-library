@@ -1,0 +1,22 @@
+# manifest_attestation.txt — self-attestation, NOT a cryptographic signature
+#
+# This file alone does NOT prove authenticity. It is the采取者 (collector) self-attestation.
+# To assert authenticity, use ONE of:
+#   (a) external_channel: detach this file and share manifest_sha256 via an
+#       external channel (encrypted email to <立会者>, Slack DM, etc.)
+#   (b) gpg_signed: gpg --detach-sign manifest_attestation.txt
+#                   → produces manifest_attestation.txt.asc
+#       verify: gpg --verify manifest_attestation.txt.asc manifest_attestation.txt
+#   (c) ssh_signed: ssh-keygen -Y sign -f <key> -n manifest manifest_attestation.txt
+#                   → produces manifest_attestation.txt.sig
+#       verify: ssh-keygen -Y verify ...
+#
+# The authenticity_level field in target_profile.yaml MUST match the chosen method.
+
+manifest_sha256: <sha256 of MANIFEST.txt>
+attested_by: <採取者氏名>
+attested_at: <ISO8601>
+authenticity_channel: "<例: GPG signature in manifest_attestation.txt.asc>"
+verification_command_macos: "shasum -a 256 MANIFEST.txt"
+verification_command_linux: "sha256sum MANIFEST.txt"
+verification_command_python: "python3 -c \"import hashlib; print(hashlib.sha256(open('MANIFEST.txt','rb').read()).hexdigest())\""

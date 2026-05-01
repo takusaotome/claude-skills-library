@@ -1,0 +1,35 @@
+# MANIFEST.txt — evidence integrity manifest
+# Generated at: <ISO8601>
+# Reviewer: <name>
+# review_id: <PROJECT>-REVIEW-<YYYY-MMDD>-<NN>
+#
+# Format: <sha256>  <relative_path_from_evidence_dir>
+# Note: This file does NOT include itself (self-reference avoided).
+#       Verify MANIFEST.txt integrity using manifest_attestation.txt.
+#
+# Generation example (macOS):
+#   cd <evidence_dir>
+#   find . -type f ! -name 'MANIFEST.txt' ! -name 'manifest_attestation.txt' \
+#     -exec shasum -a 256 {} \; | sort -k2 > MANIFEST.txt
+#
+# Generation example (Linux):
+#   cd <evidence_dir>
+#   find . -type f ! -name 'MANIFEST.txt' ! -name 'manifest_attestation.txt' \
+#     -exec sha256sum {} \; | sort -k2 > MANIFEST.txt
+
+<sha256>  ./target_profile.yaml
+<sha256>  ./command_log.jsonl
+<sha256>  ./_masking_audit.log
+<sha256>  ./01_os/<file>
+<sha256>  ./02_resource/<file>
+<sha256>  ./03_logging/<file>
+<sha256>  ./04_network/<file>
+<sha256>  ./05_service/<file>
+<sha256>  ./06_authn_access/<file>
+<sha256>  ./07_monitoring/<file>
+<sha256>  ./08_backup/<file>
+<sha256>  ./09_cert_time/<file>
+<sha256>  ./role_<name>/<file>
+
+# Total files: <N>
+# End of manifest

@@ -1,0 +1,335 @@
+# command_reference.yaml — 許可された実行パターン（v1 スケルトン）
+#
+# 状態: スケルトン。各 axis に最低 1 つの例コマンドを配置済。
+#       本番運用には checklist_9axes.yaml の全 check に対応するコマンドが必要。
+#
+# Schema (各コマンドに必須):
+#   cmd_id: <axis>.<連番>
+#   purpose: string                  # 目的
+#   command: string                  # multi-line 可、placeholder 含む
+#   constraints:
+#     timeout_sec: int
+#     max_output_lines: int          # 任意
+#     max_output_bytes: int          # 任意
+#     maxdepth: int                  # find 系
+#     time_window: string            # journalctl 系
+#     target_paths: array            # 任意
+#     excluded_paths: array          # 任意
+#     ionice: string                 # 推奨: best-effort 7
+#     nice: int                      # 推奨: 19
+#   rationale: string                # なぜこのパターンを許可するか
+#   forbidden_variants:              # 禁止パターン
+#     - cmd: string
+#       reason: string
+#
+# Placeholder 解決:
+#   <fqdn>       → target.fqdn
+#   <role>       → target.role
+#   <os_family>  → target.os_family
+#   <web_server> → target.web_server
+#   <path>, <pattern>, <user>, <unit> → コンテキスト依存（args で渡す）
+
+version: "1.0-skeleton"
+status: "skeleton — expand to cover all checklist_9axes.yaml checks"
+
+# シェルメタ文字とブール演算子優先順位ガイド
+shell_metachar_guide:
+  find_operators:
+    - "find は -and（暗黙）が優先、-o（OR）が次"
+    - "-name の OR を組み合わせる場合は必ず括弧 \\( ... \\) で囲む"
+    - "例: find /etc -type f \\( -name '*.conf' -o -name '*.json' \\)"
+    - "NG: find /etc -type f -name '*.conf' -o -name '*.json'  # -o の結合で意図より広く拾う"
+  ssh_quoting:
+    - "redirect/tee の対象パスが SSH 引用符の外側ならローカル書込（allowed）"
+    - "引用符の内側なら target host 書込（forbidden）"
+    - "詳細は guardrails.md §2 参照"
+
+axes:
+  A1_os_kernel:
+    - cmd_id: A1.1
+      purpose: "OS リリース情報の取得"
+      command: "cat /etc/os-release"
+      constraints:
+        timeout_sec: 5
+        max_output_bytes: 10000
+      rationale: "標準的な OS 識別ファイル、瞬時"
+
+    - cmd_id: A1.2
+      purpose: "稼働時間の取得（カーネルパッチ未適用検出）"
+      command: "uptime -p && uptime -s"
+      constraints:
+        timeout_sec: 5
+      rationale: "uptime は瞬時、再起動日時を取得"
+
+  A2_resource:
+    - cmd_id: A2.1
+      purpose: "ディスク使用率確認"
+      command: "df -h --output=source,size,used,avail,pcent,target"
+      constraints:
+        timeout_sec: 10
+        max_output_lines: 200
+      rationale: "df は瞬時"
+
+    - cmd_id: A2.2
+      purpose: "大容量ディレクトリの特定"
+      command: "du -h -d 2 -x /var /home /opt /usr 2>/dev/null"
+      constraints:
+        timeout_sec: 120
+        max_output_lines: 500
+        maxdepth: 2
+        target_paths: ["/var", "/home", "/opt", "/usr"]
+        excluded_paths: ["/proc", "/sys", "/dev"]
+        ionice: "best-effort 7"
+        nice: 19
+      rationale: "深さ 2 で範囲制限、ionice + nice で本番負荷低減"
+      forbidden_variants:
+        - cmd: "du / 系"
+          reason: "root 全走査、I/O 過大"
+        - cmd: "du -d 0 系（粒度不足）"
+          reason: "再走査誘発"
+
+  A3_logging:
+    - cmd_id: A3.1
+      purpose: "ログローテーション設定確認"
+      command: "ls /etc/logrotate.d/ && cat /etc/logrotate.conf"
+      constraints:
+        timeout_sec: 10
+      rationale: "logrotate 設定の存在確認"
+      forbidden_variants:
+        - cmd: "find / -name logrotate 2>/dev/null"
+          reason: "root 全走査"
+
+    - cmd_id: A3.10
+      purpose: "ログ過去傾向確認（時間窓制限）"
+      command: "journalctl --since '24 hours ago' --until 'now' --no-pager 2>&1 | head -n 1000"
+      constraints:
+        timeout_sec: 30
+        max_output_lines: 1000
+        time_window: "24h"
+      rationale: "時間窓で範囲制限、行数上限でメモリ制御"
+      forbidden_variants:
+        - cmd: "journalctl --since 'all'"
+          reason: "全期間ロード、メモリ過大"
+        - cmd: "journalctl -f"
+          reason: "フォロー、長時間ストリーム"
+
+  A4_network:
+    - cmd_id: A4.1
+      purpose: "リッスンポート確認"
+      command: "ss -tlnp 2>&1"
+      constraints:
+        timeout_sec: 10
+      rationale: "ss は netstat より高速、瞬時"
+
+    - cmd_id: A4.5
+      purpose: "外部到達性検証（loopback + Host ヘッダ）"
+      command: "curl -sk -H 'Host: <fqdn>' -o /dev/null -w '%{http_code} %{size_download}' https://localhost/<path>"
+      constraints:
+        timeout_sec: 10
+      rationale: "loopback + Host ヘッダで vhost 動作確認、本文は /dev/null へ破棄"
+      purpose_constraints:
+        - "用途限定: 外部到達性、HTTP status、レスポンスサイズ確認のみ"
+        - "TLS 証明書品質評価には使わない（A9.1 で openssl s_client 使用）"
+      forbidden_variants:
+        - cmd: "curl -sk ... -o <local_file>"
+          reason: "本文取得は exceptional_sensitive_read 対象、原則禁止"
+
+  A5_service:
+    - cmd_id: A5.1
+      purpose: "アプリプロセスの実行ユーザ確認"
+      command: "ps -ef | head -n 200"
+      constraints:
+        timeout_sec: 5
+        max_output_lines: 200
+      rationale: "プロセス一覧の取得、行数上限で制御"
+
+  A6_authn_access:
+    - cmd_id: A6.1
+      purpose: "SELinux 状態確認"
+      command: "getenforce 2>&1 || echo 'SELinux not installed'"
+      constraints:
+        timeout_sec: 5
+      rationale: "瞬時、取得失敗時のフォールバック付き"
+
+    - cmd_id: A6.10
+      purpose: "world-readable な設定ファイル特定"
+      command: |
+        find /etc /opt /usr/share -maxdepth 5 -type f -perm -004 \
+          \( -name '*.conf' -o -name '*.json' -o -name '*.env' \) \
+          2>/dev/null
+      constraints:
+        timeout_sec: 60
+        max_output_lines: 1000
+        maxdepth: 5
+        target_paths: ["/etc", "/opt", "/usr/share"]
+      rationale: "-perm -004 は他者読取可。-name の OR は括弧で結合"
+      forbidden_variants:
+        - cmd: "find / -perm -004"
+          reason: "root 全走査"
+        - cmd: "find /etc /opt -type f -perm -004 -name '*.conf' -o -name '*.json'"
+          reason: "括弧なし。-o の優先順位で意図せず広く拾う"
+
+  A7_monitoring:
+    - cmd_id: A7.1
+      purpose: "監視エージェント検出"
+      command: "systemctl list-units --type=service --all 2>&1 | grep -iE 'cloudwatch|datadog|zabbix|prometheus|newrelic|node_exporter' || echo 'no monitoring agent found'"
+      constraints:
+        timeout_sec: 10
+      rationale: "代表的な監視エージェント検出"
+
+  A8_backup:
+    - cmd_id: A8.1
+      purpose: "バックアップジョブ検出"
+      command: "systemctl list-timers --all 2>&1 | grep -iE 'backup|snapshot|dump' || echo 'no backup timer found'"
+      constraints:
+        timeout_sec: 10
+      rationale: "systemd timer ベースのバックアップ検出"
+
+  A9_cert_time:
+    - cmd_id: A9.1
+      purpose: "TLS 証明書品質評価（チェーン + 期限）"
+      command: "openssl s_client -connect <fqdn>:443 -servername <fqdn> -showcerts < /dev/null 2>/dev/null | openssl x509 -noout -dates -subject -issuer"
+      constraints:
+        timeout_sec: 30
+      rationale: "curl -k より厳密。証明書チェーン・期限・主体の確認"
+
+    - cmd_id: A9.2
+      purpose: "NTP デーモン稼働確認"
+      command: "systemctl is-active chronyd ntpd chrony ntp systemd-timesyncd 2>&1"
+      constraints:
+        timeout_sec: 5
+      rationale: "代表的な NTP デーモンを一括確認"
+
+  # === role_extensions が参照する cmd_id ===
+
+  PUBLIC_role_extension:
+    - cmd_id: "PUBLIC.2.config"
+      purpose: "WAF 設定の受動的確認（nginx / apache を独立して確認、片方失敗でも続行）"
+      command: |
+        # nginx 側（あれば）
+        if command -v nginx >/dev/null 2>&1; then
+          echo '=== nginx -V (modules) ==='
+          nginx -V 2>&1 | tr ' ' '\n' | grep -iE 'modsecurity|naxsi' || echo '(no WAF module in nginx)'
+        fi
+        # apache 側（あれば）
+        if command -v apachectl >/dev/null 2>&1; then
+          echo '=== apachectl -M (loaded modules) ==='
+          apachectl -M 2>/dev/null | grep -iE 'security|modsec|waf' || echo '(no WAF module in apache)'
+        fi
+        # WAF 設定ファイルの存在（nginx + apache + modsecurity 共通）
+        echo '=== WAF config files ==='
+        find /etc/nginx /etc/httpd /etc/apache2 /etc/modsecurity -maxdepth 4 -type f \
+          \( -name '*modsec*' -o -name '*waf*' -o -name 'security*.conf' \) \
+          2>/dev/null | head -n 30 || true
+      constraints:
+        timeout_sec: 30
+        max_output_lines: 100
+        maxdepth: 4
+        target_paths: ["/etc/nginx", "/etc/httpd", "/etc/apache2", "/etc/modsecurity"]
+      rationale: |
+        nginx と apache を独立して確認し、片方が不在でも残りが実行される。
+        受動的確認のみ。本番への能動的攻撃テスト（curl -A 'sqlmap' 等）は本スキル範囲外（read-only 設定レビュー）。
+      forbidden_variants:
+        - cmd: "curl -A 'sqlmap' ... または curl ... 'admin'-- ..."
+          reason: "擬似攻撃は WAF/IDS に検知され本番監視を汚染。本スキル範囲外"
+        - cmd: "nginx -V 2>&1 | grep modsec && apachectl ..."
+          reason: "&& 連結は前段失敗で後段に進まず、片方の Web サーバ環境で取りこぼす"
+        - cmd: "find /etc -name '*modsec*'  # maxdepth なし"
+          reason: "範囲制限なしの find は深いパスで重い"
+
+    - cmd_id: "PUBLIC.3.rate_limit"
+      purpose: "rate limit 設定の検出（nginx / apache 両対応、範囲・拡張子・出力上限すべて制限）"
+      command: |
+        # nginx 側（あれば）
+        if [ -d /etc/nginx ]; then
+          echo '=== nginx limit_req_zone / limit_conn_zone ==='
+          find /etc/nginx -maxdepth 4 -type f \
+            \( -name '*.conf' -o -name 'nginx.conf' \) \
+            -exec grep -lE 'limit_req_zone|limit_conn_zone|limit_req\s' {} \; \
+            2>/dev/null | head -n 20 || echo '(no rate limit config in nginx)'
+        fi
+        # apache 側（あれば）
+        if [ -d /etc/apache2 ] || [ -d /etc/httpd ]; then
+          echo '=== apache mod_ratelimit / mod_evasive / mod_security loaded ==='
+          if command -v apachectl >/dev/null 2>&1; then
+            apachectl -M 2>/dev/null | grep -iE 'ratelimit|evasive|security' || echo '(no rate limit module loaded)'
+          fi
+          echo '=== apache rate limit config files ==='
+          find /etc/apache2 /etc/httpd -maxdepth 4 -type f \
+            \( -name '*.conf' -o -name '*.load' \) \
+            -exec grep -lE 'RateLimit|DOSHashTableSize|mod_evasive|SecRule' {} \; \
+            2>/dev/null | head -n 20 || echo '(no rate limit config in apache)'
+        fi
+      constraints:
+        timeout_sec: 30
+        max_output_lines: 100
+        maxdepth: 4
+        target_paths: ["/etc/nginx", "/etc/apache2", "/etc/httpd"]
+      rationale: |
+        nginx と apache を独立して確認。片方不在でも残りは続行。
+        find -maxdepth で範囲制限、拡張子限定、grep -l でファイル名のみ取得（本文取得しない）、
+        head で出力上限。grep -rE は範囲・出力上限が弱いため使わない。
+      forbidden_variants:
+        - cmd: "grep -rE 'limit_req' /etc/nginx/"
+          reason: "範囲制限・出力上限なし。大規模設定で重い"
+        - cmd: "grep -rE 'limit_req' /"
+          reason: "root 全走査、I/O 過大"
+        - cmd: "find /etc/nginx ... && find /etc/apache2 ..."
+          reason: "&& 連結は前段失敗で後段に進まず、片方の Web サーバ環境で取りこぼす"
+
+  INTERNAL_role_extension:
+    - cmd_id: "INTERNAL.2.sshd_allow"
+      purpose: "sshd_config の AllowUsers/Match 設定確認"
+      command: "grep -E '^\\s*(AllowUsers|AllowGroups|Match)' /etc/ssh/sshd_config"
+      constraints:
+        timeout_sec: 5
+        max_output_lines: 30
+      rationale: "公開キー一致のみ取得、本文の全展開はしない"
+
+    - cmd_id: "INTERNAL.3.zabbix_target"
+      purpose: "Zabbix 監視サーバ接続先の確認（接続先 IP のみ）"
+      command: "grep -E '^(Server|ServerActive)=' /etc/zabbix/zabbix_agentd.conf 2>/dev/null"
+      constraints:
+        timeout_sec: 5
+        max_output_lines: 10
+      rationale: "接続先 IP は raw_evidence_store 限定で扱う（マスク必須）"
+
+  EDGE_role_extension:
+    - cmd_id: "EDGE.1.pii_storage"
+      purpose: "ローカル PII 蓄積容量の確認"
+      command: |
+        for d in /var/lib /opt/app/data /usr/share/app/uploads; do
+          [ -d "$d" ] && du -sh "$d" 2>/dev/null
+        done
+      constraints:
+        timeout_sec: 60
+      rationale: "想定される PII 保管パス候補のみ確認"
+      notes: "実際のパスは target_profile.yaml.target または scope.role_extensions の参照で個別化"
+
+    - cmd_id: "EDGE.2.vpn_config_meta"
+      purpose: "VPN 設定ファイルの存在と権限（メタデータのみ、本文は取得しない）"
+      command: "ls -l /etc/vpnc/ /etc/openvpn/ /etc/wireguard/ 2>/dev/null"
+      constraints:
+        timeout_sec: 5
+        max_output_lines: 30
+      rationale: "ls -l でメタデータのみ。本文取得は exceptional_sensitive_read 区分で別途"
+
+    - cmd_id: "EDGE.3.vpn_process_count"
+      purpose: "VPN プロセス数の確認"
+      command: "pgrep -af '^(/.*)?(openvpn|openconnect|vpnc|wg-quick)' 2>&1 | head -n 30"
+      constraints:
+        timeout_sec: 5
+        max_output_lines: 30
+      rationale: "pgrep -af でプロセス数+コマンドラインを取得"
+
+    - cmd_id: "EDGE.4.timezone"
+      purpose: "タイムゾーン情報の取得"
+      command: "timedatectl 2>&1 | grep -E 'Time zone|Local time|Universal time'"
+      constraints:
+        timeout_sec: 5
+      rationale: "timedatectl でタイムゾーン一括取得"
+
+# v1 完成までの拡充 TODO:
+# checklist_9axes.yaml の全 check に対応するコマンドを追加。
+# 特に conditional_sensitive 系（nginx -T、sshd -T、systemctl cat）の許可パターン。
+# 各コマンドの forbidden_variants をプロジェクトでの誤用例に合わせて更新。

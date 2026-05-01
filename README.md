@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 108 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 109 dirs total
+├── skills/                 # 109 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 110 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (108 Skills)
+## Skill Catalog (109 Skills)
 
-> Note: `skills/` contains 109 directories total — 108 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: `skills/` contains 110 directories total — 109 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -168,7 +168,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 
-### QA & Testing (12 skills)
+### QA & Testing (13 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -184,6 +184,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | completion-quality-gate-designer | 完了判定・品質ゲート・証跡・例外運用設計 | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
 | cross-module-consistency-auditor | 変更波及・横断整合性・コピペ展開監査 | Impact Map, Consistency Matrix, Copy Propagation Review |
 | production-parity-test-designer | 本番同等テスト階層設計・盲点排除 | Test Tier Allocation, Smoke Suite, Adversarial Regression |
+| web-server-security-reviewer | Web サーバ Phase 1 設定セキュリティレビュー（nginx/apache、Linux 中心） | 9-Axis Checklist, 6-Tier Guardrails, Read-Only, MANIFEST Integrity |
 
 ### Compliance & Governance (12 skills)
 
@@ -4432,6 +4433,41 @@ Design test hierarchies that catch production-specific failures before deploymen
 
 ---
 
+### 🔒 Web Server Security Reviewer
+
+**File:** `skills/web-server-security-reviewer/`
+
+Phase 1 web server (nginx/apache, Linux-centric) security configuration review. Validates target with `target_profile.yaml`, verifies evidence integrity via `MANIFEST.txt` + `manifest_attestation.txt`, then performs read-only inspection across 9 axes either over SSH or against a pre-collected manifest.
+
+**When to use:**
+- Pre-deployment / pre-go-live web server hardening review
+- Periodic security posture audit of nginx or apache hosts
+- Reviewing pre-collected evidence (MANIFEST + attestation) without direct SSH access
+- Documenting findings with severity (Exploitability × Blast Radius × Service Criticality) and observation_status
+
+**Key Components:**
+- `references/checklist_9axes.yaml` — 9-axis review checklist (OS/resources/logs/network/services/auth/monitoring/backup/certs)
+- `references/command_reference.yaml` — read-only command catalog with 6-tier guardrails
+- `references/finding_taxonomy.md` / `severity_criteria.md` — severity & finding model
+- `references/observation_status.md` — managed unverified-finding states
+- `references/role_extensions/` — role-specific extensions (edge / internal / public-facing + schema)
+- `assets/target_profile_template.yaml` / `manifest_template.txt` / `manifest_attestation_template.txt` — input templates
+- `assets/report_template.md` / `action_plan_template.md` / `self_review_template.md` — output templates
+- `scripts/verify_skill.py` — internal integrity verifier (17 checks)
+- `scripts/verification_run.py` — review run orchestrator
+
+**Key Features:**
+- 6-tier command guardrails (allowed / conditional / conditional_sensitive / ask-first / exceptional_sensitive_read / forbidden) prevent destructive or PII-exposing commands
+- 3-axis severity scoring with explicit observation_status separation for "not verifiable from evidence"
+- evidence_dir / raw_evidence_store split keeps secrets out of the report directory
+- MANIFEST integrity (SHA256, attestation truthfulness levels) detects tampered evidence
+- Windows / IIS hard-fail in v1 (out-of-scope) so you don't get a misleading partial review
+- Mandatory self-review template before finalizing findings
+- 21 forbidden commands enforced; SSH redirect handling for sensitive paths
+- Cross-references all template / command IDs (verifier confirms zero unresolved refs)
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -4446,6 +4482,19 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### web-server-security-reviewer v1.0 (2026-05-01)
+- Phase 1 web server (nginx/apache, Linux-centric) security configuration review skill
+- 9-axis checklist: OS / Resources / Logs / Network / Services / Authentication / Monitoring / Backup / Certificates
+- 6-tier command guardrails: allowed / conditional / conditional_sensitive / ask-first / exceptional_sensitive_read / forbidden
+- 3-axis severity model: Exploitability + Blast Radius + Service Criticality
+- Two evidence-collection modes: direct SSH (read-only) and pre-collected manifest (MANIFEST.txt + manifest_attestation.txt with SHA256 integrity)
+- observation_status taxonomy keeps unverified findings managed separately
+- evidence_dir / raw_evidence_store separation; mandatory self-review before finalization
+- Windows/IIS hard-fails in v1 (out-of-scope); rhel/nginx is the primary supported profile
+- 8 templates (target_profile, manifest_attestation, finding_table, report, action_plan, evidence_directory_layout, self_review, manifest)
+- 12 reference docs + 4 role_extension YAMLs (generic_edge / generic_internal / generic_public_facing + _schema)
+- verify_skill.py integrity script (17/17 PASS) and verification_run.py runner
 
 ### meeting-minutes-writer v1.0 (2026-04-30)
 - Generate meeting minutes from transcripts/notes with built-in self-review loop (max 3 iterations)
