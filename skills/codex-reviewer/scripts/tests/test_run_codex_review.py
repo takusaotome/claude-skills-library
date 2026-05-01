@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Tests for run_codex_review.py"""
 
+import subprocess
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 
@@ -18,6 +19,7 @@ from run_codex_review import (
     build_prompt,
     check_codex_installed,
     generate_output_filename,
+    run_codex_review,
 )
 
 
@@ -110,12 +112,12 @@ class TestProfiles:
 
     def test_deep_review_profile(self):
         profile = PROFILES["deep-review"]
-        assert profile["model"] == "gpt-5.3-codex"
-        assert profile["reasoning"] == "xhigh"
+        assert profile["model"] == "gpt-5.4"
+        assert profile["reasoning"] == "high"
 
     def test_quick_review_profile(self):
         profile = PROFILES["quick-review"]
-        assert profile["model"] == "gpt-5-codex"
+        assert profile["model"] == "gpt-5.4"
         assert profile["reasoning"] == "medium"
 
 
@@ -124,21 +126,21 @@ class TestTypeModelDefaults:
 
     def test_code_defaults(self):
         config = TYPE_MODEL_DEFAULTS["code"]
-        assert config["model"] == "gpt-5.3-codex"
-        assert config["reasoning"] == "xhigh"
+        assert config["model"] == "gpt-5.4"
+        assert config["reasoning"] == "high"
 
     def test_document_defaults(self):
         config = TYPE_MODEL_DEFAULTS["document"]
-        assert config["model"] == "gpt-5.3-thinking"
-        assert config["reasoning"] == "xhigh"
+        assert config["model"] == "gpt-5.4"
+        assert config["reasoning"] == "high"
 
     def test_design_defaults(self):
         config = TYPE_MODEL_DEFAULTS["design"]
-        assert config["model"] == "gpt-5.3-thinking"
+        assert config["model"] == "gpt-5.4"
 
     def test_test_defaults(self):
         config = TYPE_MODEL_DEFAULTS["test"]
-        assert config["model"] == "gpt-5.3-codex"
+        assert config["model"] == "gpt-5.4"
 
 
 class TestReviewPrompts:
@@ -166,6 +168,76 @@ class TestReviewPrompts:
         ]
         for focus in expected_focuses:
             assert focus in FOCUS_PROMPTS
+
+
+class TestRunCodexReview:
+    """Tests for run_codex_review function"""
+
+    @patch("run_codex_review.subprocess.run")
+    def test_stdin_devnull(self, mock_run, tmp_path):
+        """Ensure subprocess.run is called with stdin=DEVNULL to prevent stdin reading"""
+        mock_run.return_value = MagicMock(returncode=0)
+        output_dir = str(tmp_path / "reviews")
+        # Create a fake output file so validation passes
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+        def side_effect(*args, **kwargs):
+            # Create the output file that would normally be created by codex
+            for arg in args[0]:
+                if arg == "-o":
+                    idx = args[0].index("-o")
+                    output_file = args[0][idx + 1]
+                    Path(output_file).write_text("Review content")
+                    break
+            return MagicMock(returncode=0)
+
+        mock_run.side_effect = side_effect
+
+        run_codex_review("code", "src/main.py", output_dir)
+        _, kwargs = mock_run.call_args
+        assert kwargs.get("stdin") == subprocess.DEVNULL
+
+    @patch("run_codex_review.subprocess.run")
+    def test_empty_output_file_detected(self, mock_run, tmp_path):
+        """Ensure empty output file is detected as failure"""
+        output_dir = str(tmp_path / "reviews")
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+        def side_effect(*args, **kwargs):
+            # Create empty output file (simulates codex error with exitcode=0)
+            for i, arg in enumerate(args[0]):
+                if arg == "-o":
+                    output_file = args[0][i + 1]
+                    Path(output_file).write_text("")
+                    break
+            return MagicMock(returncode=0, stderr="", stdout="")
+
+        mock_run.side_effect = side_effect
+
+        success, result = run_codex_review("code", "src/main.py", output_dir)
+        assert success is False
+        assert "空" in result or "empty" in result.lower()
+
+    @patch("run_codex_review.subprocess.run")
+    def test_default_model_is_gpt54(self, mock_run, tmp_path):
+        """Ensure default model is gpt-5.4 for all review types"""
+        output_dir = str(tmp_path / "reviews")
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+        def side_effect(*args, **kwargs):
+            for i, arg in enumerate(args[0]):
+                if arg == "-o":
+                    Path(args[0][i + 1]).write_text("Review content")
+                    break
+            return MagicMock(returncode=0)
+
+        mock_run.side_effect = side_effect
+
+        for review_type in ["code", "document", "design", "test"]:
+            run_codex_review(review_type, "target", output_dir)
+            cmd = mock_run.call_args[0][0]
+            model_idx = cmd.index("--model")
+            assert cmd[model_idx + 1] == "gpt-5.4", f"Expected gpt-5.4 for {review_type}"
 
 
 if __name__ == "__main__":

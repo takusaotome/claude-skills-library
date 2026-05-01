@@ -3,7 +3,7 @@ layout: default
 title: "Vendor RFQ Creator"
 grand_parent: 日本語
 parent: プロジェクト・経営
-nav_order: 25
+nav_order: 27
 lang_peer: /en/skills/management/vendor-rfq-creator/
 permalink: /ja/skills/management/vendor-rfq-creator/
 ---
@@ -11,7 +11,7 @@ permalink: /ja/skills/management/vendor-rfq-creator/
 # Vendor RFQ Creator
 {: .no_toc }
 
-This skill should be used when creating RFQ (Request for Quotation) documents for software development projects to send to vendors. Use this skill when you have received vague requirements from clients and need to structure them into clear, comprehensive RFQs that enable vendors to provide accurate estimates. Supports Japanese (default) and English, with systematic requirements elicitation, clarification, and markdown-formatted output.
+Vendor RFQ Creator に関する日本語ガイドです。`skills/vendor-rfq-creator/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -30,27 +30,18 @@ This skill should be used when creating RFQ (Request for Quotation) documents fo
 
 ## 1. 概要
 
-This skill transforms vague client requirements into comprehensive RFQ (Request for Quotation) documents for software development projects. It guides you through requirements elicitation, clarification, structuring, and professional RFQ creation in Markdown format.
-
-**Primary language**: Japanese (default)
-**Output format**: Markdown
-
-Use this skill when:
-- Clients provide vague or incomplete project requirements
-- You need to create formal RFQs to send to development vendors
-- You want to ensure all necessary information is included for accurate estimates
-- You need to standardize RFQ creation across your organization
-
-<!-- TODO: 翻訳 -->
+このページは **Vendor RFQ Creator** スキルの日本語サマリーです。
+- スキル本体: `skills/vendor-rfq-creator/SKILL.md`
+- 参照ガイド: 1 件
+- 補助スクリプト: なし
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **API Key:** None required
-- **Python 3.9+** recommended
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
 
 ---
 
@@ -61,48 +52,68 @@ Use this skill when:
 3. **RFQ Document Creation**: Generate professional, comprehensive RFQ documents
 4. **Quality Review**: Verify completeness before sending to vendors
 
-<!-- TODO: 翻訳 -->
-
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/vendor-rfq-creator/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. スキルの手順に沿って対話またはドキュメント作成を進めます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **Vendor RFQ Creator** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 1 件を根拠にした判断材料
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/vendor-rfq-creator/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/management/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/management/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/vendor-rfq-creator/references/rfq_checklist_ja.md`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/management/vendor-rfq-creator/' | relative_url }}) を参照してください。

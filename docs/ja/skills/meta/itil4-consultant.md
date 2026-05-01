@@ -11,7 +11,7 @@ permalink: /ja/skills/meta/itil4-consultant/
 # ITIL4 Consultant
 {: .no_toc }
 
-This skill should be used when providing ITIL 4-based IT service management consulting. Use this when organizations need guidance on implementing ITIL 4 practices, improving service management maturity, optimizing IT operations, or aligning IT services with business objectives. Provides tailored recommendations based on department, scenario, and organizational context using comprehensive ITIL 4 knowledge.
+ITIL4 Consultant に関する日本語ガイドです。`skills/itil4-consultant/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -30,98 +30,97 @@ This skill should be used when providing ITIL 4-based IT service management cons
 
 ## 1. 概要
 
-This skill transforms you into an expert ITIL 4 consultant capable of analyzing organizational contexts, assessing current state maturity, and providing tailored recommendations for IT service management improvement. By leveraging comprehensive ITIL 4 knowledge covering 34 practices (14 General Management, 17 Service Management, 3 Technical Management), you can deliver context-aware consulting for any department, scenario, or industry.
-
-**Primary language**: Japanese (default), English supported
-**Knowledge base**: 4 comprehensive ITIL 4 knowledge documents
-**Output format**: Consulting reports, maturity assessments, improvement roadmaps
-
-Use this skill when:
-- Organizations want to implement or improve ITIL 4 practices
-- IT departments need service management maturity assessment
-- Teams require guidance on specific ITIL 4 practices for their context
-- Leadership seeks alignment between IT services and business objectives
-- Projects need ITIL 4-based process design or optimization
-- Teams want to adopt DevOps, Agile, or modern practices within ITIL 4 framework
-
-<!-- TODO: 翻訳 -->
+このページは **ITIL4 Consultant** スキルの日本語サマリーです。
+- スキル本体: `skills/itil4-consultant/SKILL.md`
+- 参照ガイド: 4 件
+- 補助スクリプト: なし
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **API Key:** None required
-- **Python 3.9+** recommended
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
+- 詳細な実行条件は英語版ガイドまたは `SKILL.md` を参照してください。
 
 ---
 
 ## 3. クイックスタート
 
-```bash
-Practice: [プラクティス名]
-Current Maturity: Level X
-Target Maturity: Level Y
+This skill follows a 5-workflow consulting approach:
 
-Gaps:
-1. [Gap 1: 例: インシデント記録が不完全]
-   - Impact: [影響度]
-   - Root Cause: [根本原因]
-
-2. [Gap 2]
-   ...
-
-Pain Points:
-- [ペインポイント1: 例: MTTR が長い]
-- [ペインポイント2]
-```
-
-<!-- TODO: 翻訳 -->
+1. **Context Analysis & Scoping** - Gather organizational context, identify relevant ITIL 4 practices, define consulting objectives
+2. **Current State Assessment** - Evaluate maturity level (5-level model), assess practices, identify gaps and pain points
+3. **Recommendation Development** - Apply 7 Guiding Principles, design Quick Wins/Medium-term/Strategic improvements
+4. **Roadmap Creation** - Create phased implementation roadmap (Foundation → Standardization → Optimization → Continuous Improvement)
+5. **Department/Scenario-Specific Consulting** - Tailor recommendations to specific contexts (IT Ops, DevOps, Security, PMO, Infrastructure)
 
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/itil4-consultant/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. スキルの手順に沿って対話またはドキュメント作成を進めます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **ITIL4 Consultant** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 4 件を根拠にした判断材料
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/itil4-consultant/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/meta/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/meta/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/itil4-consultant/references/ITIL 4 サービスマネジメントプラクティス詳細ガイド.md`
 - `skills/itil4-consultant/references/ITIL 4 一般的マネジメントプラクティス詳細ガイド.md`
 - `skills/itil4-consultant/references/ITIL 4 技術的マネジメントプラクティス ― 詳細解説.md`
 - `skills/itil4-consultant/references/ITIL 4ファンデーションの概要と主要ポイント.md`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/meta/itil4-consultant/' | relative_url }}) を参照してください。

@@ -55,37 +55,96 @@ python3 scripts/timezone_event_tracker.py parse \
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### Step 1: Collect Event Data
+
+Gather event data with timestamps. Events can be provided in multiple formats:
+- CSV files with timestamp columns
+- JSON event logs
+- Plain text logs with parseable timestamps
+- Manual event lists
+
+Each event should include:
+- Timestamp (in any parseable format)
+- Source timezone (or auto-detect from timestamp suffix)
+- Event description
+- Optional: severity, source system, correlation ID
+
+### Step 2: Parse and Normalize Events
+
+Run the event parser to convert all timestamps to a common reference timezone (default: UTC).
+
+```bash
+python3 scripts/timezone_event_tracker.py parse \
+  --input events.csv \
+  --output normalized_events.json \
+  --reference-tz UTC
+```
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Analyzing incidents or logs from distributed systems spanning multiple timezones
+- Correlating events from teams in different regions (e.g., US West, US East, Japan)
+- Creating unified timelines from events recorded in different local times
+- Scheduling or reviewing cross-regional meetings and handoffs
+- Generating time-normalized reports for global operations
+- Investigating issues where timestamp confusion led to coordination failures
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+### JSON Normalized Events
+
+```json
+{
+  "schema_version": "1.0",
+  "reference_timezone": "UTC",
+  "generated_at": "2024-03-15T10:30:00Z",
+  "events": [
+    {
+      "id": "evt-001",
+      "original_timestamp": "2024-03-15 02:30:00 PST",
+      "normalized_timestamp": "2024-03-15T10:30:00Z",
+      "source_timezone": "America/Los_Angeles",
+      "description": "Server restart initiated",
+      "metadata": {
+        "severity": "info",
+        "source_system": "ops-west"
+      },
+
+The full output details are documented in SKILL.md.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/timezone-aware-event-tracker/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: timezone-conversion-guide.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: timezone_event_tracker.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/meta/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 
