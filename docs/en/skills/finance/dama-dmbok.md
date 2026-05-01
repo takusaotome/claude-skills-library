@@ -117,37 +117,81 @@ DAMA-DMBOK（Data Management Body of Knowledge）は、DAMA International が策
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+本スキルは5つのCore Workflowを提供します。ユーザーの課題に応じて適切なワークフローを選択してください。
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    DAMA-DMBOK Skill Workflow                 │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. 課題・目的のヒアリング                                    │
+│         ↓                                                   │
+│  2. 適切なCore Workflowの選択                                │
+│     ├── Workflow 1: Data Governance Assessment              │
+│     ├── Workflow 2: Data Quality Improvement                │
+│     ├── Workflow 3: Data Catalog Creation                   │
+│     ├── Workflow 4: Master Data Management                  │
+│     └── Workflow 5: Data Strategy Development               │
+│         ↓                                                   │
+│  3. ワークフローに沿った段階的ガイダンス                        │
+│         ↓                                                   │
+│  4. 成果物テンプレートの提供・カスタマイズ支援                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+詳細は各Core Workflowセクションを参照してください。
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **データ戦略の策定**
+- 全社データ戦略の立案
+- データ活用ロードマップの作成
+- データ投資の優先順位付け
+- **データガバナンスの構築**
+- ガバナンス組織体制の設計
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+本スキルはアドバイザリー/ナレッジ型スキルです。主な出力形式:
+
+- **対話型ガイダンス**: ユーザーの状況に応じた段階的なアドバイス
+- **フレームワーク適用**: DAMA-DMBOK知識体系に基づく分析・提案
+- **テンプレート提供**: `assets/`配下のテンプレートをカスタマイズして提示
+- **ベストプラクティス共有**: 業界標準に基づく推奨事項
+
+> **Note**: ファイル自動生成は行いません。必要に応じてテンプレートを会話内で提示し、ユーザーが自身の環境で活用できるようにします。
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/dama-dmbok/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: data_governance.md, metadata_management.md, data_quality.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/finance/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
 
 ---
 

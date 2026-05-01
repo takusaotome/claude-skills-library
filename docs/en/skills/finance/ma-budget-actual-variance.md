@@ -82,37 +82,60 @@ Labor Cost,cost,300000,320000
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+1. **Validate Input Format**: Verify CSV structure and required columns are present
+2. **Classify Accounts**: Confirm account type assignments (revenue vs. cost/expense)
+3. **Period Alignment**: Ensure budget and actual figures correspond to the same period
+4. **Data Cleansing**: Handle missing values, zero budgets, and currency formatting
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **Monthly/Quarterly Budget Review** - Compare actual results against budget to identify significant deviations
+- 「今月の予実差異を分析して」「月次の予算対比レポートを作成して」
+- **Management Meeting Preparation** - Create executive-level variance summaries with root cause analysis
+- 「経営会議向けに予実サマリを作って」「取締役会用の業績報告資料を準備して」
+- **Cost Overrun Investigation** - Identify which line items are over budget and why
+- 「コスト超過の原因を特定して」「予算オーバーしている勘定科目を洗い出して」
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+The analysis produces a structured variance report containing:
+
+1. **Executive Summary**: Total favorable/unfavorable variance, key highlights
+2. **Variance Detail Table**: Per-account breakdown with amounts, percentages, and direction
+3. **Materiality Ranking**: Top variances sorted by absolute impact
+4. **Root Cause Analysis**: Hypotheses and supporting evidence for major variances
+5. **Recommended Actions**: Prioritized list of corrective/follow-up actions
+
+Output template: `assets/variance_report_template_ja.md` (Japanese) or `assets/variance_report_template_en.md` (English)
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/ma-budget-actual-variance/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: 第05回_その予算って根拠あるの_20250507.md, 第08回_予算実績差異分析_20250820.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/finance/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
 
 ---
 

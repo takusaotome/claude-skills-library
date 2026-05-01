@@ -407,8 +407,17 @@ class ArtifactParser:
                     source_line=line_num,
                 )
             elif current_req and line.strip():
-                # Continue description or add acceptance criteria
-                if "given" in line.lower() or "when" in line.lower() or "then" in line.lower():
+                # Continue description, add acceptance criteria, or pick up Priority
+                # written on a subsequent line.
+                priority_match = re.search(
+                    r"^\s*(?:Priority|P)\s*:\s*(\w+)|\[(High|Medium|Low|Critical)\]",
+                    line,
+                    re.IGNORECASE,
+                )
+                if priority_match and current_req.priority is None:
+                    raw = priority_match.group(1) or priority_match.group(2)
+                    current_req.priority = raw.strip().capitalize()
+                elif "given" in line.lower() or "when" in line.lower() or "then" in line.lower():
                     current_req.acceptance_criteria.append(line.strip())
                 elif not current_req.description:
                     current_req.description = line.strip()

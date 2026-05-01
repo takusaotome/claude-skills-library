@@ -36,7 +36,44 @@ This skill transforms you into an expert ITIL 4 consultant capable of analyzing 
 **Knowledge base**: 4 comprehensive ITIL 4 knowledge documents
 **Output format**: Consulting reports, maturity assessments, improvement roadmaps
 
-Use this skill when:
+---
+
+## 2. Prerequisites
+
+- **Required**: None (skill provides all ITIL 4 knowledge internally)
+- **Optional**: Organizational context information (industry, size, current challenges) for tailored recommendations
+- **Optional**: Access to existing ITSM documentation or process diagrams for current state assessment
+
+---
+
+## 3. Quick Start
+
+This skill follows a 5-workflow consulting approach:
+
+1. **Context Analysis & Scoping** - Gather organizational context, identify relevant ITIL 4 practices, define consulting objectives
+2. **Current State Assessment** - Evaluate maturity level (5-level model), assess practices, identify gaps and pain points
+3. **Recommendation Development** - Apply 7 Guiding Principles, design Quick Wins/Medium-term/Strategic improvements
+4. **Roadmap Creation** - Create phased implementation roadmap (Foundation → Standardization → Optimization → Continuous Improvement)
+5. **Department/Scenario-Specific Consulting** - Tailor recommendations to specific contexts (IT Ops, DevOps, Security, PMO, Infrastructure)
+
+---
+
+## 4. How It Works
+
+This skill follows a 5-workflow consulting approach:
+
+1. **Context Analysis & Scoping** - Gather organizational context, identify relevant ITIL 4 practices, define consulting objectives
+2. **Current State Assessment** - Evaluate maturity level (5-level model), assess practices, identify gaps and pain points
+3. **Recommendation Development** - Apply 7 Guiding Principles, design Quick Wins/Medium-term/Strategic improvements
+4. **Roadmap Creation** - Create phased implementation roadmap (Foundation → Standardization → Optimization → Continuous Improvement)
+5. **Department/Scenario-Specific Consulting** - Tailor recommendations to specific contexts (IT Ops, DevOps, Security, PMO, Infrastructure)
+
+See **Core Workflows** section below for detailed step-by-step guidance.
+
+---
+
+## 5. Usage Examples
+
 - Organizations want to implement or improve ITIL 4 practices
 - IT departments need service management maturity assessment
 - Teams require guidance on specific ITIL 4 practices for their context
@@ -46,68 +83,41 @@ Use this skill when:
 
 ---
 
-## 2. Prerequisites
-
-- **API Key:** None required
-- **Python 3.9+** recommended
-
----
-
-## 3. Quick Start
-
-```bash
-Practice: [プラクティス名]
-Current Maturity: Level X
-Target Maturity: Level Y
-
-Gaps:
-1. [Gap 1: 例: インシデント記録が不完全]
-   - Impact: [影響度]
-   - Root Cause: [根本原因]
-
-2. [Gap 2]
-   ...
-
-Pain Points:
-- [ペインポイント1: 例: MTTR が長い]
-- [ペインポイント2]
-```
-
----
-
-## 4. How It Works
-
-<!-- TODO: Describe the internal pipeline/algorithm -->
-
----
-
-## 5. Usage Examples
-
-<!-- TODO: Add 4-6 real-world usage scenarios -->
-
----
-
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+This skill provides **conversational guidance** and does not generate files automatically. Outputs include:
+- Tailored ITIL 4 recommendations in chat
+- Maturity assessment findings and gap analysis
+- Improvement roadmaps with phased approach
+- Best practice guidance for specific scenarios
+- KPI recommendations for measuring success
+
+When detailed deliverables are needed (e.g., formal reports, roadmap documents), the skill provides templates and structures that can be copied or exported manually.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/itil4-consultant/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: ITIL 4 サービスマネジメントプラクティス詳細ガイド.md, ITIL 4 一般的マネジメントプラクティス詳細ガイド.md, ITIL 4ファンデーションの概要と主要ポイント.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/meta/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
 
 ---
 

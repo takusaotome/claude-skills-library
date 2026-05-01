@@ -11,19 +11,7 @@ permalink: /ja/skills/meta/project-kickoff-bootstrapper/
 # Project Kickoff Bootstrapper
 {: .no_toc }
 
-新しいプロジェクトまたは既存リポジトリに Claude 用の kickoff 文脈を導入するスキル。
-テンプレートとリポジトリ証跡、ユーザー入力をもとに `CLAUDE.md`、`docs/PROJECT_BRIEF.md`、
-`docs/SKILL_ROUTING.md`、`docs/QUALITY_GATES.md`、`docs/TEST_STRATEGY.md`、
-`docs/DECISION_LOG.md`、`docs/HIDDEN_CONTRACT_REGISTER.md`、
-`docs/CROSS_MODULE_CONSISTENCY_MATRIX.md`、`.claude/rules/*`、
-`.claude/commands/project-kickoff.md` を必要に応じて作成・更新する。
-Use when starting a new project, retrofitting AI project context into an existing repository,
-bootstrapping Claude memory, or standardizing kickoff documents, rules, and slash-command scaffolding.
-Distinct from project-manager / project-plan-creator (which plan work),
-and from completion-quality-gate-designer / hidden-contract-investigator /
-safe-by-default-architect / cross-module-consistency-auditor /
-production-parity-test-designer (which deeply refine individual artifacts after bootstrap).
-
+Project Kickoff Bootstrapper に関する日本語ガイドです。`skills/project-kickoff-bootstrapper/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -42,24 +30,18 @@ production-parity-test-designer (which deeply refine individual artifacts after 
 
 ## 1. 概要
 
-This skill installs or refreshes the minimum Claude-facing project context needed for a new repository to operate predictably from day one. It does three things at once:
-
-1. **Inspects repository evidence** to infer stack, commands, directories, and existing governance docs.
-2. **Collects only the missing information** from the user instead of forcing a long upfront questionnaire.
-3. **Creates or updates a coherent kickoff file set** so Claude can understand the project, know which skills to use, and know what “done” means.
-
-This skill is intentionally a **bootstrap orchestrator**. It seeds starter artifacts quickly and consistently. It does **not** replace deeper follow-on work such as designing rigorous quality gates, investigating hidden contracts, or building a production-parity regression strategy. After scaffolding, route those deeper tasks to the dedicated skills.
-
-<!-- TODO: 翻訳 -->
+このページは **Project Kickoff Bootstrapper** スキルの日本語サマリーです。
+- スキル本体: `skills/project-kickoff-bootstrapper/SKILL.md`
+- 参照ガイド: 6 件
+- 補助スクリプト: なし
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **API Key:** None required
-- **Python 3.9+** recommended
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
 
 ---
 
@@ -76,49 +58,63 @@ This skill is intentionally a **bootstrap orchestrator**. It seeds starter artif
 3. Infer:
    - probable primary language and stack
 
-<!-- TODO: 翻訳 -->
-
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/project-kickoff-bootstrapper/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. スキルの手順に沿って対話またはドキュメント作成を進めます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **Project Kickoff Bootstrapper** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 6 件を根拠にした判断材料
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/project-kickoff-bootstrapper/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/meta/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/meta/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/project-kickoff-bootstrapper/references/cross_file_consistency_checklist.md`
 - `skills/project-kickoff-bootstrapper/references/follow_on_skill_sequence.md`
@@ -126,3 +122,9 @@ This skill is intentionally a **bootstrap orchestrator**. It seeds starter artif
 - `skills/project-kickoff-bootstrapper/references/non_destructive_update_policy.md`
 - `skills/project-kickoff-bootstrapper/references/question_strategy.md`
 - `skills/project-kickoff-bootstrapper/references/repository_inspection_guide.md`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/meta/project-kickoff-bootstrapper/' | relative_url }}) を参照してください。

@@ -82,37 +82,72 @@ Use this workflow when establishing or evaluating internal controls over financi
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+Use this workflow when establishing or evaluating internal controls over financial reporting.
+
+### Step 1: Determine Evaluation Scope
+
+Identify the scope of internal control evaluation:
+
+**Scoping Criteria:**
+
+| Criterion | Description | Threshold |
+|-----------|-------------|-----------|
+| Quantitative | Financial significance | > 5% of consolidated revenue/assets |
+| Qualitative | Fraud risk, complexity | High inherent risk areas |
+| Locations | Significant subsidiaries | Coverage of 70%+ of key metrics |
+
+**Scope Documentation:**
+
+```markdown
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **J-SOX/SOX Compliance**
+- "J-SOX対応の評価範囲を決定したい"
+- "Create SOX Section 404 documentation"
+- **RCM Development**
+- "リスクコントロールマトリクスを作成してください"
+- "Build an RCM for the procure-to-pay process"
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+This skill provides **conversational guidance and advisory support**. It does not generate standalone files automatically. Outputs include:
+
+- Compliance assessment recommendations and gap analyses
+- Risk Control Matrix structures and content guidance
+- Internal audit planning frameworks and procedures
+- Regulatory response strategies and remediation advice
+
+Templates in `assets/` can be used as starting points when formal documentation is needed.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/compliance-advisor/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: risk_assessment_guide.md, internal_control_methodology.md, jsox_sox_framework.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/finance/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
 
 ---
 

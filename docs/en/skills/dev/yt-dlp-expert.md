@@ -3,7 +3,7 @@ layout: default
 title: "Yt Dlp Expert"
 grand_parent: English
 parent: Software Development
-nav_order: 32
+nav_order: 33
 lang_peer: /ja/skills/dev/yt-dlp-expert/
 permalink: /en/skills/dev/yt-dlp-expert/
 ---
@@ -49,37 +49,49 @@ Invoke this skill by describing your analysis needs to Claude.
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+Follow the skill's SKILL.md workflow step by step, starting from a small validated input.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Use **Yt Dlp Expert** when you need a structured workflow rather than an ad-hoc answer.
+- Start with a small representative input before applying the workflow to production data or assets.
+- Review the helper scripts and reference guides to tailor the output format to your project.
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+- A structured response or artifact aligned to the skill's workflow.
+- Reference support from 3 guide file(s).
+- Reusable output that can be reviewed, refined, and incorporated into a wider project workflow.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/yt-dlp-expert/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: authentication.md, download_options.md, subtitle_extraction.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/dev/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
 
 ---
 

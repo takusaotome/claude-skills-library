@@ -51,57 +51,141 @@ This skill provides comprehensive Lean Six Sigma consulting capabilities, integr
 
 ## 2. Prerequisites
 
-- **API Key:** None required
-- **Python 3.9+** recommended
+Before using this skill, ensure the following dependencies are installed:
+
+```bash
+# Required Python packages for statistical analysis scripts
+pip install numpy scipy
+```
+
+**Scripts require**:
+- Python 3.8+
+- `numpy` for numerical calculations
+- `scipy` for statistical functions (normal distribution, hypothesis testing)
+
+**Optional dependencies**:
+- Process measurement data in CSV format
+- Specification limits (USL, LSL) for capability analysis
+
+---
 
 ---
 
 ## 3. Quick Start
 
 ```bash
-Customer Need → Driver → CTQ (Measurable)
-"Fast delivery" → "Delivery time" → "95% orders delivered within 2 days"
+# Calculate sigma level from defect data
+python scripts/sigma_calculator.py --defects 15 --units 1000 --opportunities 5
+
+# Analyze process capability
+python scripts/process_capability.py --demo
+
+# Perform control chart analysis
+python scripts/control_chart_analysis.py --demo
 ```
 
 ---
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+This skill supports multiple workflows depending on the user's objective:
+
+1. **DMAIC Project Execution** (Core Workflow 1)
+   - Define → Measure → Analyze → Improve → Control
+   - Use for improving existing processes
+
+2. **DMADV/DFSS** (Core Workflow 2)
+   - Define → Measure → Analyze → Design → Verify
+   - Use for designing new processes/products
+
+3. **Lean Waste Elimination** (Core Workflow 3)
+   - Value Stream Mapping → Identify 8 Wastes → Design Future State → Kaizen
+   - Use for eliminating waste and improving flow
+
+4. **Statistical Analysis Support** (Core Workflow 4)
+   - Process capability, control charts, hypothesis testing
+   - Use for data-driven decision making
+
+5. **Training/Education** (Core Workflow 6)
+   - Belt-level curricula (White to Master Black Belt)
+   - Use for learning and certification preparation
+
+**Quick Start**:
+```bash
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Leading or supporting a process improvement project
+- Need guidance on which DMAIC phase tools to use
+- Want to reduce defects, errors, or variation in a process
+- Need to eliminate waste and improve cycle time
+- Implementing statistical process control
+- Conducting root cause analysis (5 Whys, Fishbone)
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+This skill produces the following outputs:
+
+| Output Type | Format | Description |
+|-------------|--------|-------------|
+| **DMAIC Project Guidance** | Markdown/Text | Step-by-step guidance through each DMAIC phase with tollgate checklists |
+| **Process Metrics Report** | JSON/Text | Sigma level, DPMO, yield, capability indices (Cp, Cpk, Pp, Ppk) |
+| **Control Chart Analysis** | JSON/Text | Control limits, out-of-control detection, Western Electric rule violations |
+| **Root Cause Analysis** | Markdown | Fishbone diagrams, 5 Whys analysis, Pareto charts |
+| **Templates** | Markdown | Project Charter, SIPOC, FMEA, Control Plan, A3 Report |
+| **Training Materials** | Markdown | Belt-level curricula, certification preparation guides |
+
+**Example Output** (Sigma Calculator):
+```
+================================================================
+SIGMA LEVEL ANALYSIS REPORT
+================================================================
+
+📥 INPUT DATA:
+
+The full output details are documented in SKILL.md.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/lean-six-sigma-consultant/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: quick_reference_guide.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: sigma_calculator.py, control_chart_analysis.py, process_capability.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/finance/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 
 ## 10. Reference
+
+**References:**
+
+- `skills/lean-six-sigma-consultant/references/quick_reference_guide.md`
 
 **Scripts:**
 

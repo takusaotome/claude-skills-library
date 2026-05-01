@@ -40,79 +40,116 @@ This skill provides expert guidance for implementing ISO management system stand
 **Supported Standards**: ISO 9001, ISO 27001, ISO 22301, ISO 45001, ISO 14001
 **Output format**: Gap analysis reports, implementation roadmaps, document templates, audit checklists
 
-Use this skill when:
-- Planning ISO certification projects
-- Conducting gap analysis against ISO standards
-- Developing ISO-compliant documentation
-- Preparing for certification audits
-- Implementing management systems
-
 ---
 
 ---
 
 ## 2. Prerequisites
 
-- **API Key:** None required
-- **Python 3.9+** recommended
+1. **Python 3.9+** for running automation scripts
+2. **Access to target ISO standard** (official document recommended)
+3. **Stakeholder access** for interviews during gap analysis
+4. **Existing documentation** (policies, procedures, records) for assessment
+
+---
 
 ---
 
 ## 3. Quick Start
 
 ```bash
-Requirement: The organization shall determine external and internal issues relevant to its purpose.
-
-Current State:
-- No formal process for identifying issues
-- Ad-hoc discussion in management meetings
-- No documentation
-
-Gap: HIGH
-Action Required:
-1. Establish process for identifying internal/external issues
-2. Document issues in context analysis
-3. Review quarterly
+┌─────────────────────────────────────────────────────────────┐
+│                    ISO Implementation                        │
+├─────────────────────────────────────────────────────────────┤
+│  1. Gap Analysis    →  Assess current state vs requirements │
+│  2. Roadmap         →  Plan phased implementation          │
+│  3. Documentation   →  Create policies, procedures         │
+│  4. Internal Audit  →  Verify compliance internally        │
+│  5. Certification   →  Stage 1 + Stage 2 external audit    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ISO Implementation                        │
+├─────────────────────────────────────────────────────────────┤
+│  1. Gap Analysis    →  Assess current state vs requirements │
+│  2. Roadmap         →  Plan phased implementation          │
+│  3. Documentation   →  Create policies, procedures         │
+│  4. Internal Audit  →  Verify compliance internally        │
+│  5. Certification   →  Stage 1 + Stage 2 external audit    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Typical Timeline**: 6-18 months depending on starting maturity
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **Planning ISO certification**: Organization is pursuing ISO 9001, 27001, 22301, or other certification
+- **Conducting gap analysis**: Need to assess current state vs. ISO requirements
+- **Developing documentation**: Creating policies, procedures, and work instructions
+- **Preparing for audits**: Getting ready for Stage 1/Stage 2 certification audits
+- **Implementing management systems**: Building quality, security, or continuity systems
+- **Integrating multiple standards**: Combining ISO 9001 + 27001 + 22301 using HLS
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+This skill generates:
+
+| Output | Description | Format |
+|--------|-------------|--------|
+| Gap Analysis Report | Clause-by-clause compliance assessment | Markdown/CSV |
+| Implementation Roadmap | Phased plan with milestones | Markdown/Mermaid |
+| Maturity Score | 0-5 score per clause, overall average | Numeric |
+| Action Plan | Prioritized gaps with owners and effort | Table |
+| Internal Audit Checklist | Clause-specific audit questions | Markdown |
+| Document Templates | Policy, procedure, record templates | Markdown |
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/iso-implementation-guide/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: iso-hls-structure.md, gap-analysis-methodology.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: gap_analysis.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/finance/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 
 ## 10. Reference
 
-This skill uses built-in Claude capabilities without external scripts or references.
+**References:**
+
+- `skills/iso-implementation-guide/references/gap-analysis-methodology.md`
+- `skills/iso-implementation-guide/references/iso-hls-structure.md`
+
+**Scripts:**
+
+- `skills/iso-implementation-guide/scripts/gap_analysis.py`

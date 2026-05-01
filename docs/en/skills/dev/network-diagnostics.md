@@ -62,37 +62,77 @@ python3 scripts/network_diagnostics.py -o /tmp/network_diag.json
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### Phase 1: COLLECT (Data Collection)
+
+Run the diagnostics script to collect all network metrics as JSON:
+
+```bash
+python3 scripts/network_diagnostics.py -o /tmp/network_diag.json
+```
+
+**CLI Options:**
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `-o FILE` | Output file (default: stdout) | stdout |
+| `-t host,label` | Add custom target (repeatable) | - |
+| `--skip-traceroute` | Skip traceroute | false |
+| `--skip-speed` | Skip download speed tests | false |
+| `--ping-count N` | Ping packet count | 10 |
+
+**Collected Data:**
+
+1. **Connection Info** - Interface, type (Ethernet/Wi-Fi), IP, gateway, DNS, ISP, MAC, MTU
+2. **Ping Tests** - Gateway + 8.8.8.8 + 1.1.1.1 (+ custom targets) → avg/min/max/jitter/loss
+3. **HTTP Timing** - DNS resolution, TCP connect, TLS handshake, TTFB, total
+4. **Download Speed** - Cloudflare + OVH + Hetzner CDN endpoints → Mbps
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Use **Network Diagnostics** when you need a structured workflow rather than an ad-hoc answer.
+- Start with a small representative input before applying the workflow to production data or assets.
+- Review the helper scripts and reference guides to tailor the output format to your project.
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+- A structured response or artifact aligned to the skill's workflow.
+- Reference support from 2 guide file(s).
+- Script-assisted execution using 1 helper command(s) where applicable.
+- Reusable output that can be reviewed, refined, and incorporated into a wider project workflow.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/network-diagnostics/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: network_quality_thresholds.md, deep_dive_procedures.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: network_diagnostics.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/dev/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

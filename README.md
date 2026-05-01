@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (94 skills)
+├── skills/                 # 99 published skills (with SKILL.md) + 5 in-progress directories with only scripts/ — 104 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (94 Skills)
+## Skill Catalog (99 Skills)
+
+> Note: `skills/` contains 104 directories total — 99 published skills (with `SKILL.md`) listed below, plus 5 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `internal-email-composer`, `vendor-procurement-coordinator`.
 
 ### Business Strategy & Consulting (17 skills)
 
@@ -83,7 +85,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 | hearing-to-requirements-mapper | ヒアリングシート→要件定義書変換、ギャップ分析 | RTM, WBS Mapping, Ambiguity Detection, Bilingual |
 
-### Project Management (4 skills)
+### Project Management (6 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -139,7 +141,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (13 skills)
+### Documentation & Communication (15 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -156,6 +158,8 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | marp-layout-debugger | MARPレイアウト問題診断・自動修正 | Whitespace/Alignment/Bullet/Overflow/CSS Fix |
 | codebase-onboarding-generator | CLAUDE.md自動生成（コードベース分析） | Project Detection, Command Extraction, Best Practices |
 | meeting-asset-preparer | 会議資料準備（アジェンダ、決定ログ、アクション管理） | Bilingual (JA/EN), Context Integration, Decision Tracking |
+| meeting-minutes-reviewer | 議事録レビュー・品質評価・フィードバック生成 | 5-Dimension Scoring, Action Item Validation, Consistency Check |
+| meeting-minutes-writer | 議事録生成＋自己レビューループ（最大3反復） | 5 Mandatory Checks, Date Verification, Action-Item Coverage |
 
 ### QA & Testing (11 skills)
 
@@ -2286,6 +2290,63 @@ Prepares comprehensive meeting assets including agendas, reference materials, de
 
 ---
 
+### 📝 Meeting Minutes Reviewer
+
+**File:** `skills/meeting-minutes-reviewer/`
+
+Reviews meeting minutes documents for completeness, action item clarity, decision documentation, and consistency with source materials. Generates structured feedback with specific improvement suggestions and quality scores across 5 dimensions.
+
+**When to use:**
+- After drafting meeting minutes and before distribution
+- When reviewing minutes created by others for quality assurance
+- When validating that minutes accurately reflect source materials (hearing sheets, transcripts)
+- When ensuring action items meet trackability standards
+- When preparing minutes for formal project documentation or audit trails
+
+**Key Components:**
+- `scripts/review_minutes.py` - Main review script with 5-dimension quality analysis
+- `references/review-criteria.md` - Detailed scoring criteria and quality standards
+- `references/meeting-minutes-checklist.md` - Complete checklist for meeting minutes
+
+**Key Features:**
+- 5-dimension scoring: Completeness (25%), Action Items (25%), Decisions (20%), Consistency (15%), Clarity (15%)
+- Action item validation: owner, deadline, description completeness
+- Decision documentation check: context, rationale, alternatives
+- Source material consistency verification (hearing sheets, agendas)
+- Vague language detection and clarity analysis
+- JSON and Markdown report output formats
+
+---
+
+### 📝 Meeting Minutes Writer
+
+**File:** `skills/meeting-minutes-writer/`
+
+Generates strategic-consultant-grade meeting minutes from transcripts or notes, then runs a self-review loop (max 3 iterations) that checks for internal contradictions, action-item omissions, speaker-name errors, and date/day-of-week mistakes before reporting completion.
+
+**When to use:**
+- Converting raw meeting transcripts or notes into structured minutes
+- Producing executive-readable minutes (3-minute readability test)
+- Any time minutes must include verified dates and complete action items
+- When you need quality-gated output (zero findings or 3 iterations) before sharing
+
+**Key Components:**
+- `references/output_format.md` - Canonical minutes structure, inference rules, ambiguity markers
+- `references/self_review_checklist.md` - 5 Mandatory Checks with severity model and iteration logic
+- `assets/minutes_template_en.md` - Blank meeting minutes template (English)
+- `assets/minutes_template_ja.md` - 議事録テンプレート（日本語）
+- `assets/findings_report_template.md` - Per-iteration findings report layout (bilingual EN + JA)
+
+**Key Features:**
+- 2-phase workflow: ultrathink Generation → Self-Review Loop (max 3 iterations)
+- 5 Mandatory Checks: Internal Contradictions, Consistency, Action-Item Omissions, Speaker-Name Errors, Date/Day-of-Week Errors
+- MANDATORY date verification via `python3 -c "import datetime; ..."` (no memory-based dates)
+- Severity model: HIGH (blocks completion) / MEDIUM / LOW
+- Completion report surfaces remaining HIGH findings and `* To be confirmed` items
+- Complements `meeting-minutes-reviewer` (review-only) and `video2minutes` (transcribe-then-write)
+
+---
+
 ### 🎤 Fujisoft Presentation Creator
 
 **File:** `skill-packages/fujisoft-presentation-creator.skill`
@@ -3982,6 +4043,25 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### meeting-minutes-writer v1.0 (2026-04-30)
+- Generate meeting minutes from transcripts/notes with built-in self-review loop (max 3 iterations)
+- 5 Mandatory Checks per iteration: Internal Contradictions, Consistency, Action-Item Omissions, Speaker-Name Errors, Date/Day-of-Week Errors
+- MANDATORY date verification via `python3 -c "import datetime; ..."` — never memory-based
+- Severity model (HIGH/MEDIUM/LOW); HIGH findings blocking completion
+- Completion report surfaces remaining HIGH findings and `* To be confirmed` items after iteration 3
+- Complements meeting-minutes-reviewer (review-only) and video2minutes (transcribe→write)
+- Resources: output_format.md, self_review_checklist.md, minutes_template_en.md, minutes_template_ja.md, findings_report_template.md (bilingual)
+
+### meeting-minutes-reviewer v1.0 (2026-03-26)
+- Review meeting minutes for completeness, action item clarity, and decision documentation
+- 5-dimension quality scoring: Completeness (25%), Action Items (25%), Decisions (20%), Consistency (15%), Clarity (15%)
+- Action item validation: owner, deadline, description completeness checks
+- Decision documentation validation: context, rationale, alternatives considered
+- Source material consistency verification (hearing sheets, agendas)
+- Vague language detection with specific suggestions
+- JSON and Markdown report output formats
+- CLI with `review_minutes.py` script
 
 ### project-artifact-linker v1.0 (2026-03-21)
 - Cross-reference project artifacts (WBS, meeting minutes, requirements, decisions)
