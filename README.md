@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 106 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 107 dirs total
+├── skills/                 # 107 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 108 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (106 Skills)
+## Skill Catalog (107 Skills)
 
-> Note: `skills/` contains 107 directories total — 106 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: `skills/` contains 108 directories total — 107 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -143,7 +143,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (18 skills)
+### Documentation & Communication (19 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -165,6 +165,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | internal-email-composer | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
 | iterative-design-assistant | デザイン反復履歴管理・文脈理解・一貫スタイリング | Design Decision Log, Contextual Reference Resolution, Token Management |
 | purchase-request-generator | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
+| japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 
 ### QA & Testing (12 skills)
 
@@ -2605,6 +2606,37 @@ Generates strategic-consultant-grade meeting minutes from transcripts or notes, 
 
 ---
 
+### 🇯🇵 Japanese Enterprise Document Formatter
+
+**File:** `skills/japanese-enterprise-doc-formatter/`
+
+Formats documents for Japanese enterprise approval workflows including ringi (稟議), purchase requests (購入申請), and internal proposals. Handles bilingual requirements, proper keigo levels, required approval sections, and corporate template compliance.
+
+**When to use:**
+- Creating or formatting 稟議書 (ringi) approval documents
+- Preparing 購入申請書 (purchase request) forms
+- Drafting 提案書 (internal proposals) for management
+- Converting informal notes into formal Japanese business documents
+- Ensuring proper keigo levels (尊敬語, 謙譲語, 丁寧語) in documents
+- Creating bilingual (Japanese/English) enterprise documents
+
+**Key Components:**
+- `scripts/format_document.py` - Main document formatting tool with multiple output formats
+- `scripts/transform_keigo.py` - Keigo level transformation (highest/upper/standard/basic)
+- `scripts/validate_sections.py` - Section validation against document type requirements
+- `references/document_types.md` - Document type specifications (稟議書, 購入申請書, 提案書, 報告書, 依頼書)
+- `references/keigo_guide.md` - Keigo usage guide with transformation rules
+- `references/section_templates.md` - Ready-to-use templates for each document type
+
+**Key Features:**
+- 5 document types: 稟議書, 購入申請書, 提案書, 報告書, 依頼書
+- 4 keigo levels: 最上級 (executive), 上級 (upper), 標準 (standard), 基本 (basic)
+- Section validation with completeness scoring
+- Bilingual output with English summaries
+- Approval section generation based on document type
+
+---
+
 ### 🎤 Fujisoft Presentation Creator
 
 **File:** `skill-packages/fujisoft-presentation-creator.skill`
@@ -4495,6 +4527,13 @@ Future skills planned for this library:
 - 7-category consistency rule catalog (aggregation, status, sign, tax, visibility, naming, report alignment)
 - Copy propagation review strategy (canonical + diff approach)
 - Cross-module test checklist generation
+
+### japanese-enterprise-doc-formatter v1.0 (2026-03-28)
+- Format documents for Japanese enterprise approval workflows (稟議書, 購入申請書, 提案書, 報告書, 依頼書)
+- Keigo transformation at 4 levels: highest (最上級), upper (上級), standard (標準), basic (基本)
+- Section validation against document type requirements with completeness scoring
+- Bilingual output support (Japanese + English summary)
+- Reference guides for document types, keigo usage, and section templates
 
 ### production-parity-test-designer v1.0 (2026-03-21)
 - 7-step production parity test design workflow
