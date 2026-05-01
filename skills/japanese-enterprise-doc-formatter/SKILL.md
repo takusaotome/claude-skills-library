@@ -38,12 +38,14 @@ Identify the document type and extract key information from the user's input:
 - Bilingual requirement: Japanese only / Japanese + English summary
 
 ```bash
-# Doc-type detection is handled by validate_sections.py via the --doc-type
-# flag (and by format_document.py's heuristics). A standalone
-# analyze_document.py was planned but never shipped — use the workflow below.
+# Doc type is NOT auto-detected — pick it from the user's request and pass
+# it explicitly via --document-type / -t. Valid values:
+#   ringi | purchase | proposal | report | request
+# (A standalone analyze_document.py was planned but never shipped.)
 python3 scripts/validate_sections.py \
   --input user_content.md \
-  --doc-type ringi \
+  --document-type ringi \
+  --format json \
   --output analysis.json
 ```
 
