@@ -17,12 +17,94 @@ This skill provides expert guidance for implementing ISO management system stand
 **Supported Standards**: ISO 9001, ISO 27001, ISO 22301, ISO 45001, ISO 14001
 **Output format**: Gap analysis reports, implementation roadmaps, document templates, audit checklists
 
+---
+
+## When to Use
+
 Use this skill when:
-- Planning ISO certification projects
-- Conducting gap analysis against ISO standards
-- Developing ISO-compliant documentation
-- Preparing for certification audits
-- Implementing management systems
+- **Planning ISO certification**: Organization is pursuing ISO 9001, 27001, 22301, or other certification
+- **Conducting gap analysis**: Need to assess current state vs. ISO requirements
+- **Developing documentation**: Creating policies, procedures, and work instructions
+- **Preparing for audits**: Getting ready for Stage 1/Stage 2 certification audits
+- **Implementing management systems**: Building quality, security, or continuity systems
+- **Integrating multiple standards**: Combining ISO 9001 + 27001 + 22301 using HLS
+
+**Triggers**: "ISO 9001", "ISO 27001", "ISO 22301", "ISO certification", "quality management", "ISMS", "BCMS", "gap analysis", "internal audit", "certification audit"
+
+---
+
+## Prerequisites
+
+1. **Python 3.9+** for running automation scripts
+2. **Access to target ISO standard** (official document recommended)
+3. **Stakeholder access** for interviews during gap analysis
+4. **Existing documentation** (policies, procedures, records) for assessment
+
+---
+
+## Workflow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    ISO Implementation                        │
+├─────────────────────────────────────────────────────────────┤
+│  1. Gap Analysis    →  Assess current state vs requirements │
+│  2. Roadmap         →  Plan phased implementation          │
+│  3. Documentation   →  Create policies, procedures         │
+│  4. Internal Audit  →  Verify compliance internally        │
+│  5. Certification   →  Stage 1 + Stage 2 external audit    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Typical Timeline**: 6-18 months depending on starting maturity
+
+---
+
+## Output
+
+This skill generates:
+
+| Output | Description | Format |
+|--------|-------------|--------|
+| Gap Analysis Report | Clause-by-clause compliance assessment | Markdown/CSV |
+| Implementation Roadmap | Phased plan with milestones | Markdown/Mermaid |
+| Maturity Score | 0-5 score per clause, overall average | Numeric |
+| Action Plan | Prioritized gaps with owners and effort | Table |
+| Internal Audit Checklist | Clause-specific audit questions | Markdown |
+| Document Templates | Policy, procedure, record templates | Markdown |
+
+---
+
+## Resources
+
+### Reference Documents
+- `references/iso-hls-structure.md` - ISO High-Level Structure (Annex SL) guide
+- `references/gap-analysis-methodology.md` - Systematic gap analysis process
+
+### Automation Scripts
+- `scripts/gap_analysis.py` - Generate templates and reports from CSV input
+
+### Usage Examples
+
+```bash
+# Generate blank gap analysis template for ISO 27001
+python3 scripts/gap_analysis.py template --standard ISO_27001 --output gap_template.csv
+
+# Fill in the template with assessment scores, then generate report
+python3 scripts/gap_analysis.py report \
+  --input completed_assessment.csv \
+  --standard ISO_27001 \
+  --organization "ACME Corp" \
+  --assessor "John Smith" \
+  --scope "IT Department" \
+  --output gap_report.md
+
+# Generate JSON output for integration
+python3 scripts/gap_analysis.py report \
+  --input assessment.csv \
+  --format json \
+  --output report.json
+```
 
 ---
 

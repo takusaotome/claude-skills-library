@@ -26,6 +26,24 @@ The skill produces complete, ready-to-use operations manuals in both Japanese an
 - ユーザーガイドを作成する
 - 作業手順書を作成する
 
+## Prerequisites
+
+- **System Access**: Access to the target system for accurate UI/workflow documentation
+- **Subject Matter Experts**: Availability of SMEs who understand the business processes
+- **Existing Documentation** (if any): Current procedures, training materials, or process flows to reference
+- **Terminology Glossary**: Approved terminology list for the target system (if available)
+- **Screenshot Capability**: Ability to capture screenshots for the final manual (placeholders are inserted during drafting)
+
+## Output
+
+This skill generates **Markdown files** containing complete operations manuals or SOPs:
+
+- **Full Operations Manual**: Comprehensive document using `assets/operations_manual_template_ja.md` or `assets/operations_manual_template_en.md`
+- **Individual Procedures**: Per-operation documents using `assets/procedure_template.md`
+- **Troubleshooting Guide**: Symptom-Cause-Resolution tables and decision trees
+
+All outputs include screenshot placeholders (`[Screenshot: {description}]`) to be replaced with actual images during finalization.
+
 ## Workflows
 
 ### Workflow 1: Scope and Audience Definition（スコープ・対象者定義）

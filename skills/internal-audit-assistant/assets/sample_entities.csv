@@ -1,0 +1,12 @@
+entity_id,entity_name,department,entity_type,last_audit,inherent_risk,control_environment,financial_impact,regulatory_impact,last_audit_date,management_concern
+IT-01,Access Management,IT,System,2024-01,5,3,4,5,2,4
+IT-02,Backup & Recovery,IT,System,2023-06,4,3,4,3,4,3
+IT-03,Change Management,IT,System,2024-06,4,4,3,3,2,2
+FIN-01,Accounts Payable,Finance,Process,2024-03,4,3,4,4,2,3
+FIN-02,Treasury Management,Finance,Process,2023-11,5,4,5,4,3,4
+FIN-03,Payroll Processing,HR,Process,2024-05,3,3,3,4,2,2
+OPS-01,Procurement,Operations,Process,2023-09,4,3,4,3,4,3
+OPS-02,Inventory Management,Operations,Process,,3,3,3,2,5,2
+OPS-03,Vendor Management,Operations,Process,2024-02,4,3,4,4,3,3
+COMP-01,GDPR Compliance,Legal,Compliance,2024-02,4,3,3,5,2,4
+COMP-02,SOX IT Controls,IT,Compliance,2024-06,5,4,4,5,2,4

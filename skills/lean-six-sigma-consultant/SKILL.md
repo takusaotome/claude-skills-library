@@ -60,6 +60,105 @@ Use this skill when:
 
 ---
 
+## Prerequisites
+
+Before using this skill, ensure the following dependencies are installed:
+
+```bash
+# Required Python packages for statistical analysis scripts
+pip install numpy scipy
+```
+
+**Scripts require**:
+- Python 3.8+
+- `numpy` for numerical calculations
+- `scipy` for statistical functions (normal distribution, hypothesis testing)
+
+**Optional dependencies**:
+- Process measurement data in CSV format
+- Specification limits (USL, LSL) for capability analysis
+
+---
+
+## Workflow
+
+This skill supports multiple workflows depending on the user's objective:
+
+1. **DMAIC Project Execution** (Core Workflow 1)
+   - Define → Measure → Analyze → Improve → Control
+   - Use for improving existing processes
+
+2. **DMADV/DFSS** (Core Workflow 2)
+   - Define → Measure → Analyze → Design → Verify
+   - Use for designing new processes/products
+
+3. **Lean Waste Elimination** (Core Workflow 3)
+   - Value Stream Mapping → Identify 8 Wastes → Design Future State → Kaizen
+   - Use for eliminating waste and improving flow
+
+4. **Statistical Analysis Support** (Core Workflow 4)
+   - Process capability, control charts, hypothesis testing
+   - Use for data-driven decision making
+
+5. **Training/Education** (Core Workflow 6)
+   - Belt-level curricula (White to Master Black Belt)
+   - Use for learning and certification preparation
+
+**Quick Start**:
+```bash
+# Calculate sigma level from defect data
+python scripts/sigma_calculator.py --defects 15 --units 1000 --opportunities 5
+
+# Analyze process capability
+python scripts/process_capability.py --demo
+
+# Perform control chart analysis
+python scripts/control_chart_analysis.py --demo
+```
+
+---
+
+## Output
+
+This skill produces the following outputs:
+
+| Output Type | Format | Description |
+|-------------|--------|-------------|
+| **DMAIC Project Guidance** | Markdown/Text | Step-by-step guidance through each DMAIC phase with tollgate checklists |
+| **Process Metrics Report** | JSON/Text | Sigma level, DPMO, yield, capability indices (Cp, Cpk, Pp, Ppk) |
+| **Control Chart Analysis** | JSON/Text | Control limits, out-of-control detection, Western Electric rule violations |
+| **Root Cause Analysis** | Markdown | Fishbone diagrams, 5 Whys analysis, Pareto charts |
+| **Templates** | Markdown | Project Charter, SIPOC, FMEA, Control Plan, A3 Report |
+| **Training Materials** | Markdown | Belt-level curricula, certification preparation guides |
+
+**Example Output** (Sigma Calculator):
+```
+================================================================
+SIGMA LEVEL ANALYSIS REPORT
+================================================================
+
+📥 INPUT DATA:
+   Defects: 15
+   Units: 1000
+   Opportunities Per Unit: 5
+   Total Opportunities: 5000
+   Dpu: 0.015
+
+📊 CALCULATED METRICS:
+   DPMO: 3,000.00
+   Sigma Level: 4.16σ
+   Yield: 99.7%
+   Defect Rate Percent: 0.3%
+
+📈 INTERPRETATION:
+   Good (Industry Average)
+   3,000 defects per million opportunities
+   Target: 6σ = 3.4 DPMO
+================================================================
+```
+
+---
+
 ## Lean Six Sigma Framework
 
 ### DMAIC Overview

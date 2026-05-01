@@ -68,37 +68,88 @@ This skill provides comprehensive support for organizations preparing for PCI DS
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### 1. Scoping and Gap Analysis
+
+**Purpose**: Define CDE boundaries and identify compliance gaps
+
+**Process**:
+1. Identify all systems that store, process, or transmit cardholder data
+2. Map data flows and identify connected systems
+3. Review current security controls against each PCI DSS requirement
+4. Document gaps with severity and remediation priority
+5. Generate gap analysis report
+
+**Reference**: Load `references/gap_analysis_template.md` for structured analysis
+
+**Key Questions**:
+- Where does cardholder data enter your environment?
+- How does it flow through systems?
+- Where is it stored (even temporarily)?
+- Who/what has access to it?
+- How is it transmitted externally?
+
+### 2. Requirement Guidance
+
+**Purpose**: Provide detailed explanations of PCI DSS requirements
+
+See the skill's SKILL.md for the full end-to-end workflow.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **Prepare for QSA audits** - Get comprehensive checklists and evidence requirements
+- **Conduct gap analysis** - Compare current security posture against PCI DSS 4.0.1 requirements
+- **Understand specific requirements** - Get detailed explanations of any of the 281 sub-requirements
+- **Select appropriate SAQ type** - Determine which Self-Assessment Questionnaire applies
+- **Create remediation plans** - Develop prioritized action plans for compliance gaps
+- **Map to SOC 2** - Identify overlapping controls for combined audit efficiency
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+### Compliance Report
+Use `assets/compliance_report_template.md` for:
+- Executive summary
+- Scope description
+- Requirement-by-requirement status
+- Gap summary
+- Recommendations
+
+### Remediation Plan
+Use `assets/remediation_plan_template.md` for:
+- Gap identification
+- Remediation actions
+- Resource requirements
+- Timeline
+- Success criteria
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/pci-dss-compliance-consultant/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: gap_analysis_template.md, evidence_collection_guide.md, audit_preparation_checklist.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/finance/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
 
 ---
 

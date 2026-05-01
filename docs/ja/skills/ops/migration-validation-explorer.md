@@ -11,8 +11,7 @@ permalink: /ja/skills/ops/migration-validation-explorer/
 # Migration Validation Explorer
 {: .no_toc }
 
-Exploratory data-migration validation and QA ideation workflow. Use when you need to discover hidden risks, generate new validation angles, and converge mapping specs/validation reports into a prioritized QA backlog for CRM migrations. Version 2.0, updated 2025-12-28.
-
+Migration Validation Explorer に関する日本語ガイドです。`skills/migration-validation-explorer/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -31,116 +30,18 @@ Exploratory data-migration validation and QA ideation workflow. Use when you nee
 
 ## 1. 概要
 
-### Step 0: Preparation
-
-**0.1 Establish Mission:**
-- Identify business-critical flows (money, compliance, customer impact)
-- Define acceptance thresholds (allowable mismatch %, max missing refs)
-
-**0.2 Build Focus Catalog (>= 20 items):**
-> Load `references/focus_catalog.md` for the full category list
-
-Key buckets: Keys/IDs, Relationships, Normalization, Status/Stage, Ownership, Dates, Money, Volume/Dedup, Automation, Integrations, Reporting, Archiving
-
-**0.3 Run Initial Data Profiling:**
-```bash
-python scripts/exploratory_profiler.py <data_file.xlsx>
-```
-
----
-
-### Step 1: Random Focus Cycle (x10)
-
-Pick **one** focus item randomly. For each:
-
-1. **Focus**: One catalog item
-2. **Diverge**: Generate 6-12 failure mode hypotheses using **4 perspectives**
-   > Load `references/hypothesis_generation_guide.md` for perspective prompts
-3. **Prioritize**: Score hypotheses using priority formula
-4. **Converge**: Select top 2-3 plausible/high-impact risks
-5. **Verify**: Define minimal experiments (queries, diffs, samples)
-6. **Deepen**: Root cause -> remediation -> prevention
-7. **Generalize**: Apply pattern to >= 2 other objects/flows
-
-**Output per cycle:** Use template from `assets/exploration_log_template.md`
-
----
-
-### 4-Perspective Hypothesis Generation
-
-Generate hypotheses from **4 distinct perspectives** to ensure diversity:
-
-| Icon | Perspective | Focus Area | Example Question |
-|:----:|-------------|------------|------------------|
-| 🏢 | Domain Expert | Business rules, compliance | "What rule violations could occur?" |
-| 💻 | Tech Implementer | Code bugs, transforms | "Where could the mapping fail?" |
-| 🔍 | Edge Case Hunter | Boundaries, special cases | "What happens at extremes?" |
-| 📊 | Statistical Skeptic | Distributions, outliers | "Is this concentration normal?" |
-
-**Minimum**: 2 hypotheses per perspective = 8 total per cycle
-
----
-
-### Priority Scoring
-
-**Formula**: `Priority = Impact × Probability × Testability`
-
-| Score | Impact | Probability | Testability |
-|:-----:|--------|-------------|-------------|
-| 3 | All records affected | High (>50% likely) | Simple query |
-| 2 | Category affected | Medium (10-50%) | Complex conditions |
-| 1 | Rare cases | Low (<10%) | Manual verification |
-
-**Thresholds**:
-- 18-27: Test immediately
-- 8-17: Standard priority
-- 1-7: Test if time permits
-
----
-
-### Step 2: Cross-Pollination Cycle (x10)
-
-Pick **two lenses** and fuse them into new hypotheses.
-
-> Load `references/lens_library.md` for available lenses
-
-1. **Lens A + Lens B** -> new hypothesis
-2. **Apply** to specific object/relationship/integration
-3. **Verify** with targeted checks
-4. **Converge** into Go/No-Go or follow-up
-5. **Generalize** into reusable test or monitoring rule
-
-**Combination Operators**:
-| Operator | Meaning | Use Case |
-|:--------:|---------|----------|
-| AND | Both perspectives must align | Cross-source reference integrity |
-| XOR | Perspectives should differ | Inconsistency detection |
-| SEQ | One precedes the other | Lifecycle state validation |
-| REQ | Dependency relationship | Cascading reference checks |
-
----
-
-### Step 3: Converge Into QA Backlog
-
-Create backlog using `assets/qa_backlog_template.md`:
-
-| Check | Scope | Risk | Evidence | Method | Pass Criteria | Owner | Status |
-|-------|-------|------|----------|--------|---------------|-------|--------|
-
-**Risk scoring:** Impact x Likelihood x Detectability (H/M/L)
-
----
-
-<!-- TODO: 翻訳 -->
+このページは **Migration Validation Explorer** スキルの日本語サマリーです。
+- スキル本体: `skills/migration-validation-explorer/SKILL.md`
+- 参照ガイド: 5 件
+- 補助スクリプト: 3 件
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **API Key:** None required
-- **Python 3.9+** recommended
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
 
 ---
 
@@ -150,49 +51,67 @@ Create backlog using `assets/qa_backlog_template.md`:
 python scripts/exploratory_profiler.py <data_file.xlsx>
 ```
 
-<!-- TODO: 翻訳 -->
-
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/migration-validation-explorer/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. 補助スクリプトがある場合は小さな入力で実行し、出力形式を確認してから本番データへ広げます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **Migration Validation Explorer** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 補助スクリプトを使って定型処理や検証を実行したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 5 件を根拠にした判断材料
+- 補助スクリプト 3 件による補助出力や検証結果
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/migration-validation-explorer/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 補助スクリプトは本番データの前にサンプル入力で実行し、引数と出力先を確認してください。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/ops/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/ops/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
+- 引数や出力先の指定漏れが多いため、コマンド例をそのまま起点に調整すると安全です。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/migration-validation-explorer/references/divergence_library.md`
 - `skills/migration-validation-explorer/references/focus_catalog.md`
@@ -200,8 +119,14 @@ python scripts/exploratory_profiler.py <data_file.xlsx>
 - `skills/migration-validation-explorer/references/lens_library.md`
 - `skills/migration-validation-explorer/references/seed_examples.md`
 
-**Scripts:**
+**補助スクリプト:**
 
 - `skills/migration-validation-explorer/scripts/exploratory_profiler.py`
 - `skills/migration-validation-explorer/scripts/hypothesis_tester.py`
 - `skills/migration-validation-explorer/scripts/perspective_combiner.py`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/ops/migration-validation-explorer/' | relative_url }}) を参照してください。
