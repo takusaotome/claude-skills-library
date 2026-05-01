@@ -10,6 +10,22 @@ description: >
 
 # Office Scripts Expert Skill
 
+## When to Use
+
+- Writing or reviewing Office Scripts (TypeScript for Excel Online)
+- Debugging runtime errors in Office Scripts
+- Setting up testable architecture for Office Scripts projects
+- Understanding ExcelScript API patterns and limitations
+- Migrating VBA macros to Office Scripts
+- Optimizing scripts to stay within 120-second timeout
+
+## Prerequisites
+
+- Microsoft 365 subscription with Excel Online access
+- Office Scripts enabled for the tenant (admin setting)
+- Node.js + npm (for local testing with Vitest)
+- TypeScript knowledge (Office Scripts use a TypeScript subset)
+
 ## Overview
 
 Office Scripts are TypeScript-based automation scripts for Excel on the web (Microsoft 365).
@@ -60,7 +76,7 @@ office_scripts/
 | P5 | `console.log` limited | No persistent logging | Use cell writes for debug output |
 | P6 | TypeScript subset | Some TS features unavailable | Test in Office Scripts editor |
 
-See: [references/platform_limitations.md](references/platform_limitations.md)
+See: `references/platform_limitations.md`
 
 ## Reference Guide
 
@@ -68,11 +84,11 @@ Load these files based on your current task:
 
 | Situation | Reference to Load |
 |-----------|-------------------|
-| Writing ExcelScript API code (read/write cells, sheets) | [excel_api_patterns.md](references/excel_api_patterns.md) |
-| Debugging or reviewing existing code | [common_bug_patterns.md](references/common_bug_patterns.md) |
-| Setting up or running tests | [testing_strategy.md](references/testing_strategy.md) |
-| Understanding runtime constraints | [platform_limitations.md](references/platform_limitations.md) |
-| Before deploying / code review | [implementation_checklist.md](assets/implementation_checklist.md) |
+| Writing ExcelScript API code (read/write cells, sheets) | `references/excel_api_patterns.md` |
+| Debugging or reviewing existing code | `references/common_bug_patterns.md` |
+| Setting up or running tests | `references/testing_strategy.md` |
+| Understanding runtime constraints | `references/platform_limitations.md` |
+| Before deploying / code review | `assets/implementation_checklist.md` |
 
 ## Quick Reference Table
 
@@ -90,3 +106,32 @@ Load these files based on your current task:
 | Rounding to match Python | `roundHalfEven2` / `roundUp2` / `roundUp4` / `roundDown4` | excel_api_patterns.md #9 |
 | Test pure logic | `lib/*.ts` with Vitest | testing_strategy.md |
 | Pre-deploy review | Implementation checklist | implementation_checklist.md |
+
+## Workflow
+
+1. **Understand requirements** — Identify what data to read/write, which sheets, and any automation triggers
+2. **Check platform constraints** — Review P1-P6 constraints; confirm no external libraries needed
+3. **Design with lib/ extraction** — Write pure logic in `lib/*.ts` for testability
+4. **Implement and test locally** — Use Vitest to test `lib/*.ts` functions
+5. **Inline into main script** — Copy tested functions into `.ts` script with `// INLINED:` markers
+6. **Test in Excel Online** — Run the script in the Office Scripts editor
+7. **Review with checklist** — Use `assets/implementation_checklist.md` before deployment
+
+## Resources
+
+| Type | Path | Purpose |
+|------|------|---------|
+| Reference | `references/platform_limitations.md` | 6 critical platform constraints |
+| Reference | `references/excel_api_patterns.md` | ExcelScript API patterns and examples |
+| Reference | `references/common_bug_patterns.md` | 13 real-world bug patterns |
+| Reference | `references/testing_strategy.md` | lib extraction + Vitest setup |
+| Asset | `assets/implementation_checklist.md` | Pre-deployment review checklist |
+
+## Output
+
+This is an advisory/knowledge skill. Output is conversational guidance — no files are generated.
+The skill provides:
+- Code patterns and examples for Office Scripts development
+- Debugging assistance and bug pattern identification
+- Architecture recommendations for testable code
+- API usage guidance based on reference documentation

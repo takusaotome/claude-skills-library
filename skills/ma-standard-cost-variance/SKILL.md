@@ -134,8 +134,8 @@ Output template: `assets/cost_variance_report_template_ja.md` (Japanese) or `ass
 
 ### References (load into context for guidance)
 
-- `references/第12回_予定原価という考え方_20260122.md` - Standard cost (planned cost) concepts, bakery business case study with price/quantity variance decomposition
-- `references/第11回_ABCで見える店舗別損益管理の真実_20251213.md` - Activity-Based Costing methodology for store-level cost allocation and profitability analysis
+- `references/12_standard-cost_20260122.md` - Standard cost (planned cost) concepts, bakery business case study with price/quantity variance decomposition
+- `references/11_ABC-store-profitability_20251213.md` - Activity-Based Costing methodology for store-level cost allocation and profitability analysis
 
 ### Assets (templates for output generation)
 

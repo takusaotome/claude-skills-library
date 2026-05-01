@@ -38,9 +38,29 @@ from themes import Theme, discover_fonts, get_theme
 
 # Constants
 FONT_FAMILY = "DocFont"
-PAGE_WIDTH_MM = 210
+
+# Paper sizes (width, height in mm + fpdf2 format string).
+# Default is US Letter (8.5" × 11"); A4 remains available via --paper-size.
+PAPER_SIZES = {
+    "letter": {"width": 215.9, "height": 279.4, "fpdf_format": "Letter"},
+    "a4": {"width": 210.0, "height": 297.0, "fpdf_format": "A4"},
+}
+DEFAULT_PAPER_SIZE = "letter"
+
 PAGE_MARGIN_MM = 10
-CONTENT_WIDTH_MM = PAGE_WIDTH_MM - 2 * PAGE_MARGIN_MM  # 190mm
+PAGE_WIDTH_MM = PAPER_SIZES[DEFAULT_PAPER_SIZE]["width"]
+PAGE_HEIGHT_MM = PAPER_SIZES[DEFAULT_PAPER_SIZE]["height"]
+CONTENT_WIDTH_MM = PAGE_WIDTH_MM - 2 * PAGE_MARGIN_MM
+
+
+def set_paper_size(size: str) -> None:
+    """Update module-level page dimensions for the given paper size."""
+    global PAGE_WIDTH_MM, PAGE_HEIGHT_MM, CONTENT_WIDTH_MM
+    if size not in PAPER_SIZES:
+        raise ValueError(f"Unknown paper size: {size}. Use one of {list(PAPER_SIZES.keys())}.")
+    PAGE_WIDTH_MM = PAPER_SIZES[size]["width"]
+    PAGE_HEIGHT_MM = PAPER_SIZES[size]["height"]
+    CONTENT_WIDTH_MM = PAGE_WIDTH_MM - 2 * PAGE_MARGIN_MM
 
 
 # ============================================================
@@ -137,8 +157,18 @@ def children_to_markdown(children: List[Dict]) -> str:
 class ProfessionalPDF(FPDF):
     """FPDF subclass for professional document rendering with theme support."""
 
-    def __init__(self, theme: Theme, frontmatter: Optional[Dict] = None, font_regular: str = "", font_bold: str = ""):
-        super().__init__(orientation="P", unit="mm", format="A4")
+    def __init__(
+        self,
+        theme: Theme,
+        frontmatter: Optional[Dict] = None,
+        font_regular: str = "",
+        font_bold: str = "",
+        paper_size: str = DEFAULT_PAPER_SIZE,
+    ):
+        if paper_size not in PAPER_SIZES:
+            raise ValueError(f"Unknown paper size: {paper_size}. Use one of {list(PAPER_SIZES.keys())}.")
+        super().__init__(orientation="P", unit="mm", format=PAPER_SIZES[paper_size]["fpdf_format"])
+        self.paper_size = paper_size
         self.theme = theme
         self.frontmatter = frontmatter or {}
         self._is_cover = False
@@ -282,7 +312,7 @@ class ProfessionalPDF(FPDF):
 
         # Bottom bar
         self.set_fill_color(*self.theme.primary)
-        self.rect(0, 289, PAGE_WIDTH_MM, 8, "F")
+        self.rect(0, PAGE_HEIGHT_MM - 8, PAGE_WIDTH_MM, 8, "F")
 
         self._is_cover = False
 
@@ -372,9 +402,83 @@ class ProfessionalPDF(FPDF):
         self.set_line_width(0.2)
         self.ln(5)
 
-    def render_info_table(self, headers: List[str], rows: List[List[str]]):
+    def quote_block(self, paragraphs: List[str]):
+        """Render a block quote with left accent bar, light fill, and indented italic-styled text.
+
+        Args:
+            paragraphs: List of paragraph strings (already markdown-formatted).
+                        Each item becomes one paragraph inside the quote block.
+        """
+        if not paragraphs:
+            return
+
+        bar_w = 1.2  # accent bar width in mm
+        pad_l = 4.0  # left padding inside block (after bar)
+        pad_r = 3.0
+        pad_v = 2.5  # vertical padding (top and bottom)
+        line_h = 5.0
+        font_size = 9.5
+
+        # Calculate inner content width
+        inner_w = CONTENT_WIDTH_MM - bar_w - pad_l - pad_r
+
+        # Pre-measure: estimate total height by counting wrapped lines per paragraph
+        self.set_font(FONT_FAMILY, "I", font_size)
+        total_lines = 0
+        for p in paragraphs:
+            try:
+                # fpdf2 ≥2.7.4: dry_run=True, output="LINES" returns wrapped lines
+                wrapped = self.multi_cell(
+                    inner_w, line_h, p, markdown=True, dry_run=True, output="LINES", wrapmode="CHAR"
+                )
+                total_lines += max(1, len(wrapped))
+            except TypeError:
+                # Fallback for older fpdf2 versions
+                try:
+                    wrapped = self.multi_cell(inner_w, line_h, p, markdown=True, split_only=True, wrapmode="CHAR")
+                    total_lines += max(1, len(wrapped))
+                except Exception:
+                    total_lines += max(1, (len(p) // 60) + 1)
+            except Exception:
+                total_lines += max(1, (len(p) // 60) + 1)
+        # Add inter-paragraph spacing (small gap between paragraphs)
+        gap_lines = max(0, len(paragraphs) - 1) * 0.4
+        block_h = pad_v * 2 + (total_lines + gap_lines) * line_h
+
+        # Page break if not enough space
+        if self.get_y() + block_h > self.h - 25:
+            self.add_page()
+
+        y_start = self.get_y()
+
+        # Background fill (light gray)
+        self.set_fill_color(*self.theme.gray_light)
+        self.rect(PAGE_MARGIN_MM, y_start, CONTENT_WIDTH_MM, block_h, "F")
+
+        # Left accent bar (theme primary color)
+        self.set_fill_color(*self.theme.primary)
+        self.rect(PAGE_MARGIN_MM, y_start, bar_w, block_h, "F")
+
+        # Render text content
+        self.set_xy(PAGE_MARGIN_MM + bar_w + pad_l, y_start + pad_v)
+        self.set_font(FONT_FAMILY, "I", font_size)
+        self.set_text_color(*self.theme.text_dark)
+        for idx, p in enumerate(paragraphs):
+            self.set_x(PAGE_MARGIN_MM + bar_w + pad_l)
+            self.multi_cell(inner_w, line_h, p, markdown=True, align="L", wrapmode="CHAR")
+            if idx < len(paragraphs) - 1:
+                self.ln(line_h * 0.4)
+
+        # Move below the block
+        self.set_y(y_start + block_h)
+        self.ln(2)
+
+    def render_info_table(self, headers: List[str], rows: List[List[str]], col_widths_override=None):
         """Render a 2-column info table with alternating row colors."""
-        col_widths = _compute_col_widths(self, headers, rows)
+        if col_widths_override is not None:
+            col_widths = _apply_col_widths_override(col_widths_override, len(headers))
+        else:
+            col_widths = _compute_col_widths(self, headers, rows)
 
         header_style = FontFace(
             color=DeviceRGB(*[c / 255 for c in self.theme.table_header_fg]),
@@ -408,9 +512,14 @@ class ProfessionalPDF(FPDF):
                     row.cell(cell_val)
         self.ln(3)
 
-    def render_data_table(self, headers: List[str], rows: List[List[str]], col_aligns: List[str] = None):
+    def render_data_table(
+        self, headers: List[str], rows: List[List[str]], col_aligns: List[str] = None, col_widths_override=None
+    ):
         """Render a multi-column data table with header styling and column alignment."""
-        col_widths = _compute_col_widths(self, headers, rows)
+        if col_widths_override is not None:
+            col_widths = _apply_col_widths_override(col_widths_override, len(headers))
+        else:
+            col_widths = _compute_col_widths(self, headers, rows)
 
         # Default alignment: all left
         if not col_aligns:
@@ -474,8 +583,8 @@ class ProfessionalPDF(FPDF):
         render_w = CONTENT_WIDTH_MM
         render_h = img_h_px * scale
 
-        # Max usable height on a page (A4=297mm, top/bottom margins ~20mm)
-        max_page_h = 297 - 20 - 20  # ~257mm
+        # Max usable height on a page (Letter=279.4mm / A4=297mm, top/bottom margins ~20mm each)
+        max_page_h = PAGE_HEIGHT_MM - 20 - 20
         if render_h > max_page_h:
             # Scale down to fit within max page height
             render_h = max_page_h
@@ -486,7 +595,7 @@ class ProfessionalPDF(FPDF):
             x = PAGE_MARGIN_MM
 
         # Check if image fits on remaining space of current page
-        available_h = 297 - self.get_y() - 15  # 15mm bottom margin
+        available_h = PAGE_HEIGHT_MM - self.get_y() - 15  # 15mm bottom margin
         if render_h > available_h:
             self.add_page()
 
@@ -497,6 +606,27 @@ class ProfessionalPDF(FPDF):
 # ============================================================
 # Column width computation
 # ============================================================
+
+
+def _apply_col_widths_override(values: List[float], num_cols: int) -> List[float]:
+    """Convert a list of relative width values (any unit) into mm widths summing to CONTENT_WIDTH_MM.
+
+    If len(values) != num_cols, pad or truncate to match.
+    """
+    if not values:
+        return [CONTENT_WIDTH_MM / num_cols] * num_cols
+    if len(values) < num_cols:
+        # pad with remaining share distributed equally
+        deficit = num_cols - len(values)
+        total_known = sum(values)
+        avg = total_known / len(values) if values else 1.0
+        values = values + [avg] * deficit
+    elif len(values) > num_cols:
+        values = values[:num_cols]
+    total = sum(values)
+    if total <= 0:
+        return [CONTENT_WIDTH_MM / num_cols] * num_cols
+    return [v / total * CONTENT_WIDTH_MM for v in values]
 
 
 def _compute_col_widths(pdf: FPDF, headers: List[str], rows: List[List[str]]) -> List[float]:
@@ -536,11 +666,34 @@ class FPDFRenderer:
     def __init__(self, pdf: ProfessionalPDF, strict_mermaid: bool = True, debug_mermaid: bool = False):
         self.pdf = pdf
         self._next_table_style = "data"  # "data" or "info"
+        self._next_col_widths = None  # Optional[List[float]] — ratios for next table
         self._strict_mermaid = strict_mermaid
         self._debug_mermaid = debug_mermaid
         self._mermaid_success = 0
         self._mermaid_failure = 0
         self._mermaid_renderer = None  # lazy init — shared across document
+
+    @staticmethod
+    def _parse_col_widths_directive(text: str):
+        """Parse '<!-- col-widths: 10,45,45 -->' → [10.0, 45.0, 45.0].
+
+        Accepts bare numbers, percentages (10%), or numbers followed by 'mm'.
+        Returns None if parse fails.
+        """
+        import re as _re
+
+        m = _re.search(r"col-widths\s*:\s*([0-9.,\s%mM]+)", text)
+        if not m:
+            return None
+        raw = m.group(1)
+        parts = [p.strip().rstrip("%mM").strip() for p in raw.split(",") if p.strip()]
+        try:
+            values = [float(p) for p in parts]
+        except ValueError:
+            return None
+        if not values or any(v <= 0 for v in values):
+            return None
+        return values
 
     def render(self, tokens: List[Dict]):
         """Walk all top-level tokens."""
@@ -566,6 +719,14 @@ class FPDFRenderer:
                     i += 1
                     continue
 
+                # Col-widths directive: <!-- col-widths: 10,45,45 -->
+                if "col-widths" in stripped and "<!--" in stripped:
+                    cw = self._parse_col_widths_directive(stripped)
+                    if cw is not None:
+                        self._next_col_widths = cw
+                        i += 1
+                        continue
+
             # Also check block_html for comments
             if ttype == "block_html":
                 raw = token.get("raw", token.get("children", ""))
@@ -578,6 +739,12 @@ class FPDFRenderer:
                         self._next_table_style = "info"
                         i += 1
                         continue
+                    if "col-widths" in raw:
+                        cw = self._parse_col_widths_directive(raw)
+                        if cw is not None:
+                            self._next_col_widths = cw
+                            i += 1
+                            continue
 
             self._render_token(token)
             i += 1
@@ -624,6 +791,9 @@ class FPDFRenderer:
         elif ttype == "table":
             self._render_table(token)
 
+        elif ttype == "block_quote":
+            self._render_block_quote(token)
+
         elif ttype == "thematic_break":
             self.pdf.horizontal_rule()
 
@@ -633,6 +803,39 @@ class FPDFRenderer:
 
         elif ttype == "blank_line":
             pass
+
+    def _render_block_quote(self, quote_token: Dict):
+        """Render a markdown block_quote (lines starting with `> `).
+
+        Mistune produces a block_quote token whose children are typically
+        paragraph tokens. Each paragraph becomes one entry in the
+        quote_block paragraphs list. Non-paragraph children (e.g. nested
+        lists) are flattened into markdown text as a best-effort fallback.
+        """
+        paragraphs: List[str] = []
+        for child in quote_token.get("children", []):
+            ctype = child.get("type")
+            if ctype == "paragraph":
+                paragraphs.append(children_to_markdown(child.get("children", [])))
+            elif ctype == "blank_line":
+                continue
+            elif ctype == "block_quote":
+                # Nested blockquote — render inline by recursion-like flattening
+                self._render_block_quote(child)
+            elif ctype == "list":
+                # Flatten list items into bullet-prefixed lines
+                items = self._extract_list_items(child)
+                for it in items:
+                    paragraphs.append(f"・ {it}")
+            elif ctype == "block_code":
+                raw = child.get("raw", child.get("children", ""))
+                if isinstance(raw, list):
+                    raw = extract_text(raw)
+                paragraphs.append(str(raw))
+            elif "children" in child and isinstance(child["children"], list):
+                paragraphs.append(children_to_markdown(child["children"]))
+        if paragraphs:
+            self.pdf.quote_block(paragraphs)
 
     def _extract_list_items(self, list_token: Dict) -> List[str]:
         items = []
@@ -699,12 +902,16 @@ class FPDFRenderer:
 
         # Determine style and reset
         style = self._next_table_style
+        col_widths_override = self._next_col_widths
         self._next_table_style = "data"
+        self._next_col_widths = None
 
         if style == "info":
-            self.pdf.render_info_table(headers, rows)
+            self.pdf.render_info_table(headers, rows, col_widths_override=col_widths_override)
         else:
-            self.pdf.render_data_table(headers, rows, col_aligns=normalized_aligns)
+            self.pdf.render_data_table(
+                headers, rows, col_aligns=normalized_aligns, col_widths_override=col_widths_override
+            )
 
     def _render_mermaid(self, code: str):
         """Render Mermaid diagram via MermaidRenderer (in-process).
@@ -764,6 +971,7 @@ def render_pdf(
     font_bold: Optional[str] = None,
     strict_mermaid: bool = True,
     debug_mermaid: bool = False,
+    paper_size: Optional[str] = None,
 ) -> str:
     """Render Markdown text to a professional PDF.
 
@@ -790,6 +998,10 @@ def render_pdf(
     effective_theme = theme_name or frontmatter.get("theme", "navy")
     theme = get_theme(effective_theme)
 
+    # Resolve paper size (CLI override > frontmatter > default)
+    effective_paper_size = (paper_size or frontmatter.get("paper_size", DEFAULT_PAPER_SIZE)).lower()
+    set_paper_size(effective_paper_size)
+
     # Apply overrides
     if confidential:
         frontmatter["confidential"] = True
@@ -800,7 +1012,9 @@ def render_pdf(
     fr, fb = discover_fonts(font_regular, font_bold)
 
     # Create PDF
-    pdf = ProfessionalPDF(theme=theme, frontmatter=frontmatter, font_regular=fr, font_bold=fb)
+    pdf = ProfessionalPDF(
+        theme=theme, frontmatter=frontmatter, font_regular=fr, font_bold=fb, paper_size=effective_paper_size
+    )
     pdf.alias_nb_pages()
 
     # Cover page
@@ -839,6 +1053,12 @@ def main():
     )
     parser.add_argument("--confidential", action="store_true", help="Mark document as confidential")
     parser.add_argument("--no-cover", action="store_true", help="Suppress cover page")
+    parser.add_argument(
+        "--paper-size",
+        choices=list(PAPER_SIZES.keys()),
+        default=None,
+        help=f"Paper size (default: {DEFAULT_PAPER_SIZE}; also honors 'paper_size' in YAML frontmatter)",
+    )
     parser.add_argument("--font-regular", default=None, help="Path to regular weight CJK font (.ttc/.ttf/.otf)")
     parser.add_argument("--font-bold", default=None, help="Path to bold weight CJK font (.ttc/.ttf/.otf)")
     parser.add_argument(
@@ -880,6 +1100,7 @@ def main():
             font_bold=args.font_bold,
             strict_mermaid=not args.no_strict_mermaid,
             debug_mermaid=args.debug_mermaid,
+            paper_size=args.paper_size,
         )
         print(f"Generated: {output}")
 

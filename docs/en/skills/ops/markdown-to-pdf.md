@@ -84,6 +84,7 @@ npm install -g @mermaid-js/mermaid-cli
 | **Page breaks** | `<!-- pagebreak -->` comment | CSS `page-break-before` |
 | **Dependencies** | `fpdf2`, `mistune`, `pyyaml` | `markdown2`, `playwright`, `chromium` |
 | **Confidential mark** | `--confidential` flag | Manual CSS |
+| **Paper size** | `--paper-size letter\|a4` (default: `letter`), also via `paper_size` in frontmatter | `--paper-size letter\|a4` (default: `letter`) |
 
 ### Choosing a mode
 
@@ -133,7 +134,9 @@ Supported Mermaid diagram types include flowcharts, sequence diagrams, Gantt cha
 |:-------|:-----|:-------|
 | `<!-- pagebreak -->` | fpdf2 | Insert a page break |
 | `<!-- info-table -->` | fpdf2 | Render the next table as key-value info-table style |
+| `<!-- col-widths: 10,45,45 -->` | fpdf2 | Override the next table's column widths (accepts ratios, %, or mm; normalized to page width) |
 | `---` | fpdf2 | Horizontal rule |
+| `> quote` | fpdf2 | Block quote with left accent bar, light fill, and italic text |
 | ` ```mermaid ` | Both | Render Mermaid diagram as image |
 
 ---
@@ -211,6 +214,8 @@ The skill will run `markdown_to_fpdf.py --theme gray --no-cover`, using `<!-- pa
 - **Technical docs with diagrams**: Use Playwright mode with `--image-format svg` for high-quality output
 - **Page breaks**: Use `<!-- pagebreak -->` for clean section transitions in fpdf2 mode
 - **Key-value tables**: Use `<!-- info-table -->` before a table for info-table styling in fpdf2 mode
+- **Column widths**: Place `<!-- col-widths: 10,45,45 -->` before a table to override auto-calculated widths (accepts ratios, %, or mm)
+- **Paper size**: Defaults to US Letter (8.5 × 11 in). Override with `--paper-size a4` or set `paper_size: a4` in YAML frontmatter.
 - **CJK fonts**: Install TrueType CJK fonts (UDEVGothic or Noto Sans JP) to avoid garbled text. CFF-outline fonts like Hiragino can cause rendering issues.
 - **Mermaid preview**: Preview diagrams at [mermaid.live](https://mermaid.live/) before conversion
 - **Themes**: `navy` for client-facing documents, `gray` for internal documents
