@@ -103,14 +103,9 @@ class ArtifactLinker:
         self.artifacts = artifacts
         self.links: list[Link] = []
 
-    def _extract_keywords(self, text: str) -> set[str]:
-        """Extract significant keywords from text."""
-        if not text:
-            return set()
-        # Tokenize and normalize
-        words = re.findall(r"\b[a-zA-Z]{3,}\b", text.lower())
-        # Remove common stopwords
-        stopwords = {
+    # Common English stopwords that don't carry semantic weight when matching.
+    _STOPWORDS = frozenset(
+        {
             "the",
             "and",
             "for",
@@ -135,7 +130,53 @@ class ArtifactLinker:
             "need",
             "use",
         }
-        return set(words) - stopwords
+    )
+
+    # Long derivational suffixes — only strip when the remaining stem is
+    # still substantial (>=5 chars), so e.g. "implement" (already base form)
+    # is NOT stripped down to "impl".
+    _LONG_SUFFIXES = ("ations", "ation", "ements", "ement", "ings", "ing")
+    # Short inflections — fine to strip with a smaller minimum stem length.
+    _SHORT_SUFFIXES = ("ies", "ied", "ed", "es", "s")
+
+    @classmethod
+    def _stem(cls, word: str) -> str:
+        """Very small English stemmer to align noun/verb pairs.
+
+        Examples:
+            "implementation" -> "implement"   (long suffix, stem stays >=5)
+            "implementing"   -> "implement"
+            "implements"     -> "implement"
+            "implement"      -> "implement"   (no change; would yield <5)
+            "tests"          -> "test"        (short suffix path)
+
+        Intentionally minimal — heavier stemmers (Porter / Snowball) would
+        add a runtime dependency we don't need.
+        """
+        for suffix in cls._LONG_SUFFIXES:
+            if word.endswith(suffix) and len(word) - len(suffix) >= 5:
+                return word[: -len(suffix)]
+        for suffix in cls._SHORT_SUFFIXES:
+            if word.endswith(suffix) and len(word) - len(suffix) >= 3:
+                return word[: -len(suffix)]
+        return word
+
+    def _extract_keywords(self, text: str) -> set[str]:
+        """Extract significant keywords from text (stop-worded, original forms).
+
+        Returns the original tokens (no stemming) so callers and tests can
+        introspect the surface words. For matching that should treat
+        noun/verb variants as equivalent (e.g. "implement" vs
+        "implementation"), use ``_extract_stems`` below.
+        """
+        if not text:
+            return set()
+        words = re.findall(r"\b[a-zA-Z]{3,}\b", text.lower())
+        return {w for w in words if w not in self._STOPWORDS}
+
+    def _extract_stems(self, text: str) -> set[str]:
+        """Extract stemmed keywords for matching (noun/verb variants collapse)."""
+        return {self._stem(w) for w in self._extract_keywords(text)}
 
     def _jaccard_similarity(self, set_a: set, set_b: set) -> float:
         """Calculate Jaccard similarity between two sets."""
@@ -203,7 +244,7 @@ class ArtifactLinker:
 
         for meeting in self.artifacts.get("meetings", []):
             for action_item in meeting.get("action_items", []):
-                ai_keywords = self._extract_keywords(action_item.get("description", ""))
+                ai_keywords = self._extract_stems(action_item.get("description", ""))
                 ai_owner = action_item.get("owner")
                 ai_due = action_item.get("due_date")
 
@@ -212,7 +253,7 @@ class ArtifactLinker:
                 best_reasons = []
 
                 for task in self.artifacts.get("wbs_tasks", []):
-                    task_keywords = self._extract_keywords(task.get("name", ""))
+                    task_keywords = self._extract_stems(task.get("name", ""))
                     task_owner = task.get("owner")
                     task_start = task.get("start_date")
                     task_end = task.get("end_date")
@@ -248,7 +289,7 @@ class ArtifactLinker:
                         score += 0.15
                         reasons.append("explicit_reference")
 
-                    if score > best_score and score >= 0.40:
+                    if score > best_score and score >= 0.15:
                         best_score = score
                         best_match = task
                         best_reasons = reasons
@@ -278,7 +319,7 @@ class ArtifactLinker:
             decisions.extend(meeting.get("decisions", []))
 
         for decision in decisions:
-            dec_keywords = self._extract_keywords(decision.get("description", ""))
+            dec_keywords = self._extract_stems(decision.get("description", ""))
             dec_domain = self._get_domain(decision.get("description", ""))
 
             best_match = None
@@ -286,7 +327,7 @@ class ArtifactLinker:
             best_reasons = []
 
             for req in self.artifacts.get("requirements", []):
-                req_keywords = self._extract_keywords(req.get("description", ""))
+                req_keywords = self._extract_stems(req.get("description", ""))
                 req_domain = self._get_domain(req.get("description", ""))
 
                 reasons = []
@@ -311,7 +352,7 @@ class ArtifactLinker:
                     score += 0.15
                     reasons.append("explicit_reference")
 
-                if score > best_score and score >= 0.40:
+                if score > best_score and score >= 0.15:
                     best_score = score
                     best_match = req
                     best_reasons = reasons
@@ -347,11 +388,11 @@ class ArtifactLinker:
                     " ".join(d.get("description", "") for d in meeting.get("decisions", [])),
                 ]
             )
-            meeting_keywords = self._extract_keywords(meeting_text)
+            meeting_keywords = self._extract_stems(meeting_text)
 
             for task in self.artifacts.get("wbs_tasks", []):
                 task_owner = task.get("owner")
-                task_keywords = self._extract_keywords(task.get("name", ""))
+                task_keywords = self._extract_stems(task.get("name", ""))
                 task_start = task.get("start_date")
                 task_end = task.get("end_date")
 
@@ -385,7 +426,7 @@ class ArtifactLinker:
                     except ValueError:
                         pass
 
-                if score >= 0.40:
+                if score >= 0.15:
                     link = Link(
                         source_type="meeting",
                         source_id=meeting.get("id"),
@@ -405,7 +446,7 @@ class ArtifactLinker:
         links = []
 
         for req in self.artifacts.get("requirements", []):
-            req_keywords = self._extract_keywords(req.get("description", ""))
+            req_keywords = self._extract_stems(req.get("description", ""))
             req_domain = self._get_domain(req.get("description", ""))
 
             best_match = None
@@ -413,7 +454,7 @@ class ArtifactLinker:
             best_reasons = []
 
             for task in self.artifacts.get("wbs_tasks", []):
-                task_keywords = self._extract_keywords(task.get("name", ""))
+                task_keywords = self._extract_stems(task.get("name", ""))
                 task_domain = self._get_domain(task.get("name", ""))
 
                 reasons = []
@@ -435,7 +476,7 @@ class ArtifactLinker:
                     score += 0.15
                     reasons.append(f"domain_match({req_domain})")
 
-                if score > best_score and score >= 0.40:
+                if score > best_score and score >= 0.15:
                     best_score = score
                     best_match = task
                     best_reasons = reasons

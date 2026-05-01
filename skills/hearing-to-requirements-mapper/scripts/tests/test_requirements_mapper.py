@@ -37,10 +37,17 @@ class TestLanguageDetector:
         assert LanguageDetector.detect(text) == "en"
 
     def test_detect_mixed(self):
-        """Test detection of mixed Japanese/English text."""
-        text = "User authentication via OAuth 2.0 / OAuth 2.0による認証が必要"
-        result = LanguageDetector.detect(text)
-        assert result in ("ja", "mixed")  # Could be either depending on ratio
+        """Test detection of mixed Japanese/English text.
+
+        Uses a text whose Japanese-character ratio falls between the
+        implementation thresholds (0.3 < ratio < 0.7) so the result is
+        deterministically "mixed". The previous fixture was English-heavy
+        (ratio ~0.21) and was correctly classified as "en", contradicting
+        the test name.
+        """
+        text = "OAuth authentication と SAML SSO で ユーザー認証を実装する"
+        # ja chars = 13, en chars = 26 -> ratio ~0.33 -> "mixed"
+        assert LanguageDetector.detect(text) == "mixed"
 
     def test_detect_empty_text(self):
         """Test handling of empty or numeric-only text."""

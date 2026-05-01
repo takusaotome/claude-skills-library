@@ -191,6 +191,72 @@ class TestPagebreakAndBreaks:
         assert tmp_pdf.exists()
 
 
+# ===== Block Quote Tests =====
+
+
+class TestBlockQuote:
+    """Tests for `> quote` block rendering (quote_block / _render_block_quote)."""
+
+    def test_block_quote_token_parsed(self):
+        """Mistune produces a block_quote token for `> ...` lines."""
+        mod = _import_fpdf_module()
+        tokens = mod.parse_markdown("> hello world")
+        bq = [t for t in tokens if t["type"] == "block_quote"]
+        assert len(bq) == 1
+        # block_quote children should include a paragraph
+        child_types = [c["type"] for c in bq[0].get("children", [])]
+        assert "paragraph" in child_types
+
+    def test_single_paragraph_block_quote_renders(self, tmp_pdf):
+        md = "# Title\n\n> A single paragraph block quote."
+        mod = _import_fpdf_module()
+        mod.render_pdf(md, str(tmp_pdf))
+        assert tmp_pdf.exists()
+        assert tmp_pdf.stat().st_size > 0
+
+    def test_multi_paragraph_block_quote_renders(self, tmp_pdf):
+        md = "# Title\n\n> First paragraph.\n>\n> Second paragraph after blank line."
+        mod = _import_fpdf_module()
+        mod.render_pdf(md, str(tmp_pdf))
+        assert tmp_pdf.exists()
+
+    def test_block_quote_with_inline_markdown(self, tmp_pdf):
+        md = "# Title\n\n> Quote with **bold** and *italic* and `code` text."
+        mod = _import_fpdf_module()
+        mod.render_pdf(md, str(tmp_pdf))
+        assert tmp_pdf.exists()
+
+    def test_block_quote_with_japanese_cjk(self, tmp_pdf):
+        md = "# 見出し\n\n> 日本語の引用ブロックです。長い文章でも折り返しが正しく行われることを確認します。"
+        mod = _import_fpdf_module()
+        mod.render_pdf(md, str(tmp_pdf))
+        assert tmp_pdf.exists()
+
+    def test_block_quote_with_nested_list(self, tmp_pdf):
+        md = "# Title\n\n> Heading line in quote\n>\n> - item one\n> - item two\n"
+        mod = _import_fpdf_module()
+        mod.render_pdf(md, str(tmp_pdf))
+        assert tmp_pdf.exists()
+
+    def test_empty_block_quote_does_not_crash(self, tmp_pdf):
+        """quote_block should early-return on empty paragraphs (no exception)."""
+        mod = _import_fpdf_module()
+        # Empty block quote (just `>`) — mistune emits a block_quote whose
+        # only child is blank_line, so paragraphs list ends up empty.
+        md = "# Title\n\n>\n\nAfter."
+        mod.render_pdf(md, str(tmp_pdf))
+        assert tmp_pdf.exists()
+
+    def test_block_quote_long_content_triggers_pagebreak(self, tmp_pdf):
+        """A block quote whose pre-measured height does not fit should trigger add_page."""
+        # Fill a page with content first, then put a substantial quote at the bottom.
+        body = "# T\n\n" + ("Filler line.\n\n" * 50)
+        body += "> " + ("これは長い引用ブロックの本文。" * 20)
+        mod = _import_fpdf_module()
+        mod.render_pdf(body, str(tmp_pdf))
+        assert tmp_pdf.exists()
+
+
 # ===== Cover Page Tests =====
 
 
