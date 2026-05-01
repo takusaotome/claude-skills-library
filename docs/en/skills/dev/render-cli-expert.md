@@ -3,7 +3,7 @@ layout: default
 title: "Render CLI Expert"
 grand_parent: English
 parent: Software Development
-nav_order: 24
+nav_order: 25
 lang_peer: /ja/skills/dev/render-cli-expert/
 permalink: /en/skills/dev/render-cli-expert/
 ---
@@ -49,37 +49,71 @@ Invoke this skill by describing your analysis needs to Claude.
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+Follow the skill's SKILL.md workflow step by step, starting from a small validated input.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Renderサービスをターミナルからデプロイ・管理したい
+- サービスのログをリアルタイムで監視したい
+- PostgreSQLデータベースにpsqlで接続したい
+- SSHでサービスにリモート接続したい
+- CI/CDパイプラインでRender操作を自動化したい
+- ワークスペースやサービスの一覧を取得したい
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+### Available Formats
+
+```bash
+# JSON形式
+render services -o json
+
+# YAML形式
+render services -o yaml
+
+# テキスト形式（デフォルト）
+render services -o text
+```
+
+### Automation Flags
+
+```bash
+# 確認プロンプトをスキップ
+render deploys create srv-abc123 --confirm
+
+The full output details are documented in SKILL.md.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/render-cli-expert/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: last_check.json, cli_updates.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: render_cli_updater.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/dev/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

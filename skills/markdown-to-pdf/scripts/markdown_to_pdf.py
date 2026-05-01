@@ -318,7 +318,7 @@ def markdown_to_html(markdown_content, css_content=None):
     return html
 
 
-async def html_to_pdf_async(html_content, output_path, base_dir=None):
+async def html_to_pdf_async(html_content, output_path, base_dir=None, paper_size="letter"):
     """
     Convert HTML to PDF using Playwright.
 
@@ -326,6 +326,8 @@ async def html_to_pdf_async(html_content, output_path, base_dir=None):
         html_content: HTML content string
         output_path: Output PDF path
         base_dir: Base directory for resolving relative paths
+        paper_size: Playwright 'format' value. Accepts 'letter' (default) or 'a4';
+            other valid Playwright formats (e.g. 'Legal') are passed through.
 
     Returns:
         True if successful, False otherwise
@@ -356,7 +358,7 @@ async def html_to_pdf_async(html_content, output_path, base_dir=None):
             # Generate PDF with options for high quality
             await page.pdf(
                 path=str(output_path),
-                format="A4",
+                format=paper_size.capitalize() if paper_size.lower() in ("letter", "a4") else paper_size,
                 print_background=True,
                 margin={"top": "12mm", "right": "10mm", "bottom": "12mm", "left": "10mm"},
                 scale=1.0,  # Use 1:1 scale for best quality
@@ -371,7 +373,7 @@ async def html_to_pdf_async(html_content, output_path, base_dir=None):
         return False
 
 
-def html_to_pdf(html_content, output_path, base_dir=None):
+def html_to_pdf(html_content, output_path, base_dir=None, paper_size="letter"):
     """
     Convert HTML to PDF using Playwright (sync wrapper).
 
@@ -379,11 +381,12 @@ def html_to_pdf(html_content, output_path, base_dir=None):
         html_content: HTML content string
         output_path: Output PDF path
         base_dir: Base directory for resolving relative paths
+        paper_size: 'letter' (default) or 'a4'.
 
     Returns:
         True if successful, False otherwise
     """
-    return asyncio.run(html_to_pdf_async(html_content, output_path, base_dir))
+    return asyncio.run(html_to_pdf_async(html_content, output_path, base_dir, paper_size=paper_size))
 
 
 def main():
@@ -401,6 +404,12 @@ def main():
         "--image-format", choices=["png", "svg"], default="png", help="Image format for Mermaid diagrams (default: png)"
     )
     parser.add_argument("--css", help="Custom CSS file for styling")
+    parser.add_argument(
+        "--paper-size",
+        choices=["letter", "a4"],
+        default="letter",
+        help="Paper size (default: letter)",
+    )
     parser.add_argument("--keep-temp", action="store_true", help="Keep temporary files for debugging")
     parser.add_argument(
         "--no-strict-mermaid",
@@ -463,7 +472,7 @@ def main():
 
         # Convert HTML to PDF
         print("Converting HTML to PDF...")
-        success = html_to_pdf(html_content, output_path, temp_dir)
+        success = html_to_pdf(html_content, output_path, temp_dir, paper_size=args.paper_size)
 
         if success:
             print(f"Successfully created PDF: {output_path}")

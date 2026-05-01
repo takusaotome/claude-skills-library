@@ -1,11 +1,15 @@
 ---
 name: internal-audit-assistant
 description: |
-  内部監査業務支援スキル。リスクベース監査計画策定、監査プログラム作成、監査調書作成、
-  フォローアップ管理を提供。IIA（内部監査人協会）国際基準準拠。
-  Use when planning internal audits, conducting risk assessments, creating audit programs,
-  documenting audit findings, or managing corrective actions.
-  Triggers: "internal audit", "監査計画", "audit program", "監査調書", "CAR", "COSO", "IIA Standards".
+  Internal audit support skill aligned with IIA (Institute of Internal Auditors) International Standards.
+  Provides risk-based audit planning, audit program development, workpaper documentation, finding
+  development (Condition/Criteria/Cause/Effect), and Corrective Action Request (CAR) tracking.
+  Use when: planning annual/quarterly audits, creating risk assessment matrices, developing audit
+  programs and test procedures, documenting audit workpapers, writing audit findings and reports,
+  tracking corrective actions and follow-ups, preparing for external audits (SOX, ISO).
+  Triggers: "internal audit", "audit plan", "audit program", "audit workpaper", "audit finding",
+  "risk assessment", "CAR tracking", "corrective action", "IIA Standards", "COSO framework",
+  "監査計画", "監査プログラム", "監査調書", "是正措置", "リスク評価".
 ---
 
 # Internal Audit Assistant（内部監査支援）
@@ -69,6 +73,9 @@ This skill provides professional internal audit support aligned with IIA (Instit
 - **`references/sampling_guide.md`**: Statistical and judgmental sampling methods
 - **`scripts/risk_scorer.py`**: Calculate weighted risk scores for auditable entities
 - **`scripts/car_tracker.py`**: Track CAR lifecycle and generate status reports
+- **`assets/audit_finding_template.md`**: Template for documenting audit findings (Condition/Criteria/Cause/Effect)
+- **`assets/sample_entities.csv`**: Sample data for risk_scorer.py
+- **`assets/sample_cars.csv`**: Sample data for car_tracker.py
 
 ---
 
@@ -76,10 +83,16 @@ This skill provides professional internal audit support aligned with IIA (Instit
 
 ```bash
 # Calculate risk scores for auditable entities (CSV input)
-python3 scripts/risk_scorer.py entities.csv --output risk_matrix.md
+python3 scripts/risk_scorer.py assets/sample_entities.csv --output risk_matrix.md
 
 # Generate CAR status report from tracking data
-python3 scripts/car_tracker.py cars.csv --report monthly
+python3 scripts/car_tracker.py assets/sample_cars.csv --report monthly
+
+# Generate overdue CAR report
+python3 scripts/car_tracker.py assets/sample_cars.csv --report overdue
+
+# Export risk matrix as JSON
+python3 scripts/risk_scorer.py assets/sample_entities.csv --format json
 ```
 
 ---

@@ -11,11 +11,7 @@ permalink: /ja/skills/management/change-management-consultant/
 # Change Management Consultant
 {: .no_toc }
 
-組織変革管理の専門コンサルタントスキル。システム導入、組織変革、DXプロジェクトにおける変革管理を支援。
-ADKAR、Kotter 8-Stepフレームワークに基づき、ステークホルダー影響度分析、コミュニケーション計画、抵抗管理戦略を提供。
-Use when managing organizational change, system implementations, digital transformation projects, or improving user adoption rates.
-Triggers: "change management", "organizational change", "system implementation", "user adoption", "change strategy", "stakeholder engagement".
-
+Change Management Consultant に関する日本語ガイドです。`skills/change-management-consultant/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -34,35 +30,19 @@ Triggers: "change management", "organizational change", "system implementation",
 
 ## 1. 概要
 
-This skill transforms you into an expert change management consultant capable of planning, implementing, and sustaining organizational changes. By leveraging proven frameworks like ADKAR and Kotter's 8-Step Process, you can help organizations successfully navigate system implementations, business transformations, and cultural shifts.
-
-**Primary language**: Japanese (default), English supported
-**Frameworks**: ADKAR, Kotter 8-Step, Prosci Methodology
-**Output format**: Change management plans, stakeholder analysis, communication strategies, training plans
-
----
-
-<!-- TODO: 翻訳 -->
+このページは **Change Management Consultant** スキルの日本語サマリーです。
+- スキル本体: `skills/change-management-consultant/SKILL.md`
+- 参照ガイド: 3 件
+- 補助スクリプト: 3 件
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-- **Stakeholder information**: List of key stakeholders, their roles, and departments
-- **Project scope**: Clear understanding of what is changing (system, process, structure)
-- **Timeline**: Project milestones and target go-live date
-- **Organizational context**: Company culture, past change history, current challenges
-- **Executive sponsorship**: Identified project sponsor with authority
-
-**Optional but helpful**:
-- Organization chart
-- Previous change initiative outcomes
-- Employee survey data
-- Current training infrastructure
-
----
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
+- 詳細な実行条件は英語版ガイドまたは `SKILL.md` を参照してください。
 
 ---
 
@@ -78,56 +58,80 @@ This skill transforms you into an expert change management consultant capable of
                       6. Metrics & Measurement
 ```
 
-<!-- TODO: 翻訳 -->
-
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/change-management-consultant/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. 補助スクリプトがある場合は小さな入力で実行し、出力形式を確認してから本番データへ広げます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **Change Management Consultant** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 補助スクリプトを使って定型処理や検証を実行したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 3 件を根拠にした判断材料
+- 補助スクリプト 3 件による補助出力や検証結果
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/change-management-consultant/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 補助スクリプトは本番データの前にサンプル入力で実行し、引数と出力先を確認してください。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/management/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/management/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
+- 引数や出力先の指定漏れが多いため、コマンド例をそのまま起点に調整すると安全です。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/change-management-consultant/references/adkar_framework.md`
 - `skills/change-management-consultant/references/kotter_8_step.md`
 - `skills/change-management-consultant/references/resistance_patterns.md`
 
-**Scripts:**
+**補助スクリプト:**
 
 - `skills/change-management-consultant/scripts/adkar_assessment.py`
 - `skills/change-management-consultant/scripts/readiness_calculator.py`
 - `skills/change-management-consultant/scripts/stakeholder_analyzer.py`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/management/change-management-consultant/' | relative_url }}) を参照してください。

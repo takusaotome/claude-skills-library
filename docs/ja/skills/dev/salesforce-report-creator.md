@@ -3,7 +3,7 @@ layout: default
 title: "Salesforce Report Creator"
 grand_parent: 日本語
 parent: ソフトウェア開発
-nav_order: 28
+nav_order: 29
 lang_peer: /en/skills/dev/salesforce-report-creator/
 permalink: /ja/skills/dev/salesforce-report-creator/
 ---
@@ -11,7 +11,7 @@ permalink: /ja/skills/dev/salesforce-report-creator/
 # Salesforce Report Creator
 {: .no_toc }
 
-SF CLI経由でSalesforceレポートを作成するスキル。Metadata APIとREST APIの使い分け、フィールド命名規則、列数制限、レポートタイプ設定を網羅。カスタムオブジェクトレポート作成時の注意点も含む。Use when creating Salesforce reports via CLI, deploying report types, or automating report generation.
+Salesforce Report Creator に関する日本語ガイドです。`skills/salesforce-report-creator/SKILL.md` をもとに、利用開始手順、参照ファイル、補助スクリプトへの入口を日本語で整理しています。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">API不要</span>
@@ -30,43 +30,19 @@ SF CLI経由でSalesforceレポートを作成するスキル。Metadata APIとR
 
 ## 1. 概要
 
-このスキルは以下の機能を提供します：
-
-1. **レポートタイプの作成**: カスタムオブジェクト用レポートタイプXMLの生成
-2. **レポートの作成**: Metadata APIまたはREST APIを使用したレポート作成
-3. **フィールド管理**: 適切なフィールド命名規則と列数制限の適用
-4. **デプロイ**: SF CLIを使用したSalesforce組織へのデプロイ
-
-<!-- TODO: 翻訳 -->
+このページは **Salesforce Report Creator** スキルの日本語サマリーです。
+- スキル本体: `skills/salesforce-report-creator/SKILL.md`
+- 参照ガイド: 4 件
+- 補助スクリプト: 1 件
+- 詳細な背景説明や判断基準は英語版ガイドを参照してください。
 
 ---
 
 ## 2. 前提条件
 
-### 必須ツール
-
-```bash
-# Salesforce CLI (sf) がインストールされていること
-sf --version
-
-# 認証済みのSalesforce組織があること
-sf org list
-```
-
-### 認証
-
-```bash
-# Web認証フロー
-sf org login web --alias myorg
-
-# JWTフロー（CI/CD向け）
-sf org login jwt --client-id <consumer-key> --jwt-key-file <path> --username <user>
-
-# 既存の認証を確認
-sf org display --target-org myorg
-```
-
-<!-- TODO: 翻訳 -->
+- APIキーは不要です
+- Python 3.9 以上を推奨します
+- 詳細な実行条件は英語版ガイドまたは `SKILL.md` を参照してください。
 
 ---
 
@@ -78,55 +54,79 @@ sf sobject describe --sobject Property__c --target-org myorg --json | \
   python3 -c "import sys,json; [print(f['name']) for f in json.load(sys.stdin)['fields']]"
 ```
 
-<!-- TODO: 翻訳 -->
-
 ---
 
-## 4. 仕組み
+## 4. 進め方
 
-<!-- TODO: 翻訳 -->
+1. `skills/salesforce-report-creator/SKILL.md` を開き、対象タスクと期待する成果物を確認します。
+2. クイックスタートのコマンドや最小サンプルで、手順が通ることを先に確認します。
+3. 必要な観点に応じて `references/` 配下のガイドを確認し、判断基準を揃えます。
+4. 補助スクリプトがある場合は小さな入力で実行し、出力形式を確認してから本番データへ広げます。
+5. 仕上げ時に、出力内容と前提条件が依頼内容に合っているか見直します。
 
 ---
 
 ## 5. 使用例
 
-<!-- TODO: 翻訳 -->
+- **Salesforce Report Creator** に沿って作業の進め方を整理したいとき
+- まず最小の入力やサンプルデータで手順を確認したいとき
+- 補助スクリプトを使って定型処理や検証を実行したいとき
+- 参照ガイドを見ながら出力の粒度や観点を揃えたいとき
+- 詳細な実装判断や例外ケースは英語版ガイドも併用したいとき
 
 ---
 
 ## 6. 出力の読み方
 
-<!-- TODO: 翻訳 -->
+- スキルの手順に沿った構造化された回答、分析結果、または文書ドラフト
+- 参照ガイド 4 件を根拠にした判断材料
+- 補助スクリプト 1 件による補助出力や検証結果
+- 後続レビューや別スキル連携に回せる中間成果物
 
 ---
 
-## 7. Tips & ベストプラクティス
+## 7. ベストプラクティス
 
-<!-- TODO: 翻訳 -->
+- まずは小さな入力で試し、期待する出力形式になっていることを確認してから対象範囲を広げてください。
+- 詳細な手順や判断基準は `skills/salesforce-report-creator/SKILL.md` を基準にしてください。
+- 参照ガイドは必要なものから順に読むと、過剰に読み散らかさずに進められます。
+- 補助スクリプトは本番データの前にサンプル入力で実行し、引数と出力先を確認してください。
+- 出力前に、前提条件・入力範囲・未確定事項を明示すると後戻りが減ります。
 
 ---
 
 ## 8. 他スキルとの連携
 
-<!-- TODO: 翻訳 -->
+- 同じカテゴリのスキルと組み合わせると、計画・実装・レビューまでの流れをつなぎやすくなります。
+- 日本語のカテゴリ一覧: [カテゴリページ]({{ '/ja/skills/dev/' | relative_url }})
+- 詳細な関連ワークフローを探す場合は英語版カテゴリ一覧も参照してください: [English category]({{ '/en/skills/dev/' | relative_url }})
 
 ---
 
 ## 9. トラブルシューティング
 
-<!-- TODO: 翻訳 -->
+- まず前提条件を確認し、必要なランタイムやパッケージが揃っているかを見直してください。
+- 補助スクリプトを使う場合は、最小入力で一度実行してから本番データへ広げてください。
+- 期待する出力にならない場合は、参照ガイドにある入力形式や観点の前提を確認してください。
+- 引数や出力先の指定漏れが多いため、コマンド例をそのまま起点に調整すると安全です。
 
 ---
 
 ## 10. リファレンス
 
-**References:**
+**参照ガイド:**
 
 - `skills/salesforce-report-creator/references/column_limits_guide.md`
 - `skills/salesforce-report-creator/references/field_naming_rules.md`
 - `skills/salesforce-report-creator/references/metadata_api_vs_rest_api.md`
 - `skills/salesforce-report-creator/references/report_type_configuration.md`
 
-**Scripts:**
+**補助スクリプト:**
 
 - `skills/salesforce-report-creator/scripts/create_reports_via_api.py`
+
+---
+
+## English Version
+
+- 詳細な解説、背景説明、個別の運用判断は [English version]({{ '/en/skills/dev/salesforce-report-creator/' | relative_url }}) を参照してください。

@@ -3,7 +3,7 @@ layout: default
 title: "Supply Chain Consultant"
 grand_parent: English
 parent: Project & Business
-nav_order: 20
+nav_order: 22
 lang_peer: /ja/skills/management/supply-chain-consultant/
 permalink: /en/skills/management/supply-chain-consultant/
 ---
@@ -71,37 +71,69 @@ Use this skill when:
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+### Workflow 1: Demand Forecasting Optimization
+
+**Purpose**: Improve demand forecast accuracy to reduce stockouts and excess inventory.
+
+**Decision Procedure**:
+1. Assess current forecasting method, horizon, frequency, and ownership
+2. Measure forecast accuracy (MAPE, Bias, Tracking Signal)
+3. Segment products via ABC-XYZ analysis to determine forecasting approach per segment
+4. Select forecasting technique:
+   - **AX/BX**: Statistical methods (Moving Average, Exponential Smoothing)
+   - **AY/BY**: Statistical + collaborative (Holt-Winters, consensus)
+   - **AZ/BZ**: Demand sensing, safety stock buffers
+   - **CX/CY/CZ**: Simple rules, Min-Max, or make-to-order
+5. Design S&OP-integrated forecasting process
+6. Monitor forecast KPIs and adjust
+
+> **Detail**: Load `references/demand_forecasting_guide.md` for formulas, segmentation matrix, KPI dashboard template.
+> **Script**: Run `scripts/generate_demand_kpi_dashboard.py` to generate a KPI dashboard from data.
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- Use **Supply Chain Consultant** when you need a structured workflow rather than an ad-hoc answer.
+- Start with a small representative input before applying the workflow to production data or assets.
+- Review the helper scripts and reference guides to tailor the output format to your project.
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+- A structured response or artifact aligned to the skill's workflow.
+- Reference support from 6 guide file(s).
+- Script-assisted execution using 3 helper command(s) where applicable.
+- Reusable output that can be reviewed, refined, and incorporated into a wider project workflow.
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/supply-chain-consultant/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: kpi_reference.md, sop_planning_guide.md, procurement_strategy_guide.md.
+- Run helper scripts on test data before using them on final assets or production-bound inputs: generate_demand_kpi_dashboard.py, generate_sop_agenda.py, generate_inventory_policy.py.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/management/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
+- Confirm the expected Python version and required packages are installed in the active environment.
+- When output looks incomplete, inspect the script arguments and rerun with explicit input/output paths.
 
 ---
 

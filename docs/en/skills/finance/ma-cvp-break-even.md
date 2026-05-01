@@ -85,37 +85,69 @@ Product C,200,120,0.10
 
 ## 4. How It Works
 
-<!-- TODO: Describe the internal pipeline/algorithm -->
+1. **Identify Cost Behavior**: Classify all costs as fixed or variable
+2. **Calculate Unit Contribution Margin**: `Unit CM = Selling Price - Variable Cost per Unit`
+3. **Calculate CM Ratio**: `CM Ratio = Unit CM / Selling Price`
+4. **Assess Cost Structure**: Determine operating leverage (fixed cost proportion)
+5. **For Multi-Product**: Calculate weighted average CM ratio using sales mix
+
+### Key Formulas
+
+| Metric | Formula |
+|--------|---------|
+| Unit Contribution Margin | Selling Price - Variable Cost per Unit |
+| Contribution Margin Ratio | CM / Sales |
+| Total Contribution Margin | Sales - Total Variable Costs |
 
 ---
 
 ## 5. Usage Examples
 
-<!-- TODO: Add 4-6 real-world usage scenarios -->
+- **Break-Even Point Calculation** - Determine the sales volume needed to cover all costs
+- 「損益分岐点を計算して」「何個売れば元が取れる？」
+- **New Business/Product Feasibility** - Evaluate whether a new venture can be profitable
+- 「新商品の採算シミュレーションをして」「新規事業の損益分岐点を出して」
+- **Pricing Decision Support** - Analyze the profit impact of price changes
+- 「値上げしたら利益はどう変わる？」「価格設定のシミュレーションをして」
 
 ---
 
 ## 6. Understanding the Output
 
-<!-- TODO: Describe output file format and field definitions -->
+The analysis produces a structured CVP report containing:
+
+1. **Cost Structure Summary**: Fixed costs, variable costs, CM ratio breakdown
+2. **Break-Even Analysis**: BEP in units and sales, with visualization data
+3. **Margin of Safety Assessment**: Current position relative to break-even
+4. **Scenario Analysis Table**: Multiple what-if scenarios with profit projections
+5. **Decision Recommendations**: Prioritized actions based on analysis
+
+Output template: `assets/cvp_analysis_template_ja.md` (Japanese) or `assets/cvp_analysis_template_en.md` (English)
 
 ---
 
 ## 7. Tips & Best Practices
 
-<!-- TODO: Add expert advice for getting the most value -->
+- Begin with the smallest realistic sample input so you can validate the workflow before scaling up.
+- Keep `skills/ma-cvp-break-even/SKILL.md` open while working; it remains the authoritative source for the full procedure.
+- Review the most relevant reference files first instead of scanning every guide: 第10回_差額原価収益分析_20251104.md, 第09回_損益分岐点って要は元を取るライン_20251005.md.
+- Preserve intermediate outputs so you can explain assumptions, diffs, and follow-up actions clearly.
 
 ---
 
 ## 8. Combining with Other Skills
 
-<!-- TODO: Add multi-skill workflow table -->
+- Combine this skill with adjacent skills in the same category when the work spans planning, implementation, and review.
+- Browse the broader category for neighboring workflows: [category index]({{ '/en/skills/finance/' | relative_url }}).
+- Use the English skill catalog when you need to chain this workflow into a larger end-to-end process.
 
 ---
 
 ## 9. Troubleshooting
 
-<!-- TODO: Add common errors and fixes -->
+- Re-check prerequisites first: missing runtime dependencies and unsupported file formats are the most common failures.
+- If a helper script is involved, run it with a minimal sample input before applying it to a full dataset or repository.
+- Compare your input shape against the reference files to confirm expected fields, sections, or metadata are present.
 
 ---
 

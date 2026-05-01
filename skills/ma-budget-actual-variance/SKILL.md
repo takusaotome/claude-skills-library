@@ -106,8 +106,8 @@ Output template: `assets/variance_report_template_ja.md` (Japanese) or `assets/v
 
 ### References (load into context for guidance)
 
-- `references/第08回_予算実績差異分析_20250820.md` - Comprehensive guide on budget-actual variance analysis methodology with practical bakery business examples
-- `references/第05回_その予算って根拠あるの_20250507.md` - Budget planning fundamentals and evidence-based budgeting approaches
+- `references/08_budget-actual-variance-analysis_20250820.md` - Comprehensive guide on budget-actual variance analysis methodology with practical bakery business examples
+- `references/05_evidence-based-budgeting_20250507.md` - Budget planning fundamentals and evidence-based budgeting approaches
 
 ### Assets (templates for output generation)
 

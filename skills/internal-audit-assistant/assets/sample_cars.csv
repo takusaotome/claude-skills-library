@@ -1,0 +1,9 @@
+car_id,audit_name,finding_title,severity,auditee_dept,owner,due_date,status,open_date,close_date
+CAR-2025-001,AP Audit,Emergency PO process gap,Medium,Finance,J. Smith,2025-07-30,In Progress,2025-04-15,
+CAR-2025-002,IT Access Audit,Terminated user access delay,Critical,IT,K. Lee,2025-06-15,Overdue,2025-03-01,
+CAR-2025-003,Payroll Audit,Overtime approval bypass,Low,HR,M. Garcia,2025-09-30,Open,2025-05-20,
+CAR-2024-087,Procurement Audit,Vendor background check gaps,High,Operations,T. Nguyen,2025-01-31,Pending Validation,2024-09-15,
+CAR-2025-004,IT Change Management,Unauthorized changes to production,High,IT,K. Lee,2025-08-15,In Progress,2025-05-01,
+CAR-2025-005,Treasury Audit,Bank reconciliation timing,Medium,Finance,J. Smith,2025-07-15,Open,2025-05-10,
+CAR-2025-006,GDPR Compliance,Data retention policy gaps,High,Legal,S. Park,2025-06-30,In Progress,2025-04-01,
+CAR-2024-095,SOX Audit,Access certification delays,Critical,IT,K. Lee,2025-03-31,Closed,2024-11-15,2025-03-28
