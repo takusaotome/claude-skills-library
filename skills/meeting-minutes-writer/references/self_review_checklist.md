@@ -120,9 +120,23 @@ Compare the printed day-of-week against what the draft says.
 - [ ] "Next Tuesday" / "next week" resolved to the wrong calendar date
 - [ ] Year typos (e.g. "2025" written when meeting is in 2026)
 - [ ] Month/day swapped (US vs JP/EU date order confusion)
-- [ ] Time-zone conversion errors (ET ↔ JST: +13h summer / +14h winter)
+- [ ] Time-zone conversion errors verified with `zoneinfo.ZoneInfo` at the **actual meeting datetime** (not a hard-coded offset)
 - [ ] Dates earlier than the meeting date used for future deadlines
-- [ ] DST boundary errors (US DST ends 1st Sun of Nov; JP has no DST)
+- [ ] DST boundary errors (US DST starts 2nd Sun of Mar, ends 1st Sun of Nov; JP has no DST). Meetings within ±1 week of these boundaries MUST be converted with `zoneinfo`, not a fixed offset.
+
+**MANDATORY zoneinfo verification for cross-zone times**:
+
+```bash
+python3 -c "
+from datetime import datetime
+from zoneinfo import ZoneInfo
+src = datetime(2026, 3, 8, 9, 30, tzinfo=ZoneInfo('America/New_York'))  # actual meeting datetime
+dst = src.astimezone(ZoneInfo('Asia/Tokyo'))
+print(f'{src:%Y-%m-%d %H:%M %Z} = {dst:%Y-%m-%d %H:%M %Z}')
+"
+```
+
+Use this whenever the minutes mention an ET / PT / GMT / CET / etc. time AND a JST time, or any cross-zone deadline.
 
 **Japanese-specific date patterns (日本語固有の日付表現)**:
 - 「来週火曜」「再来週」「月末」「来月初」などの相対表現が会議日に対して正しく解決されているか

@@ -42,9 +42,24 @@ This document defines the canonical structure, formatting rules, and ambiguity-h
 ## Required Conventions
 
 ### Date Format
-- Always `YYYY/MM/DD (Day of Week)` — e.g. `2026/04/30 (Thu)`
-- Day of week must be verified with `python3 -c "import datetime; print(datetime.date(YYYY,MM,DD).strftime('%A'))"` — never inferred from memory.
-- Time zones: state the zone explicitly if multiple are in play (e.g. `14:00 JST / 01:00 ET`).
+
+**Universal rule** — every concrete date in the minutes (meeting date, due dates, references to past/future calendar days) MUST be rendered as `YYYY/MM/DD (Day of Week)`:
+
+- English minutes: `2026/04/30 (Thu)` — three-letter day abbreviation
+- Japanese minutes: `2026/04/30（木）` — single-character day inside full-width parens
+
+**This rule applies uniformly to**:
+- Meeting Information → Date field
+- Action Items table → Due Date column
+- Decisions Made / Discussion Points → any inline date references
+- Notes for Future Meetings → any deferred dates
+
+**Verification**: Day of week must be verified with `python3 -c "import datetime; print(datetime.date(YYYY,MM,DD).strftime('%A'))"` — never inferred from memory.
+
+**Exceptions** (the only cases where a bare date or non-date string is allowed):
+- `TBD` when no concrete date exists
+- `[Date to be confirmed]` when the meeting date itself is unknown
+- Cross-zone times: state both zones explicitly (e.g. `2026/03/08 (Sun) 14:00 JST / 2026/03/08 (Sun) 00:00 EST`) — verified with `zoneinfo.ZoneInfo`
 
 ### Owner Field
 - Use the speaker's actual name as it appears in the source (verbatim).
@@ -57,9 +72,9 @@ This document defines the canonical structure, formatting rules, and ambiguity-h
 - 🟢 Low: optimization / nice-to-have / future consideration
 
 ### Due Date
-- Concrete date if stated → render as `YYYY/MM/DD`
-- Relative reference ("next week") → resolve against meeting date and render as concrete date with `* relative` note
-- Unstated → `TBD` and add note `Deadline not set`
+- Concrete date if stated → render as `YYYY/MM/DD (Day of Week)` (same universal rule as the Date Format section above; weekday is REQUIRED, not optional)
+- Relative reference ("next week", "来週金曜") → resolve against meeting date, verify with `python3 datetime`, then render as the concrete `YYYY/MM/DD (Day of Week)` and add `* relative` note in the Notes column
+- Unstated → `TBD` in the Due Date column and add `Deadline not set` in the Notes column
 
 ## Inference Rules
 

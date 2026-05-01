@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # All Claude Code skills (98 skills)
+├── skills/                 # 98 published skills (with SKILL.md) + 5 in-progress directories with only scripts/ — 103 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -60,6 +60,8 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
 ## Skill Catalog (98 Skills)
+
+> Note: `skills/` contains 103 directories total — 98 published skills (with `SKILL.md`) listed below, plus 5 in-progress directories that only contain `scripts/` and are not yet ready for publication: `ai-bpo-proposal-generator`, `email-inbox-triager`, `email-triage-responder`, `internal-email-composer`, `vendor-procurement-coordinator`.
 
 ### Business Strategy & Consulting (17 skills)
 

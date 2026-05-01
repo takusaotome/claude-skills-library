@@ -74,12 +74,24 @@ For each iteration, run the **5 Mandatory Checks** below in order. See `referenc
 python3 -c "import calendar, datetime; d=datetime.date(YYYY, MM, DD); print(d.strftime('%Y-%m-%d %A'))"
 ```
 
-For ET↔JST conversions, use:
+For ET↔JST (or any IANA timezone) conversions — including correct DST handling around the boundaries — use `zoneinfo.ZoneInfo` with the **actual meeting datetime**, never a hard-coded offset:
+
 ```bash
-# Winter (Nov 1st Sun ~ Mar 2nd Sun): JST = ET + 14h
-# Summer (Mar 2nd Sun ~ Nov 1st Sun): JST = ET + 13h
-python3 -c "et=14; off=14; jst=et+off; print(f'{et}:00 ET = {jst%24}:00 JST' + (' (+1d)' if jst>=24 else ''))"
+# Convert a specific ET datetime to JST (DST-aware)
+python3 -c "
+from datetime import datetime
+from zoneinfo import ZoneInfo
+et = datetime(2026, 3, 8, 9, 30, tzinfo=ZoneInfo('America/New_York'))  # the actual meeting datetime
+jst = et.astimezone(ZoneInfo('Asia/Tokyo'))
+print(f'{et:%Y-%m-%d %H:%M %Z} = {jst:%Y-%m-%d %H:%M %Z}')
+"
 ```
+
+Notes:
+- **Always pass the real meeting date**. The DST boundary in the US (2nd Sun of Mar / 1st Sun of Nov) means a fixed +13h/+14h offset is wrong for meetings near the boundary.
+- For other timezones use the IANA name: `Europe/London`, `Asia/Singapore`, `America/Los_Angeles`, etc.
+- `zoneinfo` is in the Python 3.9+ standard library; no install required.
+- For a quick sanity check on offset only (without DST awareness), the legacy form `python3 -c "et=14; off=14; jst=(et+off)%24"` may be used as a rough estimate, but the `zoneinfo` form above is REQUIRED whenever the meeting date crosses or sits near a DST boundary.
 
 **Findings format** — for each finding record:
 - Severity (`HIGH` blocks completion / `MEDIUM` should fix / `LOW` style)
