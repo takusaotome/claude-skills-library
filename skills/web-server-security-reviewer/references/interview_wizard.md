@@ -16,15 +16,35 @@
 
 | Stage | 目的 | 設問数 | 条件 |
 |---|---|---|---|
-| 1 | Mode 選択 / hard-fail gate | 4 | 常時 |
-| 2 | 識別子 (target 上位) | 4 | Stage 1 で hard fail しなかった場合 |
-| 3 | host_fingerprint (本人確認) | 4 | 〃 |
-| 4 | SSH 承認 | 4 | `connection_mode == ssh_direct` |
-| 5 | evidence (採取・provenance) | 5 | 常時 |
-| 6 | scope / incident | 4 | 常時 |
-| 7 | retention | 4 | 常時 |
+| 1 | Mode 選択 / hard-fail gate | 4 (全 choice) | 常時 |
+| 1.5 | custom role 文字列入力 | 1 (free-text) | `Stage 1 で role=custom` |
+| 2 | 識別子 (target 上位) | 4 (free-text 中心) | Stage 1 で hard fail しなかった場合 |
+| 3 | host_fingerprint (本人確認) | 4 (free-text 3 + choice 1) | 〃 |
+| 4 | SSH 承認 | 4 (free-text 中心) | `connection_mode == ssh_direct` |
+| 5 | evidence (採取・provenance) | 4 (free-text 中心) | 常時 |
+| 6 | scope / incident | 4 (free-text + choice 混在) | 常時 |
+| 7 | retention | 4 (free-text + choice 混在) | 常時 |
 
-合計: 通常 6〜7 回の AskUserQuestion 呼び出し。
+### 1.1 AskUserQuestion 呼び出し回数
+
+AskUserQuestion API の制約: 1 call あたり **最大 4 questions**、各 question は **2-4 options 必須**（自由記述は自動付与される "Other" 経由）。
+
+stage 内の field を実際の AskUserQuestion 呼び出しに分解する規則:
+
+- **choice-only batch**: stage 内の全 field が choices を持つ場合 → 1 stage = 1 AskUserQuestion call（最大 4 fields）
+- **free-text singleton**: 自由記述 field は **placeholder choices 2-3 個 + "Other" 経由**で 1 question として発行。同じ stage 内に他の choice-only field があれば同じ call にバッチ可
+- **conditional skip**: condition が偽の場合は call 自体を発行しない (Stage 1.5, Stage 4 等)
+
+**実呼び出し回数の目安:**
+
+| シナリオ | call 数 |
+|---|---|
+| ssh_direct + role=preset | 7 calls (Stage 1, 2, 3, 4, 5, 6, 7) |
+| ssh_direct + role=custom | 8 calls (Stage 1, 1.5, 2, 3, 4, 5, 6, 7) |
+| offline_evidence + role=preset | 6 calls (Stage 4 を除く) |
+| Stage 1 で hard fail | 1 call のみ（以降中断）|
+
+各 stage の実呼び出し設計（call 内に何を batch するか）はエージェントの裁量。free-text 比率が高い stage では複数 call に分けても可（合計の質問内容が本仕様と一致していれば良い）。
 
 ---
 
@@ -79,10 +99,27 @@ fields:
     prompt: 対象サーバの役割は？
     header: Role
     choices: [public_facing, internal, edge, custom]
-    hint: "custom 選択時は Stage 2 で文字列を入力"
+    hint: "custom 選択時は Stage 1.5 で実際の役割名文字列を入力"
 ```
 
 **hard-fail 早期離脱:** `target.os_family == "windows"` または `target.web_server == "iis"` を検知した時点で、エージェントは以降の AskUserQuestion を発行せず、unsupported_matrix.md の文面に沿って中断メッセージを返す。
+
+---
+
+### Stage 1.5 — custom role 文字列入力（条件付き）
+
+```yaml
+stage_id: 1.5
+title: custom role の実際の役割名
+condition: "answers.target.role == 'custom'"
+fields:
+  - field: target.custom_role
+    prompt: 実際の役割名を入力（例 api_gateway / batch_worker / control_plane）
+    header: Custom role
+    hint: "Stage 1 で 'custom' を選んだ場合のみ。'custom' 自身は再入力不可。"
+```
+
+**バリデーション:** script 側で `role=='custom' かつ custom_role 未指定` → WizardError。`custom_role` の値が空文字や再度 `'custom'` でも WizardError。指定された custom_role 文字列が `target.role` に substitute される。`scope.role_extensions` は preset テーブルにヒットしないため自動推定は **空配列**。custom role に紐づく拡張 yaml がある場合は wizard_answers.json の `scope.role_extensions` に明示すること。
 
 ---
 
@@ -157,9 +194,11 @@ title: SSH 接続承認
 condition: "answers.connection_mode == 'ssh_direct'"
 fields:
   - field: ssh.bastion
-    prompt: 踏み台 hostname（直接接続なら "none"）
+    prompt: 踏み台 hostname（直接接続なら "none" / "null" / "なし" / 空欄のいずれか）
     header: Bastion
     required: false
+    normalize_to: optional_null
+    hint: "script 側で空文字 / 'none' / 'null' / 'なし' / 'n/a' は null に正規化"
 
   - field: ssh.user
     prompt: 接続用ユーザ（read-only 推奨）

@@ -53,6 +53,9 @@ DEFAULT_EARLY_DELETION_CONDITIONS = [
 SHA256_RE = re.compile(r"^[a-f0-9]{64}$")
 REVIEW_ID_RE = re.compile(r"^[A-Z][A-Z0-9_]*-REVIEW-\d{4}-\d{4}-\d{2}$")
 
+# Strings the wizard accepts as "no value" (case-insensitive).
+NULL_EQUIVALENTS = {"", "none", "null", "なし", "n/a"}
+
 
 # ---------------------------------------------------------------------------
 # Exceptions
@@ -79,6 +82,20 @@ def normalize_csv(value: Any) -> list[str]:
     if isinstance(value, list):
         return [str(v).strip() for v in value if str(v).strip()]
     return [s.strip() for s in str(value).split(",") if s.strip()]
+
+
+def normalize_optional_null(value: Any) -> str | None:
+    """Treat empty / "none" / "null" / "なし" / "n/a" (any case) as None.
+
+    Used for optional fields where the wizard hint allows the user to type
+    a sentinel string instead of leaving the answer blank.
+    """
+    if value is None:
+        return None
+    raw = str(value).strip()
+    if raw.lower() in NULL_EQUIVALENTS:
+        return None
+    return raw
 
 
 def validate_machine_id_sha256(value: Any) -> str:
@@ -216,6 +233,19 @@ def _build_target(answers_target: dict) -> dict:
     if not role:
         raise WizardError("target.role is required")
 
+    # Stage 1 may return the placeholder "custom"; the actual role string
+    # then arrives in target.custom_role. Substitute and validate.
+    if role.lower() == "custom":
+        custom_role = str(answers_target.get("custom_role", "") or "").strip()
+        if not custom_role:
+            raise WizardError(
+                "target.custom_role is required when target.role='custom' "
+                "(provide the actual role string, e.g. 'api_gateway')"
+            )
+        if custom_role.lower() == "custom":
+            raise WizardError("target.custom_role cannot itself be 'custom'; provide the actual role string")
+        role = custom_role
+
     return {
         "hostname": hostname,
         "fqdn": str(answers_target.get("fqdn", "") or ""),
@@ -244,7 +274,7 @@ def _build_ssh(connection_mode: str, ssh_in: dict | None) -> dict | None:
             raise WizardError(f"ssh.{key} is required when connection_mode=ssh_direct")
     _parse_iso8601(ssh_in["approved_at"], "ssh.approved_at")
     return {
-        "bastion": ssh_in.get("bastion") or None,
+        "bastion": normalize_optional_null(ssh_in.get("bastion")),
         "user": str(ssh_in["user"]).strip(),
         "approved_by": str(ssh_in["approved_by"]).strip(),
         "approved_at": str(ssh_in["approved_at"]).strip(),

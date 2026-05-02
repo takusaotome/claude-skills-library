@@ -238,6 +238,60 @@ class TestDefaults:
         assert profile["target"]["app_runtime"] == "none"
 
 
+# ---------- bastion normalization ----------
+
+
+class TestBastionNormalization:
+    @pytest.mark.parametrize("null_equiv", ["", "none", "None", "NONE", "null", "なし", "n/a", "N/A"])
+    def test_null_equivalents_become_none(self, null_equiv):
+        profile = build_profile(_answers(ssh={"bastion": null_equiv}))
+        assert profile["ssh"]["bastion"] is None
+
+    def test_real_bastion_preserved(self):
+        profile = build_profile(_answers(ssh={"bastion": "bastion01.example.com"}))
+        assert profile["ssh"]["bastion"] == "bastion01.example.com"
+
+    def test_bastion_strips_whitespace(self):
+        profile = build_profile(_answers(ssh={"bastion": "  bastion01  "}))
+        assert profile["ssh"]["bastion"] == "bastion01"
+
+    def test_explicit_python_none(self):
+        profile = build_profile(_answers(ssh={"bastion": None}))
+        assert profile["ssh"]["bastion"] is None
+
+
+# ---------- custom role handling ----------
+
+
+class TestCustomRole:
+    def test_custom_role_requires_custom_role_string(self):
+        # role="custom" alone is a placeholder, not a real role name
+        with pytest.raises(WizardError, match="custom_role"):
+            build_profile(_answers(target={"role": "custom"}))
+
+    def test_custom_role_substituted_when_provided(self):
+        profile = build_profile(_answers(target={"role": "custom", "custom_role": "api_gateway"}))
+        assert profile["target"]["role"] == "api_gateway"
+
+    def test_custom_role_extensions_inference_returns_empty(self):
+        # api_gateway is not a preset → role_extensions empty unless explicitly given
+        profile = build_profile(_answers(target={"role": "custom", "custom_role": "api_gateway"}))
+        assert profile["scope"]["role_extensions"] == []
+
+    def test_custom_role_with_explicit_extensions(self):
+        profile = build_profile(
+            _answers(
+                target={"role": "custom", "custom_role": "api_gateway"},
+                scope={"role_extensions": ["custom_api_gw"]},
+            )
+        )
+        assert profile["scope"]["role_extensions"] == ["custom_api_gw"]
+
+    def test_custom_role_empty_string_rejected(self):
+        with pytest.raises(WizardError, match="custom_role"):
+            build_profile(_answers(target={"role": "custom", "custom_role": "  "}))
+
+
 # ---------- role_extensions inference ----------
 
 
