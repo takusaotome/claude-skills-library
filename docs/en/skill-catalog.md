@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 108 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 109 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -86,7 +86,7 @@ All 108 skills organized by category. Skills with dedicated guide pages are show
 
 ## Operations & Documentation
 
-21 skills for technical writing, presentations, document conversion, and meeting minutes.
+22 skills for technical writing, presentations, document conversion, and meeting minutes.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -102,6 +102,7 @@ All 108 skills organized by category. Skills with dedicated guide pages are show
 | [presentation-reviewer]({{ '/en/skills/ops/presentation-reviewer/' | relative_url }}) | Presentation review from audience perspective | 5 Evaluation Axes |
 | [meeting-asset-preparer]({{ '/en/skills/meta/meeting-asset-preparer/' | relative_url }}) | Prepare meeting agendas, materials, and action items | Bilingual (JA/EN), Context Integration |
 | [meeting-minutes-writer]({{ '/en/skills/meta/meeting-minutes-writer/' | relative_url }}) | Generate meeting minutes with self-review loop (max 3 iterations) | 5 Mandatory Checks, Date Verification, HIGH-finding Guard |
+| [meeting-minutes-reviewer]({{ '/en/skills/meta/meeting-minutes-reviewer/' | relative_url }}) | Review existing meeting minutes for completeness, action clarity, and consistency | 5-Dimension Scoring, Severity Findings, Source Cross-check |
 | [timezone-aware-event-tracker]({{ '/en/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | Track and correlate events across timezones | DST Handling, Multi-TZ Timeline |
 | [action-status-updater]({{ '/en/skills/meta/action-status-updater/' | relative_url }}) | Track action items via natural-language updates (JP/EN) | NL Parsing, YAML State, daily-comms-ops Integration |
 | [email-triage-responder]({{ '/en/skills/meta/email-triage-responder/' | relative_url }}) | Inbox triage with urgency scoring + draft replies | Eisenhower Matrix, Draft Generation, gogcli/Outlook |
