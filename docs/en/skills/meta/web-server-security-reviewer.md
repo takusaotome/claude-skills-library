@@ -121,7 +121,7 @@ Each finding is one of: confirmed (verified from evidence), observed-pending (ma
 
 ## 9. Troubleshooting
 
-- **`python3 scripts/verify_skill.py` reports a failure** — the skill ships expecting all 17 checks to pass. Investigate before using the skill in a real engagement.
+- **`python3 scripts/verify_skill.py` reports a failure** — the skill ships expecting all 22 checks to pass (including section H wizard pipeline smoke). Investigate before using the skill in a real engagement.
 - **Manifest integrity fails** — do not proceed. Either re-collect evidence or escalate per `references/guardrails.md`.
 - **Windows / IIS target detected** — the skill hard-fails by design in v1. Use a different process for those targets.
 - **Find unresolved template / command IDs** — `verify_skill.py` will surface them; fix the cross-reference before running a real review.
