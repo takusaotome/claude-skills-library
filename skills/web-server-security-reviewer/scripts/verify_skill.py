@@ -247,6 +247,69 @@ def main():
     unr = [(cid, r) for cid, r in cmd_refs_all if r not in all_cmd]
     t("command_refs 全件解決", not unr, f"total={len(cmd_refs_all)} cmd_ids={len(all_cmd)} unresolved={len(unr)}")
 
+    # === H: Wizard pipeline integrity ===
+    print("\n### H: Interview wizard pipeline ###")
+    wizard_files = [
+        "references/interview_wizard.md",
+        "scripts/build_target_profile.py",
+        "assets/wizard_answers_example.json",
+        "scripts/tests/test_build_target_profile.py",
+    ]
+    missing = [f for f in wizard_files if not os.path.exists(f)]
+    t("H.1 wizard ファイル存在", not missing, f"missing={missing}")
+
+    # SKILL.md が wizard ファイルに言及している
+    skill_md = open("SKILL.md").read()
+    skill_refs = [
+        "references/interview_wizard.md",
+        "scripts/build_target_profile.py",
+        "assets/wizard_answers_example.json",
+    ]
+    miss_ref = [r for r in skill_refs if r not in skill_md]
+    t("H.2 SKILL.md 参照整合", not miss_ref, f"missing_refs={miss_ref}")
+
+    # smoke: example JSON → YAML 生成が exit 0 で必須キー一式を含む
+    if not missing:
+        with tempfile.TemporaryDirectory() as td:
+            out = os.path.join(td, "tp.yaml")
+            import subprocess
+
+            r = subprocess.run(
+                [
+                    sys.executable,
+                    "scripts/build_target_profile.py",
+                    "--answers",
+                    "assets/wizard_answers_example.json",
+                    "--output",
+                    out,
+                ],
+                capture_output=True,
+                text=True,
+            )
+            t("H.3 wizard smoke (exit 0)", r.returncode == 0, r.stderr.strip())
+
+            if r.returncode == 0 and os.path.exists(out):
+                tp = yaml.safe_load(open(out))
+                req_keys = {
+                    "review_id",
+                    "target",
+                    "connection_mode",
+                    "ssh",
+                    "evidence",
+                    "scope",
+                    "incident_context",
+                    "retention",
+                    "exceptional_approvals",
+                }
+                miss_k = req_keys - set(tp.keys())
+                t("H.4 生成 YAML 必須キー網羅", not miss_k, f"missing={miss_k}")
+                # delete_after が派生されている
+                t(
+                    "H.5 retention.delete_after 派生",
+                    "delete_after" in tp.get("retention", {}),
+                    "",
+                )
+
     # === Summary ===
     print("\n### SUMMARY ###")
     total = len(results)

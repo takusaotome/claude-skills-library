@@ -4453,7 +4453,10 @@ Phase 1 web server (nginx/apache, Linux-centric) security configuration review. 
 - `references/role_extensions/` — role-specific extensions (edge / internal / public-facing + schema)
 - `assets/target_profile_template.yaml` / `manifest_template.txt` / `manifest_attestation_template.txt` — input templates
 - `assets/report_template.md` / `action_plan_template.md` / `self_review_template.md` — output templates
-- `scripts/verify_skill.py` — internal integrity verifier (17 checks)
+- `assets/wizard_answers_example.json` — sample wizard answers for `build_target_profile.py`
+- `references/interview_wizard.md` — 7-stage declarative spec for the Phase 0 interactive wizard
+- `scripts/build_target_profile.py` — wizard answers JSON → `target_profile.yaml` builder (defaults / derivations / hard-fail gates)
+- `scripts/verify_skill.py` — internal integrity verifier (22 checks, includes wizard pipeline smoke)
 - `scripts/verification_run.py` — review run orchestrator
 
 **Key Features:**
@@ -4483,6 +4486,20 @@ Future skills planned for this library:
 
 ## Version History
 
+### web-server-security-reviewer v1.1 (2026-05-02)
+- Phase 0 interactive interview wizard for building `target_profile.yaml` via `AskUserQuestion`
+- New `references/interview_wizard.md` — 7-stage declarative spec (stage_id / field / prompt / header / choices / required / condition / normalize_to)
+- New `scripts/build_target_profile.py` — wizard answers JSON → target_profile.yaml builder
+  - Hard-fail gates (windows / iis), machine_id_sha256 strict validation, ISO8601 enforcement
+  - Auto-derivations: `delete_after`, `source_confidence`, `role_extensions` from preset roles
+  - Conditional requirements: ssh.* when ssh_direct, incident_id/summary when active_incident=true
+  - CSV normalization for array fields (out_of_scope / access_approvers / rotation_dependencies)
+  - `normalize_optional_null()` for ssh.bastion (collapses "" / "none" / "null" / "なし" / "n/a" → None)
+  - `target.custom_role` substitution when `target.role == "custom"`
+- New `assets/wizard_answers_example.json` smoke fixture
+- 78 unit tests (16 new vs v1.0 baseline)
+- verify_skill.py expanded to 22 checks (added section H: wizard pipeline smoke)
+
 ### web-server-security-reviewer v1.0 (2026-05-01)
 - Phase 1 web server (nginx/apache, Linux-centric) security configuration review skill
 - 9-axis checklist: OS / Resources / Logs / Network / Services / Authentication / Monitoring / Backup / Certificates
@@ -4494,7 +4511,7 @@ Future skills planned for this library:
 - Windows/IIS hard-fails in v1 (out-of-scope); rhel/nginx is the primary supported profile
 - 8 templates (target_profile, manifest_attestation, finding_table, report, action_plan, evidence_directory_layout, self_review, manifest)
 - 12 reference docs + 4 role_extension YAMLs (generic_edge / generic_internal / generic_public_facing + _schema)
-- verify_skill.py integrity script (17/17 PASS) and verification_run.py runner
+- verify_skill.py integrity script (17/17 PASS at v1.0; 22/22 PASS at v1.1) and verification_run.py runner
 
 ### meeting-minutes-writer v1.0 (2026-04-30)
 - Generate meeting minutes from transcripts/notes with built-in self-review loop (max 3 iterations)

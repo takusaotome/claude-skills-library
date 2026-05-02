@@ -1,0 +1,44 @@
+{
+  "review_id": "ACME-REVIEW-2026-0501-01",
+  "target": {
+    "hostname": "web01",
+    "fqdn": "web01.example.com",
+    "role": "public_facing",
+    "os_family": "rhel",
+    "os_version": "Rocky Linux 9.5",
+    "web_server": "nginx",
+    "app_runtime": "nodejs-v20.10.0",
+    "host_fingerprint": {
+      "machine_id_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "primary_ipv4": "10.0.0.10",
+      "ssh_host_key_sha256": "SHA256:abc123def456",
+      "timezone": "America/Los_Angeles"
+    }
+  },
+  "connection_mode": "ssh_direct",
+  "ssh": {
+    "bastion": "bastion01.example.com",
+    "user": "ro_auditor",
+    "approved_by": "Alice Witness",
+    "approved_at": "2026-04-30T21:00:00-07:00"
+  },
+  "evidence": {
+    "collected_by": "Alice Witness",
+    "collection_completed_at": "2026-05-01T03:00:00-07:00",
+    "evidence_dir": "./review_acme/evidence/",
+    "raw_evidence_store": "s3://acme-security/raw/acme-review-2026-0501-01/",
+    "authenticity_level": "external_channel"
+  },
+  "scope": {
+    "out_of_scope": "Phase 2 コードレビュー, ペネトレーションテスト"
+  },
+  "incident_context": {
+    "active_incident": false
+  },
+  "retention": {
+    "raw_retention_days": 90,
+    "owner": "Bob Owner",
+    "access_approvers": "Alice Witness, Carol SecretOwner",
+    "rotation_dependencies": "VPN 認証情報ローテーション完了確認, DB 認証情報ローテーション完了確認"
+  }
+}
