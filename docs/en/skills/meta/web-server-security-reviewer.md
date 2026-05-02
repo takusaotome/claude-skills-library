@@ -148,11 +148,13 @@ Each finding is one of: confirmed (verified from evidence), observed-pending (ma
 - `skills/web-server-security-reviewer/references/role_extensions/generic_edge.yaml`
 - `skills/web-server-security-reviewer/references/role_extensions/generic_internal.yaml`
 - `skills/web-server-security-reviewer/references/role_extensions/generic_public_facing.yaml`
+- `skills/web-server-security-reviewer/references/interview_wizard.md` — Phase 0 interactive wizard 7-stage declarative spec (v1.1+)
 
 **Scripts:**
 
-- `skills/web-server-security-reviewer/scripts/verify_skill.py`
+- `skills/web-server-security-reviewer/scripts/verify_skill.py` — internal integrity verifier (22 checks)
 - `skills/web-server-security-reviewer/scripts/verification_run.py`
+- `skills/web-server-security-reviewer/scripts/build_target_profile.py` — wizard answers JSON → target_profile.yaml builder (defaults / derivations / hard-fail gates)
 
 **Assets:**
 
@@ -162,5 +164,6 @@ Each finding is one of: confirmed (verified from evidence), observed-pending (ma
 - `skills/web-server-security-reviewer/assets/finding_table_template.md`
 - `skills/web-server-security-reviewer/assets/report_template.md`
 - `skills/web-server-security-reviewer/assets/action_plan_template.md`
+- `skills/web-server-security-reviewer/assets/wizard_answers_example.json` — sample wizard answers for `build_target_profile.py`
 - `skills/web-server-security-reviewer/assets/evidence_directory_layout.md`
 - `skills/web-server-security-reviewer/assets/self_review_template.md`

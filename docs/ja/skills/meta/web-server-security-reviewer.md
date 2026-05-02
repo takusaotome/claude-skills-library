@@ -148,11 +148,13 @@ Claude Code 内で対象プロファイル（ロール、OS、Web サーバ、�
 - `skills/web-server-security-reviewer/references/role_extensions/generic_edge.yaml`
 - `skills/web-server-security-reviewer/references/role_extensions/generic_internal.yaml`
 - `skills/web-server-security-reviewer/references/role_extensions/generic_public_facing.yaml`
+- `skills/web-server-security-reviewer/references/interview_wizard.md` — Phase 0 対話ウィザード 7 stage 宣言的設問仕様 (v1.1+)
 
 **スクリプト:**
 
-- `skills/web-server-security-reviewer/scripts/verify_skill.py`
+- `skills/web-server-security-reviewer/scripts/verify_skill.py` — 内部整合性検証 (22 checks)
 - `skills/web-server-security-reviewer/scripts/verification_run.py`
+- `skills/web-server-security-reviewer/scripts/build_target_profile.py` — wizard 回答 JSON → target_profile.yaml ビルダー (default 補完 / 派生 / hard-fail gate)
 
 **アセット:**
 
@@ -164,6 +166,7 @@ Claude Code 内で対象プロファイル（ロール、OS、Web サーバ、�
 - `skills/web-server-security-reviewer/assets/action_plan_template.md`
 - `skills/web-server-security-reviewer/assets/evidence_directory_layout.md`
 - `skills/web-server-security-reviewer/assets/self_review_template.md`
+- `skills/web-server-security-reviewer/assets/wizard_answers_example.json` — `build_target_profile.py` 用ウィザード回答サンプル
 
 ---
 
