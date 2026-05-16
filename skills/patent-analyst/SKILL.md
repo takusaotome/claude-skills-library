@@ -19,15 +19,140 @@ This skill provides professional patent analysis and intellectual property (IP) 
 **Analysis Tools**: Patent citation analysis, technology landscape mapping, patent valuation
 **Output format**: Prior art reports, patentability opinions, FTO analysis, IP strategy recommendations, patent landscape reports
 
-Use this skill when:
-- Conducting novelty searches before patent filing
-- Evaluating patentability of inventions
-- Performing freedom-to-operate (FTO) analysis before product launch
-- Analyzing competitor patent portfolios
-- Developing patent filing strategies
-- Assessing patent infringement risks
-- Preparing patent prosecution responses (Office Actions)
-- Conducting due diligence for M&A or licensing
+---
+
+## When to Use
+
+Use this skill when you need to:
+- Conduct novelty searches before patent filing
+- Evaluate patentability of inventions
+- Perform freedom-to-operate (FTO) analysis before product launch
+- Analyze competitor patent portfolios
+- Develop patent filing strategies
+- Assess patent infringement risks
+- Prepare patent prosecution responses (Office Actions)
+- Conduct due diligence for M&A or licensing
+
+**Trigger phrases** (EN): "patent search", "prior art", "patentability", "FTO analysis", "patent portfolio", "IP strategy", "patent landscape", "infringement risk", "Office Action response"
+
+**Trigger phrases** (JP): "特許調査", "先行技術調査", "特許性評価", "FTO分析", "特許ポートフォリオ", "知的財産戦略", "侵害リスク評価", "拒絶理由通知対応"
+
+---
+
+## Prerequisites
+
+### Required Knowledge
+- Understanding of patent law basics (35 USC 101, 102, 103, 112 for US; corresponding laws for EP/JP/CN)
+- Familiarity with patent classification systems (CPC, IPC)
+- Basic Boolean search syntax
+
+### Environment Setup
+
+**Patent Database Access** (Free):
+- [Google Patents](https://patents.google.com) - Most accessible, global coverage
+- [Espacenet](https://worldwide.espacenet.com) - European Patent Office
+- [PatentScope](https://patentscope.wipo.int) - WIPO international applications
+- [J-PlatPat](https://www.j-platpat.inpit.go.jp) - Japan Patent Office
+
+**Commercial Tools** (Optional, for advanced analysis):
+- Derwent Innovation (Clarivate)
+- Orbit Intelligence (Questel)
+- PatBase (Minesoft)
+
+**Python Dependencies** (for automation scripts):
+
+```bash
+# Install required packages
+pip install requests beautifulsoup4 pandas openpyxl
+```
+
+---
+
+## Workflow
+
+This skill provides four primary workflows:
+
+1. **Prior Art Search (Novelty Search)** - Determine if invention is novel before filing
+2. **Freedom-to-Operate (FTO) Analysis** - Identify infringement risks before product launch
+3. **Patent Portfolio Analysis** - Assess competitor/acquisition target patent strength
+4. **Patent Prosecution Support** - Respond to Office Action rejections
+
+See [Core Workflows](#core-workflows) section for detailed step-by-step procedures.
+
+### Quick Start Example
+
+```bash
+# Search Google Patents for prior art (example)
+# Open browser and navigate to:
+open "https://patents.google.com/?q=neural+network+image+segmentation&type=PATENT"
+
+# Run patent search helper script (generates structured search report)
+python3 scripts/patent_search_helper.py \
+  --keywords "neural network,image segmentation,medical imaging" \
+  --cpc "G06N3/08,G06V10/82" \
+  --output prior_art_report.md
+```
+
+---
+
+## Output
+
+This skill generates the following deliverables:
+
+| Output Type | Format | Description |
+|-------------|--------|-------------|
+| Prior Art Report | Markdown/PDF | Search results, relevance ranking, feature comparison matrix |
+| Patentability Opinion | Markdown | 35 USC 102/103 analysis, filing recommendation, risk assessment |
+| FTO Analysis Report | Markdown | Claim mapping, infringement risk matrix, design-around options |
+| Patent Portfolio Analysis | Markdown/Excel | Technology segmentation, competitor benchmarking, valuation |
+| Office Action Response | Markdown | Arguments against rejection, proposed claim amendments |
+
+### Sample Output Structure
+
+```markdown
+# Prior Art Search Report
+
+## Executive Summary
+- **Invention**: [Title]
+- **Search Date**: [Date]
+- **Conclusion**: [NOVEL / NOT NOVEL / CONDITIONAL]
+
+## Search Strategy
+- **Databases**: Google Patents, Espacenet, USPTO PatFT
+- **Keywords**: [List]
+- **Classifications**: [CPC codes]
+
+## Key References (Top 10)
+| # | Patent/Publication | Relevance | Key Features | Differences |
+|---|-------------------|-----------|--------------|-------------|
+| 1 | US10,123,456 | HIGH | ... | ... |
+
+## Feature Comparison Matrix
+[Detailed comparison table]
+
+## Patentability Assessment
+- **Novelty (35 USC 102)**: [Analysis]
+- **Non-Obviousness (35 USC 103)**: [Analysis]
+
+## Recommendations
+[Filing strategy, claim drafting guidance]
+```
+
+---
+
+## Resources
+
+### Bundled References
+- `references/patent_search_methodology.md` - Comprehensive search methodology guide
+- `references/claim_analysis_guide.md` - Patent claim interpretation and mapping
+
+### Bundled Scripts
+- `scripts/patent_search_helper.py` - Generate structured prior art search reports
+
+### External Resources
+- [USPTO Patent Classification](https://www.uspto.gov/web/patents/classification/cpc.html)
+- [EPO CPC Browser](https://www.cooperativepatentclassification.org/cpcSchemeAndDefinitions)
+- [WIPO IP Services](https://www.wipo.int/portal/en/index.html)
 
 ---
 
