@@ -535,21 +535,43 @@ class TestMermaidStrictMode:
 
 class TestPDFContentVerification:
     def test_table_content_produces_substantial_pdf(self, tmp_pdf):
-        """PDF with table content should be substantially larger than empty PDF."""
+        """A table PDF must render substantially more text than an empty PDF.
+
+        Raw file size is not a reliable signal here: every PDF embeds the
+        same large CJK font subset (~18 KB constant), so a small 2x2 table
+        only grows the file by ~15% and the old ">20% file size" assertion
+        was inherently flaky. Instead, count text-showing operators (Tj/TJ)
+        in the decompressed content streams, which directly reflects how
+        much text was actually drawn.
+        """
+        import re as re_mod
+        import zlib
+
         mod = _import_fpdf_module()
-        # Render a PDF with a table
+
+        def text_op_count(path: Path) -> int:
+            pdf_bytes = path.read_bytes()
+            decompressed = b""
+            for match in re_mod.finditer(rb"stream\r?\n(.*?)\r?\nendstream", pdf_bytes, re_mod.DOTALL):
+                try:
+                    decompressed += zlib.decompress(match.group(1))
+                except zlib.error:
+                    pass
+            return len(re_mod.findall(rb"\bT[jJ]\b", decompressed))
+
         md_table = "| Name | Age |\n|------|-----|\n| Alice | 30 |\n| Bob | 25 |"
         mod.render_pdf(md_table, str(tmp_pdf))
-        table_size = tmp_pdf.stat().st_size
+        table_ops = text_op_count(tmp_pdf)
 
         # Render a minimal empty PDF for comparison
         empty_pdf = tmp_pdf.parent / "empty.pdf"
         mod.render_pdf("", str(empty_pdf))
-        empty_size = empty_pdf.stat().st_size
+        empty_ops = text_op_count(empty_pdf)
 
-        # Table PDF should be at least 20% larger than empty PDF
-        assert table_size > empty_size * 1.2, (
-            f"Table PDF ({table_size}B) should be substantially larger than empty PDF ({empty_size}B)"
+        # 2 header cells + 4 body cells add several text operators on top of
+        # whatever the empty PDF draws (e.g. the page-number footer).
+        assert table_ops >= empty_ops + 4, (
+            f"Table PDF should render substantially more text operators ({table_ops}) than empty PDF ({empty_ops})"
         )
 
     def test_table_headers_in_decompressed_pdf(self, tmp_pdf):
@@ -599,6 +621,62 @@ class TestPDFContentVerification:
             pdf_bytes = tmp_pdf.read_bytes()
             # Should NOT contain the raw Mermaid fence marker
             assert b"```mermaid" not in pdf_bytes
+
+
+# ===== Nested / Ordered List Flattening Tests =====
+
+
+class TestFlattenList:
+    """Regression tests for FPDFRenderer._flatten_list().
+
+    _flatten_list() does not touch self.pdf, so a renderer built with
+    pdf=None is sufficient to exercise the flattening logic in isolation.
+    """
+
+    def _flatten(self, mod, markdown_src: str):
+        tokens = mod.parse_markdown(markdown_src)
+        list_token = next(t for t in tokens if t["type"] == "list")
+        renderer = mod.FPDFRenderer(pdf=None)
+        return renderer._flatten_list(list_token, depth=0)
+
+    def test_unordered_nesting_increments_depth(self):
+        mod = _import_fpdf_module()
+        rows = self._flatten(mod, "- a\n  - b\n    - c\n- d\n")
+        assert [(r["depth"], r["marker"], r["text"]) for r in rows] == [
+            (0, None, "a"),
+            (1, None, "b"),
+            (2, None, "c"),
+            (0, None, "d"),
+        ]
+
+    def test_ordered_list_numbers_sequentially(self):
+        mod = _import_fpdf_module()
+        rows = self._flatten(mod, "1. first\n2. second\n3. third\n")
+        assert [r["marker"] for r in rows] == ["1.", "2.", "3."]
+        assert all(r["depth"] == 0 for r in rows)
+
+    def test_ordered_list_preserves_start_number(self):
+        """A list starting at `3.` must keep its start offset, not reset to 1."""
+        mod = _import_fpdf_module()
+        rows = self._flatten(mod, "3. third\n4. fourth\n")
+        assert [r["marker"] for r in rows] == ["3.", "4."]
+
+    def test_mixed_unordered_parent_with_ordered_child(self):
+        mod = _import_fpdf_module()
+        rows = self._flatten(mod, "- parent\n  1. one\n  2. two\n")
+        assert [(r["depth"], r["marker"], r["text"]) for r in rows] == [
+            (0, None, "parent"),
+            (1, "1.", "one"),
+            (1, "2.", "two"),
+        ]
+
+    def test_nested_list_renders_to_pdf(self, tmp_pdf):
+        """End-to-end: a nested + ordered document renders without error."""
+        mod = _import_fpdf_module()
+        md = "# Title\n\n1. step one\n2. step two\n   - detail a\n   - detail b\n3. step three\n"
+        mod.render_pdf(md, str(tmp_pdf))
+        assert tmp_pdf.exists()
+        assert tmp_pdf.stat().st_size > 0
 
 
 # ===== TrueType Outline Detection Tests =====

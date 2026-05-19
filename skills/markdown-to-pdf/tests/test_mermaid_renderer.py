@@ -333,6 +333,77 @@ class TestAutoFallback:
             assert result.success is True
 
 
+# ===== mmdc Error Classification Tests (mocked, no external tools) =====
+
+
+class TestMmdcErrorClassification:
+    """Deterministic regression tests for _try_mmdc() stderr classification.
+
+    subprocess.run is mocked so these run without mermaid-cli installed and
+    pin the behavior the integration test cannot guarantee across mmdc
+    versions.
+    """
+
+    def _run_mmdc_with_stderr(self, stderr: str, returncode: int = 1):
+        from unittest.mock import MagicMock
+
+        from mermaid_renderer import MermaidBackend, MermaidRenderer
+
+        renderer = MermaidRenderer(backend=MermaidBackend.MMDC)
+        fake_proc = MagicMock()
+        fake_proc.returncode = returncode
+        fake_proc.stdout = ""
+        fake_proc.stderr = stderr
+        with patch("mermaid_renderer.subprocess.run", return_value=fake_proc):
+            return renderer._try_mmdc("not valid mermaid", "/nonexistent/out.png")
+
+    def test_newer_mmdc_unknown_diagram_error_is_syntax_error(self):
+        """mermaid-cli >=11 emits UnknownDiagramError for unparseable input."""
+        from mermaid_renderer import MermaidErrorCategory
+
+        stderr = (
+            "UnknownDiagramError: No diagram type detected matching given "
+            "configuration for text: not valid mermaid\n"
+            "detectType (/path/to/mermaid.js:1553:15)"
+        )
+        result = self._run_mmdc_with_stderr(stderr)
+        assert result.success is False
+        assert result.error_category == MermaidErrorCategory.SYNTAX_ERROR
+
+    def test_legacy_parse_error_still_syntax_error(self):
+        """Older mermaid-cli wording must keep classifying as SYNTAX_ERROR."""
+        from mermaid_renderer import MermaidErrorCategory
+
+        result = self._run_mmdc_with_stderr("Error: Parse error on line 2")
+        assert result.error_category == MermaidErrorCategory.SYNTAX_ERROR
+
+    def test_unrelated_error_stays_unknown(self):
+        """Non-syntax failures must not be misclassified as SYNTAX_ERROR."""
+        from mermaid_renderer import MermaidErrorCategory
+
+        result = self._run_mmdc_with_stderr("Error: ENOSPC: no space left on device")
+        assert result.error_category == MermaidErrorCategory.UNKNOWN
+
+    def test_syntax_error_blocks_auto_fallback(self):
+        """SYNTAX_ERROR from mmdc must stop AUTO from retrying Playwright."""
+        from unittest.mock import MagicMock
+
+        from mermaid_renderer import MermaidBackend, MermaidRenderer
+
+        renderer = MermaidRenderer(backend=MermaidBackend.AUTO)
+        fake_proc = MagicMock()
+        fake_proc.returncode = 1
+        fake_proc.stdout = ""
+        fake_proc.stderr = "UnknownDiagramError: No diagram type detected matching given configuration for text: x"
+        with (
+            patch("mermaid_renderer.subprocess.run", return_value=fake_proc),
+            patch.object(renderer, "_try_playwright") as mock_pw,
+        ):
+            result = renderer.render("not valid mermaid")
+        mock_pw.assert_not_called()
+        assert result.success is False
+
+
 # ===== Cache Tests =====
 
 
