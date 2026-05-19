@@ -623,6 +623,62 @@ class TestPDFContentVerification:
             assert b"```mermaid" not in pdf_bytes
 
 
+# ===== Nested / Ordered List Flattening Tests =====
+
+
+class TestFlattenList:
+    """Regression tests for FPDFRenderer._flatten_list().
+
+    _flatten_list() does not touch self.pdf, so a renderer built with
+    pdf=None is sufficient to exercise the flattening logic in isolation.
+    """
+
+    def _flatten(self, mod, markdown_src: str):
+        tokens = mod.parse_markdown(markdown_src)
+        list_token = next(t for t in tokens if t["type"] == "list")
+        renderer = mod.FPDFRenderer(pdf=None)
+        return renderer._flatten_list(list_token, depth=0)
+
+    def test_unordered_nesting_increments_depth(self):
+        mod = _import_fpdf_module()
+        rows = self._flatten(mod, "- a\n  - b\n    - c\n- d\n")
+        assert [(r["depth"], r["marker"], r["text"]) for r in rows] == [
+            (0, None, "a"),
+            (1, None, "b"),
+            (2, None, "c"),
+            (0, None, "d"),
+        ]
+
+    def test_ordered_list_numbers_sequentially(self):
+        mod = _import_fpdf_module()
+        rows = self._flatten(mod, "1. first\n2. second\n3. third\n")
+        assert [r["marker"] for r in rows] == ["1.", "2.", "3."]
+        assert all(r["depth"] == 0 for r in rows)
+
+    def test_ordered_list_preserves_start_number(self):
+        """A list starting at `3.` must keep its start offset, not reset to 1."""
+        mod = _import_fpdf_module()
+        rows = self._flatten(mod, "3. third\n4. fourth\n")
+        assert [r["marker"] for r in rows] == ["3.", "4."]
+
+    def test_mixed_unordered_parent_with_ordered_child(self):
+        mod = _import_fpdf_module()
+        rows = self._flatten(mod, "- parent\n  1. one\n  2. two\n")
+        assert [(r["depth"], r["marker"], r["text"]) for r in rows] == [
+            (0, None, "parent"),
+            (1, "1.", "one"),
+            (1, "2.", "two"),
+        ]
+
+    def test_nested_list_renders_to_pdf(self, tmp_pdf):
+        """End-to-end: a nested + ordered document renders without error."""
+        mod = _import_fpdf_module()
+        md = "# Title\n\n1. step one\n2. step two\n   - detail a\n   - detail b\n3. step three\n"
+        mod.render_pdf(md, str(tmp_pdf))
+        assert tmp_pdf.exists()
+        assert tmp_pdf.stat().st_size > 0
+
+
 # ===== TrueType Outline Detection Tests =====
 
 
