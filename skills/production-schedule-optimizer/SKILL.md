@@ -406,7 +406,7 @@ remaining_capacity_min = (staff_count * shift_hours * 60) - assigned_minutes
 ### generate_schedule.py
 
 ```bash
-python3 skills/production-schedule-optimizer/scripts/generate_schedule.py \
+python3 scripts/generate_schedule.py \
   --products products.csv --demand demand.csv \
   --rooms rooms.csv --staff staff.csv \
   --week-start 2026-02-23 \
@@ -428,7 +428,7 @@ python3 skills/production-schedule-optimizer/scripts/generate_schedule.py \
 ### estimate_staff.py
 
 ```bash
-python3 skills/production-schedule-optimizer/scripts/estimate_staff.py \
+python3 scripts/estimate_staff.py \
   --products products.csv --demand demand.csv \
   --rooms rooms.csv --shift-hours 8 \
   --output staff_report.md
