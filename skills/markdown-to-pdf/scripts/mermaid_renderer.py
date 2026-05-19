@@ -193,7 +193,21 @@ class MermaidRenderer:
             if self.debug:
                 print(f"  mmdc stderr: {stderr}", file=sys.stderr)
 
-            if "Parse error" in stderr or "error" in stderr.lower() and "syntax" in stderr.lower():
+            stderr_low = stderr.lower()
+            # Markers that unambiguously indicate the diagram source itself is
+            # invalid. "No diagram type detected" / UnknownDiagramError is what
+            # newer mermaid-cli (>=11) emits for unparseable input where older
+            # versions said "Parse error". Treat all of these as SYNTAX_ERROR
+            # so the AUTO backend does NOT pointlessly retry with Playwright.
+            syntax_markers = (
+                "parse error",
+                "no diagram type detected",
+                "unknowndiagramerror",
+            )
+            is_syntax_error = any(m in stderr_low for m in syntax_markers) or (
+                "error" in stderr_low and "syntax" in stderr_low
+            )
+            if is_syntax_error:
                 return MermaidResult(
                     success=False,
                     error_category=MermaidErrorCategory.SYNTAX_ERROR,

@@ -535,21 +535,43 @@ class TestMermaidStrictMode:
 
 class TestPDFContentVerification:
     def test_table_content_produces_substantial_pdf(self, tmp_pdf):
-        """PDF with table content should be substantially larger than empty PDF."""
+        """A table PDF must render substantially more text than an empty PDF.
+
+        Raw file size is not a reliable signal here: every PDF embeds the
+        same large CJK font subset (~18 KB constant), so a small 2x2 table
+        only grows the file by ~15% and the old ">20% file size" assertion
+        was inherently flaky. Instead, count text-showing operators (Tj/TJ)
+        in the decompressed content streams, which directly reflects how
+        much text was actually drawn.
+        """
+        import re as re_mod
+        import zlib
+
         mod = _import_fpdf_module()
-        # Render a PDF with a table
+
+        def text_op_count(path: Path) -> int:
+            pdf_bytes = path.read_bytes()
+            decompressed = b""
+            for match in re_mod.finditer(rb"stream\r?\n(.*?)\r?\nendstream", pdf_bytes, re_mod.DOTALL):
+                try:
+                    decompressed += zlib.decompress(match.group(1))
+                except zlib.error:
+                    pass
+            return len(re_mod.findall(rb"\bT[jJ]\b", decompressed))
+
         md_table = "| Name | Age |\n|------|-----|\n| Alice | 30 |\n| Bob | 25 |"
         mod.render_pdf(md_table, str(tmp_pdf))
-        table_size = tmp_pdf.stat().st_size
+        table_ops = text_op_count(tmp_pdf)
 
         # Render a minimal empty PDF for comparison
         empty_pdf = tmp_pdf.parent / "empty.pdf"
         mod.render_pdf("", str(empty_pdf))
-        empty_size = empty_pdf.stat().st_size
+        empty_ops = text_op_count(empty_pdf)
 
-        # Table PDF should be at least 20% larger than empty PDF
-        assert table_size > empty_size * 1.2, (
-            f"Table PDF ({table_size}B) should be substantially larger than empty PDF ({empty_size}B)"
+        # 2 header cells + 4 body cells add several text operators on top of
+        # whatever the empty PDF draws (e.g. the page-number footer).
+        assert table_ops >= empty_ops + 4, (
+            f"Table PDF should render substantially more text operators ({table_ops}) than empty PDF ({empty_ops})"
         )
 
     def test_table_headers_in_decompressed_pdf(self, tmp_pdf):

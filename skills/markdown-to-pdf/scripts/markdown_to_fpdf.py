@@ -355,16 +355,33 @@ class ProfessionalPDF(FPDF):
         self.multi_cell(0, 5.5, text, markdown=True, align="L", wrapmode="CHAR")
         self.ln(2)
 
-    def bullet_list(self, items: List[str]):
-        """Render bulleted list."""
+    def bullet_list(self, rows: List[Dict]):
+        """Render a (possibly nested) list.
+
+        Args:
+            rows: flat list of dicts produced by ListRenderer._flatten_list,
+                  each ``{"depth": int, "text": str, "marker": Optional[str]}``.
+                  ``marker`` is set for ordered-list items (e.g. ``"1."``);
+                  ``None`` means use a depth-appropriate bullet glyph.
+        """
         self.set_font(FONT_FAMILY, "", 9)
         self.set_text_color(*self.theme.text_dark)
-        for item in items:
-            x = self.get_x()
-            self.cell(5, 5, "\u30fb", new_x="END")
-            self.cell(2)
-            self.multi_cell(0, 5, item, markdown=True, align="L", wrapmode="CHAR")
-            self.set_x(x)
+        depth_bullets = ["\u30fb", "\u2013", "\u2022", "\u25e6"]  # \u30fb \u2013 \u2022 \u25e6
+        indent_per_level = 4.5  # mm
+        for row in rows:
+            depth = max(0, int(row.get("depth", 0)))
+            text = row.get("text", "")
+            ordered_marker = row.get("marker")
+            marker = ordered_marker or depth_bullets[depth % len(depth_bullets)]
+            indent = min(depth, 6) * indent_per_level
+            x0 = PAGE_MARGIN_MM + indent
+            # Marker width: wide enough for the glyph/number plus a gap.
+            marker_w = max(self.get_string_width(marker) + 2.5, 5.0)
+            self.set_x(x0)
+            self.cell(marker_w, 5, marker, new_x="END")
+            # Hanging indent: wrapped lines align under the text, not the marker.
+            self.multi_cell(0, 5, text, markdown=True, align="L", wrapmode="CHAR")
+            self.set_x(PAGE_MARGIN_MM)
         self.ln(2)
 
     def code_block(self, code: str):
@@ -774,8 +791,8 @@ class FPDFRenderer:
                 self.pdf.body_text(text)
 
         elif ttype == "list":
-            items = self._extract_list_items(token)
-            self.pdf.bullet_list(items)
+            rows = self._flatten_list(token, depth=0)
+            self.pdf.bullet_list(rows)
 
         elif ttype == "block_code":
             info = token.get("attrs", {}).get("info", "")
@@ -836,6 +853,45 @@ class FPDFRenderer:
                 paragraphs.append(children_to_markdown(child["children"]))
         if paragraphs:
             self.pdf.quote_block(paragraphs)
+
+    def _flatten_list(self, list_token: Dict, depth: int = 0) -> List[Dict]:
+        """Recursively flatten a (possibly nested) list into ordered rows.
+
+        Each row preserves its nesting ``depth`` and, for ordered lists, a
+        numeric ``marker`` so bullet_list can indent and number correctly.
+        Nested sublists are emitted immediately after their parent item.
+        """
+        rows: List[Dict] = []
+        attrs = list_token.get("attrs", {})
+        ordered = bool(attrs.get("ordered", False))
+        idx = attrs.get("start", 1) or 1
+        for child in list_token.get("children", []):
+            if child.get("type") != "list_item":
+                continue
+            text_parts: List[str] = []
+            nested: List[Dict] = []
+            for sub in child.get("children", []):
+                stype = sub.get("type")
+                if stype in ("paragraph", "block_text"):
+                    text_parts.append(children_to_markdown(sub.get("children", [])))
+                elif stype == "list":
+                    nested.append(sub)
+                elif "children" in sub and isinstance(sub["children"], list):
+                    text_parts.append(children_to_markdown(sub["children"]))
+                elif "children" in sub:
+                    text_parts.append(str(sub["children"]))
+            text = " ".join(p for p in text_parts if p)
+            rows.append(
+                {
+                    "depth": depth,
+                    "text": text,
+                    "marker": f"{idx}." if ordered else None,
+                }
+            )
+            idx += 1
+            for nested_list in nested:
+                rows.extend(self._flatten_list(nested_list, depth + 1))
+        return rows
 
     def _extract_list_items(self, list_token: Dict) -> List[str]:
         items = []
