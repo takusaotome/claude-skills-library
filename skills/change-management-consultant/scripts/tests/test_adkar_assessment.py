@@ -143,7 +143,8 @@ class TestGenerateReport:
         data = json.loads(report)
         assert data["stakeholder"] == "Sales Team"
         assert data["scores"]["awareness"] == 8
-        assert data["barrier_point"] == "Knowledge"
+        # Barrier point is Ability (score=0), not Knowledge (score=2)
+        assert data["barrier_point"] == "Ability"
         assert "recommendations" in data
         assert len(data["recommendations"]) > 0
 

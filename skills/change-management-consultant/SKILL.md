@@ -89,6 +89,7 @@ This skill produces the following deliverables:
 | Stakeholder Engagement Plan | Markdown table | Power/Interest mapping with engagement strategies |
 | Communication Calendar | Markdown table | Timeline of communications with audience and channel |
 | ADKAR Assessment | Markdown | Individual/group assessment against ADKAR model |
+| Kotter 8-Step Assessment | Markdown | Organizational progress against Kotter's 8-Step model |
 | Training Needs Matrix | Markdown table | Gap analysis with training recommendations |
 | Change Dashboard | Markdown | Progress metrics and status indicators |
 | Resistance Management Plan | Markdown | Resistance sources and mitigation strategies |
@@ -97,17 +98,23 @@ This skill produces the following deliverables:
 
 ```bash
 # Generate ADKAR assessment for a stakeholder group
-python3 skills/change-management-consultant/scripts/adkar_assessment.py \
+python3 scripts/adkar_assessment.py \
   --stakeholder "Sales Team" \
   --awareness 8 --desire 4 --knowledge 2 --ability 0 --reinforcement 0
 
+# Assess progress against Kotter's 8-Step model
+python3 scripts/kotter_assessment.py \
+  --urgency 4 --coalition 3 --vision 4 --communicate 2 \
+  --empower 2 --wins 1 --sustain 1 --anchor 1
+# Or use short flags: -u 4 -c 3 -v 4 -m 2 -e 2 -w 1 -s 1 -a 1
+
 # Calculate change readiness score
-python3 skills/change-management-consultant/scripts/readiness_calculator.py \
+python3 scripts/readiness_calculator.py \
   --leadership 8 --culture 6 --capacity 5 --history 7 --resources 9
 # Or use short flags: -l 8 -c 6 -a 5 -y 7 -r 9
 
 # Generate stakeholder analysis from CSV
-python3 skills/change-management-consultant/scripts/stakeholder_analyzer.py \
+python3 scripts/stakeholder_analyzer.py \
   --input stakeholders.csv --output stakeholder_analysis.md
 ```
 
@@ -122,6 +129,7 @@ python3 skills/change-management-consultant/scripts/stakeholder_analyzer.py \
 
 ### Scripts (executable automation)
 - `scripts/adkar_assessment.py` - ADKAR scoring and gap analysis
+- `scripts/kotter_assessment.py` - Kotter 8-Step progress assessment
 - `scripts/readiness_calculator.py` - Change readiness score calculation
 - `scripts/stakeholder_analyzer.py` - Stakeholder analysis from CSV input
 
