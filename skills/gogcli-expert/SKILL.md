@@ -315,8 +315,9 @@ gog gmail label apply <message-id> --label "Projects/Active"
 
 ```bash
 # 下書き
-gog gmail drafts
-gog gmail draft create --to recipient@example.com --subject "下書き" --body "内容"
+gog gmail drafts list
+gog gmail drafts create --to recipient@example.com --subject "下書き" --body "内容"
+gog gmail drafts send <draft-id>   # 作成と同じ経路で送信（推奨）
 
 # フィルタ
 gog gmail filters
@@ -328,6 +329,8 @@ gog gmail vacation --disable
 # 委任
 gog gmail delegates
 ```
+
+> ⚠️ **`drafts delete` のデータ消失注意:** CLI で作った下書きを Gmail Web 画面から送信すると孤立ドラフトが残り、その `draft-id` を `drafts delete` すると**送信済みメールごと完全削除**される（ゴミ箱にも残らない）。`drafts update` が **`Message not a draft`** を返したら「送信済み」のサインなので**削除しない**こと。詳細は `references/troubleshooting.md` の「Gmail: Draft Delete が送信済みメールを消す」を参照。
 
 ### Calendar
 
@@ -804,6 +807,8 @@ export GOG_ENABLE_COMMANDS=calendar,tasks
 | キーリングエラー | バックエンド問題 | `gog auth keyring auto` でリセット |
 | タイムゾーンが違う | 未設定 | `gog config set default_timezone "Asia/Tokyo"` |
 | サービスアカウントエラー | 委任未設定 | Workspace 管理コンソールでスコープを許可 |
+| `drafts update` が `Message not a draft` | その下書きは**送信済み**（孤立ドラフト） | **`drafts delete` しない**。delete すると送信済みメールごと完全削除される。Sent/Admin ログで確認 |
+| 送信したはずのメールが Sent から消えた | 孤立ドラフトを `drafts delete` した可能性 | `drafts delete` は完全削除（ゴミ箱なし）。受信者コピー/Google Vault で復旧 |
 
 詳細なトラブルシューティングは `references/troubleshooting.md` を参照。
 

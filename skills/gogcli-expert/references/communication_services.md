@@ -177,17 +177,38 @@ gog gmail label delete "Projects/Archived"
 
 ```bash
 # 下書き一覧
-gog gmail drafts
+gog gmail drafts list
 
 # 下書き作成
-gog gmail draft create \
+gog gmail drafts create \
   --to recipient@example.com \
   --subject "Draft Subject" \
   --body "Draft content..."
 
-# 下書き送信
-gog gmail draft send <draft-id>
+# 下書き更新（内容差し替え）
+gog gmail drafts update <draft-id> --subject "..." --body-file body.txt
+
+# 下書き送信（推奨: 作成と同じ経路で送信し、孤立ドラフトを残さない）
+gog gmail drafts send <draft-id>
+
+# 下書き削除（破壊的。下記の警告を必読）
+gog gmail drafts delete <draft-id>
 ```
+
+> ⚠️ **データ消失の重大注意 — `drafts delete` が「送信済みメール」を完全削除することがある**
+>
+> **事象:** API/CLI で作成した下書きを Gmail の Web 画面から送信すると、下書きが自動消去されず「孤立（orphaned draft）」して残ることがある。この孤立ドラフトの `draft-id` を `drafts delete` すると、ポインタの先＝**送信済み本体メッセージごと完全削除**される。`drafts.delete` は「即時・完全削除（ゴミ箱に入れない）」仕様のため、**ゴミ箱からも復元できない**。
+>
+> **決定的な兆候:** `drafts update <draft-id>` が **`Message not a draft`（HTTP 400）** を返したら、その下書きは**すでに送信済み**を意味する（404 ではない点に注意）。`drafts list` に出てこないのに `drafts get <draft-id>` が返る場合も孤立ドラフトのサイン。
+>
+> **安全ルール:**
+> 1. `Message not a draft` が出たら **その `draft-id` を絶対に `delete` しない**。まず送信済みか確認する。
+> 2. 下書きの「作り直し」を **delete → create で行わない**。変更は `drafts update` を使う。
+> 3. 送信後に残った孤立ドラフトの掃除は **Gmail Web 画面でゴミ箱へ**（30日間は復元可能）。API の `drafts delete` は使わない。
+> 4. **作成と送信は同じ経路で完結**させる。CLI で作ったら `gog gmail drafts send` で送る。
+> 5. 「送ったか」の真偽は**メールボックスの Sent ではなく、Google Admin の Email Log Search／受信者確認を真実**とする。削除で Sent コピー自体が消えると「未送信」に見え、**二重送信のリスク**が生じる。
+>
+> 詳細は `references/troubleshooting.md` の「Gmail: Draft Delete が送信済みメールを消す」を参照。
 
 ### Filters
 

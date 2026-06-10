@@ -272,6 +272,45 @@ gog gmail threads --json
 | 添付ファイルが大きすぎる | Gmail の添付制限は 25MB |
 | 受信者アドレスが無効 | メールアドレスの形式を確認 |
 
+### Gmail: Draft Delete が送信済みメールを消す（データ消失・重大）
+
+**症状:** CLI で作った下書きを送信したはずなのに、後日その送信済みメールが Sent からもゴミ箱からも見つからない。`drafts delete` を実行した前後で「送信履歴が消える」事象が再発する。
+
+**根本原因（メカニズム）:**
+
+- Gmail の「下書き」は、本体メッセージに `DRAFT` ラベルを付けた**ポインタ**にすぎない。
+- **API/CLI で作成した下書きを Gmail の Web 画面から送信**すると、理想動作（送信時に下書きが消え、新IDの送信メッセージになる）から外れ、**下書きのポインタが残ったまま実体が送信済みになる**ことがある（orphaned draft）。
+- この孤立ドラフトの `draft-id` を `drafts delete` すると、Gmail API の `users.drafts.delete` は**ポインタの先の本体メッセージを即時・完全削除**する。実体が送信済みなら**送信済みメールごと消える**。
+- `drafts.delete` は「**Does not simply trash it（ゴミ箱に入れず完全削除）**」仕様のため、**ゴミ箱からも復元不可**。`in:anywhere`（Trash/Spam含む全検索）でもヒットしなくなる。
+
+**決定的な兆候（このシグナルが出たら止まる）:**
+
+| シグナル | 意味 |
+|---------|------|
+| `drafts update <id>` → **`Message not a draft`（HTTP 400）** | その下書きの実体は**もう下書きではない＝送信済み**。404 ではなく 400 が出る点が重要 |
+| `drafts list` に出ないのに `drafts get <id>` は返る | 孤立ドラフト（orphaned draft）のサイン |
+| `drafts delete` が成功した後、Sent からメールが消える | 送信済み本体を削除した可能性が高い |
+
+**対策・安全ルール:**
+
+1. `Message not a draft` が出たら、**その `draft-id` を絶対に `delete` しない**。`gog gmail search 'in:sent ...'` や Google Admin の Email Log Search で送信済みかを先に確認する。
+2. 下書きの「作り直し」を **delete → create で行わない**。内容変更は `gog gmail drafts update` を使う。
+3. 送信後に残った孤立ドラフトの掃除は、**Gmail Web 画面からゴミ箱へ**移す（30日間は復元可能）。API の `drafts delete` は完全削除なので使わない。
+4. **作成と送信を同じ経路で完結**させる。CLI で作った下書きは `gog gmail drafts send <id>` で送り、Web 画面からの送信と混在させない（混在が孤立ドラフトの主因）。
+5. 「送ったか未送信か」の判断は、**メールボックスの Sent ではなく Google Admin の Email Log Search／受信者確認を真実**とする。削除で Sent コピーが消えると Sent が空に見え、**未送信と誤認して二重送信するリスク**が生じる。
+
+**復旧（既に消えてしまった場合）:**
+
+- **受信側のコピーは残る**（送達済みなら受信者の受信トレイにある）。コンテンツ自体は失われない。
+- **Google Vault**（保持設定が有効な場合）は、ユーザー削除と無関係にメールを保持するため、管理者がエクスポートで復元できる。
+- **Google Admin の Email Log Search** にメタデータ（ヘッダ）の監査記録は残る。
+- 完全削除されたメールボックス内コピーは、ゴミ箱を経由しないため通常 UI からは復元できない。
+
+**参考:**
+- [users.drafts.delete（完全削除・ゴミ箱に入れない）](https://developers.google.com/gmail/api/reference/rest/v1/users.drafts/delete)
+- [Gmail API: Create and send draft emails](https://developers.google.com/workspace/gmail/api/guides/drafts)
+- [gmailr Issue #119（送信後に下書きが自動削除されず残る）](https://github.com/r-lib/gmailr/issues/119)
+
 ### Gmail: Track Setup Fails
 
 **症状:** `gog gmail track setup` が失敗する。
