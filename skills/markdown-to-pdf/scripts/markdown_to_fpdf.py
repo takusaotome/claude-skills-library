@@ -352,7 +352,9 @@ class ProfessionalPDF(FPDF):
         """Render body paragraph with inline markdown support."""
         self.set_font(FONT_FAMILY, "", 9.5)
         self.set_text_color(*self.theme.text_dark)
-        self.multi_cell(0, 5.5, text, markdown=True, align="L", wrapmode="CHAR")
+        # WORD-wrap prose at word boundaries; fpdf2 still char-breaks any single
+        # token longer than the line, so long file paths/IDs stay safe.
+        self.multi_cell(0, 5.5, text, markdown=True, align="L", wrapmode="WORD")
         self.ln(2)
 
     def bullet_list(self, rows: List[Dict]):
@@ -380,7 +382,8 @@ class ProfessionalPDF(FPDF):
             self.set_x(x0)
             self.cell(marker_w, 5, marker, new_x="END")
             # Hanging indent: wrapped lines align under the text, not the marker.
-            self.multi_cell(0, 5, text, markdown=True, align="L", wrapmode="CHAR")
+            # WORD-wrap so bullets break at word boundaries (long tokens still split).
+            self.multi_cell(0, 5, text, markdown=True, align="L", wrapmode="WORD")
             self.set_x(PAGE_MARGIN_MM)
         self.ln(2)
 
