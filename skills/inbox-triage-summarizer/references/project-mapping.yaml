@@ -1,0 +1,123 @@
+# Project Mapping Configuration
+#
+# This file defines rules for associating emails with projects/clients.
+# Copy this template and customize for your organization.
+#
+# Match rules are evaluated in order; first match wins.
+
+schema_version: "1.0"
+
+# Default project for emails that don't match any rules
+default_project: unassigned
+
+# Project definitions
+projects:
+  # Client project example
+  - id: client-alpha
+    display_name: Alpha Corp Project
+    priority: high  # high, medium, low
+    contacts:
+      primary: alice@alpha.com
+      all:
+        - alice@alpha.com
+        - bob@alpha.com
+        - legal@alpha.com
+    match_rules:
+      - type: sender_domain
+        pattern: "@alpha.com"
+        confidence: 0.9
+      - type: subject_contains
+        pattern: "Alpha|ALPHA-\\d+"
+        confidence: 0.8
+        case_insensitive: true
+      - type: thread_label
+        pattern: "clients/alpha"
+        confidence: 1.0
+
+  # Vendor project example
+  - id: vendor-acme
+    display_name: ACME Vendor Relations
+    priority: medium
+    contacts:
+      primary: sales@acme.com
+    match_rules:
+      - type: sender_domain
+        pattern: "@acme.com"
+        confidence: 0.9
+      - type: subject_contains
+        pattern: "ACME|License Renewal|Subscription"
+        confidence: 0.7
+        case_insensitive: true
+
+  # Internal project example
+  - id: internal-ops
+    display_name: Internal Operations
+    priority: low
+    match_rules:
+      - type: sender_domain
+        pattern: "@mycompany.com"
+        confidence: 0.8
+      - type: subject_contains
+        pattern: "Internal|HR|IT Support|Facilities"
+        confidence: 0.6
+        case_insensitive: true
+
+  # Recruiting project example
+  - id: recruiting
+    display_name: Recruiting & Hiring
+    priority: medium
+    match_rules:
+      - type: sender_domain
+        pattern: "@linkedin.com|@indeed.com|@greenhouse.io"
+        confidence: 0.9
+      - type: subject_contains
+        pattern: "Application|Candidate|Interview|Resume"
+        confidence: 0.7
+        case_insensitive: true
+
+# VIP senders (used for urgency scoring)
+vip_senders:
+  - pattern: "ceo@"
+    urgency_boost: 25
+  - pattern: "cto@"
+    urgency_boost: 25
+  - pattern: "@alpha.com"
+    urgency_boost: 15
+    reason: "Primary client"
+
+# Ignore patterns (skip these emails in triage)
+ignore_patterns:
+  - type: sender
+    pattern: "noreply@|no-reply@|notifications@"
+  - type: subject
+    pattern: "Out of Office|Automatic reply|Undeliverable"
+  - type: list_id
+    pattern: "marketing-newsletter|company-announcements"
+
+# Classification overrides
+classification_overrides:
+  # Force specific emails to specific classifications
+  - match:
+      sender_domain: "@alerts.monitoring.com"
+    classification: requires_action
+    reason: "System alerts always need action"
+
+  - match:
+      subject_contains: "Weekly Digest|Monthly Report"
+    classification: fyi
+    reason: "Digests are informational only"
+
+# Staleness thresholds (in days)
+staleness_thresholds:
+  warning: 3
+  follow_up: 5
+  escalation: 10
+
+# Thread completion keywords
+thread_completion_patterns:
+  - "resolved"
+  - "completed"
+  - "closed"
+  - "no further action"
+  - "all set"
+  - "thanks, this is done"

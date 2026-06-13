@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 109 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 110 dirs total
+├── skills/                 # 110 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 111 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (109 Skills)
+## Skill Catalog (110 Skills)
 
-> Note: `skills/` contains 110 directories total — 109 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: `skills/` contains 111 directories total — 110 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -168,7 +168,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 
-### QA & Testing (13 skills)
+### QA & Testing (14 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -178,6 +178,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
 | helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
 | email-triage-responder | 受信メールのトリアージ・優先度付け・返信ドラフト | Eisenhower Matrix, Topic Classification, Draft Generation |
+| inbox-triage-summarizer | 受信箱の定期スキャン・プロジェクト別分類・アクションサマリー | Project/Client Grouping, FYI/Response/Action/Blocked Classification, Thread Tracking |
 | cx-error-analyzer | CXエラーシナリオ分析・改善優先度付け | 6-Axis CX Scoring, Impact vs Effort Matrix |
 | skill-idea-miner | セッションログからスキルアイデアを自動抽出・スコアリング | Session Log Mining, LLM Scoring, Backlog Management |
 | skill-designer | アイデア仕様からスキル設計プロンプトを生成 | Design Prompt Generation, Repository Convention Compliance |
@@ -2120,6 +2121,49 @@ Analyze inbox emails to identify action-required items, prioritize by urgency/im
 - "Generate draft responses for my Q1 and Q2 emails"
 - "Classify my inbox by topic and sender type"
 - "Track which emails I've responded to this week"
+
+---
+
+### 📥 Inbox Triage Summarizer
+
+**File:** `skills/inbox-triage-summarizer/SKILL.md`
+
+Periodic inbox scan that categorizes new emails by project/client, identifies action-required items, and generates prioritized summary with clear action classifications (FYI, requires-response, requires-action, blocked-waiting-on-others).
+
+**When to use:**
+- Running a periodic inbox review (daily, weekly) to understand backlog
+- Grouping emails by project or client for focused processing
+- Identifying blocked items waiting on external responses
+- Generating an executive summary of inbox state for team standup
+- Feeding action-required emails to email-triage-responder for response drafting
+
+**Core Capabilities:**
+- ✅ Project/client detection (domain matching, subject keywords, labels)
+- ✅ 4-way action classification (FYI, requires-response, requires-action, blocked-waiting)
+- ✅ Thread correlation and staleness tracking
+- ✅ Urgency scoring with deadline detection
+- ✅ Export format compatible with email-triage-responder
+- ✅ Scan history for delta-based processing
+
+**Classification Categories:**
+
+| Classification | Description | Action |
+|---------------|-------------|--------|
+| FYI | No action required | Read and archive |
+| Requires Response | Reply needed, no deliverable | Send response |
+| Requires Action | Work beyond replying required | Complete task |
+| Blocked Waiting | Ball in their court | Monitor/follow-up |
+
+**Key Components:**
+- `scripts/triage_inbox.py` - Main inbox triage and summarization script
+- `references/email-categorization-guide.md` - Classification criteria and rules
+- `references/project-mapping.yaml` - Project/client detection configuration
+
+**Example Use Cases:**
+- "Scan my inbox and group emails by project"
+- "Show me which threads are blocked waiting on responses"
+- "Generate a summary of action items for today's standup"
+- "Export action-required emails for response drafting"
 
 ---
 
@@ -4563,6 +4607,17 @@ Future skills planned for this library:
 - Service categories: Finance & Accounting, HR & Payroll, Customer Support, Data Processing, Procurement
 - Client intake questionnaire template with 8 sections
 - Industry benchmarks for automation rates, error reduction, and cost savings
+
+### inbox-triage-summarizer v1.0 (2026-06-13)
+- Periodic inbox scan for project/client-based email categorization
+- 4-way action classification: FYI, requires-response, requires-action, blocked-waiting
+- Project matching via sender domain, subject keywords, and thread labels
+- Thread correlation and staleness tracking (warning/follow-up/escalation thresholds)
+- Urgency scoring with deadline detection (URGENT, ASAP, EOD, explicit dates)
+- Export format compatible with email-triage-responder for response drafting
+- Scan history tracking for delta-based processing
+- YAML-based project mapping configuration
+- JSON and Markdown summary report outputs
 
 ### email-triage-responder v1.0 (2026-04-21)
 - Email inbox triage and response draft generation skill
