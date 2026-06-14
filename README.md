@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 109 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 110 dirs total
+├── skills/                 # 110 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 111 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (109 Skills)
+## Skill Catalog (110 Skills)
 
-> Note: `skills/` contains 110 directories total — 109 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: `skills/` contains 111 directories total — 110 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -168,7 +168,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 
-### QA & Testing (13 skills)
+### QA & Testing (14 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -178,6 +178,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | uat-testcase-generator | UATテストケース生成(Excel) | Excel Output, Traceability |
 | helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
 | email-triage-responder | 受信メールのトリアージ・優先度付け・返信ドラフト | Eisenhower Matrix, Topic Classification, Draft Generation |
+| email-thread-summarizer | メールスレッド要約・アクションアイテム抽出・陳腐化検出 | Gmail/Outlook Support, Staleness Detection, Action Item Extraction |
 | cx-error-analyzer | CXエラーシナリオ分析・改善優先度付け | 6-Axis CX Scoring, Impact vs Effort Matrix |
 | skill-idea-miner | セッションログからスキルアイデアを自動抽出・スコアリング | Session Log Mining, LLM Scoring, Backlog Management |
 | skill-designer | アイデア仕様からスキル設計プロンプトを生成 | Design Prompt Generation, Repository Convention Compliance |
@@ -2120,6 +2121,63 @@ Analyze inbox emails to identify action-required items, prioritize by urgency/im
 - "Generate draft responses for my Q1 and Q2 emails"
 - "Classify my inbox by topic and sender type"
 - "Track which emails I've responded to this week"
+
+---
+
+### 📬 Email Thread Summarizer
+
+**File:** `skills/email-thread-summarizer/SKILL.md`
+
+Analyze email threads to extract current status, pending actions, timeline of events, and identify stale/outdated information. Supports both Gmail (via gogcli) and Outlook email exports.
+
+**When to use:**
+- Summarizing long email conversations to understand current state
+- Extracting outstanding action items from email exchanges
+- Building a timeline of key events and decisions from email threads
+- Detecting if a previously cached thread summary is outdated
+- Analyzing thread status (resolved, pending, stale, escalated)
+
+**Core Capabilities:**
+- Multi-format parsing (Gmail JSON, Outlook/Graph API, EML, MBOX)
+- Participant role detection (initiator, responder, CC)
+- Action item extraction with deadline detection
+- Decision identification and tracking
+- Superseded information detection
+- Thread status classification (active, resolved, stale, escalated, awaiting_response)
+- Staleness detection for cached summaries
+
+**Workflow:**
+
+| Step | Description |
+|------|-------------|
+| Step 1 | Collect thread data (gogcli, Graph API, or file import) |
+| Step 2 | Parse and analyze thread structure |
+| Step 3 | Extract action items, decisions, timeline |
+| Step 4 | Classify thread status |
+| Step 5 | Generate markdown summary |
+| Step 6 | Check staleness vs cached version (optional) |
+
+**Status Classification:**
+
+| Status | Criteria |
+|--------|----------|
+| Active | Last message within 3 business days, no resolution |
+| Resolved | Contains resolution language ("resolved", "done", "closed") |
+| Stale | No activity for 7+ days, has pending items |
+| Escalated | CC to management, urgent markers, escalation language |
+| Awaiting Response | Last message is a question/request with no reply |
+
+**Key Components:**
+- `scripts/analyze_thread.py` - Parse thread and extract structured data
+- `scripts/generate_summary.py` - Generate markdown summary report
+- `scripts/check_staleness.py` - Compare cached vs current state
+- `references/thread_analysis_patterns.md` - Action item, decision, and status patterns
+
+**Example Use Cases:**
+- "Summarize this email thread and tell me what's still pending"
+- "What decisions were made in this conversation?"
+- "Is my summary from last week still accurate?"
+- "Who committed to what actions in this thread?"
 
 ---
 
@@ -4485,6 +4543,18 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### email-thread-summarizer v1.0 (2026-06-14)
+- Email thread analysis skill for extracting status, action items, timeline, and decisions
+- Multi-format support: Gmail JSON, Outlook/Graph API, EML, MBOX
+- Participant role detection (initiator, responder, CC)
+- Action item extraction with deadline detection using NLP patterns
+- Decision identification and tracking
+- Superseded information detection (corrections, updates, contradictions)
+- 5-state thread status classification (active, resolved, stale, escalated, awaiting_response)
+- Staleness detection for cached summaries with recommendation engine
+- Markdown summary generation with timeline, action items, and decisions
+- 69 unit tests covering all core functionality
 
 ### web-server-security-reviewer v1.1 (2026-05-02)
 - Phase 0 interactive interview wizard for building `target_profile.yaml` via `AskUserQuestion`
