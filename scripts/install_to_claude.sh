@@ -86,10 +86,16 @@ sync_skill() {
   if (( CHECK_ONLY )); then
     if [[ ! -d "$dst" ]]; then
       note_drift "skill missing in ~/.claude: $name"
-    elif ! diff -rq "$src" "$dst" 2>&1 | grep -v "__pycache__\|\.DS_Store" | grep -q .; then
-      :  # in sync
     else
-      note_drift "skill differs from repo: $name"
+      # Capture the filtered diff into a variable instead of piping into `grep -q`.
+      # `grep -q` short-circuits on first match and closes the pipe, which sends
+      # SIGPIPE (exit 141) to the upstream `grep -v`; under `set -o pipefail` that
+      # 141 became the pipeline status and the leading `!` flipped it to success,
+      # silently reporting drift as "in sync". Comparing a captured string is
+      # race-free and does not depend on pipe exit codes.
+      local delta
+      delta="$(diff -rq "$src" "$dst" 2>&1 | grep -v "__pycache__\|\.DS_Store" || true)"
+      [[ -n "$delta" ]] && note_drift "skill differs from repo: $name"
     fi
     return 0
   fi
