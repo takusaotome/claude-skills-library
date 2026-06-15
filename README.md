@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 111 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 112 dirs total
+├── skills/                 # 112 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 113 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (111 Skills)
+## Skill Catalog (112 Skills)
 
-> Note: `skills/` contains 111 directories total — 110 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: `skills/` contains 112 directories total — 111 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -205,7 +205,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | pci-dss-compliance-consultant | PCI DSS v4準拠支援 | Gap Analysis, SAQ Selection |
 | financial-analyst | 財務分析・投資評価 | DCF, Comparable Analysis |
 
-### Vendor Management (4 skills)
+### Vendor Management (5 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -213,6 +213,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | vendor-estimate-reviewer | ベンダー見積レビュー・妥当性評価 | 12 Review Dimensions, 60+ Risk Factors |
 | vendor-procurement-coordinator | RFQ送信〜見積受領〜クライアント見積作成の統合調整 | Email Automation, Response Tracking, Quote Comparison |
 | vendor-rfq-creator | RFQ（見積依頼書）作成 | 150+ Checklist Items |
+| vendor-support-ticket-tracker | 複数ベンダーのサポートチケット・RMA管理 | Ticket State Machine, SLA Tracking, Stale Detection |
 
 ### HR Management (2 skills)
 
@@ -1037,6 +1038,69 @@ A skill that orchestrates the complete vendor procurement lifecycle from initial
 - YAML形式の調達ステータス（procurement.yaml）
 - Markdown形式のベンダー比較レポート
 - Markdown形式のクライアント見積書
+
+---
+
+### 🎫 Vendor Support Ticket Tracker（ベンダーサポートチケット管理）
+
+**File:** `skill-packages/vendor-support-ticket-tracker.skill`
+
+複数ベンダー（STX、Dell、HP等）のサポートチケットおよびRMAケースを一元管理するスキル。チケット状態、通信タイムライン、保留アクション、エスカレーション状況を追跡。ベンダーからのメール応答を解析してチケットステータスを自動更新し、フォローアップが必要なチケットを特定するステータスレポートを生成。
+
+A skill for tracking vendor support tickets and RMA cases across multiple vendors (STX, Dell, HP, etc.). Maintains ticket state, communication timeline, pending actions, and escalation status. Integrates with email to auto-update ticket status from vendor responses and generates status reports identifying tickets requiring follow-up.
+
+**When to use:**
+- 新規ベンダーサポートチケットまたはRMAケースを登録するとき
+- ベンダーからのメール返信を基にチケットステータスを更新するとき
+- オープンチケットのステータスレポートを生成するとき
+- フォローアップが必要な古いチケットを特定するとき
+- 特定チケットのエスカレーション履歴を確認するとき
+- ベンダー間のSLA遵守状況を追跡するとき
+
+**Core Capabilities:**
+- ✅ チケットデータベース初期化（YAML形式）
+- ✅ チケット作成（ベンダー、ID、件名、優先度、カテゴリ）
+- ✅ ステータス更新とタイムライン記録
+- ✅ エスカレーション管理（理由、履歴追跡）
+- ✅ 古いチケット検出（設定可能な閾値）
+- ✅ ステータスレポート生成（Markdown形式）
+
+**Key Features:**
+
+**8段階チケット状態マシン**:
+1. `open` - 新規作成、ベンダー確認待ち
+2. `acknowledged` - ベンダーが受領確認
+3. `in-progress` - ベンダーが対応中
+4. `awaiting-parts` - RMA: 交換部品待ち
+5. `awaiting-customer` - ベンダーが顧客対応待ち
+6. `escalated` - 上位サポートにエスカレート
+7. `resolved` - 問題解決、確認待ち
+8. `closed` - 解決確認済み、完了
+
+**SLA管理**:
+- 優先度別SLA目標（critical: 4h, high: 24h, medium: 72h, low: 5日）
+- SLA違反警告と自動エスカレーション
+- 営業時間計算（9:00-18:00、休日除外）
+
+**Bundled Resources:**
+- `references/ticket-lifecycle.md`: チケット状態遷移、SLAガイドライン、エスカレーション手順
+- `scripts/ticket_manager.py`: CLI（init/create/update/report/stale/escalate/show/list）
+
+**Use Cases:**
+- ハードウェア障害のRMAケース追跡
+- ソフトウェアサポートチケット管理
+- SLA遵守状況のモニタリング
+- ベンダー対応のエスカレーション管理
+
+**Best For:**
+- ITサポートマネージャー
+- システム管理者
+- 調達・資産管理担当者
+- ヘルプデスク運用者
+
+**Output Format:**
+- YAML形式のチケットデータベース（tickets.yaml）
+- Markdown形式のステータスレポート
 
 ---
 
@@ -4587,6 +4651,19 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### vendor-support-ticket-tracker v1.0 (2026-06-15)
+- Track vendor support tickets and RMA cases across multiple vendors (STX, Dell, HP, etc.)
+- 8-state ticket lifecycle: open → acknowledged → in-progress → awaiting-parts/awaiting-customer → escalated → resolved → closed
+- YAML-based ticket database with schema versioning
+- Priority-based SLA target calculation (critical: 4h, high: 24h, medium: 72h, low: 5 days)
+- Stale ticket detection with configurable threshold (default 7 days)
+- Escalation management with reason tracking and timeline logging
+- Markdown status report generation grouped by vendor with follow-up recommendations
+- CLI commands: init, create, update, report, stale, escalate, show, list
+- Vendor-specific guidelines for STX, Dell, HP/HPE, Cisco
+- Integration points for email auto-update and calendar scheduling
+- 27 unit tests covering all core functionality
 
 ### email-thread-summarizer v1.0 (2026-06-14)
 - Email thread analysis skill for extracting status, action items, timeline, and decisions
