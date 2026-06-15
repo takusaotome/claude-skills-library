@@ -223,7 +223,7 @@ gog groups members engineering@company.com --json | jq -r '.[].email'
 
 | 目的 | コマンド | API | 必要権限 |
 |------|---------|-----|---------|
-| 自分の所属グループとメンバーを読む | `gog groups list` / `gog groups members` | Cloud Identity | 通常の OAuth（Workspace） |
+| 自分の所属グループとメンバーを読む | `gog groups list` / `gog groups members` | Cloud Identity | サービスアカウント、または `cloud-identity.groups.readonly` スコープ付きトークン（標準の `auth add --services` 対象外。`gog auth services` で `groups` は user=false） |
 | ドメイン全体のグループ管理・メンバー編集 | `gog admin groups ...` | Directory | サービスアカウント＋ドメイン委任 |
 
 ---
