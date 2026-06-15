@@ -114,7 +114,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | ffmpeg-expert | 1.0 | Media Processing | Video/Audio encoding, filters, streaming |
 | financial-analyst | 1.0 | Financial Analysis | DCF, NPV/IRR, Comparable Analysis |
 | fujisoft-presentation-creator | 1.0 | Presentations | MARP Templates, Corporate Style |
-| gogcli-expert | 1.0 | Google Workspace CLI | 13 services, OAuth2/SA auth, multi-account |
+| gogcli-expert | 2.0 | Google Workspace CLI | 25+ services (gogcli v0.27.0), OAuth2/SA auth, multi-account |
 | helpdesk-responder | 1.0 | Customer Support | KB-based responses, confidence scoring, escalation |
 | hidden-contract-investigator | 1.0 | Code Contract Analysis | 6-Category Mismatch Taxonomy, Reuse Risk Classification |
 | imagemagick-expert | 1.0 | Image Processing | Convert, Resize, Effects, Batch |

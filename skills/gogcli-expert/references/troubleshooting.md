@@ -1,4 +1,26 @@
-# Troubleshooting Guide
+# Troubleshooting Guide (v0.27.0)
+
+## まず最初に: 診断コマンド
+
+問題に直面したら、まず次の3つで状況を把握します。
+
+```bash
+# 認証・キーリング・トークンを総合診断（第一手）
+gog auth doctor
+
+# リフレッシュトークンを実際にアクセストークンへ交換して検証
+gog auth doctor --check
+
+# アカウント一覧とトークンの生存確認
+gog auth list --check
+
+# auth/config の現在状態
+gog status
+```
+
+`gog auth doctor` はキーリングの読み書き、保存済みクレデンシャル、トークンの有無をまとめて確認します。`--check` を付けると、各トークンを実際にアクセストークンに交換できるかまで試すため、失効したトークンを確実に切り分けられます。
+
+---
 
 ## Authentication Issues
 
@@ -34,8 +56,9 @@ gog --verbose auth add user@gmail.com
 **対策:**
 
 ```bash
-# 再認証
+# 再認証（auth add でも login でも可。login は auth add のエイリアス）
 gog auth add user@gmail.com
+gog login user@gmail.com
 
 # 再同意を強制（スコープ変更時にも有効）
 gog auth add user@gmail.com --force-consent
@@ -64,9 +87,41 @@ gog auth add user@gmail.com --force-consent
 2. gogcli のアクセスを削除
 3. 再度 `gog auth add` を実行
 
+### Keyring Timeout After a Version Update（重要・実体験ベース）
+
+**症状:** gogcli をバージョンアップした直後、非対話実行で `keyring connection timed out after 10s` が出てコマンドが止まる。それまで普通に動いていたアカウントで突然発生する。
+
+**根本原因:** バージョン更新でバイナリの署名・パスが変わると、macOS Keychain はそのバイナリを「別のアプリ」とみなし、保存済みトークンへのアクセス許可を再要求します。通常はダイアログで許可すれば済みますが、CI やバックグラウンド、エージェント経由など端末プロンプトを表示できない非対話環境では、ユーザーが「許可」を押せないまま10秒で接続がタイムアウトします。
+
+**対策:**
+
+```bash
+# 1. まず対話ターミナルで任意の gog コマンドを一度実行する。
+#    Keychain のアクセス許可ダイアログが出るので「常に許可」を押す。
+gog auth list
+
+# 以後、同じバイナリからのアクセスはプロンプトなしで通る。
+```
+
+ダイアログで「常に許可（Always Allow）」を選ぶことが肝心です。「許可」だけだと次回また聞かれます。
+
+非対話環境を端末プロンプトに依存させたくない場合は、Keychain ではなく暗号化ファイルバックエンドに切り替えます。
+
+```bash
+# 暗号化ファイルストレージを使う（Keychain プロンプトを完全に回避）
+export GOG_KEYRING_BACKEND=file
+export GOG_KEYRING_PASSWORD='secure-password'
+
+gog auth list   # ファイルバックエンドから読むためプロンプトは出ない
+```
+
+ファイルバックエンドはパスワードでトークンを暗号化します。`GOG_KEYRING_PASSWORD` を安全に管理してください。空のままだと復号できません。
+
 ### Keyring Issues
 
 **症状:** キーリングへのアクセスエラー。
+
+まず `gog auth doctor` でキーリングの読み書きが通るかを確認します。
 
 **macOS Keychain:**
 
@@ -98,6 +153,7 @@ gog auth keyring file
 gog auth keyring file
 
 # パスワードを設定（非対話環境用）
+export GOG_KEYRING_BACKEND=file
 export GOG_KEYRING_PASSWORD='secure-password'
 ```
 
@@ -109,13 +165,13 @@ export GOG_KEYRING_PASSWORD='secure-password'
 
 ```bash
 # 現在のアカウント確認
-gog auth status
+gog status
 
 # アカウント一覧
 gog auth list
 
-# 明示的にアカウント指定
-gog --account work@company.com gmail threads
+# 明示的にアカウント指定（-a は --account の短縮）
+gog -a work@company.com gmail search "is:unread"
 
 # デフォルトアカウント設定
 export GOG_ACCOUNT=work@company.com
@@ -142,14 +198,18 @@ gog config set default_account work@company.com
 | API が未有効化 | Google Cloud Console で該当APIを有効化 |
 
 ```bash
-# 現在のスコープを確認
-gog auth status --json
+# 現在の認証状態とスコープを確認
+gog auth doctor
+gog auth list --check
 
 # 特定サービスのスコープを追加
 gog auth add user@gmail.com --services sheets --force-consent
 
 # すべてのサービスで再認証
 gog auth add user@gmail.com --force-consent
+
+# クレデンシャル自体が未登録なら、まず OAuth クライアントを登録
+gog auth credentials set ./credentials.json
 ```
 
 ### Adding New Services After Initial Auth
@@ -177,8 +237,11 @@ Google がリフレッシュトークンを返さない場合:
 4. 対象ユーザーがドメイン内に存在するか
 
 ```bash
+# サービスアカウントの保存状態を確認
+gog auth service-account status admin@domain.com
+
 # 詳細ログで確認
-gog --verbose --account admin@domain.com gmail threads
+gog --verbose --account admin@domain.com gmail search "is:unread"
 ```
 
 ---
@@ -193,13 +256,13 @@ gog --verbose --account admin@domain.com gmail threads
 
 ```bash
 # Homebrew でインストール確認
-brew list steipete/tap/gogcli
+brew list openclaw/tap/gogcli
 
 # パスを確認
 which gog
 
 # Homebrew リンクを修復
-brew link steipete/tap/gogcli
+brew link openclaw/tap/gogcli
 
 # ソースビルドの場合
 ls ./bin/gog
@@ -211,7 +274,7 @@ ls ./bin/gog
 
 **症状:** コマンドがブロックされ実行できない。
 
-**原因:** `--enable-commands` フラグまたは `GOG_ENABLE_COMMANDS` 環境変数でコマンドが制限されている。
+**原因:** `--enable-commands`/`--disable-commands` フラグ、または `GOG_ENABLE_COMMANDS` 環境変数でコマンドが制限されている。Gmail 送信は `--gmail-no-send` や `gog config no-send set` でも止まります。
 
 ```bash
 # 環境変数を確認
@@ -222,6 +285,10 @@ unset GOG_ENABLE_COMMANDS
 
 # または必要なコマンドを追加
 export GOG_ENABLE_COMMANDS=gmail,calendar,drive,tasks
+
+# Gmail 送信ガードを確認・解除
+gog config no-send list
+gog config no-send remove user@gmail.com
 ```
 
 ### Account Selection Errors
@@ -232,11 +299,11 @@ export GOG_ENABLE_COMMANDS=gmail,calendar,drive,tasks
 # アカウント一覧を確認
 gog auth list
 
-# 明示的に指定
-gog --account user@gmail.com gmail threads
+# 明示的に指定（-a は --account の短縮）
+gog -a user@gmail.com gmail search "is:unread"
 
 # 自動選択の仕組み:
-# 1. --account フラグ
+# 1. -a / --account フラグ
 # 2. GOG_ACCOUNT 環境変数
 # 3. config の default_account
 # 4. 唯一のアカウント（1つだけの場合）
@@ -251,10 +318,13 @@ gog --account user@gmail.com gmail threads
 
 ```bash
 # stderr を抑制して stdout のみ取得
-gog gmail threads --json 2>/dev/null | jq .
+gog gmail search "is:unread" --json 2>/dev/null | jq .
 
-# または verbose を無効化
-gog gmail threads --json
+# 主結果だけが欲しい場合は --results-only でエンベロープを除く
+gog gmail search "is:unread" --json --results-only
+
+# 特定フィールドだけ抽出
+gog gmail search "is:unread" --json --select id,snippet
 ```
 
 ---
@@ -334,37 +404,43 @@ gog config set default_timezone "Asia/Tokyo"
 # 一時的に変更
 GOG_TIMEZONE="America/New_York" gog calendar events --today
 
-# イベント作成時にタイムゾーンを明示
-gog calendar event create \
+# イベント作成時にタイムゾーンを明示（第1引数は calendarId。--from/--to を使う）
+gog calendar create primary \
   --summary "Meeting" \
-  --start "2025-02-01T10:00:00+09:00" \
-  --end "2025-02-01T11:00:00+09:00"
+  --from "2026-06-20T10:00:00+09:00" \
+  --to "2026-06-20T11:00:00+09:00"
 ```
+
+v0.27 では作成は `gog calendar create <calendarId>`、時刻は `--from`/`--to`、繰り返しは `--rrule` です。旧 `event create --start/--end` 形式は使えません。
 
 ### Calendar: Event Creation Fails
 
 | 原因 | 対策 |
 |------|------|
-| 日時形式が不正 | ISO 8601 形式を使用: `2025-02-01T10:00:00` |
-| 終了時刻が開始時刻より前 | 開始・終了の順序を確認 |
+| 日時形式が不正 | RFC3339 形式を使用: `2026-06-20T10:00:00+09:00` |
+| 終了時刻が開始時刻より前 | `--from`/`--to` の順序を確認 |
 | `calendar` スコープ未認証 | `gog auth add <email> --services calendar --force-consent` |
-| 繰り返しルールが不正 | RRULE 構文を確認（`FREQ=WEEKLY;BYDAY=MO`） |
+| 繰り返しルールが不正 | RRULE 構文を確認（`--rrule "RRULE:FREQ=WEEKLY;BYDAY=MO"`） |
 
 ### Drive: Download/Upload Fails
 
 | 原因 | 対策 |
 |------|------|
-| ファイルIDが不正 | `gog drive list --json` でIDを再確認 |
+| ファイルIDが不正 | `gog drive ls --json` でIDを再確認 |
 | 権限不足 | ファイルの共有設定を確認 |
-| Googleファイルをダウンロード | `gog drive export` を使用（`download` ではなく） |
+| Googleファイルをダウンロード | `--format` を指定して自動エクスポート |
 | ファイルが大きすぎる | Drive API の制限を確認 |
 | `drive` スコープが制限的 | `--drive-scope full` で再認証 |
 
 ```bash
-# Googleファイル（Docs/Sheets/Slides）はexportを使用
-gog drive export <file-id> --mime application/pdf
+# Googleファイル（Docs/Sheets/Slides）は --format で形式を指定
+gog drive download <file-id> --format pdf   # pdf|csv|xlsx|pptx|txt|png|docx|md
 
-# 通常ファイル（PDF, XLSX等）はdownloadを使用
+# Sheets/Docs/Slides には専用の export サブコマンドもある
+gog sheets export <id> --format xlsx
+gog docs export <docId> --format pdf
+
+# 通常ファイル（PDF, XLSX等）はそのまま download
 gog drive download <file-id>
 ```
 
@@ -372,14 +448,16 @@ gog drive download <file-id>
 
 **症状:** `Unable to parse range` エラー。
 
+v0.27 では範囲は位置引数で渡します（`--range` フラグは使いません）。
+
 ```bash
 # 正しいA1記法:
-gog sheets get <id> --range "Sheet1!A1:D10"     # OK
-gog sheets get <id> --range "'Sheet Name'!A1:D10" # スペース含むシート名
+gog sheets get <id> "Sheet1!A1:D10"       # OK
+gog sheets get <id> "'Sheet Name'!A1:D10" # スペース含むシート名
 
 # よくある間違い:
-# gog sheets get <id> --range "A1:D10"            # シート名なし（デフォルトで最初のシート）
-# gog sheets get <id> --range "Sheet 1!A1:D10"    # スペース含むがクォートなし
+# gog sheets get <id> "A1:D10"             # シート名なし（最初のシートが対象）
+# gog sheets get <id> "Sheet 1!A1:D10"     # スペース含むがクォートなし
 ```
 
 ### Chat/Groups/Keep: Workspace Required
@@ -445,9 +523,15 @@ unset GOG_KEYRING_PASSWORD
 ```bash
 # バージョン確認
 gog --version
+gog version
+
+# 認証・トークンの総合診断
+gog auth doctor
+gog auth doctor --check
+gog auth list --check
 
 # 認証状態
-gog auth status
+gog status
 gog auth list
 
 # 設定確認
@@ -458,7 +542,11 @@ gog config path
 gog auth keyring
 
 # 詳細ログでコマンド実行
-gog --verbose gmail threads
+gog --verbose gmail search "is:unread"
+
+# 機械可読スキーマ（コマンド・フラグ一覧）
+gog schema
+gog schema gmail send
 
 # ヘルプ確認
 gog --help
@@ -466,9 +554,40 @@ gog gmail --help
 GOG_HELP=full gog --help
 ```
 
+## Exit Codes
+
+スクリプトや CI では戻り値で分岐できます。一般的なマッピングは次のとおりです。確認したい場合は `gog --help` の末尾を参照してください。
+
+| コード | 意味 |
+|-------|------|
+| 0 | 成功 |
+| 1 | 一般エラー |
+| 2 | usage エラー（引数・フラグの誤り） |
+| 3 | 結果が空（`--fail-empty` 指定時など） |
+| 4 | 認証エラー |
+| 5 | 対象が見つからない（not found） |
+| 6 | 権限不足（denied） |
+| 7 | レート制限 |
+| 8 | リトライ可能なエラー |
+| 10 | 設定エラー |
+| 11 | 孤立リソース（orphaned） |
+| 130 | 中断（Ctrl-C / SIGINT） |
+
+例: 空結果（コード3）を正常系として扱う。
+
+```bash
+gog gmail search "is:unread" --fail-empty
+case $? in
+  0) echo "未読あり" ;;
+  3) echo "未読なし" ;;
+  4) echo "再認証が必要: gog auth add user@gmail.com --force-consent" ;;
+  *) echo "エラー" ;;
+esac
+```
+
 ## Getting Help
 
-- **公式リポジトリ:** https://github.com/steipete/gogcli
-- **Issue報告:** https://github.com/steipete/gogcli/issues
+- **公式リポジトリ:** https://github.com/openclaw/gogcli
+- **Issue報告:** https://github.com/openclaw/gogcli/issues
 - **コマンドヘルプ:** `gog <command> --help`
 - **詳細ヘルプ:** `GOG_HELP=full gog --help`
