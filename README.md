@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 110 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 111 dirs total
+├── skills/                 # 111 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 112 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (110 Skills)
+## Skill Catalog (111 Skills)
 
 > Note: `skills/` contains 111 directories total — 110 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
 
@@ -115,7 +115,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | it-system-roi-analyzer | IT投資ROI分析・TCO計算 | ROI, TCO, NPV, Payback |
 | aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
 | render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
-| gogcli-expert | gogcli（Google Workspace CLI）操作支援 | 13 Services, OAuth2, Multi-Account |
+| gogcli-expert | gogcli（Google Workspace CLI）操作支援 | 25+ Services, OAuth2, Multi-Account |
 | network-diagnostics | ネットワーク品質診断・ボトルネック特定 | Ping/Speed/HTTP/Traceroute, Cross-Platform |
 | network-incident-analyzer | ネットワークログ分析・障害検出・原因分析 | Multi-Format Parsing, Anomaly Detection, Correlation |
 | office-script-expert | Office Scripts（Excel Online）開発支援 | ExcelScript API, 13 Bug Patterns, lib/Testing |
@@ -168,7 +168,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 
-### QA & Testing (14 skills)
+### QA & Testing (15 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -179,6 +179,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | helpdesk-responder | ヘルプデスク対応ドラフト作成 | KB-Based Responses, Confidence Scoring |
 | email-triage-responder | 受信メールのトリアージ・優先度付け・返信ドラフト | Eisenhower Matrix, Topic Classification, Draft Generation |
 | inbox-triage-summarizer | 受信箱の定期スキャン・プロジェクト別分類・アクションサマリー | Project/Client Grouping, FYI/Response/Action/Blocked Classification, Thread Tracking |
+| email-thread-summarizer | メールスレッド要約・アクションアイテム抽出・陳腐化検出 | Gmail/Outlook Support, Staleness Detection, Action Item Extraction |
 | cx-error-analyzer | CXエラーシナリオ分析・改善優先度付け | 6-Axis CX Scoring, Impact vs Effort Matrix |
 | skill-idea-miner | セッションログからスキルアイデアを自動抽出・スコアリング | Session Log Mining, LLM Scoring, Backlog Management |
 | skill-designer | アイデア仕様からスキル設計プロンプトを生成 | Design Prompt Generation, Repository Convention Compliance |
@@ -2143,7 +2144,6 @@ Periodic inbox scan that categorizes new emails by project/client, identifies ac
 - ✅ Thread correlation and staleness tracking
 - ✅ Urgency scoring with deadline detection
 - ✅ Export format compatible with email-triage-responder
-- ✅ Scan history for delta-based processing
 
 **Classification Categories:**
 
@@ -2164,6 +2164,63 @@ Periodic inbox scan that categorizes new emails by project/client, identifies ac
 - "Show me which threads are blocked waiting on responses"
 - "Generate a summary of action items for today's standup"
 - "Export action-required emails for response drafting"
+
+---
+
+### 📬 Email Thread Summarizer
+
+**File:** `skills/email-thread-summarizer/SKILL.md`
+
+Analyze email threads to extract current status, pending actions, timeline of events, and identify stale/outdated information. Supports both Gmail (via gogcli) and Outlook email exports.
+
+**When to use:**
+- Summarizing long email conversations to understand current state
+- Extracting outstanding action items from email exchanges
+- Building a timeline of key events and decisions from email threads
+- Detecting if a previously cached thread summary is outdated
+- Analyzing thread status (resolved, pending, stale, escalated)
+
+**Core Capabilities:**
+- Multi-format parsing (Gmail JSON, Outlook/Graph API, EML, MBOX)
+- Participant role detection (initiator, responder, CC)
+- Action item extraction with deadline detection
+- Decision identification and tracking
+- Superseded information detection
+- Thread status classification (active, resolved, stale, escalated, awaiting_response)
+- Staleness detection for cached summaries
+
+**Workflow:**
+
+| Step | Description |
+|------|-------------|
+| Step 1 | Collect thread data (gogcli, Graph API, or file import) |
+| Step 2 | Parse and analyze thread structure |
+| Step 3 | Extract action items, decisions, timeline |
+| Step 4 | Classify thread status |
+| Step 5 | Generate markdown summary |
+| Step 6 | Check staleness vs cached version (optional) |
+
+**Status Classification:**
+
+| Status | Criteria |
+|--------|----------|
+| Active | Last message within 3 business days, no resolution |
+| Resolved | Contains resolution language ("resolved", "done", "closed") |
+| Stale | No activity for 7+ days, has pending items |
+| Escalated | CC to management, urgent markers, escalation language |
+| Awaiting Response | Last message is a question/request with no reply |
+
+**Key Components:**
+- `scripts/analyze_thread.py` - Parse thread and extract structured data
+- `scripts/generate_summary.py` - Generate markdown summary report
+- `scripts/check_staleness.py` - Compare cached vs current state
+- `references/thread_analysis_patterns.md` - Action item, decision, and status patterns
+
+**Example Use Cases:**
+- "Summarize this email thread and tell me what's still pending"
+- "What decisions were made in this conversation?"
+- "Is my summary from last week still accurate?"
+- "Who committed to what actions in this thread?"
 
 ---
 
@@ -2488,31 +2545,32 @@ AWS CLI expert skill for cloud infrastructure management and operations.
 
 **File:** `skill-packages/gogcli-expert.skill`
 
-Expert skill for gogcli (steipete/gogcli), a Go-based CLI tool for managing 13 Google Workspace services from the terminal.
+Expert skill for gogcli (openclaw/gogcli), a Go-based CLI tool for managing 25+ Google Workspace and related services from the terminal. Tracks gogcli **v0.27.0**.
 
 **When to use:**
-- Managing Gmail (search, send, labels, filters, vacation)
-- Calendar operations (events, conflicts, free/busy, recurring events)
-- Drive file operations (list, upload, download, export, permissions)
-- Sheets data reading/writing (A1 notation, append, formatting)
-- Docs/Slides export (PDF, DOCX, PPTX via Drive export)
+- Managing Gmail (search, send, labels, settings, tracking)
+- Calendar operations (events, conflicts, free/busy, focus-time, out-of-office, recurring)
+- Drive file operations (ls, upload, download, share, audit, bulk permissions)
+- Sheets data reading/writing (A1 notation, append, formatting, charts, tables)
+- Docs/Slides full editing (create, find-replace, create-from-markdown, export PDF/DOCX/PPTX)
 - Tasks management (create, complete, recurring)
-- Workspace admin (Groups, Classroom, People, Contacts)
+- Workspace admin (Groups, Directory API Admin, Classroom, People, Contacts)
+- New services (Forms, Meet, Maps, YouTube, Photos, Sites, Analytics, Search Console, Apps Script, Zoom)
 - Setting up OAuth2 / service account authentication
 - Multi-account and multi-client configuration
 
 **Core Capabilities:**
-- 13 Google Workspace services: Gmail, Calendar, Drive, Sheets, Docs, Slides, Contacts, Tasks, Chat, Groups, Keep, Classroom, People
+- 25+ services: Gmail, Calendar, Chat, Drive, Sheets, Docs, Slides, Tasks, Keep, Contacts, People, Groups, Admin, Classroom, Forms, Meet, Maps, YouTube, Photos, Sites, Analytics, Search Console, Apps Script, Zoom (plus backup / batch / mcp)
 - OAuth2 + Service Account authentication with scope control
 - Multi-account management with aliases and domain mapping
 - `--json` / `--plain` output for pipeline integration
-- Command sandboxing with `--enable-commands` for agent safety
+- Agent safety: `--gmail-no-send`, `--dry-run`, `--enable-commands` sandboxing, built-in `mcp` server
 
 **Key Components:**
-- `references/quick_reference.md` - All 13 services command cheat sheet
+- `references/quick_reference.md` - All-services command cheat sheet
 - `references/communication_services.md` - Gmail/Calendar/Chat detailed guide
 - `references/productivity_services.md` - Drive/Sheets/Docs/Slides/Tasks/Keep detailed guide
-- `references/workspace_admin_services.md` - Groups/Classroom/People + service account guide
+- `references/workspace_admin_services.md` - Groups/Admin/Classroom/People + new services guide
 - `references/troubleshooting.md` - Comprehensive troubleshooting guide
 
 ---
@@ -4530,6 +4588,18 @@ Future skills planned for this library:
 
 ## Version History
 
+### email-thread-summarizer v1.0 (2026-06-14)
+- Email thread analysis skill for extracting status, action items, timeline, and decisions
+- Multi-format support: Gmail JSON, Outlook/Graph API, EML, MBOX
+- Participant role detection (initiator, responder, CC)
+- Action item extraction with deadline detection using NLP patterns
+- Decision identification and tracking
+- Superseded information detection (corrections, updates, contradictions)
+- 5-state thread status classification (active, resolved, stale, escalated, awaiting_response)
+- Staleness detection for cached summaries with recommendation engine
+- Markdown summary generation with timeline, action items, and decisions
+- 69 unit tests covering all core functionality
+
 ### web-server-security-reviewer v1.1 (2026-05-02)
 - Phase 0 interactive interview wizard for building `target_profile.yaml` via `AskUserQuestion`
 - New `references/interview_wizard.md` — 7-stage declarative spec (stage_id / field / prompt / header / choices / required / condition / normalize_to)
@@ -4987,6 +5057,20 @@ Future skills planned for this library:
 - 3ワークフロー: AI臭診断、リライト実行、Before/After比較
 - Markdown/JSON出力対応
 - 英語テキストはClaude自身がreferences/を参照して分析・リライト
+
+### gogcli-expert v2.0 (2026-06-14)
+- Updated for gogcli v0.27.0 (upstream moved steipete/gogcli → openclaw/gogcli)
+- Expanded from 13 to 25+ services: added Admin (Directory API), Forms, Meet, Maps, YouTube, Photos, Sites, Analytics (GA4), Search Console, Apps Script, Zoom, plus backup / batch / mcp
+- Command-tree restructuring rewritten across SKILL.md and all 5 reference guides:
+  - Gmail: `gmail threads` → `gmail search "<query>"` (query required); settings moved under `gmail settings ...`; new track/archive/reply/forward
+  - Calendar: `event create` → `create`; focus-time / out-of-office / respond now dedicated subcommands; `--recurrence` → `--rrule`
+  - Drive: `list` → `ls`; `folder create` → `mkdir`; `shared-drives` → `drives`; new audit/bulk/changes/comments
+  - Sheets: range/values now positional args; new charts/tables/conditional-format/export
+  - Docs/Slides: full editing surface (find-replace, create-from-markdown) beyond Drive export
+  - Auth: `auth credentials` → `auth credentials set`; new `auth doctor`, `gog status`, top-level aliases (`login`/`logout`/`send`/`ls`/`me`)
+- New agent-safety coverage: `--gmail-no-send`, `--dry-run`, `--enable-commands`/`--disable-commands`, `mcp` server
+- Troubleshooting: added keyring-timeout-after-binary-update fix and `auth doctor` diagnostics; retained Gmail orphaned-draft data-loss warning
+- All commands/flags verified against the live v0.27.0 schema (`gog schema --json`)
 
 ### gogcli-expert v1.0 (2026-01-29)
 - Initial release

@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
         "--base-growth-rate",
         type=float,
         default=0.05,
-        help="Monthly growth rate for base scenario (e.g. 0.05 for 5%).",
+        help="Monthly growth rate for base scenario (e.g. 0.05 for 5%%).",
     )
     parser.add_argument(
         "--base-cogs-rate",

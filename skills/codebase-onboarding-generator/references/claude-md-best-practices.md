@@ -197,7 +197,7 @@ Required environment variables (set in `.env` or export):
 
 **Bad:**
 ```markdown
-Run tests: `/Users/john/projects/myapp/run_tests.sh`
+Run tests: `/Users/<username>/projects/myapp/run_tests.sh`
 ```
 
 **Good:**

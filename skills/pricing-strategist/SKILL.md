@@ -20,6 +20,8 @@ This skill helps design optimal pricing strategies for IT services and consultin
 - System Development（システム開発・受託開発）
 - Hardware Sales（ハードウェア・IT機器販売）
 
+## When to Use
+
 Use this skill when:
 - 新製品・サービスの価格設定を行う
 - 価格モデル（Cost-plus, Value-based, Competitive, Subscription）を比較・選定する
@@ -27,6 +29,23 @@ Use this skill when:
 - 価格テスト（A/B, コンジョイント分析）を設計する
 - 価格改定の根拠を作成する
 - 競合価格分析と自社ポジショニングを行う
+
+## Prerequisites
+
+- 対象サービス/製品の基本情報（コスト構造、ターゲット顧客など）
+- 競合情報（可能であれば）
+- 過去の価格・販売データ（弾力性分析を行う場合）
+
+## Output
+
+This skill provides **conversational guidance** for pricing strategy design. Outputs include:
+- 価格モデル選定の推奨と根拠
+- バリューベース価格の計算と価値コミュニケーション案
+- 価格弾力性分析の設計と解釈
+- 価格テスト（A/B、コンジョイント）の設計案
+- Markdown形式の価格戦略書・提案書（テンプレートベース）
+
+**Note**: ファイル生成は行いません。ドキュメントテンプレートはMarkdownとして会話内で提供します。
 
 ## Core Workflows
 
