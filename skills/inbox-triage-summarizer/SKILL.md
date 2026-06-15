@@ -72,7 +72,7 @@ python3 scripts/triage_inbox.py \
   --group-by project
 ```
 
-Grouping options:
+Grouping options (the report is currently grouped by `project`; the other values are accepted but not yet applied to the output):
 - `project` -- Group by detected project/client
 - `action` -- Group by action classification
 - `sender` -- Group by sender domain
@@ -90,17 +90,6 @@ python3 scripts/triage_inbox.py \
   --classifications requires-response,requires-action
 ```
 
-### Step 5: Track Scan History
-
-Maintain scan history to enable delta-based processing.
-
-```bash
-python3 scripts/triage_inbox.py \
-  --input emails.json \
-  --scan-history .inbox-triage-history.json \
-  --mark-scanned
-```
-
 ## Output Format
 
 ### JSON Summary
@@ -115,7 +104,6 @@ python3 scripts/triage_inbox.py \
   },
   "summary": {
     "total_emails": 87,
-    "new_since_last_scan": 32,
     "by_classification": {
       "fyi": 45,
       "requires_response": 18,
@@ -138,17 +126,7 @@ python3 scripts/triage_inbox.py \
       "action_required_count": 5,
       "blocked_count": 2,
       "oldest_unanswered": "2024-01-10T14:30:00Z",
-      "threads": [
-        {
-          "thread_id": "thread_abc123",
-          "subject": "Q1 Deliverables Review",
-          "participants": ["alice@alpha.com", "bob@mycompany.com"],
-          "message_count": 4,
-          "last_message_from": "alice@alpha.com",
-          "classification": "requires_response",
-          "staleness_days": 3
-        }
-      ]
+      "threads": []
     }
   ],
   "action_items": [
