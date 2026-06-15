@@ -112,12 +112,12 @@ class TestProfiles:
 
     def test_deep_review_profile(self):
         profile = PROFILES["deep-review"]
-        assert profile["model"] == "gpt-5.4"
-        assert profile["reasoning"] == "high"
+        assert profile["model"] == "gpt-5.5"
+        assert profile["reasoning"] == "xhigh"
 
     def test_quick_review_profile(self):
         profile = PROFILES["quick-review"]
-        assert profile["model"] == "gpt-5.4"
+        assert profile["model"] == "gpt-5.5"
         assert profile["reasoning"] == "medium"
 
 
@@ -126,21 +126,21 @@ class TestTypeModelDefaults:
 
     def test_code_defaults(self):
         config = TYPE_MODEL_DEFAULTS["code"]
-        assert config["model"] == "gpt-5.4"
-        assert config["reasoning"] == "high"
+        assert config["model"] == "gpt-5.5"
+        assert config["reasoning"] == "xhigh"
 
     def test_document_defaults(self):
         config = TYPE_MODEL_DEFAULTS["document"]
-        assert config["model"] == "gpt-5.4"
-        assert config["reasoning"] == "high"
+        assert config["model"] == "gpt-5.5"
+        assert config["reasoning"] == "xhigh"
 
     def test_design_defaults(self):
         config = TYPE_MODEL_DEFAULTS["design"]
-        assert config["model"] == "gpt-5.4"
+        assert config["model"] == "gpt-5.5"
 
     def test_test_defaults(self):
         config = TYPE_MODEL_DEFAULTS["test"]
-        assert config["model"] == "gpt-5.4"
+        assert config["model"] == "gpt-5.5"
 
 
 class TestReviewPrompts:
@@ -219,8 +219,8 @@ class TestRunCodexReview:
         assert "空" in result or "empty" in result.lower()
 
     @patch("run_codex_review.subprocess.run")
-    def test_default_model_is_gpt54(self, mock_run, tmp_path):
-        """Ensure default model is gpt-5.4 for all review types"""
+    def test_default_model_is_gpt55_xhigh(self, mock_run, tmp_path):
+        """Ensure default model is gpt-5.5 with xhigh reasoning for all review types"""
         output_dir = str(tmp_path / "reviews")
         Path(output_dir).mkdir(parents=True, exist_ok=True)
 
@@ -237,7 +237,8 @@ class TestRunCodexReview:
             run_codex_review(review_type, "target", output_dir)
             cmd = mock_run.call_args[0][0]
             model_idx = cmd.index("--model")
-            assert cmd[model_idx + 1] == "gpt-5.4", f"Expected gpt-5.4 for {review_type}"
+            assert cmd[model_idx + 1] == "gpt-5.5", f"Expected gpt-5.5 for {review_type}"
+            assert "model_reasoning_effort=xhigh" in cmd, f"Expected xhigh reasoning for {review_type}"
 
 
 if __name__ == "__main__":
