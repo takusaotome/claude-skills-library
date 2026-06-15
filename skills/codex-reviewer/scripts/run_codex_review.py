@@ -3,7 +3,7 @@
 Codex Review Runner
 
 OpenAI Codex CLIを使用してコードやドキュメントのレビューを実行するスクリプト。
-GPT-5.4 モデルを high 推論モードで呼び出します。
+GPT-5.5 モデルを xhigh 推論モードで呼び出します。
 
 Usage:
     python3 run_codex_review.py --type code --target src/ --output ./reviews
@@ -115,27 +115,27 @@ FOCUS_PROMPTS = {
 
 # プロファイル別のデフォルト設定
 PROFILES = {
-    "quick-review": {"model": "gpt-5.4", "reasoning": "medium", "description": "軽量レビュー（高速）"},
-    "deep-review": {"model": "gpt-5.4", "reasoning": "high", "description": "標準レビュー（推奨）"},
+    "quick-review": {"model": "gpt-5.5", "reasoning": "medium", "description": "軽量レビュー（高速）"},
+    "deep-review": {"model": "gpt-5.5", "reasoning": "xhigh", "description": "標準レビュー（推奨）"},
 }
 
 # レビュータイプ別のデフォルトモデル設定
-# 全タイプで gpt-5.4 + high推論 を使用
+# 全タイプで gpt-5.5 + xhigh推論 を使用
 TYPE_MODEL_DEFAULTS = {
     "code": {
-        "model": "gpt-5.4",
-        "reasoning": "high",
+        "model": "gpt-5.5",
+        "reasoning": "xhigh",
         "description": "コードレビュー向け",
     },
     "document": {
-        "model": "gpt-5.4",
-        "reasoning": "high",
+        "model": "gpt-5.5",
+        "reasoning": "xhigh",
         "description": "ドキュメントレビュー向け",
     },
-    "design": {"model": "gpt-5.4", "reasoning": "high", "description": "設計レビュー向け"},
+    "design": {"model": "gpt-5.5", "reasoning": "xhigh", "description": "設計レビュー向け"},
     "test": {
-        "model": "gpt-5.4",
-        "reasoning": "high",
+        "model": "gpt-5.5",
+        "reasoning": "xhigh",
         "description": "テストレビュー向け",
     },
 }
@@ -195,7 +195,7 @@ def run_codex_review(
     モデル選択の優先順位:
     1. --model/--reasoning オプション（明示的指定）
     2. --profile オプション（プロファイル指定）
-    3. レビュータイプ別デフォルト（code→gpt-5.3-codex, document→gpt-5.3-thinking等）
+    3. レビュータイプ別デフォルト（全タイプ gpt-5.5 + xhigh）
 
     Returns:
         tuple: (成功フラグ, 出力ファイルパス or エラーメッセージ)
@@ -288,10 +288,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 例:
-  # コードレビュー（自動的にgpt-5.3-codex + highを使用）
+  # コードレビュー（自動的にgpt-5.5 + xhighを使用）
   python3 run_codex_review.py --type code --target src/ --output ./reviews
 
-  # ドキュメントレビュー（自動的にgpt-5.3-thinking + xhighを使用）
+  # ドキュメントレビュー（自動的にgpt-5.5 + xhighを使用）
   python3 run_codex_review.py --type document --target docs/spec.md --output ./reviews
 
   # セキュリティ重視のコードレビュー
@@ -303,15 +303,15 @@ def main():
   # カスタムプロンプトでレビュー
   python3 run_codex_review.py --type code --target src/ --output ./reviews --custom-prompt "APIエンドポイントのセキュリティを確認してください。対象: {target}"
 
-レビュータイプ別デフォルトモデル（すべてhigh推論）:
-  code     : gpt-5.4 (high)
-  document : gpt-5.4 (high)
-  design   : gpt-5.4 (high)
-  test     : gpt-5.4 (high)
+レビュータイプ別デフォルトモデル（すべてxhigh推論）:
+  code     : gpt-5.5 (xhigh)
+  document : gpt-5.5 (xhigh)
+  design   : gpt-5.5 (xhigh)
+  test     : gpt-5.5 (xhigh)
 
 利用可能なプロファイル（--profileで明示指定時）:
-  deep-review   : gpt-5.4, high（推奨）
-  quick-review  : gpt-5.4, medium（高速）
+  deep-review   : gpt-5.5, xhigh（推奨）
+  quick-review  : gpt-5.5, medium（高速）
         """,
     )
 
@@ -341,7 +341,7 @@ def main():
 
     parser.add_argument("--working-dir", "-C", help="作業ディレクトリ")
 
-    parser.add_argument("--model", "-m", help="モデルをオーバーライド（例: gpt-5.3-codex）")
+    parser.add_argument("--model", "-m", help="モデルをオーバーライド（例: gpt-5.5）")
 
     parser.add_argument(
         "--reasoning", "-r", choices=["low", "medium", "high", "xhigh"], help="推論レベルをオーバーライド"

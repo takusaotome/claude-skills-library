@@ -1,13 +1,13 @@
 ---
 name: codex-reviewer
-description: OpenAI Codex CLIを使用してドキュメントやコードのレビューを依頼するスキル。GPT-5.4モデルをhigh推論モードで呼び出し、深い分析によるレビューを実行。レビュー結果を指定フォルダに出力し、その内容を確認・分析する機能を提供。コードレビュー、ドキュメントレビュー、設計書レビュー、テスト計画レビューなど、専門的なレビューが必要な場面で使用。
+description: OpenAI Codex CLIを使用してドキュメントやコードのレビューを依頼するスキル。GPT-5.5モデルをxhigh推論モードで呼び出し、深い分析によるレビューを実行。レビュー結果を指定フォルダに出力し、その内容を確認・分析する機能を提供。コードレビュー、ドキュメントレビュー、設計書レビュー、テスト計画レビューなど、専門的なレビューが必要な場面で使用。
 ---
 
 # Codex Reviewer
 
 ## Overview
 
-OpenAI Codex CLIを活用して、コードやドキュメントの専門的なレビューを実行するスキルです。全レビュータイプで **GPT-5.4** モデルを **high推論モード**で使用し、徹底的な分析を行います。
+OpenAI Codex CLIを活用して、コードやドキュメントの専門的なレビューを実行するスキルです。全レビュータイプで **GPT-5.5** モデルを **xhigh推論モード**で使用し、徹底的な分析を行います。
 
 ## When to Use
 
@@ -23,10 +23,10 @@ OpenAI Codex CLIを活用して、コードやドキュメントの専門的な�
 
 | 拡張子/パターン | --type | 使用モデル |
 |----------------|--------|-----------|
-| `.py`, `.js`, `.ts`, `.tsx`, `.java`, `.go`, `.rs`, `.cpp`, `.c`, `.rb`, `.php` | code | gpt-5.4 |
-| `.md`, `.txt`, `.rst`, `.docx`, `.pdf`, `仕様書`, `要件定義` | document | gpt-5.4 |
-| `design/`, `architecture/`, `設計書`, `アーキテクチャ` | design | gpt-5.4 |
-| `tests/`, `test_*`, `*.test.*`, `*_test.*`, `*.spec.*` | test | gpt-5.4 |
+| `.py`, `.js`, `.ts`, `.tsx`, `.java`, `.go`, `.rs`, `.cpp`, `.c`, `.rb`, `.php` | code | gpt-5.5 |
+| `.md`, `.txt`, `.rst`, `.docx`, `.pdf`, `仕様書`, `要件定義` | document | gpt-5.5 |
+| `design/`, `architecture/`, `設計書`, `アーキテクチャ` | design | gpt-5.5 |
+| `tests/`, `test_*`, `*.test.*`, `*_test.*`, `*.spec.*` | test | gpt-5.5 |
 
 **例:**
 - 「`src/main.py`をレビューして」→ `--type code`
@@ -55,8 +55,8 @@ OpenAI Codex CLIを活用して、コードやドキュメントの専門的な�
    ```toml
    # デフォルトプロファイル
    [profiles.deep-review]
-   model = "gpt-5.4"
-   model_reasoning_effort = "high"
+   model = "gpt-5.5"
+   model_reasoning_effort = "xhigh"
    approval_policy = "never"
    ```
 
@@ -132,7 +132,7 @@ codex exec --profile deep-review \
 ### 1. コードレビュー
 
 ```bash
-# 自動的にgpt-5.4 + highを使用
+# 自動的にgpt-5.5 + xhighを使用
 python3 scripts/run_codex_review.py \
   --type code \
   --target src/ \
@@ -151,7 +151,7 @@ python3 scripts/run_codex_review.py \
 ### 2. ドキュメントレビュー
 
 ```bash
-# 自動的にgpt-5.4 + highを使用（深い推論）
+# 自動的にgpt-5.5 + xhighを使用（深い推論）
 python3 scripts/run_codex_review.py \
   --type document \
   --target docs/specification.md \
@@ -169,7 +169,7 @@ python3 scripts/run_codex_review.py \
 ### 3. 設計レビュー
 
 ```bash
-# 自動的にgpt-5.4 + highを使用（深い推論）
+# 自動的にgpt-5.5 + xhighを使用（深い推論）
 python3 scripts/run_codex_review.py \
   --type design \
   --target docs/design/ \
@@ -223,10 +223,10 @@ python3 scripts/analyze_review.py \
 
 | 用途 | 推奨モデル | 推論レベル |
 |------|-----------|-----------|
-| コードレビュー | gpt-5.4 | high |
-| テストレビュー | gpt-5.4 | high |
-| ドキュメントレビュー | gpt-5.4 | high |
-| 設計レビュー | gpt-5.4 | high |
+| コードレビュー | gpt-5.5 | xhigh |
+| テストレビュー | gpt-5.5 | xhigh |
+| ドキュメントレビュー | gpt-5.5 | xhigh |
+| 設計レビュー | gpt-5.5 | xhigh |
 
 ### スクリプト内蔵プロファイル
 
@@ -234,22 +234,22 @@ python3 scripts/analyze_review.py \
 
 | プロファイル | モデル | 推論レベル | 説明 |
 |-------------|--------|-----------|------|
-| `deep-review` | gpt-5.4 | high | 標準レビュー（推奨） |
-| `quick-review` | gpt-5.4 | medium | 軽量レビュー（高速） |
+| `deep-review` | gpt-5.5 | xhigh | 標準レビュー（推奨） |
+| `quick-review` | gpt-5.5 | medium | 軽量レビュー（高速） |
 
 **使用例:**
 ```bash
-# コードレビュー（自動的にgpt-5.4 + highを使用）
+# コードレビュー（自動的にgpt-5.5 + xhighを使用）
 python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews
 
-# ドキュメントレビュー（自動的にgpt-5.4 + highを使用）
+# ドキュメントレビュー（自動的にgpt-5.5 + xhighを使用）
 python3 scripts/run_codex_review.py --type document --target docs/ --output ./reviews
 
 # 軽量レビュー（高速）
 python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --profile quick-review
 
 # モデルと推論レベルを直接指定（オーバーライド）
-python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --model gpt-5.4 --reasoning medium
+python3 scripts/run_codex_review.py --type code --target src/ --output ./reviews --model gpt-5.5 --reasoning medium
 ```
 
 ### Codex CLI直接使用時のプロファイル例
@@ -260,19 +260,19 @@ Codex CLIを直接使用する場合は、以下のプロファイルを `~/.cod
 # ~/.codex/config.toml
 
 # デフォルト設定
-model = "gpt-5.4"
-model_reasoning_effort = "high"
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
 approval_policy = "on-request"
 
 # 標準レビュー用プロファイル（推奨）
 [profiles.deep-review]
-model = "gpt-5.4"
-model_reasoning_effort = "high"
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
 approval_policy = "never"
 
 # 軽量レビュー用（高速）
 [profiles.quick-review]
-model = "gpt-5.4"
+model = "gpt-5.5"
 model_reasoning_effort = "medium"
 approval_policy = "never"
 ```
