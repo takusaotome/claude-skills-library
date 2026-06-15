@@ -52,7 +52,7 @@ gog whoami                 # 現在のプロフィール（people me のエイ�
 | `gog auth keyring [<backend>]` | キーリングバックエンド確認・設定 |
 | `gog auth import --email <e> --refresh-token-stdin` | リフレッシュトークンを非対話インポート |
 | `gog auth tokens list` / `export` / `import` / `delete` | トークンの一覧・退避・取り込み |
-| `gog auth manage` | ブラウザでアカウント管理 UI を開く（login の旧名） |
+| `gog auth manage` | ブラウザでアカウント管理 UI を開く（別名 `gog auth login`。トップレベルの `gog login <email>` とは別物で、後者は `auth add`） |
 
 ## Global Flags
 

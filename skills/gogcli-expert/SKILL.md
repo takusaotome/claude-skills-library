@@ -188,7 +188,7 @@ gog auth add user@gmail.com --gmail-scope readonly   # full|readonly
 gog auth add user@gmail.com --drive-scope readonly    # full|readonly|file
 ```
 
-利用可能なサービス名は `gog auth services` で一覧できます。代表例: `gmail, calendar, chat, classroom, drive, docs, slides, contacts, tasks, sheets, people, forms, sites, meet, appscript, analytics, searchconsole, youtube, photos`。`admin, groups, keep` はサービスアカウント専用です。
+利用可能なサービス名は `gog auth services` で一覧できます。代表例: `gmail, calendar, chat, classroom, drive, driveactivity, drivelabels, docs, slides, contacts, tasks, sheets, people, forms, sites, meet, appscript, analytics, searchconsole, ads, youtube, photos`。`photospicker` は明示的なオプトイン指定が必要です。`admin, groups, keep` はサービスアカウント専用です（`gog auth services` で `user=false`）。
 
 ### Adding Services Later
 
@@ -397,12 +397,12 @@ gog calendar create primary --summary "ミーティング" \
   --from "2026-02-01T10:00:00" --to "2026-02-01T11:00:00" \
   --attendees "a@example.com,b@example.com" --with-meet
 
-# イベント更新・削除
-gog calendar update <eventId> --summary "更新後のタイトル"
-gog calendar delete <eventId>
+# イベント更新・削除（calendarId と eventId は位置引数）
+gog calendar update primary <eventId> --summary "更新後のタイトル"
+gog calendar delete primary <eventId>
 
-# 単一イベント取得
-gog calendar event <eventId>
+# 単一イベント取得（calendarId と eventId は位置引数）
+gog calendar event primary <eventId>
 ```
 
 **スケジュール管理:**
@@ -425,11 +425,11 @@ gog calendar respond primary <eventId> --status accepted
 **特殊イベント:**
 
 ```bash
-# フォーカスタイム
-gog calendar focus-time --from "2026-02-01T09:00:00" --to "2026-02-01T12:00:00"
+# フォーカスタイム（--from/--to は RFC3339。タイムゾーン必須）
+gog calendar focus-time --from "2026-02-01T09:00:00+09:00" --to "2026-02-01T12:00:00+09:00"
 
-# 不在（Out of Office）
-gog calendar out-of-office --from "2026-02-10" --to "2026-02-14"
+# 不在（Out of Office。date-only は不可、RFC3339 日時が必須）
+gog calendar out-of-office --from "2026-02-10T00:00:00+09:00" --to "2026-02-14T23:59:59+09:00"
 
 # 繰り返しイベント（--rrule は繰り返し可）
 gog calendar create primary --summary "Weekly Standup" \
@@ -478,7 +478,7 @@ gog drive upload notes.md --convert-to doc       # ネイティブ Google 形式
 
 # フォルダ作成・ツリー表示
 gog drive mkdir "Project Documents"
-gog drive tree <folderId>
+gog drive tree --parent <folderId>
 
 # 共有・権限（--to で共有先種別を指定）
 gog drive share <fileId> --to user --email user@example.com --role writer
@@ -502,8 +502,8 @@ gog sheets update <spreadsheetId> "Sheet1!A1:B2" --values-json '[["a","b"],["c",
 # 追記
 gog sheets append <spreadsheetId> "Sheet1!A1" "New" "Row" "Data"
 
-# 新規作成・メタデータ
-gog sheets create --title "New Spreadsheet"
+# 新規作成・メタデータ（title は位置引数）
+gog sheets create "New Spreadsheet"
 gog sheets metadata <spreadsheetId>
 
 # エクスポート（pdf|xlsx|csv）
@@ -517,8 +517,8 @@ Sheets は書式・チャート・条件付き書式・テーブル・名前付�
 v0.27 では Docs / Slides がフル編集に対応しています。
 
 ```bash
-# Docs: 作成・本文取得・エクスポート
-gog docs create --title "新規ドキュメント"
+# Docs: 作成・本文取得・エクスポート（title は位置引数）
+gog docs create "新規ドキュメント"
 gog docs cat <docId>                              # プレーンテキストで取得
 gog docs export <docId> --format pdf --out doc.pdf  # pdf|docx|txt|md|html
 gog docs find-replace <docId> "旧称" "新称"           # find / replace は位置引数
@@ -570,7 +570,7 @@ gog people search "John Smith"
 
 # 連絡先検索・作成・一覧
 gog contacts search "Jane"
-gog contacts create --name "Jane Doe" --email jane@example.com --phone "+1-555-0100"
+gog contacts create --given Jane --family Doe --email jane@example.com --phone "+1-555-0100"
 gog contacts list
 
 # その他の連絡先（やり取り履歴から自動生成）
@@ -640,7 +640,8 @@ gog drive ls --json 2>/dev/null | jq '.[] | .name'
 | `-y, --force` | 確認プロンプトをスキップ |
 | `--no-input` | プロンプト時にエラー終了（CI向け） |
 | `--gmail-no-send` | Gmail 送信操作をブロック（エージェント安全） |
-| `--enable-commands <csv>` | 使用可能コマンドを制限（サンドボックス） |
+| `--enable-commands <csv>` | 使用可能コマンドを前方一致で制限（サンドボックス） |
+| `--enable-commands-exact <csv>` | 使用可能コマンドを完全一致で制限（親コマンドを許可しても子は許可されない） |
 | `--disable-commands <csv>` | 指定コマンドを無効化 |
 | `--home <dir>` | config/data/state/cache のルートを上書き |
 | `-v, --verbose` | 詳細ログ出力 |
@@ -660,6 +661,8 @@ gog drive ls --json 2>/dev/null | jq '.[] | .name'
 | `GOG_ENABLE_COMMANDS` | コマンド許可リスト |
 | `GOG_KEYRING_BACKEND` | キーリングバックエンド（`auto`/`keychain`/`file`） |
 | `GOG_KEYRING_PASSWORD` | 暗号化キーリングのパスワード |
+
+Zoom を使う場合は Server-to-Server OAuth 認証情報を `gog zoom auth setup` で登録するか、環境変数 `GOG_ZOOM_ACCOUNT_ID` / `GOG_ZOOM_CLIENT_ID` / `GOG_ZOOM_CLIENT_SECRET` で渡します。
 
 ## Configuration
 
@@ -750,8 +753,8 @@ gog --enable-commands calendar,tasks calendar events --today
 # Gmail 送信だけを禁止
 gog --gmail-no-send gmail search "in:inbox"
 
-# 変更前にドライラン
-gog --dry-run calendar delete <eventId>
+# 変更前にドライラン（calendarId と eventId は位置引数）
+gog --dry-run calendar delete primary <eventId>
 
 # 環境変数で制限
 export GOG_ENABLE_COMMANDS=gmail,drive

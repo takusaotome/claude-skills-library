@@ -636,8 +636,8 @@ v0.27.0 では旧 `--event-type` の各種が専用サブコマンド化され�
 ```bash
 gog calendar focus-time primary \
   --summary "Deep Work" \
-  --from "2025-02-03T09:00:00" \
-  --to "2025-02-03T12:00:00" \
+  --from "2025-02-03T09:00:00+09:00" \
+  --to "2025-02-03T12:00:00+09:00" \
   --auto-decline all \
   --chat-status doNotDisturb
 ```
@@ -649,8 +649,8 @@ gog calendar focus-time primary \
 ```bash
 gog calendar out-of-office primary \
   --summary "Vacation" \
-  --from "2025-02-10T00:00:00" \
-  --to "2025-02-14T23:59:59" \
+  --from "2025-02-10T00:00:00+09:00" \
+  --to "2025-02-14T23:59:59+09:00" \
   --decline-message "外出中のため、戻り次第ご返信します。"
 ```
 
