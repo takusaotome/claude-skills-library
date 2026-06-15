@@ -115,7 +115,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | it-system-roi-analyzer | IT投資ROI分析・TCO計算 | ROI, TCO, NPV, Payback |
 | aws-cli-expert | AWS CLIコマンド生成 | EC2, S3, Lambda, IAM |
 | render-cli-expert | Render CLIによるデプロイ管理 | Deploys, Logs, PostgreSQL |
-| gogcli-expert | gogcli（Google Workspace CLI）操作支援 | 13 Services, OAuth2, Multi-Account |
+| gogcli-expert | gogcli（Google Workspace CLI）操作支援 | 25+ Services, OAuth2, Multi-Account |
 | network-diagnostics | ネットワーク品質診断・ボトルネック特定 | Ping/Speed/HTTP/Traceroute, Cross-Platform |
 | network-incident-analyzer | ネットワークログ分析・障害検出・原因分析 | Multi-Format Parsing, Anomaly Detection, Correlation |
 | office-script-expert | Office Scripts（Excel Online）開発支援 | ExcelScript API, 13 Bug Patterns, lib/Testing |
@@ -2444,31 +2444,32 @@ AWS CLI expert skill for cloud infrastructure management and operations.
 
 **File:** `skill-packages/gogcli-expert.skill`
 
-Expert skill for gogcli (steipete/gogcli), a Go-based CLI tool for managing 13 Google Workspace services from the terminal.
+Expert skill for gogcli (openclaw/gogcli), a Go-based CLI tool for managing 25+ Google Workspace and related services from the terminal. Tracks gogcli **v0.27.0**.
 
 **When to use:**
-- Managing Gmail (search, send, labels, filters, vacation)
-- Calendar operations (events, conflicts, free/busy, recurring events)
-- Drive file operations (list, upload, download, export, permissions)
-- Sheets data reading/writing (A1 notation, append, formatting)
-- Docs/Slides export (PDF, DOCX, PPTX via Drive export)
+- Managing Gmail (search, send, labels, settings, tracking)
+- Calendar operations (events, conflicts, free/busy, focus-time, out-of-office, recurring)
+- Drive file operations (ls, upload, download, share, audit, bulk permissions)
+- Sheets data reading/writing (A1 notation, append, formatting, charts, tables)
+- Docs/Slides full editing (create, find-replace, create-from-markdown, export PDF/DOCX/PPTX)
 - Tasks management (create, complete, recurring)
-- Workspace admin (Groups, Classroom, People, Contacts)
+- Workspace admin (Groups, Directory API Admin, Classroom, People, Contacts)
+- New services (Forms, Meet, Maps, YouTube, Photos, Sites, Analytics, Search Console, Apps Script, Zoom)
 - Setting up OAuth2 / service account authentication
 - Multi-account and multi-client configuration
 
 **Core Capabilities:**
-- 13 Google Workspace services: Gmail, Calendar, Drive, Sheets, Docs, Slides, Contacts, Tasks, Chat, Groups, Keep, Classroom, People
+- 25+ services: Gmail, Calendar, Chat, Drive, Sheets, Docs, Slides, Tasks, Keep, Contacts, People, Groups, Admin, Classroom, Forms, Meet, Maps, YouTube, Photos, Sites, Analytics, Search Console, Apps Script, Zoom (plus backup / batch / mcp)
 - OAuth2 + Service Account authentication with scope control
 - Multi-account management with aliases and domain mapping
 - `--json` / `--plain` output for pipeline integration
-- Command sandboxing with `--enable-commands` for agent safety
+- Agent safety: `--gmail-no-send`, `--dry-run`, `--enable-commands` sandboxing, built-in `mcp` server
 
 **Key Components:**
-- `references/quick_reference.md` - All 13 services command cheat sheet
+- `references/quick_reference.md` - All-services command cheat sheet
 - `references/communication_services.md` - Gmail/Calendar/Chat detailed guide
 - `references/productivity_services.md` - Drive/Sheets/Docs/Slides/Tasks/Keep detailed guide
-- `references/workspace_admin_services.md` - Groups/Classroom/People + service account guide
+- `references/workspace_admin_services.md` - Groups/Admin/Classroom/People + new services guide
 - `references/troubleshooting.md` - Comprehensive troubleshooting guide
 
 ---
@@ -4932,6 +4933,20 @@ Future skills planned for this library:
 - 3ワークフロー: AI臭診断、リライト実行、Before/After比較
 - Markdown/JSON出力対応
 - 英語テキストはClaude自身がreferences/を参照して分析・リライト
+
+### gogcli-expert v2.0 (2026-06-14)
+- Updated for gogcli v0.27.0 (upstream moved steipete/gogcli → openclaw/gogcli)
+- Expanded from 13 to 25+ services: added Admin (Directory API), Forms, Meet, Maps, YouTube, Photos, Sites, Analytics (GA4), Search Console, Apps Script, Zoom, plus backup / batch / mcp
+- Command-tree restructuring rewritten across SKILL.md and all 5 reference guides:
+  - Gmail: `gmail threads` → `gmail search "<query>"` (query required); settings moved under `gmail settings ...`; new track/archive/reply/forward
+  - Calendar: `event create` → `create`; focus-time / out-of-office / respond now dedicated subcommands; `--recurrence` → `--rrule`
+  - Drive: `list` → `ls`; `folder create` → `mkdir`; `shared-drives` → `drives`; new audit/bulk/changes/comments
+  - Sheets: range/values now positional args; new charts/tables/conditional-format/export
+  - Docs/Slides: full editing surface (find-replace, create-from-markdown) beyond Drive export
+  - Auth: `auth credentials` → `auth credentials set`; new `auth doctor`, `gog status`, top-level aliases (`login`/`logout`/`send`/`ls`/`me`)
+- New agent-safety coverage: `--gmail-no-send`, `--dry-run`, `--enable-commands`/`--disable-commands`, `mcp` server
+- Troubleshooting: added keyring-timeout-after-binary-update fix and `auth doctor` diagnostics; retained Gmail orphaned-draft data-loss warning
+- All commands/flags verified against the live v0.27.0 schema (`gog schema --json`)
 
 ### gogcli-expert v1.0 (2026-01-29)
 - Initial release
