@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 111 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 112 dirs total
+├── skills/                 # 112 published skills (with SKILL.md) + 2 in-progress directories with only scripts/ — 114 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (111 Skills)
+## Skill Catalog (112 Skills)
 
-> Note: `skills/` contains 111 directories total — 110 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: `skills/` contains 114 directories total — 112 published skills (with `SKILL.md`) listed below, plus 2 in-progress directories that only contain `scripts/` and are not yet ready for publication: `email-inbox-triager`, `vendor-support-ticket-tracker`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -168,7 +168,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 
-### QA & Testing (15 skills)
+### QA & Testing (16 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -186,6 +186,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | completion-quality-gate-designer | 完了判定・品質ゲート・証跡・例外運用設計 | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
 | cross-module-consistency-auditor | 変更波及・横断整合性・コピペ展開監査 | Impact Map, Consistency Matrix, Copy Propagation Review |
 | production-parity-test-designer | 本番同等テスト階層設計・盲点排除 | Test Tier Allocation, Smoke Suite, Adversarial Regression |
+| fable-thinking | Fableクラスの思考プロセスを任意のモデルで再現する思考スキャフォールド | Phase-Gated Protocol, 12 Lenses, Adversarial Self-Critique |
 | web-server-security-reviewer | Web サーバ Phase 1 設定セキュリティレビュー（nginx/apache、Linux 中心） | 9-Axis Checklist, 6-Tier Guardrails, Read-Only, MANIFEST Integrity |
 
 ### Compliance & Governance (12 skills)
@@ -4573,6 +4574,33 @@ Phase 1 web server (nginx/apache, Linux-centric) security configuration review. 
 
 ---
 
+### 🧠 Fable Thinking
+
+**File:** `skills/fable-thinking/`
+
+Fableクラスの思考プロセスを任意のモデルで再現する思考スキャフォールド（knowledge-only）。「視野を広げてから絞る」「自分の結論を一度攻撃してから出す」という思考の順序を、8フェーズと通過ゲートで強制する。モデルの規模に依存しない手続きなので、Opus や Sonnet でも深く幅広い検討を経た結論を再現できる。
+
+**When to use:**
+- 設計判断、技術選定、移行判断など、間違えたときの手戻りコストが高いタスク
+- 原因が自明でない調査、トラブルシュート、データ分析
+- 提案書・戦略文書・レビューなど、結論の説得力が成果物の価値を決めるタスク
+- 「深く考えて」「幅広い視野で」「多角的に」「Fableのように」と指示されたとき
+
+**Key Components:**
+- `SKILL.md` — 8フェーズの思考プロトコル本体（トリアージ → 問いの再構築 → 前提の棚卸し → 視野の拡張 → 深掘り → 反証 → 収束 → セルフレビュー）
+- `references/thinking-protocol.md` — 各フェーズの質問バンクと、浅い回答と深い回答を比較する実例
+- `references/lenses.md` — 視野を強制的に広げる12のレンズ集（時間軸、二次効果、逆転、プレモーテム、ベースレート、可逆性ほか）とタスク種類別の推奨セット
+- `references/anti-patterns.md` — 10の失敗パターンと対策の早見表（アンカリング、メニュー回答、ヘッジ逃げ、記憶による断定ほか）
+
+**Key Features:**
+- 各フェーズに Gate（通過条件）を設け、弱いモデルが素通りしがちな検討ステップを強制する
+- 「質的に異なる3案が揃うまで収束禁止」でアンカリングを構造的に防止
+- 反証フェーズで結論を仮固定して攻撃し、負けたら選択肢展開に戻るループ設計
+- 出力契約: 結論先頭・推奨1つ・トレードオフ・反証条件の4点セット。思考の足場は出力に見せない
+- `/fable-thinking` で直接呼び出し、またはエージェント定義から `Follow the fable-thinking protocol` で参照可能
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -4587,6 +4615,15 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### fable-thinking v1.0 (2026-07-07)
+- Knowledge-only thinking scaffold that reproduces Fable-class deep reasoning on any model (Opus / Sonnet)
+- 8-phase protocol with exit gates: Triage → Question Reframing → Assumption Audit → Option Expansion → Deep Dive → Adversarial Self-Critique → Calibrated Convergence → Self-Review
+- 12 perspective lenses (time horizon, second-order effects, inversion, pre-mortem, base rate, reversibility, etc.) with task-type recommendation sets
+- Anti-pattern catalog: 10 shallow-reasoning failure modes with countermeasures (anchoring, menu answers, hedging, literal-answer trap, etc.)
+- Worked example contrasting shallow vs scaffolded answers (SQLite→PostgreSQL migration case)
+- Output contract: conclusion-first, single recommendation + trade-offs + falsification conditions; scaffold stays in thinking
+- Invocable via /fable-thinking, natural-language triggers (深く考えて / 多角的に / Fableのように), or agent definitions
 
 ### email-thread-summarizer v1.0 (2026-06-14)
 - Email thread analysis skill for extracting status, action items, timeline, and decisions

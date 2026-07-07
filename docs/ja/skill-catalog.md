@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 109 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 110 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -138,7 +138,7 @@ permalink: /ja/skill-catalog/
 
 ## QA、テスト & ベンダー管理
 
-品質保証、テスト、ベンダー評価、顧客体験の 16 スキル。
+品質保証、テスト、ベンダー評価、思考品質、顧客体験の 17 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -154,6 +154,7 @@ permalink: /ja/skill-catalog/
 | [completion-quality-gate-designer]({{ '/ja/skills/meta/completion-quality-gate-designer/' | relative_url }}) | 完了判定・品質ゲート・証跡・例外運用設計 | 品質ゲート、Exit Criteria |
 | [cross-module-consistency-auditor]({{ '/ja/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | 変更波及・横断整合性・コピペ展開監査 | 横断整合性、変更波及分析 |
 | [production-parity-test-designer]({{ '/ja/skills/meta/production-parity-test-designer/' | relative_url }}) | 本番同等テスト階層設計・盲点排除 | テスト階層設計、本番同等 |
+| [fable-thinking]({{ '/ja/skills/meta/fable-thinking/' | relative_url }}) | Fableクラスの思考プロセスを任意のモデルで再現する思考スキャフォールド | フェーズゲート、12レンズ、反証プロセス |
 | [skill-designer]({{ '/ja/skills/meta/skill-designer/' | relative_url }}) | Claudeスキル設計 | 規約準拠、プロンプト生成 |
 | [skill-idea-miner]({{ '/ja/skills/meta/skill-idea-miner/' | relative_url }}) | セッションログからスキルアイデア抽出 | LLMスコアリング、バックログ管理 |
 | [vendor-procurement-coordinator]({{ '/ja/skills/meta/vendor-procurement-coordinator/' | relative_url }}) | ベンダー調達ワークフロー一気通貫オーケストレーション | RFQ→メール→追跡、ベンダーライフサイクル |

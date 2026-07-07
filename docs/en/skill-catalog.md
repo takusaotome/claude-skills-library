@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 109 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 110 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -138,7 +138,7 @@ All 109 skills organized by category. Skills with dedicated guide pages are show
 
 ## QA, Testing & Vendor Management
 
-16 skills for quality assurance, testing, vendor evaluation, and customer experience.
+17 skills for quality assurance, testing, vendor evaluation, reasoning quality, and customer experience.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -154,6 +154,7 @@ All 109 skills organized by category. Skills with dedicated guide pages are show
 | [completion-quality-gate-designer]({{ '/en/skills/meta/completion-quality-gate-designer/' | relative_url }}) | Design quality gates, exit criteria, and evidence requirements | Quality Gates, Exit Criteria |
 | [cross-module-consistency-auditor]({{ '/en/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | Audit cross-module consistency for change impact | Cross-Module Consistency, Change Impact |
 | [production-parity-test-designer]({{ '/en/skills/meta/production-parity-test-designer/' | relative_url }}) | Design production-parity test hierarchies | Test Hierarchy Design, Production Parity |
+| [fable-thinking]({{ '/en/skills/meta/fable-thinking/' | relative_url }}) | Deep-thinking scaffold that reproduces Fable-class reasoning on any model | Phase-Gated Protocol, 12 Lenses, Adversarial Self-Critique |
 | [skill-designer]({{ '/en/skills/meta/skill-designer/' | relative_url }}) | Design new Claude skills from idea specifications | Convention Compliance, Prompt Generation |
 | [skill-idea-miner]({{ '/en/skills/meta/skill-idea-miner/' | relative_url }}) | Mine session logs for skill idea candidates | LLM Scoring, Backlog Management |
 | [vendor-procurement-coordinator]({{ '/en/skills/meta/vendor-procurement-coordinator/' | relative_url }}) | End-to-end vendor procurement workflow orchestration | RFQ→Email→Tracking, Vendor Lifecycle States |

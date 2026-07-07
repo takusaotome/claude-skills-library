@@ -111,6 +111,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | email-triage-responder | 1.0 | Email Triage | Eisenhower matrix, draft generation, status tracking, gogcli/Outlook |
 | esg-reporter | 1.0 | ESG Reporting | GRI, SASB, TCFD, CDP standards |
 | executive-briefing-writer | 1.0 | Executive Communication | Board Reports, So What Analysis |
+| fable-thinking | 1.0 | Deep Reasoning | Phase-Gated Protocol, 12 Lenses, Adversarial Self-Critique |
 | ffmpeg-expert | 1.0 | Media Processing | Video/Audio encoding, filters, streaming |
 | financial-analyst | 1.0 | Financial Analysis | DCF, NPV/IRR, Comparable Analysis |
 | fujisoft-presentation-creator | 1.0 | Presentations | MARP Templates, Corporate Style |
