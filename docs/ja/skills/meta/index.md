@@ -25,6 +25,7 @@ permalink: /ja/skills/meta/
 | [completion-quality-gate-designer]({{ '/ja/skills/meta/completion-quality-gate-designer/' | relative_url }}) | 完了判定・品質ゲート・証跡・例外運用設計 | 7フェーズゲート設計、DoD分離、証跡カタログ |
 | [cross-module-consistency-auditor]({{ '/ja/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | 変更波及・横断整合性・コピペ展開監査 | Impact Map、整合性マトリクス、コピペレビュー戦略 |
 | [production-parity-test-designer]({{ '/ja/skills/meta/production-parity-test-designer/' | relative_url }}) | 本番同等テスト階層設計・盲点排除 | テスト階層配賦、Smokeスイート、Adversarial回帰 |
+| [fable-thinking]({{ '/ja/skills/meta/fable-thinking/' | relative_url }}) | Fableクラスの思考プロセスを任意のモデルで再現する思考スキャフォールド | フェーズゲート、12レンズ、反証プロセス |
 
 ## ベンダー管理
 

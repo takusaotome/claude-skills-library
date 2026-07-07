@@ -25,6 +25,7 @@ Skills for quality assurance, vendor management, CRM, media processing, HR, and 
 | [completion-quality-gate-designer]({{ '/en/skills/meta/completion-quality-gate-designer/' | relative_url }}) | Design quality gates, exit criteria, evidence requirements | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
 | [cross-module-consistency-auditor]({{ '/en/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | Audit cross-module consistency for change impact | Impact Map, Consistency Matrix, Copy Propagation Review |
 | [production-parity-test-designer]({{ '/en/skills/meta/production-parity-test-designer/' | relative_url }}) | Design production-parity test hierarchies | Test Tier Allocation, Smoke Suite, Adversarial Regression |
+| [fable-thinking]({{ '/en/skills/meta/fable-thinking/' | relative_url }}) | Deep-thinking scaffold that reproduces Fable-class reasoning on any model | Phase-Gated Protocol, 12 Lenses, Adversarial Self-Critique |
 
 ## Vendor Management
 
