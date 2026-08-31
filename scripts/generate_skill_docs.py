@@ -65,7 +65,7 @@ HAND_WRITTEN = frozenset(
 MAX_NAV_ORDER = {
     "dev": 11,
     "management": 4,
-    "ops": 3,
+    "ops": 15,
     "finance": 1,
     "meta": 13,
 }
@@ -134,6 +134,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "bcp-planner": "ops",
     "cx-error-analyzer": "ops",
     "data-visualization-expert": "ops",
+    "eli5": "ops",
     "fujisoft-presentation-creator": "ops",
     "incident-rca-specialist": "ops",
     "markdown-to-pdf": "ops",

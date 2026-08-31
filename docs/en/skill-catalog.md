@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 110 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 111 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -86,7 +86,7 @@ All 110 skills organized by category. Skills with dedicated guide pages are show
 
 ## Operations & Documentation
 
-22 skills for technical writing, presentations, document conversion, and meeting minutes.
+23 skills for technical writing, presentations, document conversion, plain-language explainers, and meeting minutes.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -112,6 +112,7 @@ All 110 skills organized by category. Skills with dedicated guide pages are show
 | [marp-layout-debugger]({{ '/en/skills/meta/marp-layout-debugger/' | relative_url }}) | Diagnose and fix MARP slide layout issues | Whitespace/Alignment/Bullet/CSS Fix Catalog |
 | [multi-format-document-optimizer]({{ '/en/skills/ops/multi-format-document-optimizer/' | relative_url }}) | Unified document pipeline (docling+ImageMagick+markdown-to-pdf) | 4 Quality Presets, Batch Processing, PDF Image Optimization |
 | [purchase-request-generator]({{ '/en/skills/management/purchase-request-generator/' | relative_url }}) | Generate purchase requests with cost-benefit analysis | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
+| [eli5]({{ '/en/skills/ops/eli5/' | relative_url }}) | Dead-simple visual explainer as a single HTML artifact | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
 
 ---
 

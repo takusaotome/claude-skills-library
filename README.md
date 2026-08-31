@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 112 published skills (with SKILL.md) + 2 in-progress directories with only scripts/ — 114 dirs total
+├── skills/                 # 113 published skills (with SKILL.md) + 2 in-progress directories with only scripts/ — 115 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (112 Skills)
+## Skill Catalog (113 Skills)
 
-> Note: `skills/` contains 114 directories total — 112 published skills (with `SKILL.md`) listed below, plus 2 in-progress directories that only contain `scripts/` and are not yet ready for publication: `email-inbox-triager`, `vendor-support-ticket-tracker`.
+> Note: `skills/` contains 115 directories total — 113 published skills (with `SKILL.md`) listed below, plus 2 in-progress directories that only contain `scripts/` and are not yet ready for publication: `email-inbox-triager`, `vendor-support-ticket-tracker`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -143,7 +143,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (20 skills)
+### Documentation & Communication (21 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -167,6 +167,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | purchase-request-generator | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
+| eli5 | 大きな絵と最小限の言葉によるHTML説明ページ生成 | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
 
 ### QA & Testing (16 skills)
 
@@ -4601,6 +4602,33 @@ Fableクラスの思考プロセスを任意のモデルで再現する思考ス
 
 ---
 
+### 🧒 ELI5
+
+**File:** `skills/eli5/`
+
+トピックを「大きな絵と最小限の言葉」だけで説明する、単一のHTMLアーティファクトを生成するスキル。名前は5歳児向けだが、狙いは子ども向けの語彙で話すことではなく、読み手が持っていない前提知識を取り除くこと。想定読者は「そのテーマを一度も聞いたことがない賢い大人」で、平易さと正確さを両立させる。
+
+**When to use:**
+- 「ELI5」「簡単に説明して」「図で説明して」「初心者向けに」「素人にもわかるように」と依頼されたとき
+- 技術的な内容を、非技術者の上長・顧客・家族に説明する必要があるとき
+- ビジュアル説明資料、図解ウォークスルー、初心者が追える1枚ものを求められたとき
+- 一度説明したが伝わらず、もっと平易な版を求められたとき
+
+**Key Components:**
+- `SKILL.md` — 説明設計の方針と、生成するHTMLアーティファクトの構成規定
+
+**Key Features:**
+- 冒頭に1文サマリ、数枚の大パネル、締めの「だから何なのか」1行という固定構成
+- CSSとSVGをすべてインライン化した自己完結型HTML。外部スクリプト・スタイル・画像を読み込まない
+- 正確な技術図より、うまい例えを絵にしたものを優先する
+- 全体を1分で読み切れる分量に制限。段落を書きそうになったら図に置き換える
+- 出力言語は依頼者に追従。指定された聞き手が別言語を読む場合はそちらを優先
+- 対象外は厳密な技術仕様書と、既に分野を理解している聴衆向けのプレゼン資料
+
+**Credits:** MITライセンスの [eli5 プラグイン](https://github.com/anthropics/claude-plugins-community/tree/main/eli5)（作者 Thariq Shihipar）をもとに拡張。
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -4615,6 +4643,14 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### eli5 v1.0 (2026-08-30)
+- Plain-language visual explainer that renders a topic as a single self-contained HTML artifact
+- Big pictures, very few words: one-sentence opener, a few large panels, one concrete example, a closing "so what" line
+- Inline CSS and SVG only — no external scripts, stylesheets, or images
+- Targets "a smart adult who has never heard of this" rather than a literal five-year-old, keeping the explanation both simple and accurate
+- Bilingual trigger coverage (ELI5 / explain like I'm five / 簡単に説明して / 図で説明して / 初心者向けに / 素人にもわかるように); output follows the user's language, or the named audience's
+- Adapted from the MIT-licensed eli5 plugin by Thariq Shihipar
 
 ### fable-thinking v1.0 (2026-07-07)
 - Knowledge-only thinking scaffold that reproduces Fable-class deep reasoning on any model (Opus / Sonnet)

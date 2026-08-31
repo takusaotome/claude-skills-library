@@ -25,3 +25,4 @@ permalink: /ja/skills/ops/
 | [operations-manual-creator]({{ '/ja/skills/ops/operations-manual-creator/' | relative_url }}) | 操作マニュアル・SOP作成 | STEPフォーマット、ANSI Z535、トラブルシューティング |
 | [presentation-reviewer]({{ '/ja/skills/ops/presentation-reviewer/' | relative_url }}) | プレゼン資料レビュー（聴衆視点） | 5評価軸、Marp互換性 |
 | [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) | インシデントRCA・是正措置計画 | 5 Whys、Fishbone、FTA、3D Prevention |
+| [eli5]({{ '/ja/skills/ops/eli5/' | relative_url }}) | 大きな絵と最小限の言葉によるHTML説明ページ生成 | 図中心パネル、インラインSVG、非技術者向け |

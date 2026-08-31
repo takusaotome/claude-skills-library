@@ -108,6 +108,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | docling-converter | 1.0 | Document Conversion | PDF, DOCX, PPTX, Markdown conversion |
 | dual-axis-skill-reviewer | 1.0 | Skill Quality Review | run_dual_axis_review.py, 5-dimension auto scoring, LLM merge |
 | duckdb-expert | 1.0 | Data Analytics | SQL Optimization, CSV/Parquet/JSON |
+| eli5 | 1.0 | Documentation & Communication | Single HTML artifact, inline SVG, big-picture panels |
 | email-triage-responder | 1.0 | Email Triage | Eisenhower matrix, draft generation, status tracking, gogcli/Outlook |
 | esg-reporter | 1.0 | ESG Reporting | GRI, SASB, TCFD, CDP standards |
 | executive-briefing-writer | 1.0 | Executive Communication | Board Reports, So What Analysis |
