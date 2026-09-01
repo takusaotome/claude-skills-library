@@ -108,9 +108,11 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | docling-converter | 1.0 | Document Conversion | PDF, DOCX, PPTX, Markdown conversion |
 | dual-axis-skill-reviewer | 1.0 | Skill Quality Review | run_dual_axis_review.py, 5-dimension auto scoring, LLM merge |
 | duckdb-expert | 1.0 | Data Analytics | SQL Optimization, CSV/Parquet/JSON |
+| eli5 | 1.0 | Documentation & Communication | Single HTML artifact, inline SVG, big-picture panels |
 | email-triage-responder | 1.0 | Email Triage | Eisenhower matrix, draft generation, status tracking, gogcli/Outlook |
 | esg-reporter | 1.0 | ESG Reporting | GRI, SASB, TCFD, CDP standards |
 | executive-briefing-writer | 1.0 | Executive Communication | Board Reports, So What Analysis |
+| fable-thinking | 1.0 | Deep Reasoning | Phase-Gated Protocol, 12 Lenses, Adversarial Self-Critique |
 | ffmpeg-expert | 1.0 | Media Processing | Video/Audio encoding, filters, streaming |
 | financial-analyst | 1.0 | Financial Analysis | DCF, NPV/IRR, Comparable Analysis |
 | fujisoft-presentation-creator | 1.0 | Presentations | MARP Templates, Corporate Style |
@@ -179,6 +181,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | vendor-estimate-reviewer | 1.0 | Vendor Management | 12 Review Dimensions, 60+ Risk Factors |
 | vendor-procurement-coordinator | 1.0 | Procurement | RFQ→email→tracking orchestration, vendor lifecycle states |
 | vendor-rfq-creator | 1.0 | RFQ Creation | 150+ Checklist Items |
+| vendor-support-ticket-tracker | 1.0 | Vendor Management | ticket_manager.py, 8-state lifecycle, SLA tracking |
 | video2minutes | 1.0 | Media Processing | Transcription, Meeting Minutes |
 | web-server-security-reviewer | 1.0 | Security Review | 9-Axis Checklist, 6-Tier Guardrails, MANIFEST Integrity, Read-Only |
 | yt-dlp-expert | 1.0 | Media Download | 1000+ Sites, Subtitles, Formats |

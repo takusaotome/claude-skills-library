@@ -65,9 +65,9 @@ HAND_WRITTEN = frozenset(
 MAX_NAV_ORDER = {
     "dev": 11,
     "management": 4,
-    "ops": 3,
+    "ops": 15,
     "finance": 1,
-    "meta": 12,
+    "meta": 33,
 }
 
 # Primary category for every skill.  Determines where the docs page lives.
@@ -134,6 +134,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "bcp-planner": "ops",
     "cx-error-analyzer": "ops",
     "data-visualization-expert": "ops",
+    "eli5": "ops",
     "fujisoft-presentation-creator": "ops",
     "incident-rca-specialist": "ops",
     "markdown-to-pdf": "ops",
@@ -163,6 +164,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "completion-quality-gate-designer": "meta",
     "cross-module-consistency-auditor": "meta",
     "dual-axis-skill-reviewer": "meta",
+    "fable-thinking": "meta",
     "itil4-consultant": "meta",
     "meeting-asset-preparer": "meta",
     "multi-file-log-correlator": "meta",
@@ -173,6 +175,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "skill-designer": "meta",
     "skill-idea-miner": "meta",
     "timezone-aware-event-tracker": "meta",
+    "vendor-support-ticket-tracker": "meta",
 }
 
 # ---------------------------------------------------------------------------

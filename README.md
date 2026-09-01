@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 112 published skills (with SKILL.md) + 1 in-progress directory with only scripts/ — 113 dirs total
+├── skills/                 # 114 published skills (with SKILL.md) — 114 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,9 +59,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (112 Skills)
+## Skill Catalog (114 Skills)
 
-> Note: `skills/` contains 112 directories total — 111 published skills (with `SKILL.md`) listed below, plus 1 in-progress directory that only contains `scripts/` and is not yet ready for publication: `email-inbox-triager`.
+> Note: every directory under `skills/` is a published skill with a `SKILL.md`.
 
 ### Business Strategy & Consulting (18 skills)
 
@@ -143,7 +143,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (20 skills)
+### Documentation & Communication (21 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -167,8 +167,9 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | purchase-request-generator | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
+| eli5 | 大きな絵と最小限の言葉によるHTML説明ページ生成 | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
 
-### QA & Testing (15 skills)
+### QA & Testing (16 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -186,6 +187,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | completion-quality-gate-designer | 完了判定・品質ゲート・証跡・例外運用設計 | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
 | cross-module-consistency-auditor | 変更波及・横断整合性・コピペ展開監査 | Impact Map, Consistency Matrix, Copy Propagation Review |
 | production-parity-test-designer | 本番同等テスト階層設計・盲点排除 | Test Tier Allocation, Smoke Suite, Adversarial Regression |
+| fable-thinking | Fableクラスの思考プロセスを任意のモデルで再現する思考スキャフォールド | Phase-Gated Protocol, 12 Lenses, Adversarial Self-Critique |
 | web-server-security-reviewer | Web サーバ Phase 1 設定セキュリティレビュー（nginx/apache、Linux 中心） | 9-Axis Checklist, 6-Tier Guardrails, Read-Only, MANIFEST Integrity |
 
 ### Compliance & Governance (12 skills)
@@ -1043,7 +1045,7 @@ A skill that orchestrates the complete vendor procurement lifecycle from initial
 
 ### 🎫 Vendor Support Ticket Tracker（ベンダーサポートチケット管理）
 
-**File:** `skill-packages/vendor-support-ticket-tracker.skill`
+**File:** `skills/vendor-support-ticket-tracker/`
 
 複数ベンダー（STX、Dell、HP等）のサポートチケットおよびRMAケースを一元管理するスキル。チケット状態、通信タイムライン、保留アクション、エスカレーション状況を追跡。ベンダーからのメール応答を解析してチケットステータスを自動更新し、フォローアップが必要なチケットを特定するステータスレポートを生成。
 
@@ -4637,6 +4639,60 @@ Phase 1 web server (nginx/apache, Linux-centric) security configuration review. 
 
 ---
 
+### 🧠 Fable Thinking
+
+**File:** `skills/fable-thinking/`
+
+Fableクラスの思考プロセスを任意のモデルで再現する思考スキャフォールド（knowledge-only）。「視野を広げてから絞る」「自分の結論を一度攻撃してから出す」という思考の順序を、8フェーズと通過ゲートで強制する。モデルの規模に依存しない手続きなので、Opus や Sonnet でも深く幅広い検討を経た結論を再現できる。
+
+**When to use:**
+- 設計判断、技術選定、移行判断など、間違えたときの手戻りコストが高いタスク
+- 原因が自明でない調査、トラブルシュート、データ分析
+- 提案書・戦略文書・レビューなど、結論の説得力が成果物の価値を決めるタスク
+- 「深く考えて」「幅広い視野で」「多角的に」「Fableのように」と指示されたとき
+
+**Key Components:**
+- `SKILL.md` — 8フェーズの思考プロトコル本体（トリアージ → 問いの再構築 → 前提の棚卸し → 視野の拡張 → 深掘り → 反証 → 収束 → セルフレビュー）
+- `references/thinking-protocol.md` — 各フェーズの質問バンクと、浅い回答と深い回答を比較する実例
+- `references/lenses.md` — 視野を強制的に広げる12のレンズ集（時間軸、二次効果、逆転、プレモーテム、ベースレート、可逆性ほか）とタスク種類別の推奨セット
+- `references/anti-patterns.md` — 10の失敗パターンと対策の早見表（アンカリング、メニュー回答、ヘッジ逃げ、記憶による断定ほか）
+
+**Key Features:**
+- 各フェーズに Gate（通過条件）を設け、弱いモデルが素通りしがちな検討ステップを強制する
+- 「質的に異なる3案が揃うまで収束禁止」でアンカリングを構造的に防止
+- 反証フェーズで結論を仮固定して攻撃し、負けたら選択肢展開に戻るループ設計
+- 出力契約: 結論先頭・推奨1つ・トレードオフ・反証条件の4点セット。思考の足場は出力に見せない
+- `/fable-thinking` で直接呼び出し、またはエージェント定義から `Follow the fable-thinking protocol` で参照可能
+
+---
+
+### 🧒 ELI5
+
+**File:** `skills/eli5/`
+
+トピックを「大きな絵と最小限の言葉」だけで説明する、単一のHTMLアーティファクトを生成するスキル。名前は5歳児向けだが、狙いは子ども向けの語彙で話すことではなく、読み手が持っていない前提知識を取り除くこと。想定読者は「そのテーマを一度も聞いたことがない賢い大人」で、平易さと正確さを両立させる。
+
+**When to use:**
+- 「ELI5」「簡単に説明して」「図で説明して」「初心者向けに」「素人にもわかるように」と依頼されたとき
+- 技術的な内容を、非技術者の上長・顧客・家族に説明する必要があるとき
+- ビジュアル説明資料、図解ウォークスルー、初心者が追える1枚ものを求められたとき
+- 一度説明したが伝わらず、もっと平易な版を求められたとき
+
+**Key Components:**
+- `SKILL.md` — 説明設計の方針と、生成するHTMLアーティファクトの構成規定
+
+**Key Features:**
+- 冒頭に1文サマリ、数枚の大パネル、締めの「だから何なのか」1行という固定構成
+- CSSとSVGをすべてインライン化した自己完結型HTML。外部スクリプト・スタイル・画像を読み込まない
+- 正確な技術図より、うまい例えを絵にしたものを優先する
+- 全体を1分で読み切れる分量に制限。段落を書きそうになったら図に置き換える
+- 出力言語は依頼者に追従。指定された聞き手が別言語を読む場合はそちらを優先
+- 対象外は厳密な技術仕様書と、既に分野を理解している聴衆向けのプレゼン資料
+
+**Credits:** MITライセンスの [eli5 プラグイン](https://github.com/anthropics/claude-plugins-community/tree/main/eli5)（作者 Thariq Shihipar）をもとに拡張。
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -4652,18 +4708,31 @@ Future skills planned for this library:
 
 ## Version History
 
-### vendor-support-ticket-tracker v1.0 (2026-06-15)
-- Track vendor support tickets and RMA cases across multiple vendors (STX, Dell, HP, etc.)
-- 8-state ticket lifecycle: open → acknowledged → in-progress → awaiting-parts/awaiting-customer → escalated → resolved → closed
-- YAML-based ticket database with schema versioning
-- Priority-based SLA target calculation (critical: 4h, high: 24h, medium: 72h, low: 5 days)
-- Stale ticket detection with configurable threshold (default 7 days)
-- Escalation management with reason tracking and timeline logging
-- Markdown status report generation grouped by vendor with follow-up recommendations
-- CLI commands: init, create, update, report, stale, escalate, show, list
-- Vendor-specific guidelines for STX, Dell, HP/HPE, Cisco
-- Integration points for email auto-update and calendar scheduling
-- 27 unit tests covering all core functionality
+### vendor-support-ticket-tracker v1.0 (2026-09-01)
+- Track vendor support tickets and RMA cases across multiple vendors from a local YAML database
+- 8-state ticket lifecycle: open → acknowledged → in-progress → awaiting-parts / awaiting-customer → escalated → resolved → closed
+- SLA targets by priority (critical 4h, high 24h, medium 72h, low 5 days) with business-hours calculation and breach warnings
+- Stale-ticket detection with a configurable threshold, plus escalation history tracking
+- `scripts/ticket_manager.py` CLI: init / create / update / report / stale / escalate / show / list
+- `references/ticket-lifecycle.md` documents state transitions, SLA guidelines, and escalation procedures
+- Markdown status reports identifying tickets that need follow-up
+
+### eli5 v1.0 (2026-08-30)
+- Plain-language visual explainer that renders a topic as a single self-contained HTML artifact
+- Big pictures, very few words: one-sentence opener, a few large panels, one concrete example, a closing "so what" line
+- Inline CSS and SVG only — no external scripts, stylesheets, or images
+- Targets "a smart adult who has never heard of this" rather than a literal five-year-old, keeping the explanation both simple and accurate
+- Bilingual trigger coverage (ELI5 / explain like I'm five / 簡単に説明して / 図で説明して / 初心者向けに / 素人にもわかるように); output follows the user's language, or the named audience's
+- Adapted from the MIT-licensed eli5 plugin by Thariq Shihipar
+
+### fable-thinking v1.0 (2026-07-07)
+- Knowledge-only thinking scaffold that reproduces Fable-class deep reasoning on any model (Opus / Sonnet)
+- 8-phase protocol with exit gates: Triage → Question Reframing → Assumption Audit → Option Expansion → Deep Dive → Adversarial Self-Critique → Calibrated Convergence → Self-Review
+- 12 perspective lenses (time horizon, second-order effects, inversion, pre-mortem, base rate, reversibility, etc.) with task-type recommendation sets
+- Anti-pattern catalog: 10 shallow-reasoning failure modes with countermeasures (anchoring, menu answers, hedging, literal-answer trap, etc.)
+- Worked example contrasting shallow vs scaffolded answers (SQLite→PostgreSQL migration case)
+- Output contract: conclusion-first, single recommendation + trade-offs + falsification conditions; scaffold stays in thinking
+- Invocable via /fable-thinking, natural-language triggers (深く考えて / 多角的に / Fableのように), or agent definitions
 
 ### email-thread-summarizer v1.0 (2026-06-14)
 - Email thread analysis skill for extracting status, action items, timeline, and decisions

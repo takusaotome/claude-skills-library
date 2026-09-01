@@ -53,6 +53,7 @@ jobs:
           - shift-planner
           - skill-designer
           - skill-idea-miner
+          - vendor-support-ticket-tracker
           - wbs-review-assistant
     steps:
       - uses: actions/checkout@v4
@@ -109,10 +110,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Pinned to 3.1: the github-pages gem forces jekyll 3.9 / liquid 4.0.3,
+      # whose taint_check calls String#tainted? — removed in Ruby 3.2.
+      # Lift this once docs/ moves off github-pages to jekyll 4.x.
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: '3.1'
           bundler-cache: true
           working-directory: docs
 

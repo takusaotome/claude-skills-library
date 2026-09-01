@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 109 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 112 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -86,7 +86,7 @@ permalink: /ja/skill-catalog/
 
 ## オペレーション & ドキュメンテーション
 
-技術文書、プレゼン、ドキュメント変換、議事録の 22 スキル。
+技術文書、プレゼン、ドキュメント変換、平易な説明資料、議事録の 23 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -112,6 +112,7 @@ permalink: /ja/skill-catalog/
 | [marp-layout-debugger]({{ '/ja/skills/meta/marp-layout-debugger/' | relative_url }}) | MARPスライドレイアウト診断・自動修正 | Whitespace/Alignment/Bullet/CSS Fix |
 | [multi-format-document-optimizer]({{ '/ja/skills/ops/multi-format-document-optimizer/' | relative_url }}) | ドキュメント変換・画像最適化パイプライン統合 | 4品質プリセット、バッチ処理、PDF画像最適化 |
 | [purchase-request-generator]({{ '/ja/skills/management/purchase-request-generator/' | relative_url }}) | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback、ベンダー比較、MARPスライド |
+| [eli5]({{ '/ja/skills/ops/eli5/' | relative_url }}) | 大きな絵と最小限の言葉によるHTML説明ページ生成 | 図中心パネル、インラインSVG、非技術者向け |
 
 ---
 
@@ -138,7 +139,7 @@ permalink: /ja/skill-catalog/
 
 ## QA、テスト & ベンダー管理
 
-品質保証、テスト、ベンダー評価、顧客体験の 16 スキル。
+品質保証、テスト、ベンダー評価、思考品質、顧客体験の 18 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -154,9 +155,11 @@ permalink: /ja/skill-catalog/
 | [completion-quality-gate-designer]({{ '/ja/skills/meta/completion-quality-gate-designer/' | relative_url }}) | 完了判定・品質ゲート・証跡・例外運用設計 | 品質ゲート、Exit Criteria |
 | [cross-module-consistency-auditor]({{ '/ja/skills/meta/cross-module-consistency-auditor/' | relative_url }}) | 変更波及・横断整合性・コピペ展開監査 | 横断整合性、変更波及分析 |
 | [production-parity-test-designer]({{ '/ja/skills/meta/production-parity-test-designer/' | relative_url }}) | 本番同等テスト階層設計・盲点排除 | テスト階層設計、本番同等 |
+| [fable-thinking]({{ '/ja/skills/meta/fable-thinking/' | relative_url }}) | Fableクラスの思考プロセスを任意のモデルで再現する思考スキャフォールド | フェーズゲート、12レンズ、反証プロセス |
 | [skill-designer]({{ '/ja/skills/meta/skill-designer/' | relative_url }}) | Claudeスキル設計 | 規約準拠、プロンプト生成 |
 | [skill-idea-miner]({{ '/ja/skills/meta/skill-idea-miner/' | relative_url }}) | セッションログからスキルアイデア抽出 | LLMスコアリング、バックログ管理 |
 | [vendor-procurement-coordinator]({{ '/ja/skills/meta/vendor-procurement-coordinator/' | relative_url }}) | ベンダー調達ワークフロー一気通貫オーケストレーション | RFQ→メール→追跡、ベンダーライフサイクル |
+| [vendor-support-ticket-tracker]({{ '/ja/skills/meta/vendor-support-ticket-tracker/' | relative_url }}) | 複数ベンダーのサポートチケット・RMA管理 | 8段階ライフサイクル、SLA追跡、停滞検出 |
 | [web-server-security-reviewer]({{ '/ja/skills/meta/web-server-security-reviewer/' | relative_url }}) | Web サーバ Phase 1 設定セキュリティレビュー（nginx/apache、Linux 中心） | 9 観点チェックリスト、6 階層ガード、MANIFEST 整合性、Read-Only |
 
 ---

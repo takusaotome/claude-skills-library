@@ -25,3 +25,4 @@ Skills for technical writing, document conversion, presentation creation, and op
 | [operations-manual-creator]({{ '/en/skills/ops/operations-manual-creator/' | relative_url }}) | Operations manual and SOP creation | STEP Format, ANSI Z535, Troubleshooting |
 | [presentation-reviewer]({{ '/en/skills/ops/presentation-reviewer/' | relative_url }}) | Presentation review from audience perspective | 5 Evaluation Axes, Marp Compatibility |
 | [incident-rca-specialist]({{ '/en/skills/ops/incident-rca-specialist/' | relative_url }}) | Incident root cause analysis and corrective actions | 5 Whys, Fishbone, FTA, 3D Prevention |
+| [eli5]({{ '/en/skills/ops/eli5/' | relative_url }}) | Dead-simple visual explainer as a single HTML artifact | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
