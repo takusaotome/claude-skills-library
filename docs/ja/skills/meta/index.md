@@ -34,6 +34,7 @@ permalink: /ja/skills/meta/
 | [vendor-estimate-creator]({{ '/ja/skills/management/vendor-estimate-creator/' | relative_url }}) | 開発見積作成 | WBS、4見積手法、ROI |
 | [vendor-estimate-reviewer]({{ '/ja/skills/management/vendor-estimate-reviewer/' | relative_url }}) | ベンダー見積レビュー・妥当性評価 | 12レビュー次元、60+リスク要因 |
 | [vendor-rfq-creator]({{ '/ja/skills/management/vendor-rfq-creator/' | relative_url }}) | RFQ（見積依頼書）作成 | 150+チェックリスト項目 |
+| [vendor-support-ticket-tracker]({{ '/ja/skills/meta/vendor-support-ticket-tracker/' | relative_url }}) | 複数ベンダーのサポートチケット・RMA管理 | 8段階ライフサイクル、SLA追跡、停滞検出 |
 
 ## Salesforce
 

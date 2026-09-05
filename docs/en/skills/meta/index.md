@@ -34,6 +34,7 @@ Skills for quality assurance, vendor management, CRM, media processing, HR, and 
 | [vendor-estimate-creator]({{ '/en/skills/management/vendor-estimate-creator/' | relative_url }}) | Development cost estimation | WBS, 4 Estimation Methods, ROI |
 | [vendor-estimate-reviewer]({{ '/en/skills/management/vendor-estimate-reviewer/' | relative_url }}) | Vendor estimate review and validation | 12 Review Dimensions, 60+ Risk Factors |
 | [vendor-rfq-creator]({{ '/en/skills/management/vendor-rfq-creator/' | relative_url }}) | RFQ (Request for Quotation) creation | 150+ Checklist Items |
+| [vendor-support-ticket-tracker]({{ '/en/skills/meta/vendor-support-ticket-tracker/' | relative_url }}) | Track vendor support tickets and RMA cases across vendors | 8-State Lifecycle, SLA Tracking, Stale Detection |
 
 ## Salesforce
 

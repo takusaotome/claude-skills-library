@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 111 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 112 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -139,7 +139,7 @@ All 111 skills organized by category. Skills with dedicated guide pages are show
 
 ## QA, Testing & Vendor Management
 
-17 skills for quality assurance, testing, vendor evaluation, reasoning quality, and customer experience.
+18 skills for quality assurance, testing, vendor evaluation, reasoning quality, and customer experience.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -159,6 +159,7 @@ All 111 skills organized by category. Skills with dedicated guide pages are show
 | [skill-designer]({{ '/en/skills/meta/skill-designer/' | relative_url }}) | Design new Claude skills from idea specifications | Convention Compliance, Prompt Generation |
 | [skill-idea-miner]({{ '/en/skills/meta/skill-idea-miner/' | relative_url }}) | Mine session logs for skill idea candidates | LLM Scoring, Backlog Management |
 | [vendor-procurement-coordinator]({{ '/en/skills/meta/vendor-procurement-coordinator/' | relative_url }}) | End-to-end vendor procurement workflow orchestration | RFQ→Email→Tracking, Vendor Lifecycle States |
+| [vendor-support-ticket-tracker]({{ '/en/skills/meta/vendor-support-ticket-tracker/' | relative_url }}) | Track vendor support tickets and RMA cases across vendors | 8-State Lifecycle, SLA Tracking, Stale Detection |
 | [web-server-security-reviewer]({{ '/en/skills/meta/web-server-security-reviewer/' | relative_url }}) | Phase 1 web server security configuration review (nginx/apache, Linux) | 9-Axis Checklist, 6-Tier Guardrails, MANIFEST Integrity, Read-Only |
 
 ---

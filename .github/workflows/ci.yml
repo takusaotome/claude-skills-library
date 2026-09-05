@@ -53,6 +53,7 @@ jobs:
           - shift-planner
           - skill-designer
           - skill-idea-miner
+          - vendor-support-ticket-tracker
           - wbs-review-assistant
     steps:
       - uses: actions/checkout@v4

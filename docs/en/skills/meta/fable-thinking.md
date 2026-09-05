@@ -3,7 +3,7 @@ layout: default
 title: "Fable Thinking"
 grand_parent: English
 parent: Meta & Quality
-nav_order: 14
+nav_order: 33
 lang_peer: /ja/skills/meta/fable-thinking/
 permalink: /en/skills/meta/fable-thinking/
 ---

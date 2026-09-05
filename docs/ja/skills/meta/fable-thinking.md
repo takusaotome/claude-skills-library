@@ -3,7 +3,7 @@ layout: default
 title: "Fable Thinking"
 grand_parent: 日本語
 parent: メタ・品質
-nav_order: 14
+nav_order: 33
 lang_peer: /en/skills/meta/fable-thinking/
 permalink: /ja/skills/meta/fable-thinking/
 ---

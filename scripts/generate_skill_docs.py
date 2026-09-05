@@ -67,7 +67,7 @@ MAX_NAV_ORDER = {
     "management": 4,
     "ops": 15,
     "finance": 1,
-    "meta": 13,
+    "meta": 33,
 }
 
 # Primary category for every skill.  Determines where the docs page lives.
@@ -175,6 +175,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "skill-designer": "meta",
     "skill-idea-miner": "meta",
     "timezone-aware-event-tracker": "meta",
+    "vendor-support-ticket-tracker": "meta",
 }
 
 # ---------------------------------------------------------------------------
