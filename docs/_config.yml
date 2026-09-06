@@ -44,6 +44,7 @@ callouts:
 color_scheme: light
 
 exclude:
+  - README.md
   - internal/
   - Gemfile
   - Gemfile.lock
