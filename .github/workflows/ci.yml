@@ -110,13 +110,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Pinned to 3.1: the github-pages gem forces jekyll 3.9 / liquid 4.0.3,
-      # whose taint_check calls String#tainted? — removed in Ruby 3.2.
-      # Lift this once docs/ moves off github-pages to jekyll 4.x.
+      # docs/Gemfile.lock pins jekyll 3.10.0 / liquid 4.0.4, so Ruby 3.3 is fine
+      # here. Regenerating that lock requires Bundler 2.3.x — modern Bundler
+      # resolves github-pages down to 222 / jekyll 3.9.0, whose liquid calls
+      # String#tainted? and fails on Ruby >= 3.2. See docs/README.md.
+      # `bundler: default` uses the Ruby 3.3 built-in rather than installing the
+      # EOL 2.3.27 named in the lock's BUNDLED WITH; the frozen install is
+      # unaffected because it resolves nothing.
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'
+          ruby-version: '3.3'
+          bundler: default
           bundler-cache: true
           working-directory: docs
 

@@ -402,12 +402,17 @@ The `description` field is critical - it determines when Claude Code automatical
 
 ## Docs Site Local Verification
 
-Before pushing changes to `docs/`, always run a local Jekyll build to verify:
+Before pushing changes to `docs/`, always run a local Jekyll build to verify.
+macOS system Ruby (2.6) is too old for these gems, so run it through Docker:
 
 ```bash
-cd docs && bundle install && bundle exec jekyll serve
+cd docs
+docker run --rm -p 4000:4000 -v "$PWD:/srv" -w /srv ruby:3.1 \
+  bash -lc "bundle install --quiet && bundle exec jekyll serve --host 0.0.0.0"
 # Open http://127.0.0.1:4000/claude-skills-library/
 ```
+
+See `docs/README.md` for why `Gemfile.lock` is committed and how to regenerate it.
 
 Verification checklist:
 - Landing pages (EN/JA) render correctly with language selector
