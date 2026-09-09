@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 114 published skills (with SKILL.md) — 114 dirs total
+├── skills/                 # 115 published skills (with SKILL.md) — 115 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,11 +59,11 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (114 Skills)
+## Skill Catalog (115 Skills)
 
 > Note: every directory under `skills/` is a published skill with a `SKILL.md`.
 
-### Business Strategy & Consulting (18 skills)
+### Business Strategy & Consulting (19 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -84,6 +84,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | ma-cvp-break-even | CVP・損益分岐点分析 | Break-Even, Margin of Safety, Multi-Product |
 | ma-standard-cost-variance | 標準原価差異分析 | Price/Quantity Variance, 材料費/労務費/間接費 |
 | hearing-to-requirements-mapper | ヒアリングシート→要件定義書変換、ギャップ分析 | RTM, WBS Mapping, Ambiguity Detection, Bilingual |
+| grill-me | 1問ずつのインタビューで要件・企画・計画・提案を詰める | Design Tree, Recommended Answers, Decision Log |
 | ai-bpo-proposal-generator | 在米日系企業向けAI-BPO提案書作成 | Service Selection, ROI Analysis, Bilingual Proposals |
 
 ### Project Management (7 skills)
@@ -4693,6 +4694,37 @@ Fableクラスの思考プロセスを任意のモデルで再現する思考ス
 
 ---
 
+### 🔥 Grill Me（詰めるインタビュー）
+
+**File:** `skills/grill-me/`
+
+要件・企画・計画・提案・アイデアを、1問ずつの容赦ないインタビューで詰めきり、最後にブリーフとして書き起こすスキル。依頼者の頭の中にある構想は本人が思っているよりぼやけている、という前提に立ち、そのぼやけを質問で洗い出す。対象は文書ではなく会話なので、事前に何かが書かれている必要はない。
+
+**When to use:**
+- 「grill me」「grill this」「clarify」「詰めて」「詰めたい」「壁打ち」「要件を固めたい」「企画を練りたい」「計画を整理したい」「アイデアをぶつけたい」「突っ込んで」「質問して」「何が決まってないか教えて」と言われたとき
+- 動き出す前に、自分の考えを叩いておきたいとき
+- 計画やアイデアを漠然と説明して、次に何をすべきか尋ねられたとき
+- 仕様書・提案書・資料をこれから書くが、材料が固まっていないとき
+
+**Key Components:**
+- `SKILL.md` — インタビューの進め方。設計ツリーとフロンティアの考え方、質問の作り方、ぼやけの検出パターン、終わらせ方
+- `references/lenses.md` — 対象の種類ごとの質問の切り口（要件／企画／計画／アイデア／提案の5種）
+- `references/output-format.md` — ブリーフのテンプレート
+- `NOTICE` — 上流の著作権表示とMIT許諾文
+
+**Key Features:**
+- 対象を設計ツリーとして捉え、前提が確定した判断（フロンティア）のうち最も多くを解きほぐす1問だけを聞く
+- **1ターンに1問。** 番号付きの質問を並べると流し読みされるが、選択肢付きの1問なら3秒で実際の判断が返る
+- **すべての質問に推奨回答を添える。** 推奨のない質問は宿題、推奨のある質問はその場で受け入れられる判断になる
+- 曖昧な数量表現、曖昧なスコープ、未定義の成功、登場人物・制約の欠落、順序の未記述、借り物の確信の7パターンからぼやけを検出
+- 調べられる事実はスキルが調べ、依頼者にしか出せない事実だけを聞く
+- 8〜10問でチェックポイントを置き、続けるかここでまとめるかを依頼者に選ばせる
+- 成果物は、詰めきった要約・用語集・判断ログ・未決事項・次の一手からなるブリーフ1枚
+
+**Credits:** MITライセンスの [`grilling` / `domain-modeling` スキル](https://github.com/mattpocock/skills)（作者 Matt Pocock）と、本リポジトリの `commands/clarify.md` をもとに構成。
+
+---
+
 ## Roadmap
 
 Future skills planned for this library:
@@ -4707,6 +4739,17 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### grill-me v1.0 (2026-09-08)
+- Relentless one-question-at-a-time interview that sharpens requirements, business plans, project plans, proposals, and raw ideas
+- Models the subject as a design tree; asks only the single frontier question that unblocks the most of it, then recomputes
+- Every question carries a recommended answer, which turns a question from homework into a decision the user can accept instantly
+- Seven fuzz-detection patterns: vague quantifiers, ambiguous scope, undefined success, missing actors, missing constraints, unstated sequencing, borrowed certainty
+- Facts are looked up rather than asked; only facts about the user's own world (budget, headcount, what the boss said) are put to them
+- Checkpoint after ~8-10 questions so the user decides how deep to go
+- Output is a single brief: sharpened summary, glossary, decision log, and open items
+- `references/lenses.md` carries question angles for 5 subject types; `references/output-format.md` carries the brief template
+- Adapted from the MIT-licensed grilling / domain-modeling skills by Matt Pocock and this repository's commands/clarify.md
 
 ### vendor-support-ticket-tracker v1.0 (2026-09-01)
 - Track vendor support tickets and RMA cases across multiple vendors from a local YAML database

@@ -36,6 +36,7 @@ Skills for strategic planning, project management, business analysis, and manage
 | [bug-ticket-creator]({{ '/en/skills/management/bug-ticket-creator/' | relative_url }}) | Bug ticket creation with CLEAR principles | CLEAR Principles, Severity/Priority |
 | [change-management-consultant]({{ '/en/skills/management/change-management-consultant/' | relative_url }}) | Organizational change management | ADKAR, Kotter 8-Step |
 | [contract-reviewer]({{ '/en/skills/management/contract-reviewer/' | relative_url }}) | Contract review and risk analysis | Risk Analysis, Red Flag Detection |
+| [grill-me]({{ '/en/skills/management/grill-me/' | relative_url }}) | One-question-at-a-time interview that sharpens requirements, plans, and ideas | Design Tree, Recommended Answers, Decision Log |
 | [hearing-to-requirements-mapper]({{ '/en/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | Transform hearing sheets into requirements | RTM, WBS Mapping, Gap Detection |
 | [helpdesk-responder]({{ '/en/skills/management/helpdesk-responder/' | relative_url }}) | Helpdesk response drafts | KB-Based Responses, Confidence Scoring |
 | [project-artifact-linker]({{ '/en/skills/management/project-artifact-linker/' | relative_url }}) | Cross-reference project artifacts | WBS↔Meeting↔Requirements Linking |

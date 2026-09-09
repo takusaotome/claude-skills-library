@@ -47,7 +47,9 @@ HAND_WRITTEN = frozenset(
         "cross-module-consistency-auditor",
         "data-scientist",
         "dual-axis-skill-reviewer",
+        "eli5",
         "financial-analyst",
+        "grill-me",
         "hidden-contract-investigator",
         "incident-rca-specialist",
         "markdown-to-pdf",
@@ -63,10 +65,10 @@ HAND_WRITTEN = frozenset(
 
 # Max existing nav_order per category (for appending new pages after).
 MAX_NAV_ORDER = {
-    "dev": 11,
-    "management": 4,
+    "dev": 33,
+    "management": 31,
     "ops": 15,
-    "finance": 1,
+    "finance": 15,
     "meta": 33,
 }
 
@@ -110,6 +112,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "contract-reviewer": "management",
     "design-thinking": "management",
     "executive-briefing-writer": "management",
+    "grill-me": "management",
     "hearing-to-requirements-mapper": "management",
     "helpdesk-responder": "management",
     "kpi-designer": "management",

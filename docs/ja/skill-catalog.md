@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 112 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 113 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -53,7 +53,7 @@ permalink: /ja/skill-catalog/
 
 ## プロジェクト & ビジネス
 
-戦略、コンサルティング、プロジェクト管理、管理会計の 24 スキル。
+戦略、コンサルティング、プロジェクト管理、管理会計の 25 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -75,6 +75,7 @@ permalink: /ja/skill-catalog/
 | [ma-standard-cost-variance]({{ '/ja/skills/finance/ma-standard-cost-variance/' | relative_url }}) | 標準原価差異分析 | 材料費/労務費/間接費 |
 | [project-manager]({{ '/ja/skills/management/project-manager/' | relative_url }}) | PMBOK 準拠 PM | 10 知識エリア、EVM |
 | [project-plan-creator]({{ '/ja/skills/management/project-plan-creator/' | relative_url }}) | プロジェクト計画書・WBS・ガント | 5 Mermaid ダイアグラム |
+| [grill-me]({{ '/ja/skills/management/grill-me/' | relative_url }}) | 1問ずつのインタビューで要件・計画・アイデアを詰める | 設計ツリー、推奨回答つき質問、判断ログ |
 | [hearing-to-requirements-mapper]({{ '/ja/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | ヒアリングシート→要件定義書変換 | RTM、WBSマッピング、ギャップ検出 |
 | [project-artifact-linker]({{ '/ja/skills/management/project-artifact-linker/' | relative_url }}) | プロジェクト成果物のクロスリファレンス | WBS↔議事録↔要件リンク |
 | [wbs-review-assistant]({{ '/ja/skills/management/wbs-review-assistant/' | relative_url }}) | WBS・要件ドキュメント照合レビュー | Excelアノテーション、トレーサビリティ |

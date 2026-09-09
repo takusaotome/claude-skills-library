@@ -36,6 +36,7 @@ permalink: /ja/skills/management/
 | [bug-ticket-creator]({{ '/ja/skills/management/bug-ticket-creator/' | relative_url }}) | バグチケット作成支援 | CLEAR原則、Severity/Priority |
 | [change-management-consultant]({{ '/ja/skills/management/change-management-consultant/' | relative_url }}) | 組織変革マネジメント | ADKAR、Kotter 8-Step |
 | [contract-reviewer]({{ '/ja/skills/management/contract-reviewer/' | relative_url }}) | 契約書レビュー・リスク分析 | リスク分析、レッドフラグ検出 |
+| [grill-me]({{ '/ja/skills/management/grill-me/' | relative_url }}) | 1問ずつのインタビューで要件・計画・アイデアを詰める | 設計ツリー、推奨回答つき質問、判断ログ |
 | [hearing-to-requirements-mapper]({{ '/ja/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | ヒアリングシート→要件定義書変換 | RTM、WBSマッピング、ギャップ検出 |
 | [helpdesk-responder]({{ '/ja/skills/management/helpdesk-responder/' | relative_url }}) | ヘルプデスク対応ドラフト | KBベース、信頼度スコア |
 | [project-artifact-linker]({{ '/ja/skills/management/project-artifact-linker/' | relative_url }}) | プロジェクト成果物のクロスリファレンス | WBS↔議事録↔要件リンク |
