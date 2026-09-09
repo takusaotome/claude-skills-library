@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 112 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 113 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -53,7 +53,7 @@ All 112 skills organized by category. Skills with dedicated guide pages are show
 
 ## Project & Business
 
-24 skills for strategy, consulting, project management, and management accounting.
+25 skills for strategy, consulting, project management, and management accounting.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -75,6 +75,7 @@ All 112 skills organized by category. Skills with dedicated guide pages are show
 | [ma-standard-cost-variance]({{ '/en/skills/finance/ma-standard-cost-variance/' | relative_url }}) | Standard cost variance analysis | Material/Labor/Overhead Variance |
 | [project-manager]({{ '/en/skills/management/project-manager/' | relative_url }}) | PMBOK-compliant project management | 10 Knowledge Areas, EVM Metrics |
 | [project-plan-creator]({{ '/en/skills/management/project-plan-creator/' | relative_url }}) | Project charter, WBS, Gantt, RACI | 5 Mermaid Diagrams |
+| [grill-me]({{ '/en/skills/management/grill-me/' | relative_url }}) | One-question-at-a-time interview that sharpens requirements, plans, and ideas | Design Tree, Recommended Answers, Decision Log |
 | [hearing-to-requirements-mapper]({{ '/en/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | Transform hearing sheets into structured requirements | RTM, WBS Mapping, Gap Detection |
 | [project-artifact-linker]({{ '/en/skills/management/project-artifact-linker/' | relative_url }}) | Cross-reference project artifacts by date and action items | WBS↔Meeting↔Requirements Linking |
 | [wbs-review-assistant]({{ '/en/skills/management/wbs-review-assistant/' | relative_url }}) | Review WBS against requirements and hearing sheets | Excel Annotation, Traceability Matrix |
