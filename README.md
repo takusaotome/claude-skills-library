@@ -2,6 +2,17 @@
 
 A collection of professional Claude Code skills for various domains and use cases.
 
+## 📖 Documentation Site
+
+**[https://takusaotome.github.io/claude-skills-library/](https://takusaotome.github.io/claude-skills-library/)**
+
+Browse the full skill catalog, getting-started guide, and per-skill usage guides on the GitHub Pages site.
+
+| Language | Pages |
+|---|---|
+| [English](https://takusaotome.github.io/claude-skills-library/en/) | [Getting Started](https://takusaotome.github.io/claude-skills-library/en/getting-started.html) · [Skill Catalog](https://takusaotome.github.io/claude-skills-library/en/skill-catalog.html) |
+| [日本語](https://takusaotome.github.io/claude-skills-library/ja/) | [はじめに](https://takusaotome.github.io/claude-skills-library/ja/getting-started.html) · [スキルカタログ](https://takusaotome.github.io/claude-skills-library/ja/skill-catalog.html) |
+
 ## Overview
 
 This repository contains custom skills designed to extend Claude's capabilities with specialized knowledge, workflows, and tools. Each skill is self-contained and follows best practices for skill development.
