@@ -28,7 +28,10 @@ jobs:
         run: ruff format --check skills/ scripts/
 
   test-skills:
-    name: Test Skills
+    # A skill that needs something other than the defaults adds an `include`
+    # entry below. Defaults: Python 3.9, tests in scripts/tests, coverage over
+    # scripts, no extra dependencies.
+    name: Test Skills (${{ matrix.skill }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -43,6 +46,7 @@ jobs:
           - internal-audit-assistant
           - iso-implementation-guide
           - it-system-roi-analyzer
+          - jev-artifact-style-review
           - kpi-designer
           - meeting-asset-preparer
           - multi-file-log-correlator
@@ -55,21 +59,40 @@ jobs:
           - skill-idea-miner
           - vendor-support-ticket-tracker
           - wbs-review-assistant
+        include:
+          # Needs 3.10+ syntax; tests sit at the skill root, and the library
+          # lives in jev_review/ rather than scripts/. Its optional readers are
+          # pytest.importorskip'd, so without them the format tests would skip
+          # silently instead of failing.
+          - skill: jev-artifact-style-review
+            python: "3.10"
+            tests: tests
+            cov: jev_review
+            requirements: >-
+              skills/jev-artifact-style-review/requirements.txt
+              skills/jev-artifact-style-review/requirements-dev.txt
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.9
+      - name: Set up Python ${{ matrix.python || '3.9' }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "${{ matrix.python || '3.9' }}"
 
       - name: Install dependencies
         run: pip install -e ".[dev]" pytest-cov
 
+      - name: Install skill dependencies
+        if: matrix.requirements
+        run: |
+          for req in ${{ matrix.requirements }}; do
+            pip install -r "$req"
+          done
+
       - name: Test ${{ matrix.skill }}
         run: >
-          python -m pytest skills/${{ matrix.skill }}/scripts/tests/ -v
-          --cov=skills/${{ matrix.skill }}/scripts
+          python -m pytest skills/${{ matrix.skill }}/${{ matrix.tests || 'scripts/tests' }} -v
+          --cov=skills/${{ matrix.skill }}/${{ matrix.cov || 'scripts' }}
           --cov-report=term-missing
 
   test-repo-scripts:

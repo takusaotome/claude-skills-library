@@ -216,6 +216,22 @@ When writing or modifying Python scripts in `scripts/`, always use the `tdd-deve
 
 Run tests with: `uv run pytest skills/<skill-name>/scripts/tests/ -v`
 
+**Registering tests in CI:** add the skill name to the `test-skills` matrix in
+`.github/workflows/ci.yml`. The defaults are Python 3.9, tests in `scripts/tests`,
+and coverage over `scripts`. A skill that needs something else adds an `include`
+entry overriding only what differs:
+
+| Key | Default | Purpose |
+|-----|---------|---------|
+| `python` | `3.9` | Python version |
+| `tests` | `scripts/tests` | Test directory, relative to the skill |
+| `cov` | `scripts` | Coverage target, relative to the skill |
+| `requirements` | none | Requirements files to install, space-separated, repo-relative |
+
+Optional dependencies guarded by `pytest.importorskip` skip silently when absent,
+so a skill that has them needs `requirements` set or CI will run a smaller suite
+than it appears to.
+
 **SKILL.md Guidelines:**
 - Use imperative/infinitive form (verb-first instructions)
 - Include clear "When to Use" section with specific scenarios
