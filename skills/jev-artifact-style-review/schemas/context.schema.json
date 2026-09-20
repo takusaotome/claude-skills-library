@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Editorial review brief (no credentials)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "purpose": {"type":"string"},
+    "audience": {"type":"string"},
+    "action_expected": {"type":"boolean"},
+    "constraints": {"type":"array","items":{"type":"string","minLength":1}},
+    "source_facts": {"type":"array","items":{"type":"string","minLength":1}},
+    "required_information": {"type":"array","items":{"type":"string","minLength":1}},
+    "protected_fragments": {"type":"array","items":{"type":"string","minLength":1}},
+    "style_reference": {"type":"string"},
+    "locked_sections": {"type":"array","items":{"type":"string","minLength":1}}
+  }
+}

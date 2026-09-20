@@ -26,3 +26,4 @@ Skills for technical writing, document conversion, presentation creation, and op
 | [presentation-reviewer]({{ '/en/skills/ops/presentation-reviewer/' | relative_url }}) | Presentation review from audience perspective | 5 Evaluation Axes, Marp Compatibility |
 | [incident-rca-specialist]({{ '/en/skills/ops/incident-rca-specialist/' | relative_url }}) | Incident root cause analysis and corrective actions | 5 Whys, Fishbone, FTA, 3D Prevention |
 | [eli5]({{ '/en/skills/ops/eli5/' | relative_url }}) | Dead-simple visual explainer as a single HTML artifact | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
+| [jev-artifact-style-review]({{ '/en/skills/ops/jev-artifact-style-review/' | relative_url }}) | Japanese-first bilingual editorial style review with source-grounded feedback | 8 Style + 4 Content Axes, 7 Profiles, Revision Loop |

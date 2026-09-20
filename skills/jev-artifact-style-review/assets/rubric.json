@@ -1,0 +1,238 @@
+{
+  "version": "1.0.0",
+  "calibration_status": "unvalidated_editorial_rubric",
+  "dimensions": [
+    {
+      "id": "stock_phrasing",
+      "group": "style",
+      "label_ja": "決まり文句・汎用的な前置き",
+      "label_en": "Stock phrasing",
+      "weight": 15,
+      "target": "Unnecessary stock phrases and generic opening/closing sentences substitute for a direct message.",
+      "exceptions": "Do not penalize ordinary greetings, thanks, contract boilerplate, required disclaimers or a phrase merely because it is common.",
+      "fix_ja": "意思決定に寄与しない前置き・定型句を削り、要件から始める。挨拶や必要な免責は残す。",
+      "fix_en": "Remove generic padding and lead with the actual point; retain necessary courtesy and disclaimers.",
+      "example_ja": "昨今の急速に変化する環境において／包括的なアプローチが重要です",
+      "example_en": "In today’s rapidly evolving landscape; it is important to note",
+      "requires": null
+    },
+    {
+      "id": "redundancy",
+      "group": "style",
+      "label_ja": "同義反復・冗長さ",
+      "label_en": "Redundancy",
+      "weight": 20,
+      "target": "The passage repeats substantially the same point without adding useful information.",
+      "exceptions": "An executive summary, safety repetition, definition or intentionally repeated procedural step may be appropriate. Do not count occurrences; judge added meaning.",
+      "fix_ja": "同じ意味の文を統合する。条件、例外、注意事項は削らない。",
+      "fix_en": "Merge repetitions without losing conditions, exceptions or warnings.",
+      "example_ja": "重要です／不可欠です／欠かせません、と同じ主張を重ねる",
+      "example_en": "Restating the same benefit in multiple adjacent sentences",
+      "requires": null
+    },
+    {
+      "id": "mechanical_structure",
+      "group": "style",
+      "label_ja": "型にはめすぎた構成",
+      "label_en": "Over-templated structure",
+      "weight": 15,
+      "target": "Headings, numbered groups, symmetric sections or list items impose a structure that is disproportionate to the message.",
+      "exceptions": "Do not penalize mandated templates, accessibility headings, technical procedures, checklists, comparison tables or slide bullets that help the reader.",
+      "fix_ja": "見出しや項目を目的に合わせて減らす。指定テンプレート、手順の順序、比較軸は維持する。",
+      "fix_en": "Remove gratuitous scaffolding while preserving required templates, ordered steps and comparison dimensions.",
+      "example_ja": "短い返信を「背景・現状・課題・方向性・まとめ」の五章に分ける",
+      "example_en": "A two-sentence update expanded into a five-section framework",
+      "requires": null
+    },
+    {
+      "id": "uniform_rhythm",
+      "group": "style",
+      "label_ja": "文型・語尾の機械的な反復",
+      "label_en": "Mechanical sentence rhythm",
+      "weight": 10,
+      "target": "Repeated sentence patterns or endings create conspicuously monotonous prose where variation would improve readability.",
+      "exceptions": "Consistent terminology, controlled language, parallel safety instructions and short messages are not defects. Do not inject random variation.",
+      "fix_ja": "読みにくい部分だけ文を統合・分割する。専門用語や手順文の一貫性は崩さない。",
+      "fix_en": "Vary only awkward passages; preserve consistent terminology and parallel procedures.",
+      "example_ja": "各文が「〜することができます」で続き、情報の強弱がない",
+      "example_en": "Every paragraph follows the identical opening, explanation and closing pattern",
+      "requires": null
+    },
+    {
+      "id": "register_mismatch",
+      "group": "style",
+      "label_ja": "敬語・距離感・口調の不一致",
+      "label_en": "Register mismatch",
+      "weight": 15,
+      "target": "The level of formality, politeness or interpersonal warmth does not fit the stated reader and purpose.",
+      "exceptions": "Japanese business greetings, honorifics and requests are normal. Do not equate fluent, formal or non-native English with machine authorship. If reader context is missing, abstain unless the mismatch is self-evident.",
+      "fix_ja": "相手との関係に合う口調に整える。社外メールの敬意は維持し、過剰なへりくだりだけを調整する。",
+      "fix_en": "Match the relationship and purpose without removing appropriate respect or courtesy.",
+      "example_ja": "社内の短い連絡に「ご確認いただけますと幸甚に存じ上げます」を重ねる",
+      "example_en": "Effusive praise in a routine technical incident update",
+      "requires": null
+    },
+    {
+      "id": "translationese",
+      "group": "style",
+      "label_ja": "直訳調・不自然な連語",
+      "label_en": "Translation-like awkwardness",
+      "weight": 10,
+      "target": "Collocations, word order or nominalizations are unnatural in the original language and impede comprehension.",
+      "exceptions": "Read the original without translation. Accepted technical terms, loanwords, legitimate bilingual usage and a non-native writer identity are not defects.",
+      "fix_ja": "原文の意味を保ち、自然な動詞・語順に直す。無理に和語化せず、専門用語は維持する。",
+      "fix_en": "Use idiomatic verbs and word order without changing meaning or established technical terms.",
+      "example_ja": "課題をアドレスするための価値をアンロックする",
+      "example_en": "Make an implementation of the confirmation",
+      "requires": null
+    },
+    {
+      "id": "inflated_rhetoric",
+      "group": "style",
+      "label_ja": "誇張・過剰な装飾や共感",
+      "label_en": "Inflated rhetoric",
+      "weight": 10,
+      "target": "Grand claims, decorative metaphors or emotional amplification are disproportionate to the actual content and purpose.",
+      "exceptions": "Persuasive copy or empathetic responses can be appropriate when requested. Judge excess in context, not the existence of emotion or metaphor.",
+      "fix_ja": "根拠のない強調や比喩を外し、実際に伝えられる効果・限界へ戻す。新しい数値や実績は作らない。",
+      "fix_en": "Replace exaggerated rhetoric with supported effects and limitations; never invent results.",
+      "example_ja": "定例の設定変更を「革新的で圧倒的な変革」と表現する",
+      "example_en": "Calling a minor configuration change a game-changing revolution",
+      "requires": null
+    },
+    {
+      "id": "assistant_residue",
+      "group": "style",
+      "label_ja": "成果物に残った対話AIの応答定型",
+      "label_en": "Conversational assistant residue",
+      "weight": 5,
+      "target": "The deliverable contains unsolicited chat-assistant framing, self-reference or follow-up offers that do not belong in the final artifact.",
+      "exceptions": "Quotes, documentation about AI systems, customer-service offers requested by the brief and actual dialog transcripts are not defects.",
+      "fix_ja": "完成成果物に不要な対話の前置き・後置きを除く。引用や実際のサービス案内は残す。",
+      "fix_en": "Remove unsolicited assistant framing from the deliverable, but keep quotations and genuine service offers.",
+      "example_ja": "素晴らしい質問です／以下にご依頼の文章を作成します／ご希望であればさらに",
+      "example_en": "Certainly! Here is your requested email; let me know if you would like me to refine it",
+      "requires": null
+    },
+    {
+      "id": "context_specificity",
+      "group": "quality",
+      "label_ja": "文脈・具体性の不足",
+      "label_en": "Missing context-specific information",
+      "weight": 0,
+      "target": "Required case-specific information available in the brief is missing or replaced by generic statements.",
+      "exceptions": "Do not request fabricated examples, names, dates or numbers. Generic educational material may be correct for its purpose.",
+      "fix_ja": "提供された事実・背景のうち必要なものを反映する。不明点は作成者に確認し、推測で補わない。",
+      "fix_en": "Use relevant supplied facts and context. Ask the author about unknowns rather than inventing detail.",
+      "requires": "brief"
+    },
+    {
+      "id": "action_clarity",
+      "group": "quality",
+      "label_ja": "依頼・担当・次の行動の不足",
+      "label_en": "Unclear next action",
+      "weight": 0,
+      "target": "A next action required by the brief is unclear to the reader.",
+      "exceptions": "Do not require an owner or deadline for a greeting, narrative, informational note or a task that does not call for action. Never invent an owner or deadline.",
+      "fix_ja": "依頼内容・次の行動を明示する。担当や期限が未確定なら確認事項として残す。",
+      "fix_en": "Make the requested next action clear; leave unknown owners or dates as questions.",
+      "requires": "action"
+    },
+    {
+      "id": "support_alignment",
+      "group": "quality",
+      "label_ja": "根拠に対する断定の強さ",
+      "label_en": "Certainty beyond supplied support",
+      "weight": 0,
+      "target": "The passage presents a claim more definitively than the supplied source facts or explicit uncertainty warrant.",
+      "exceptions": "This compares only the supplied evidence. It is not external fact checking. Missing external evidence alone does not prove a claim false.",
+      "fix_ja": "提供根拠の強さに合わせて断定を調整する。外部の真偽検証は別工程へ返す。",
+      "fix_en": "Align certainty with supplied evidence; send external fact checks to a separate reviewer.",
+      "requires": "facts"
+    },
+    {
+      "id": "instruction_fit",
+      "group": "quality",
+      "label_ja": "指示・制約との不一致",
+      "label_en": "Mismatch with explicit instructions",
+      "weight": 0,
+      "target": "An explicit requirement in the supplied brief is violated by the evaluated passage.",
+      "exceptions": "Judge a visible conflict, not an omission elsewhere in a chunked document. Other chunks may satisfy a requirement. Use an independent final checklist for completeness.",
+      "fix_ja": "明示された制約・要件への不一致を修正する。長文全体の網羅性は別チェックで確認する。",
+      "fix_en": "Fix visible conflicts with explicit requirements; verify whole-document completeness separately.",
+      "requires": "constraints"
+    }
+  ],
+  "profiles": {
+    "email": {
+      "description": "Business email. Prefer a direct purpose, appropriate courtesy and an explicit request only when needed.",
+      "weights": {}
+    },
+    "chat": {
+      "description": "Short work message. Brevity is normal. Do not force introductions, conclusions or rich detail.",
+      "weights": {
+        "mechanical_structure": 20,
+        "uniform_rhythm": 0,
+        "stock_phrasing": 20
+      }
+    },
+    "report": {
+      "description": "Analytical report. Headings, executive summaries and tables are useful; retain caveats and sources.",
+      "weights": {
+        "mechanical_structure": 10,
+        "redundancy": 15,
+        "inflated_rhetoric": 15
+      }
+    },
+    "proposal": {
+      "description": "Business proposal. Persuasion is appropriate but unsupported grandiosity is not. Preserve scope and commercial terms.",
+      "weights": {
+        "inflated_rhetoric": 15,
+        "mechanical_structure": 10
+      }
+    },
+    "technical": {
+      "description": "Technical document, specification or README. Consistent terms, procedural repetition and code are appropriate.",
+      "weights": {
+        "uniform_rhythm": 0,
+        "mechanical_structure": 5,
+        "redundancy": 10,
+        "translationese": 15
+      }
+    },
+    "slides": {
+      "description": "Slide text only. Short fragments, bullets, headings and parallel structure are appropriate. Visual layout is not evaluated.",
+      "weights": {
+        "mechanical_structure": 0,
+        "uniform_rhythm": 0,
+        "redundancy": 10,
+        "inflated_rhetoric": 20
+      }
+    },
+    "formal": {
+      "description": "Formal policy or contract-like text. Required terminology, boilerplate and defined terms must not be casually rewritten.",
+      "weights": {
+        "stock_phrasing": 5,
+        "mechanical_structure": 0,
+        "uniform_rhythm": 0,
+        "register_mismatch": 5
+      }
+    }
+  },
+  "thresholds": {
+    "applicability_confidence": 0.45,
+    "score_confidence": 0.4,
+    "evidence_confidence": 0.45,
+    "finding_score": 1.5,
+    "min_coverage": 0.7,
+    "minimum_style_dimensions": 3,
+    "meaningful_delta": 5.0
+  },
+  "severity_levels": [
+    "No observable issue for this dimension in the evaluated passage.",
+    "Slight issue: a localized optional edit, with little reader impact.",
+    "Noticeable issue: a targeted edit would improve comprehension or suitability.",
+    "Strong issue: this feature materially harms clarity or suitability.",
+    "Dominant issue: this feature repeatedly obstructs the intended communication."
+  ]
+}

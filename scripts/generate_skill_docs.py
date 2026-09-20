@@ -52,6 +52,7 @@ HAND_WRITTEN = frozenset(
         "grill-me",
         "hidden-contract-investigator",
         "incident-rca-specialist",
+        "jev-artifact-style-review",
         "markdown-to-pdf",
         "operations-manual-creator",
         "production-parity-test-designer",
@@ -67,7 +68,7 @@ HAND_WRITTEN = frozenset(
 MAX_NAV_ORDER = {
     "dev": 33,
     "management": 31,
-    "ops": 15,
+    "ops": 16,
     "finance": 15,
     "meta": 33,
 }
@@ -140,6 +141,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "eli5": "ops",
     "fujisoft-presentation-creator": "ops",
     "incident-rca-specialist": "ops",
+    "jev-artifact-style-review": "ops",
     "markdown-to-pdf": "ops",
     "migration-validation-explorer": "ops",
     "operations-manual-creator": "ops",

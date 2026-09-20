@@ -10,7 +10,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 115 published skills (with SKILL.md) — 115 dirs total
+├── skills/                 # 116 published skills (with SKILL.md) — 116 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -59,7 +59,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (115 Skills)
+## Skill Catalog (116 Skills)
 
 > Note: every directory under `skills/` is a published skill with a `SKILL.md`.
 
@@ -144,7 +144,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (21 skills)
+### Documentation & Communication (22 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -169,6 +169,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | japanese-enterprise-doc-formatter | 日本企業向け稟議書・購入申請書・提案書フォーマット | Ringi/Purchase/Proposal Templates, Keigo Levels, Bilingual |
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 | eli5 | 大きな絵と最小限の言葉によるHTML説明ページ生成 | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
+| jev-artifact-style-review | 日英対応の文体レビュー・作成者への改善フィードバック | 8 Style + 4 Content Axes, 7 Profiles, Revision Loop |
 
 ### QA & Testing (16 skills)
 
@@ -280,6 +281,30 @@ Agents are specialized sub-agents that can be spawned by Claude Code using the T
 ---
 
 ## Available Skills (Detailed)
+
+### 🔍 Jev Artifact Style Review
+
+「AIっぽい」という読後感を、修正できる文体・伝達品質の問題として指摘する日本語中心・英語対応のレビュースキルです。執筆者判定器ではありません。TypeSafe の Jev モデルが採点と根拠セグメントの選択を担当し、ホストのエージェントが原文を確認して具体的な修正文案を書きます。
+
+**When to use:**
+- 日本語・英語の文書、メール、提案書、技術資料、スライドが硬い・定型的・直訳調に見え、その理由を具体的に言語化したいとき
+- 「もっと自然にして」ではなく「この一文をこう直す」という短いリストを作成担当者へ渡したいとき
+- 改稿した版を同一条件で再評価し、本当に改善したかを確認したいとき
+
+**Key Features:**
+- 文体8軸と内容品質4軸を独立に採点し、ひとつの数値に混ぜない
+- 0〜100の文体違和感指数は文体8軸のみを集計。AI執筆確率でも読者の違和感率でもない
+- 用途別 profile 7種類（email / chat / report / proposal / technical / slides / formal）
+- 外部送信前に `--dry-run` で送信内容を確認。dry run は採点せずダミースコアも出さない
+- 引用文は Jev が選んだセグメントIDをもとに Python が原文から切り出す
+- 改稿は原則2回まで。比較不能を「改善した」と解釈しない
+- 対応形式は MD / TXT / HTML / JSON。追加依存で PDF / DOCX / PPTX のテキスト層も読む
+
+**Requirements:** Python 3.10+、実際の採点には環境変数 `TYPESAFE_API_KEY` が必要です。
+
+**Status:** 同梱テスト64件は合成応答によるもので、外部APIへ接続していません。実APIでの日本語精度・false positive・confidence の校正は未検証です。`references/CALIBRATION.md` の人手評価を実施するまで、指数は暫定値として扱ってください。
+
+---
 
 ### 📊 Data Scientist
 
@@ -4739,6 +4764,17 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### jev-artifact-style-review v1.0 (2026-09-20)
+- 日本語中心・英語対応の文体レビュー。「AIっぽさ」を執筆者の推定ではなく、修正可能な編集上の欠点として扱う
+- 文体8軸（決まり文句、同義反復、過剰な構造化、文型・語尾の単調さ、口調・敬語の不一致、直訳調、誇張・装飾、対話AI定型の残存）と内容品質4軸を独立に採点
+- 0〜100の文体違和感指数は文体8軸のみを集計。AI執筆確率でも読者の違和感率でもない
+- 採点と根拠選択は Jev、妥当性判断・説明・修正文案はホストのエージェントという役割分担
+- 用途別 profile 7種類とルーブリック外部化（`assets/rubric.json`）
+- `scripts/review.py`（抽出・dry run・採点）と `scripts/compare.py`（同一条件での再評価比較）
+- 出力は `review.md` / `review.json` / `writer_handoff.json` / `extracted.json`。既存ディレクトリへの上書きなし、POSIX権限600/700
+- 校正状況は未検証。同梱テスト64件は合成応答で、実APIには接続していない
+- 配布元 v1.0.0 を取り込み、本リポジトリのCIに合わせて Python 11ファイルを整形（ロジック変更なし、テスト64件合格を再確認）
 
 ### grill-me v1.0 (2026-09-08)
 - Relentless one-question-at-a-time interview that sharpens requirements, business plans, project plans, proposals, and raw ideas
