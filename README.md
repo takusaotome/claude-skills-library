@@ -4788,7 +4788,8 @@ Future skills planned for this library:
 - 校正状況は未検証。同梱テスト64件は合成応答で、実APIには接続していない
 - 配布元 v1.0.0 を取り込み。本リポジトリのCIに合わせて Python 11ファイルを整形した。ロジックは変更しておらず、整形後もテスト64件の合格を再確認
 - `TEST_REPORT.md` のヘッダー3行は行末2スペース改行を箇条書きへ変換。pre-commit が行末スペースを除去し3行が1段落に結合されるため。文言は不変
-- `MANIFEST.sha256` は上記2点を反映して再生成したため、配布元 zip のハッシュとは一致しない
+- `requirements.txt` の `pypdf` の下限を `>=5` から `>=6.10` へ引き上げ。配布元の範囲は CVE-2026-40260 の影響版を許容するため。Python 3.10 と pypdf 6.19.0 でテスト64件の合格を確認
+- `MANIFEST.sha256` は上記3点を反映して再生成したため、配布元 zip のハッシュとは一致しない
 
 ### grill-me v1.0 (2026-09-08)
 - Relentless one-question-at-a-time interview that sharpens requirements, business plans, project plans, proposals, and raw ideas
