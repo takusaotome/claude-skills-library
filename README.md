@@ -4772,7 +4772,7 @@ Future skills planned for this library:
 - 採点と根拠選択は Jev、妥当性判断・説明・修正文案はホストのエージェントという役割分担
 - 用途別 profile 7種類とルーブリック外部化（`assets/rubric.json`）
 - `scripts/review.py`（抽出・dry run・採点）と `scripts/compare.py`（同一条件での再評価比較）
-- CLI 出力は `review.md` / `review.json` / `writer_handoff.json` / `extracted.json` / `context.json` / `plan.json` / `run_status.json`、dry run 時は `request_preview.json`
+- dry run の出力は `extracted.json` / `context.json` / `plan.json` / `request_preview.json`。採点する実行ではこれに `review.md` / `review.json` / `writer_handoff.json` / `run_status.json` が加わる
 - `reviewer_feedback.md` は CLI ではなくホストのエージェントが生成する。既存ディレクトリへの上書きなし、POSIX権限600/700
 - 校正状況は未検証。同梱テスト64件は合成応答で、実APIには接続していない
 - 配布元 v1.0.0 を取り込み。本リポジトリのCIに合わせて Python 11ファイルを整形した。ロジックは変更しておらず、整形後もテスト64件の合格を再確認

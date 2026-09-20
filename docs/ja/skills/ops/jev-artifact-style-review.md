@@ -135,6 +135,8 @@ python scripts/compare.py runs/style-v1/review.json runs/style-v2/review.json \
 | `request_preview.json` | dry run のみ。送信予定の内容そのもの |
 | `reviewer_feedback.md` | CLI ではなくホストが生成する、原文→修正文と判断理由 |
 
+どのファイルが出るかは実行モードによります。dry run は `extracted.json`、`context.json`、`plan.json`、`request_preview.json` を書いて終了し、`run_status.json` は作りません。実際に採点する実行では `review.md`、`review.json`、`writer_handoff.json`、`run_status.json` が加わります。失敗時に `status: failed` の `run_status.json` が残るのは、出力ディレクトリを作成したあとで失敗した場合だけです。APIキー未設定や入力が読めないなど、作成前に失敗したときはファイルが1つも残りません。
+
 引用文は、Jev が選んだセグメントIDをもとに Python が原文から切り出します。Jev が引用文を書くことはありません。出力ディレクトリは新規または空である必要があり、既存の評価を上書きしません。POSIX 環境ではファイル権限 600、ディレクトリ 700 で保存します。出力には本文と引用が含まれるため、Git や共有ドライブへ不用意に登録しないでください。
 
 ---
@@ -150,7 +152,7 @@ python scripts/compare.py runs/style-v1/review.json runs/style-v2/review.json \
 | DOCX | 本文・表のテキスト。ヘッダー、フッター、コメント、変更履歴の意味は未評価 |
 | PPTX | テキスト枠・表。図、画像、ノート、視覚的配置は未評価 |
 
-対象外: 画像中心の成果物、実行コードの正しさ、スプレッドシートの計算、デザイン。長文は断片別評価の集計であり、全体構成・遠く離れた重複・論旨の通りは完全には評価しません。上限はファイル30MB、抽出本文50万文字、既定128 chunk、既定150論理API呼出です。chunk は採点のために送る単位で、`extracted.json` に記録される segment とは別の概念です。
+対象外: 画像中心の成果物、実行コードの正しさ、スプレッドシートの計算、デザイン。長文は chunk 単位の評価を集計したものであり、全体構成・遠く離れた重複・論旨の通りは完全には評価しません。上限はファイル30MB、抽出本文50万文字、既定128 chunk、既定150論理API呼出です。chunk は採点のために送る単位で、`extracted.json` に記録される segment とは別の概念です。
 
 {: .callout .warning }
 **校正状況は未検証です。** 同梱テスト64件は合成応答を使い、外部APIへ接続していません。実際の認証・応答品質・日本語の精度・実運用のfalse positive・confidence の校正はいずれも未測定です。`references/CALIBRATION.md` の人手評価を実施するまで、指数は暫定値として扱ってください。改稿比較で使う5ポイント差も暫定の目安であり、合格条件ではありません。

@@ -135,6 +135,8 @@ A context file (`assets/context.example.json`, schema in `schemas/context.schema
 | `request_preview.json` | Dry run only: exactly what would be transmitted |
 | `reviewer_feedback.md` | Written by the host agent, not the CLI: original → replacement wording with the reasoning behind each |
 
+Which files appear depends on the mode. A dry run writes `extracted.json`, `context.json`, `plan.json`, and `request_preview.json`, then stops — it produces no `run_status.json`. A live run adds `review.md`, `review.json`, `writer_handoff.json`, and `run_status.json`. A failure writes `run_status.json` with `status: failed` only if it happens after the output directory was created; a failure before that point (a missing API key, an unreadable input) leaves no files at all.
+
 Quotations are sliced from the source text by Python using the segment IDs Jev selected — Jev never authors a quotation. The output directory must be new or empty; an existing evaluation is never overwritten. On POSIX systems files are written 600 and the directory 700. Output contains the document body and quotations, so keep it out of Git and shared drives.
 
 ---
@@ -150,7 +152,7 @@ Quotations are sliced from the source text by Python using the segment IDs Jev s
 | DOCX | Body and table text; headers, footers, comments, tracked changes not interpreted |
 | PPTX | Text frames and tables; figures, images, notes, and visual placement not evaluated |
 
-Out of scope: image-led artifacts, code correctness, spreadsheet calculations, and visual design. Long documents are scored per segment, so overall structure, distant repetition, and argument flow are not fully assessed. Limits: 30 MB per file, 500,000 extracted characters, 128 chunks (`--max-chunks`), 150 logical API calls. Chunks are the units sent for scoring, and are distinct from the `segments` recorded in `extracted.json`.
+Out of scope: image-led artifacts, code correctness, spreadsheet calculations, and visual design. Long documents are scored per chunk and aggregated, so overall structure, distant repetition, and argument flow are not fully assessed. Limits: 30 MB per file, 500,000 extracted characters, 128 chunks (`--max-chunks`), 150 logical API calls. Chunks are the units sent for scoring, and are distinct from the `segments` recorded in `extracted.json`.
 
 {: .callout .warning }
 **Calibration status: unvalidated.** The bundled test suite (64 tests) uses synthetic responses and never contacts the API. Real authentication, response quality, Japanese-language accuracy, false-positive rate, and confidence calibration have not been measured. Treat the index as provisional until you run the human-rating procedure in `references/CALIBRATION.md`. The 5-point difference used when comparing revisions is a rough guide, not a passing threshold.
