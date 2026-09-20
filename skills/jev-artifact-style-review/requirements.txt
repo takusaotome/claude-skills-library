@@ -1,5 +1,7 @@
 # Core CLI: Python 3.10+ standard library only.
 # Optional document readers:
-pypdf>=5,<7
+# pypdf floor is 6.10: earlier versions are affected by CVE-2026-40260,
+# where crafted XMP entity declarations expand recursively and exhaust RAM.
+pypdf>=6.10,<7
 python-docx>=1.1,<2
 python-pptx>=1.0,<2

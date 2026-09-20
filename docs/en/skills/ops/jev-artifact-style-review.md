@@ -180,10 +180,12 @@ Prompt-injection resistance is not guaranteed. The skill detects embedded instru
 
 ## 9. Notes on this repository copy
 
-The upstream v1.0.0 distribution is vendored as-is, with two deliberate exceptions.
+The upstream v1.0.0 distribution is vendored as-is, with three deliberate exceptions.
 
 Its 11 Python files were reformatted to satisfy this repository's `ruff check` / `ruff format` CI. Formatting only — no logic was changed, and the bundled suite still passes 64/64 afterwards.
 
 `TEST_REPORT.md` used two-space Markdown hard breaks in its three header lines. This repository's pre-commit hook strips trailing whitespace, which would have collapsed them into one paragraph, so they were converted to a bullet list. The wording is unchanged.
 
-`MANIFEST.sha256` was regenerated over both changes, so it no longer matches the upstream zip.
+The `pypdf` floor in `requirements.txt` was raised from `>=5` to `>=6.10`. Upstream's range admitted versions affected by CVE-2026-40260, where crafted XMP entity declarations expand recursively and exhaust memory; 6.10.0 fixes it. The bundled suite passes 64/64 against pypdf 6.19.0 on Python 3.10. `TEST_REPORT.md` still records pypdf 5.9.0 because that is what upstream tested, and it has not been rewritten.
+
+`MANIFEST.sha256` was regenerated over all three changes, so it no longer matches the upstream zip.
