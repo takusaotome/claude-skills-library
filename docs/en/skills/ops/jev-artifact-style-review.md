@@ -14,7 +14,7 @@ permalink: /en/skills/ops/jev-artifact-style-review/
 Japanese-first bilingual editorial style review that turns "this reads like AI wrote it" into concrete, fixable writing problems.
 {: .fs-6 .fw-300 }
 
-<span class="badge badge-optional">TYPESAFE_API_KEY Required</span>
+<span class="badge badge-required">TYPESAFE_API_KEY Required</span>
 <span class="badge badge-scripts">Python 3.10+</span>
 <span class="badge badge-bilingual">Bilingual JA/EN</span>
 
@@ -130,6 +130,9 @@ A context file (`assets/context.example.json`, schema in `schemas/context.schema
 | `review.json` | Per-dimension values, confidence, quotation offsets, usage, model, rubric, raw response and request hashes |
 | `writer_handoff.json` | Revision candidates, preservation conditions, and a writer response field (pending until answered) |
 | `extracted.json` | Normalized full text, segments, character offsets, exclusion reasons, extraction warnings |
+| `context.json`, `plan.json` | The conditions the run executed under |
+| `run_status.json` | Completed or failed; `release_approval` is always false |
+| `request_preview.json` | Dry run only: exactly what would be transmitted |
 | `reviewer_feedback.md` | Written by the host agent, not the CLI: original → replacement wording with the reasoning behind each |
 
 Quotations are sliced from the source text by Python using the segment IDs Jev selected — Jev never authors a quotation. The output directory must be new or empty; an existing evaluation is never overwritten. On POSIX systems files are written 600 and the directory 700. Output contains the document body and quotations, so keep it out of Git and shared drives.
@@ -147,7 +150,7 @@ Quotations are sliced from the source text by Python using the segment IDs Jev s
 | DOCX | Body and table text; headers, footers, comments, tracked changes not interpreted |
 | PPTX | Text frames and tables; figures, images, notes, and visual placement not evaluated |
 
-Out of scope: image-led artifacts, code correctness, spreadsheet calculations, and visual design. Long documents are scored per segment, so overall structure, distant repetition, and argument flow are not fully assessed. Limits: 30 MB per file, 500,000 extracted characters, 128 segments, 150 logical API calls.
+Out of scope: image-led artifacts, code correctness, spreadsheet calculations, and visual design. Long documents are scored per segment, so overall structure, distant repetition, and argument flow are not fully assessed. Limits: 30 MB per file, 500,000 extracted characters, 128 chunks (`--max-chunks`), 150 logical API calls. Chunks are the units sent for scoring, and are distinct from the `segments` recorded in `extracted.json`.
 
 {: .callout .warning }
 **Calibration status: unvalidated.** The bundled test suite (64 tests) uses synthetic responses and never contacts the API. Real authentication, response quality, Japanese-language accuracy, false-positive rate, and confidence calibration have not been measured. Treat the index as provisional until you run the human-rating procedure in `references/CALIBRATION.md`. The 5-point difference used when comparing revisions is a rough guide, not a passing threshold.
@@ -175,4 +178,10 @@ Prompt-injection resistance is not guaranteed. The skill detects embedded instru
 
 ## 9. Notes on this repository copy
 
-The upstream v1.0.0 distribution is vendored as-is, except that its 11 Python files were reformatted to satisfy this repository's `ruff check` / `ruff format` CI. Formatting only — no logic was changed, and the bundled suite still passes 64/64 afterwards. `MANIFEST.sha256` was regenerated over the reformatted files, so it no longer matches the upstream zip.
+The upstream v1.0.0 distribution is vendored as-is, with two deliberate exceptions.
+
+Its 11 Python files were reformatted to satisfy this repository's `ruff check` / `ruff format` CI. Formatting only — no logic was changed, and the bundled suite still passes 64/64 afterwards.
+
+`TEST_REPORT.md` used two-space Markdown hard breaks in its three header lines. This repository's pre-commit hook strips trailing whitespace, which would have collapsed them into one paragraph, so they were converted to a bullet list. The wording is unchanged.
+
+`MANIFEST.sha256` was regenerated over both changes, so it no longer matches the upstream zip.

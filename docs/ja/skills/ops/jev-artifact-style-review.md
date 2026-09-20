@@ -14,7 +14,7 @@ permalink: /ja/skills/ops/jev-artifact-style-review/
 「AIっぽい」という読後感を、修正できる文体・伝達品質の問題として指摘する日本語中心・英語対応のレビュースキル。
 {: .fs-6 .fw-300 }
 
-<span class="badge badge-optional">TYPESAFE_API_KEY 必須</span>
+<span class="badge badge-required">TYPESAFE_API_KEY 必須</span>
 <span class="badge badge-scripts">Python 3.10+</span>
 <span class="badge badge-bilingual">日英対応</span>
 
@@ -57,7 +57,7 @@ permalink: /ja/skills/ops/jev-artifact-style-review/
 
 - **APIキー**: ローカル環境変数 `TYPESAFE_API_KEY`。実際の採点に必須です。dry run はキーなしで動きます。
 - **Python 3.10+**。Markdown・TXT・HTML・JSON は標準ライブラリだけで動作します。
-- **任意の追加依存**: PDF / DOCX / PPTX のテキスト抽出を使う場合のみ `pip install -r requirements.txt`（`pypdf`、`python-docx`、`python-pptx`）。
+- **任意の追加依存**: PDF / DOCX / PPTX のテキスト抽出を使う場合のみ `pip install -r requirements.txt` を実行します。入るのは `pypdf`、`python-docx`、`python-pptx` の3つです。
 - **送信許可**: 外部送信が認められていない資料は送りません。まず `--dry-run` で送信予定の内容を確認してください。
 
 {: .callout .prerequisite }
@@ -128,8 +128,11 @@ python scripts/compare.py runs/style-v1/review.json runs/style-v2/review.json \
 |:---|:---|
 | `review.md` | 人が読むための採点・原文引用・編集方針 |
 | `review.json` | 次元別値、確信度、引用位置、使用量、モデル、rubric、raw応答・要求ハッシュ |
-| `writer_handoff.json` | 作成者向けの修正候補、保持条件、応答欄（書き換え前は pending） |
+| `writer_handoff.json` | 作成者向けの修正候補、保持条件、応答欄。書き換え前の応答欄は pending |
 | `extracted.json` | 正規化した原文全文、セグメント、文字位置、除外理由、抽出警告 |
+| `context.json`、`plan.json` | 実行条件の記録 |
+| `run_status.json` | 実行completed / failed。`release_approval` は常に false |
+| `request_preview.json` | dry run のみ。送信予定の内容そのもの |
 | `reviewer_feedback.md` | CLI ではなくホストが生成する、原文→修正文と判断理由 |
 
 引用文は、Jev が選んだセグメントIDをもとに Python が原文から切り出します。Jev が引用文を書くことはありません。出力ディレクトリは新規または空である必要があり、既存の評価を上書きしません。POSIX 環境ではファイル権限 600、ディレクトリ 700 で保存します。出力には本文と引用が含まれるため、Git や共有ドライブへ不用意に登録しないでください。
@@ -147,7 +150,7 @@ python scripts/compare.py runs/style-v1/review.json runs/style-v2/review.json \
 | DOCX | 本文・表のテキスト。ヘッダー、フッター、コメント、変更履歴の意味は未評価 |
 | PPTX | テキスト枠・表。図、画像、ノート、視覚的配置は未評価 |
 
-対象外: 画像中心の成果物、実行コードの正しさ、スプレッドシートの計算、デザイン。長文は断片別評価の集計であり、全体構成・遠く離れた重複・論旨の通りは完全には評価しません。上限はファイル30MB、抽出本文50万文字、既定128断片、既定150論理API呼出です。
+対象外: 画像中心の成果物、実行コードの正しさ、スプレッドシートの計算、デザイン。長文は断片別評価の集計であり、全体構成・遠く離れた重複・論旨の通りは完全には評価しません。上限はファイル30MB、抽出本文50万文字、既定128 chunk、既定150論理API呼出です。chunk は採点のために送る単位で、`extracted.json` に記録される segment とは別の概念です。
 
 {: .callout .warning }
 **校正状況は未検証です。** 同梱テスト64件は合成応答を使い、外部APIへ接続していません。実際の認証・応答品質・日本語の精度・実運用のfalse positive・confidence の校正はいずれも未測定です。`references/CALIBRATION.md` の人手評価を実施するまで、指数は暫定値として扱ってください。改稿比較で使う5ポイント差も暫定の目安であり、合格条件ではありません。
@@ -165,7 +168,10 @@ prompt injection 耐性は保証されません。埋込指示の簡易検知、
 - `references/CALIBRATION.md` — 人手評価の手順と本番移行の条件
 - `references/API_AND_SOURCES.md` — 2026-09-20確認の公式API、モデル・confidence・言語の制約
 
-**scripts**: `scripts/review.py`（抽出・dry run・採点）、`scripts/compare.py`（2回の実行を比較）
+**scripts**
+
+- `scripts/review.py` — 抽出、dry run、採点
+- `scripts/compare.py` — 同一条件で実行した2回の比較
 
 **assets**: `assets/rubric.json`、`assets/context.example.json` ／ **schemas**: `schemas/*.schema.json`
 
@@ -175,4 +181,10 @@ prompt injection 耐性は保証されません。埋込指示の簡易検知、
 
 ## 9. このリポジトリ版について
 
-配布元 v1.0.0 をそのまま取り込んだうえで、本リポジトリの CI（`ruff check` / `ruff format --check`）に合わせて Python 11 ファイルを整形しています。整形のみでロジックは変更しておらず、整形後も同梱テストは64件全て合格します。`MANIFEST.sha256` は整形後の内容で再生成したため、配布元 zip のハッシュとは一致しません。
+配布元 v1.0.0 をそのまま取り込んでいますが、意図的な変更が2点あります。
+
+1つ目は Python 11 ファイルの整形です。本リポジトリの CI が `ruff check` と `ruff format --check` を実行するため、それに合わせました。整形のみでロジックは変更しておらず、整形後も同梱テストは64件全て合格します。
+
+2つ目は `TEST_REPORT.md` のヘッダー3行です。行末2スペースによる改行を使っていましたが、本リポジトリの pre-commit フックが行末スペースを除去するため、そのままでは3行が1段落に結合されます。箇条書きへ変換しました。文言は変えていません。
+
+`MANIFEST.sha256` はこの2点を反映して再生成したため、配布元 zip のハッシュとは一致しません。
