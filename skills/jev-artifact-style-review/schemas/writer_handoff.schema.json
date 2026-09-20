@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Writer handoff; an independent quality check is mandatory",
+  "type":"object",
+  "required":["schema_version","event","artifact_sha256","index_is_not_authorship_probability","auto_approve","max_revision_rounds","revision_candidates","preserve","writer_instructions","writer_response"],
+  "properties":{
+    "schema_version":{"const":"1.0.0"},
+    "event":{"const":"editorial_review_available"},
+    "index_is_not_authorship_probability":{"const":true},
+    "auto_approve":{"const":false},
+    "max_revision_rounds":{"const":2},
+    "artifact_sha256":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "revision_candidates":{"type":"array","maxItems":8},
+    "preserve":{"type":"object","required":["source_facts","required_information","protected_fragments","constraints"]},
+    "writer_instructions":{"type":"array","items":{"type":"string"}},
+    "writer_response":{"type":"object","required":["status","edits","unresolved_questions","fact_and_meaning_preservation","requirement_checklist"],"properties":{"status":{"enum":["pending","revised","no_change","needs_clarification"]},"edits":{"type":"array"},"unresolved_questions":{"type":"array"},"requirement_checklist":{"type":"array"}}}
+  }
+}

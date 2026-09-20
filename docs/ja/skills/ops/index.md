@@ -26,3 +26,4 @@ permalink: /ja/skills/ops/
 | [presentation-reviewer]({{ '/ja/skills/ops/presentation-reviewer/' | relative_url }}) | プレゼン資料レビュー（聴衆視点） | 5評価軸、Marp互換性 |
 | [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) | インシデントRCA・是正措置計画 | 5 Whys、Fishbone、FTA、3D Prevention |
 | [eli5]({{ '/ja/skills/ops/eli5/' | relative_url }}) | 大きな絵と最小限の言葉によるHTML説明ページ生成 | 図中心パネル、インラインSVG、非技術者向け |
+| [jev-artifact-style-review]({{ '/ja/skills/ops/jev-artifact-style-review/' | relative_url }}) | 日英対応の文体レビューと作成者への改善フィードバック | 文体8軸＋内容4軸、7 profile、改稿ループ |

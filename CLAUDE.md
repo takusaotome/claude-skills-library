@@ -129,6 +129,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | iterative-design-assistant | 1.0 | Design Iteration | Decision log (JSON v1.0), 5 categories, contextual reference resolution |
 | itil4-consultant | 1.0 | IT Service Management | 34 Practices, Maturity Assessment, 5 workflows |
 | japanese-enterprise-doc-formatter | 1.0 | JP Enterprise Docs | 5 doc types (稟議/購入申請/提案), 4 keigo levels, section validation |
+| jev-artifact-style-review | 1.0 | Editorial Style Review | 8 style + 4 content axes, 7 profiles, Jev scoring, writer handoff |
 | kpi-designer | 1.0 | Performance Management | SMART KPIs, BSC, OKR, Dashboard Design |
 | lean-six-sigma-consultant | 1.0 | Process Improvement | DMAIC, Value Stream Mapping, All Belt Levels |
 | log-debugger | 1.0 | Log Analysis, Debugging | 4-Phase Framework, Log Patterns, RCA |

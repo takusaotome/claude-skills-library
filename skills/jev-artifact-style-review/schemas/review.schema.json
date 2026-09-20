@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Jev artifact editorial review, not an authorship detector",
+  "type":"object",
+  "required":["schema_version","mode","document","configuration","comparison_fingerprint","status","release_approval","summary","dimensions","findings","coverage","preservation_checks","usage"],
+  "properties":{
+    "schema_version":{"const":"1.0.0"},
+    "mode":{"enum":["jev_live","test_fixture"]},
+    "release_approval":{"const":false},
+    "status":{"enum":["needs_editorial_review","no_priority_findings","insufficient_evidence"]},
+    "comparison_fingerprint":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+    "document":{"type":"object","required":["name","sha256","scope"]},
+    "configuration":{"type":"object","required":["profile","language","requested_model","resolved_models","rubric_sha256","context_sha256"]},
+    "summary":{
+      "type":"object",
+      "required":["style_index_0_to_100","is_ai_authorship_probability","calibration_status","quality_dimensions_excluded_from_style_index"],
+      "properties":{
+        "style_index_0_to_100":{"type":["number","null"],"minimum":0,"maximum":100},
+        "is_ai_authorship_probability":{"const":false},
+        "quality_dimensions_excluded_from_style_index":{"const":true},
+        "calibration_status":{"type":"string"}
+      }
+    },
+    "dimensions":{"type":"array","items":{"type":"object","required":["id","group","severity_0_to_4","coverage","chunks"],"properties":{"group":{"enum":["style","quality"]},"severity_0_to_4":{"type":["number","null"],"minimum":0,"maximum":4}}}},
+    "findings":{"type":"array","maxItems":8,"items":{"type":"object","required":["id","dimension","source_span","fix_ja","fix_en","suggested_rewrite"],"properties":{"suggested_rewrite":{"type":["string","null"]},"source_span":{"type":"object","required":["text","start","end","locator","source_sha256"],"properties":{"text":{"type":"string","minLength":1},"start":{"type":"integer","minimum":0},"end":{"type":"integer","minimum":1}}}}}},
+    "coverage":{"type":"object","required":["evaluated_characters","excluded_characters","sampling","visual_assessment"],"properties":{"sampling":{"const":false},"visual_assessment":{"const":false}}},
+    "preservation_checks":{"type":"object","required":["missing_literals","semantic_fact_verification"]},
+    "usage":{"type":"object","required":["input_tokens","output_tokens","successful_logical_calls"]}
+  }
+}

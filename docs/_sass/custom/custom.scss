@@ -145,6 +145,11 @@
     color: #0969da;
   }
 
+  &.badge-required {
+    background-color: #ffebe9;
+    color: #a40e26;
+  }
+
   &.badge-workflow {
     background-color: #f3e8ff;
     color: #6e40c9;

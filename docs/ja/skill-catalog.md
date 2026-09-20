@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 113 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 114 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -87,7 +87,7 @@ permalink: /ja/skill-catalog/
 
 ## オペレーション & ドキュメンテーション
 
-技術文書、プレゼン、ドキュメント変換、平易な説明資料、議事録の 23 スキル。
+技術文書、プレゼン、ドキュメント変換、平易な説明資料、議事録の 24 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -114,6 +114,7 @@ permalink: /ja/skill-catalog/
 | [multi-format-document-optimizer]({{ '/ja/skills/ops/multi-format-document-optimizer/' | relative_url }}) | ドキュメント変換・画像最適化パイプライン統合 | 4品質プリセット、バッチ処理、PDF画像最適化 |
 | [purchase-request-generator]({{ '/ja/skills/management/purchase-request-generator/' | relative_url }}) | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback、ベンダー比較、MARPスライド |
 | [eli5]({{ '/ja/skills/ops/eli5/' | relative_url }}) | 大きな絵と最小限の言葉によるHTML説明ページ生成 | 図中心パネル、インラインSVG、非技術者向け |
+| [jev-artifact-style-review]({{ '/ja/skills/ops/jev-artifact-style-review/' | relative_url }}) | 日英対応の文体レビューと作成者への改善フィードバック | 文体8軸＋内容4軸、7 profile、改稿ループ |
 
 ---
 
