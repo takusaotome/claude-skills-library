@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 114 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 117 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -53,7 +53,7 @@ permalink: /ja/skill-catalog/
 
 ## プロジェクト & ビジネス
 
-戦略、コンサルティング、プロジェクト管理、管理会計の 25 スキル。
+戦略、コンサルティング、プロジェクト管理、管理会計の 26 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -79,6 +79,7 @@ permalink: /ja/skill-catalog/
 | [hearing-to-requirements-mapper]({{ '/ja/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | ヒアリングシート→要件定義書変換 | RTM、WBSマッピング、ギャップ検出 |
 | [project-artifact-linker]({{ '/ja/skills/management/project-artifact-linker/' | relative_url }}) | プロジェクト成果物のクロスリファレンス | WBS↔議事録↔要件リンク |
 | [wbs-review-assistant]({{ '/ja/skills/management/wbs-review-assistant/' | relative_url }}) | WBS・要件ドキュメント照合レビュー | Excelアノテーション、トレーサビリティ |
+| [task-runner]({{ '/ja/skills/management/task-runner/' | relative_url }}) | フォルダ型タスクチケットを定期実行で1件ずつ処理し結果を書き戻す | todo/doing/blocked/doneフォルダ、計画カード、看板ボード |
 | [project-completeness-scorer]({{ '/ja/skills/meta/project-completeness-scorer/' | relative_url }}) | プロジェクト完成度評価 (0-100) | 5軸評価、Gap分析、テンプレート |
 | [project-kickoff-bootstrapper]({{ '/ja/skills/meta/project-kickoff-bootstrapper/' | relative_url }}) | Claude用プロジェクトkickoff文脈導入 | CLAUDE.mdスキャフォールド、15テンプレート |
 | [ai-bpo-proposal-generator]({{ '/ja/skills/management/ai-bpo-proposal-generator/' | relative_url }}) | AI活用BPO提案書生成（米国市場向け日系企業） | 15サービスモジュール、ROI/NPV、バイリンガル提案 |
@@ -87,7 +88,7 @@ permalink: /ja/skill-catalog/
 
 ## オペレーション & ドキュメンテーション
 
-技術文書、プレゼン、ドキュメント変換、平易な説明資料、議事録の 24 スキル。
+技術文書、プレゼン、ドキュメント変換、平易な説明資料、議事録の 26 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -115,6 +116,8 @@ permalink: /ja/skill-catalog/
 | [purchase-request-generator]({{ '/ja/skills/management/purchase-request-generator/' | relative_url }}) | 購入稟議書・費用対効果分析・MARP資料作成 | ROI/NPV/Payback、ベンダー比較、MARPスライド |
 | [eli5]({{ '/ja/skills/ops/eli5/' | relative_url }}) | 大きな絵と最小限の言葉によるHTML説明ページ生成 | 図中心パネル、インラインSVG、非技術者向け |
 | [jev-artifact-style-review]({{ '/ja/skills/ops/jev-artifact-style-review/' | relative_url }}) | 日英対応の文体レビューと作成者への改善フィードバック | 文体8軸＋内容4軸、7 profile、改稿ループ |
+| [japanese-clear-writing]({{ '/ja/skills/ops/japanese-clear-writing/' | relative_url }}) | 日本語文書の新規執筆・書き直し・添削・評価 | 5モード、6項目ルーブリック、score.py |
+| [ste-writer]({{ '/ja/skills/ops/ste-writer/' | relative_url }}) | 英文を ASD-STE100 の主要ルールで執筆・書き換え | 14の主要ルール、full/soft、[CHECK]マーカー |
 
 ---
 

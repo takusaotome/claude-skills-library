@@ -21,7 +21,7 @@ This repository contains custom skills designed to extend Claude's capabilities 
 
 ```
 claude-skills-library/
-├── skills/                 # 116 published skills (with SKILL.md) — 116 dirs total
+├── skills/                 # 119 published skills (with SKILL.md) — 119 dirs total
 │   ├── data-scientist/
 │   ├── project-manager/
 │   ├── business-analyst/
@@ -70,7 +70,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 **Installation**: Copy `commands/clarify.md` to `~/.claude/commands/`
 
-## Skill Catalog (116 Skills)
+## Skill Catalog (119 Skills)
 
 > Note: every directory under `skills/` is a published skill with a `SKILL.md`.
 
@@ -98,7 +98,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | grill-me | 1問ずつのインタビューで要件・企画・計画・提案を詰める | Design Tree, Recommended Answers, Decision Log |
 | ai-bpo-proposal-generator | 在米日系企業向けAI-BPO提案書作成 | Service Selection, ROI Analysis, Bilingual Proposals |
 
-### Project Management (7 skills)
+### Project Management (8 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -109,6 +109,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | project-artifact-linker | プロジェクト成果物のトレーサビリティ・クロスリファレンス | WBS↔Meeting↔Requirements Linking, Gap Detection |
 | project-kickoff-bootstrapper | Claude用kickoff文脈・テンプレート導入、プロジェクト初期設定 | CLAUDE.md Scaffolding, 15 Templates, 3 Install Profiles |
 | wbs-review-assistant | WBS・要件ドキュメント照合レビュー | Excel Annotation, Gap Analysis, Traceability Matrix |
+| task-runner | フォルダ型タスクチケットを1件ずつ実行し結果を書き戻す | todo/doing/blocked/done Folders, Kanban Dashboard, dry-run/live Modes |
 
 ### Software Development & IT (21 skills)
 
@@ -155,7 +156,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | sox-expert | SoXによる音声処理 | Audio Effects, Format Conversion |
 | yt-dlp-expert | yt-dlpによる動画ダウンロード | Download, Extract, Subtitles |
 
-### Documentation & Communication (22 skills)
+### Documentation & Communication (24 skills)
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
@@ -181,6 +182,8 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 | multi-format-document-optimizer | ドキュメント変換・画像最適化パイプライン統合 | docling/ImageMagick/markdown-to-pdf連携, Quality Presets, Batch Processing |
 | eli5 | 大きな絵と最小限の言葉によるHTML説明ページ生成 | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
 | jev-artifact-style-review | 日英対応の文体レビュー・作成者への改善フィードバック | 8 Style + 4 Content Axes, 7 Profiles, Revision Loop |
+| japanese-clear-writing | 日本語文書の新規執筆・書き直し・添削・評価 | 4 Modes + Integrated Review, 6-Item Rubric, score.py |
+| ste-writer | ASD-STE100（Simplified Technical English）での英文執筆・書き換え | 14 Core Rules, Full/Soft Strictness, Word Swaps |
 
 ### QA & Testing (16 skills)
 
@@ -292,6 +295,56 @@ Agents are specialized sub-agents that can be spawned by Claude Code using the T
 ---
 
 ## Available Skills (Detailed)
+
+### ✍️ Japanese Clear Writing
+
+日本語の文書を、読み手が見つけ・理解し・使えるように書くためのスキルです。新規執筆、書き直し、添削、評価の4モードと、それらをまとめた統合モードを持ちます。
+
+**When to use:**
+- メモや箇条書きから、レポート・手順書・提案書・メールを書き起こすとき
+- 既存の原稿やAI生成文を、意味を変えずに読みやすくしたいとき
+- 原稿の問題点と修正案、またはルーブリックによる点数がほしいとき
+
+**Key Features:**
+- 依頼文と渡された原稿からモードを自動で選ぶ。指定があれば指定を優先する
+- 意味・事実・数値・固有名詞・要件の強さを変えない。足りない情報は `[要確認]` で示す
+- 指摘には必ず具体的な修正案を添える
+- 6項目のルーブリック（目的・構成、文の明瞭さ、曖昧さ・正確さ、用語の一貫性、読み手適合性、表記・視認性）で採点し、`scripts/score.py` が合計点と判定を計算する
+- `references/standards.md` に参照した規格・ガイドラインをまとめている
+
+---
+
+### 🛠️ STE Writer
+
+英文を ASD-STE100（Simplified Technical English）の主要ルールに沿って書く、または書き換えるスキルです。手順書、マニュアル、SOP、ランブック、リリースノートが対象です。
+
+**When to use:**
+- 英語が母語でない読み手や機械翻訳を前提に、誤読のない英文の手順書を書きたいとき
+- 既存の英文マニュアルを STE 寄りに書き換えたいとき
+
+**Key Features:**
+- 14の主要ルール（1文1指示、命令形、能動態、単純時制、1語1義、警告を先に置くなど）
+- full（全ルール適用）と soft（「80% STE」程度）の2段階
+- 公式の ASD-STE100 仕様書や辞書は同梱していない。出力は「STE準拠」ではなく「主要ルールに沿って記述」と表現する
+
+---
+
+### 📋 Task Runner
+
+1ファイル1タスクのチケットを `tasks/` 配下のフォルダで管理し、定期実行のたびに1件ずつ拾って実行し、結果をチケットに書き戻すスキルです。Cowork のスケジュール実行から1時間ごとなどで呼ぶ想定です。
+
+**When to use:**
+- 「タスクを1件処理して」「tasksフォルダをチェックして」など、溜めたタスクを順に進めたいとき
+- タスク管理フォルダを初期設定したいとき、または看板ボードで状況を確認したいとき
+
+**Key Features:**
+- ステータスはフォルダ（`todo/` `doing/` `blocked/` `done/YYYY-MM/`）だけで表し、ファイル内に status 欄を持たない
+- `doing/` をロック代わりに使い、二重起動を防ぐ。60分を超えて残ったタスクは `blocked/` へ移し、自動では再実行しない
+- `dry-run` / `live` の2モード。既定は `dry-run`
+- `scripts/build_dashboard.py` が毎回 `tasks/dashboard.html` の看板ボードを再生成する
+- `assets/` にチケットのひな形、設定ファイル、サンプルタスク3件を同梱
+
+---
 
 ### 🔍 Jev Artifact Style Review
 
@@ -4775,6 +4828,12 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### japanese-clear-writing v1.1.0 / ste-writer v1.0 / task-runner v1.0 (2026-10-04)
+- japanese-clear-writing: 日本語文書の新規執筆・書き直し・添削・評価の4モードと統合モード。6項目ルーブリックと `scripts/score.py`
+- ste-writer: ASD-STE100 の主要14ルールで英文を執筆・書き換え。full / soft の2段階
+- task-runner: フォルダ型タスクチケットの定期実行と、`scripts/build_dashboard.py` による看板ボード生成
+- 配布済みの版を取り込み。変更は pre-commit による行末空白・末尾改行の修正と、Python 2ファイルの ruff format のみで、ロジックは変更していない
 
 ### jev-artifact-style-review v1.0 (2026-09-20)
 - 日本語中心・英語対応の文体レビュー。「AIっぽさ」を執筆者の推定ではなく、修正可能な編集上の欠点として扱う

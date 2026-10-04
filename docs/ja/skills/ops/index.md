@@ -27,3 +27,5 @@ permalink: /ja/skills/ops/
 | [incident-rca-specialist]({{ '/ja/skills/ops/incident-rca-specialist/' | relative_url }}) | インシデントRCA・是正措置計画 | 5 Whys、Fishbone、FTA、3D Prevention |
 | [eli5]({{ '/ja/skills/ops/eli5/' | relative_url }}) | 大きな絵と最小限の言葉によるHTML説明ページ生成 | 図中心パネル、インラインSVG、非技術者向け |
 | [jev-artifact-style-review]({{ '/ja/skills/ops/jev-artifact-style-review/' | relative_url }}) | 日英対応の文体レビューと作成者への改善フィードバック | 文体8軸＋内容4軸、7 profile、改稿ループ |
+| [japanese-clear-writing]({{ '/ja/skills/ops/japanese-clear-writing/' | relative_url }}) | 日本語文書の新規執筆・書き直し・添削・評価 | 5モード、6項目ルーブリック、score.py |
+| [ste-writer]({{ '/ja/skills/ops/ste-writer/' | relative_url }}) | 英文を ASD-STE100 の主要ルールで執筆・書き換え | 14の主要ルール、full/soft、[CHECK]マーカー |

@@ -48,3 +48,4 @@ permalink: /ja/skills/management/
 | [vendor-estimate-reviewer]({{ '/ja/skills/management/vendor-estimate-reviewer/' | relative_url }}) | ベンダー見積レビュー | 12評価軸、60+リスク要因 |
 | [vendor-rfq-creator]({{ '/ja/skills/management/vendor-rfq-creator/' | relative_url }}) | RFQ(見積依頼書)作成 | 150+チェック項目 |
 | [wbs-review-assistant]({{ '/ja/skills/management/wbs-review-assistant/' | relative_url }}) | WBS・要件ドキュメント照合レビュー | Excelアノテーション、トレーサビリティ |
+| [task-runner]({{ '/ja/skills/management/task-runner/' | relative_url }}) | フォルダ型タスクチケットを定期実行で1件ずつ処理し結果を書き戻す | todo/doing/blocked/doneフォルダ、計画カード、看板ボード |
