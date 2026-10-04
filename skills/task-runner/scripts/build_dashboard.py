@@ -66,6 +66,14 @@ def parse_dt(value):
     return None
 
 
+def parse_name_date(date_str):
+    # 存在しない日付（13月、2月30日など）は日付なしとして扱い、ボード全体を落とさない
+    try:
+        return datetime.strptime(date_str, "%Y%m%d") if date_str else None
+    except ValueError:
+        return None
+
+
 def strip_comment(value):
     # "不可   # メール送信..." のようなインラインコメントを除く
     return re.split(r"\s+#", value, maxsplit=1)[0].strip()
@@ -156,7 +164,7 @@ def parse_task(path):
     return {
         "file": base + ".md",
         "title": title or rest or base,
-        "date": datetime.strptime(date_str, "%Y%m%d") if date_str else None,
+        "date": parse_name_date(date_str),
         "prio": int(prio) if prio else None,
         "purpose": fields.get("目的", ""),
         "external": fields.get("外部操作", ""),
@@ -664,6 +672,8 @@ def main():
     if not os.path.isdir(args.tasks_dir):
         sys.exit(f"tasks フォルダが見つかりません: {args.tasks_dir}")
     now = parse_dt(args.now) if args.now else datetime.now()
+    if now is None:
+        sys.exit(f"--now の形式が不正です（YYYY-MM-DD HH:MM）: {args.now}")
     out = args.out or os.path.join(args.tasks_dir, "dashboard.html")
     page = render(args.tasks_dir, now, args.done_days)
     tmp = out + ".tmp"

@@ -97,7 +97,7 @@ Status lives only in the folder. Ticket files have no status field, so the two c
 
 ## 6. Writing a Ticket
 
-File name: `YYYYMMDD_priority_title.md`, for example `20260923_1_請求書チェック.md`. Only tickets dated today or earlier run. On the same date, the lower priority number runs first. Files that start with `_` are ignored.
+File name: `YYYYMMDD_priority_title.md`, for example `20260923_1_請求書チェック.md`. Only tickets dated today or earlier run. Tickets run in file-name order, so on the same date priority 1 runs before 2. Keep the priority to one digit (1-9), because `10` sorts before `2`. Files that start with `_` are ignored.
 
 The template fields:
 
@@ -125,7 +125,7 @@ You can also ask 「〇〇のタスクを追加して」 and Claude creates the 
 6. **Done check.** Claude verifies the completion condition against the real output before moving the ticket to `done/YYYY-MM/`.
 7. **Log and dashboard.** One line is added to `tasks/log.md`, and the dashboard is regenerated, even on `idle` and `skip` runs.
 
-Claude only appends to tickets: start and end times, the plan card, the result, the run log, and your approvals. The parts you wrote are never rewritten.
+Claude writes only to these parts of a ticket: the start and end times, the plan card, the result, the run log, and your approvals and extra instructions. The result section is replaced on every run so that its first line always shows the current state; the run log is appended to. The parts you wrote are never rewritten.
 
 ---
 

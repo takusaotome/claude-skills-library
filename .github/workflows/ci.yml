@@ -46,6 +46,7 @@ jobs:
           - internal-audit-assistant
           - iso-implementation-guide
           - it-system-roi-analyzer
+          - japanese-clear-writing
           - jev-artifact-style-review
           - kpi-designer
           - meeting-asset-preparer
@@ -57,6 +58,7 @@ jobs:
           - shift-planner
           - skill-designer
           - skill-idea-miner
+          - task-runner
           - vendor-support-ticket-tracker
           - wbs-review-assistant
         include:

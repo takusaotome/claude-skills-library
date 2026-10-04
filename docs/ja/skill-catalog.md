@@ -10,7 +10,7 @@ permalink: /ja/skill-catalog/
 # スキル一覧
 {: .no_toc }
 
-全 117 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
+全 119 スキルをカテゴリ別に掲載しています。ガイドページがあるスキルはリンクとして表示されます。
 {: .fs-6 .fw-300 }
 
 ## 目次
@@ -88,7 +88,7 @@ permalink: /ja/skill-catalog/
 
 ## オペレーション & ドキュメンテーション
 
-技術文書、プレゼン、ドキュメント変換、平易な説明資料、議事録の 26 スキル。
+技術文書、プレゼン、ドキュメント変換、平易な説明資料、議事録の 28 スキル。
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
@@ -108,6 +108,8 @@ permalink: /ja/skill-catalog/
 | [timezone-aware-event-tracker]({{ '/ja/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | マルチタイムゾーンイベント追跡・相関 | DST対応、マルチTZタイムライン |
 | [action-status-updater]({{ '/ja/skills/meta/action-status-updater/' | relative_url }}) | アクションアイテム自然言語更新追跡（JP/EN） | NLパース、YAML状態、daily-comms-ops連携 |
 | [email-triage-responder]({{ '/ja/skills/meta/email-triage-responder/' | relative_url }}) | メールトリアージ＋返信ドラフト生成 | Eisenhowerマトリクス、ドラフト生成、gogcli/Outlook |
+| inbox-triage-summarizer | 受信箱の定期スキャン・プロジェクト別分類・アクションサマリー | FYI/要返信/要対応/ブロック分類、スレッド追跡 |
+| email-thread-summarizer | メールスレッド要約・アクションアイテム抽出・陳腐化検出 | Gmail/Outlook、陳腐化検出、アクション抽出 |
 | [internal-email-composer]({{ '/ja/skills/meta/internal-email-composer/' | relative_url }}) | 社内メール作成（見積依頼転送、タスク依頼、進捗報告） | JA/ENバイリンガル、6シナリオ、ビジネスエチケット |
 | [iterative-design-assistant]({{ '/ja/skills/meta/iterative-design-assistant/' | relative_url }}) | デザイン反復履歴管理・文脈理解・一貫スタイリング | デザイン決定ログ、トークン管理 |
 | [japanese-enterprise-doc-formatter]({{ '/ja/skills/ops/japanese-enterprise-doc-formatter/' | relative_url }}) | 日本企業向け稟議書・購入申請書・提案書フォーマット | 敬語レベル、5文書タイプ、バイリンガル |

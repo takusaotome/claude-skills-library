@@ -4,7 +4,6 @@ description: 日本語の文書を、読み手が見つけ・理解し・使え�
 license: MIT
 metadata:
   version: '1.1.0'
-  author: Hermes Agent + Takuei Saotome
   platforms:
   - macos
   - linux

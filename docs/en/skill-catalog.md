@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 117 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 119 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -88,7 +88,7 @@ All 117 skills organized by category. Skills with dedicated guide pages are show
 
 ## Operations & Documentation
 
-26 skills for technical writing, presentations, document conversion, plain-language explainers, and meeting minutes.
+28 skills for technical writing, presentations, document conversion, plain-language explainers, and meeting minutes.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -108,6 +108,8 @@ All 117 skills organized by category. Skills with dedicated guide pages are show
 | [timezone-aware-event-tracker]({{ '/en/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | Track and correlate events across timezones | DST Handling, Multi-TZ Timeline |
 | [action-status-updater]({{ '/en/skills/meta/action-status-updater/' | relative_url }}) | Track action items via natural-language updates (JP/EN) | NL Parsing, YAML State, daily-comms-ops Integration |
 | [email-triage-responder]({{ '/en/skills/meta/email-triage-responder/' | relative_url }}) | Inbox triage with urgency scoring + draft replies | Eisenhower Matrix, Draft Generation, gogcli/Outlook |
+| inbox-triage-summarizer | Periodic inbox scan grouped by project/client with an action summary | FYI/Response/Action/Blocked Classification, Thread Tracking |
+| email-thread-summarizer | Summarize email threads, extract action items, and flag stale information | Gmail/Outlook, Staleness Detection, Action Item Extraction |
 | [internal-email-composer]({{ '/en/skills/meta/internal-email-composer/' | relative_url }}) | Compose professional internal emails (vendor RFQ/delegation/update) | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
 | [iterative-design-assistant]({{ '/en/skills/meta/iterative-design-assistant/' | relative_url }}) | Track design iteration history and apply consistent styling | Design Decision Log, Token Management |
 | [japanese-enterprise-doc-formatter]({{ '/en/skills/ops/japanese-enterprise-doc-formatter/' | relative_url }}) | Format documents for Japanese ringi/purchase/proposal workflows | Keigo Levels, 5 Document Types, Bilingual |

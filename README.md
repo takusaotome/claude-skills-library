@@ -4833,7 +4833,10 @@ Future skills planned for this library:
 - japanese-clear-writing: 日本語文書の新規執筆・書き直し・添削・評価の4モードと統合モード。6項目ルーブリックと `scripts/score.py`
 - ste-writer: ASD-STE100 の主要14ルールで英文を執筆・書き換え。full / soft の2段階
 - task-runner: フォルダ型タスクチケットの定期実行と、`scripts/build_dashboard.py` による看板ボード生成
-- 配布済みの版を取り込み。変更は pre-commit による行末空白・末尾改行の修正と、Python 2ファイルの ruff format のみで、ロジックは変更していない
+- 配布済みの版を取り込み。pre-commit による行末空白・末尾改行の修正と、Python 2ファイルの ruff format を適用
+- japanese-clear-writing の frontmatter から `author` を削除
+- task-runner: 存在しない日付をファイル名に持つチケットでダッシュボード生成全体が落ちる不具合を修正し、日付なしとして扱うようにした。`--now` が不正な場合は分かるエラーで終了する。同日内の処理順がファイル名の昇順であることと、`## 結果` を毎回置き換えることをドキュメントに明記
+- `score.py` と `build_dashboard.py` にテストを追加し、CI の `test-skills` に登録
 
 ### jev-artifact-style-review v1.0 (2026-09-20)
 - 日本語中心・英語対応の文体レビュー。「AIっぽさ」を執筆者の推定ではなく、修正可能な編集上の欠点として扱う
