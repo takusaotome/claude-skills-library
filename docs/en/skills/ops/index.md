@@ -27,3 +27,5 @@ Skills for technical writing, document conversion, presentation creation, and op
 | [incident-rca-specialist]({{ '/en/skills/ops/incident-rca-specialist/' | relative_url }}) | Incident root cause analysis and corrective actions | 5 Whys, Fishbone, FTA, 3D Prevention |
 | [eli5]({{ '/en/skills/ops/eli5/' | relative_url }}) | Dead-simple visual explainer as a single HTML artifact | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
 | [jev-artifact-style-review]({{ '/en/skills/ops/jev-artifact-style-review/' | relative_url }}) | Japanese-first bilingual editorial style review with source-grounded feedback | 8 Style + 4 Content Axes, 7 Profiles, Revision Loop |
+| [japanese-clear-writing]({{ '/en/skills/ops/japanese-clear-writing/' | relative_url }}) | Write, rewrite, proofread, or score Japanese documents for clarity | 5 Modes, 6-Item Rubric, score.py |
+| [ste-writer]({{ '/en/skills/ops/ste-writer/' | relative_url }}) | Write or rewrite English to the main ASD-STE100 Simplified Technical English rules | 14 Core Rules, Full/Soft Strictness, [CHECK] Markers |

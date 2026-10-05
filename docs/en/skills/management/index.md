@@ -48,3 +48,4 @@ Skills for strategic planning, project management, business analysis, and manage
 | [vendor-estimate-reviewer]({{ '/en/skills/management/vendor-estimate-reviewer/' | relative_url }}) | Vendor estimate review and validation | 12 Review Dimensions, 60+ Risk Factors |
 | [vendor-rfq-creator]({{ '/en/skills/management/vendor-rfq-creator/' | relative_url }}) | RFQ document creation | 150+ Checklist Items |
 | [wbs-review-assistant]({{ '/en/skills/management/wbs-review-assistant/' | relative_url }}) | Review WBS against requirements | Excel Annotation, Traceability Matrix |
+| [task-runner]({{ '/en/skills/management/task-runner/' | relative_url }}) | Run folder-based task tickets one per scheduled run and write results back | todo/doing/blocked/done Folders, Plan Card, Kanban Dashboard |

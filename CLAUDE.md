@@ -128,6 +128,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | it-system-roi-analyzer | 1.0 | IT Investment | ROI, TCO, NPV, Payback Period |
 | iterative-design-assistant | 1.0 | Design Iteration | Decision log (JSON v1.0), 5 categories, contextual reference resolution |
 | itil4-consultant | 1.0 | IT Service Management | 34 Practices, Maturity Assessment, 5 workflows |
+| japanese-clear-writing | 1.1 | Japanese Writing | 4 modes (write/rewrite/review/score), 6-item rubric, score.py |
 | japanese-enterprise-doc-formatter | 1.0 | JP Enterprise Docs | 5 doc types (稟議/購入申請/提案), 4 keigo levels, section validation |
 | jev-artifact-style-review | 1.0 | Editorial Style Review | 8 style + 4 content axes, 7 profiles, Jev scoring, writer handoff |
 | kpi-designer | 1.0 | Performance Management | SMART KPIs, BSC, OKR, Dashboard Design |
@@ -171,10 +172,12 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | skill-designer | 1.0 | Skill Pipeline | Design Prompt Generation, Convention Compliance |
 | skill-idea-miner | 1.0 | Skill Pipeline | Session Log Mining, LLM Scoring, Backlog |
 | sox-expert | 1.0 | Audio Processing | Audio Effects, Format Conversion, Spectrogram |
+| ste-writer | 1.0 | Technical Writing (EN) | ASD-STE100 core rules, full/soft strictness |
 | strategic-planner | 1.0 | Business Strategy | SWOT, PEST, Porter 5F, Scenario Planning |
 | streamlit-expert | 1.0 | Web Development | OIDC Auth, Plotly/Altair, Caching |
 | supply-chain-consultant | 1.0 | Supply Chain | Supply Chain Modeling, Optimization, S&OP |
 | talent-acquisition-specialist | 1.0 | HR/Recruitment | JD Templates, Interview Evaluation, Onboarding |
+| task-runner | 1.0 | Task Automation | Folder-based tickets, scheduled runs, kanban dashboard |
 | tdd-developer | 1.0 | Software Development | Red-Green-Refactor, pytest patterns |
 | technical-spec-writer | 1.0 | Technical Documentation | IEEE 830, Mermaid Diagrams, API/DB/Screen Design |
 | timezone-aware-event-tracker | 1.0 | Timezone Event Tracking | DST Handling, Multi-TZ Timeline, Event Correlation |

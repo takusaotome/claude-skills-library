@@ -10,7 +10,7 @@ permalink: /en/skill-catalog/
 # Skill Catalog
 {: .no_toc }
 
-All 114 skills organized by category. Skills with dedicated guide pages are shown as links.
+All 119 skills organized by category. Skills with dedicated guide pages are shown as links.
 {: .fs-6 .fw-300 }
 
 ## Table of contents
@@ -53,7 +53,7 @@ All 114 skills organized by category. Skills with dedicated guide pages are show
 
 ## Project & Business
 
-25 skills for strategy, consulting, project management, and management accounting.
+26 skills for strategy, consulting, project management, and management accounting.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -79,6 +79,7 @@ All 114 skills organized by category. Skills with dedicated guide pages are show
 | [hearing-to-requirements-mapper]({{ '/en/skills/management/hearing-to-requirements-mapper/' | relative_url }}) | Transform hearing sheets into structured requirements | RTM, WBS Mapping, Gap Detection |
 | [project-artifact-linker]({{ '/en/skills/management/project-artifact-linker/' | relative_url }}) | Cross-reference project artifacts by date and action items | WBS↔Meeting↔Requirements Linking |
 | [wbs-review-assistant]({{ '/en/skills/management/wbs-review-assistant/' | relative_url }}) | Review WBS against requirements and hearing sheets | Excel Annotation, Traceability Matrix |
+| [task-runner]({{ '/en/skills/management/task-runner/' | relative_url }}) | Run folder-based task tickets one per scheduled run and write results back | todo/doing/blocked/done Folders, Plan Card, Kanban Dashboard |
 | [project-completeness-scorer]({{ '/en/skills/meta/project-completeness-scorer/' | relative_url }}) | Evaluate project completeness with weighted 0-100 scoring | 5 Dimensions, Gap Analysis, Templates |
 | [project-kickoff-bootstrapper]({{ '/en/skills/meta/project-kickoff-bootstrapper/' | relative_url }}) | Bootstrap Claude project context and templates | CLAUDE.md Scaffolding, 15 Templates |
 | [ai-bpo-proposal-generator]({{ '/en/skills/management/ai-bpo-proposal-generator/' | relative_url }}) | Generate AI-powered BPO proposals for Japanese companies in US market | 15 Service Modules, ROI/NPV, Bilingual Proposals |
@@ -87,7 +88,7 @@ All 114 skills organized by category. Skills with dedicated guide pages are show
 
 ## Operations & Documentation
 
-24 skills for technical writing, presentations, document conversion, plain-language explainers, and meeting minutes.
+28 skills for technical writing, presentations, document conversion, plain-language explainers, and meeting minutes.
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
@@ -107,6 +108,8 @@ All 114 skills organized by category. Skills with dedicated guide pages are show
 | [timezone-aware-event-tracker]({{ '/en/skills/meta/timezone-aware-event-tracker/' | relative_url }}) | Track and correlate events across timezones | DST Handling, Multi-TZ Timeline |
 | [action-status-updater]({{ '/en/skills/meta/action-status-updater/' | relative_url }}) | Track action items via natural-language updates (JP/EN) | NL Parsing, YAML State, daily-comms-ops Integration |
 | [email-triage-responder]({{ '/en/skills/meta/email-triage-responder/' | relative_url }}) | Inbox triage with urgency scoring + draft replies | Eisenhower Matrix, Draft Generation, gogcli/Outlook |
+| inbox-triage-summarizer | Periodic inbox scan grouped by project/client with an action summary | FYI/Response/Action/Blocked Classification, Thread Tracking |
+| email-thread-summarizer | Summarize email threads, extract action items, and flag stale information | Gmail/Outlook, Staleness Detection, Action Item Extraction |
 | [internal-email-composer]({{ '/en/skills/meta/internal-email-composer/' | relative_url }}) | Compose professional internal emails (vendor RFQ/delegation/update) | JA/EN Bilingual, 6 Scenarios, Business Etiquette |
 | [iterative-design-assistant]({{ '/en/skills/meta/iterative-design-assistant/' | relative_url }}) | Track design iteration history and apply consistent styling | Design Decision Log, Token Management |
 | [japanese-enterprise-doc-formatter]({{ '/en/skills/ops/japanese-enterprise-doc-formatter/' | relative_url }}) | Format documents for Japanese ringi/purchase/proposal workflows | Keigo Levels, 5 Document Types, Bilingual |
@@ -115,6 +118,8 @@ All 114 skills organized by category. Skills with dedicated guide pages are show
 | [purchase-request-generator]({{ '/en/skills/management/purchase-request-generator/' | relative_url }}) | Generate purchase requests with cost-benefit analysis | ROI/NPV/Payback, Vendor Comparison, MARP Slides |
 | [eli5]({{ '/en/skills/ops/eli5/' | relative_url }}) | Dead-simple visual explainer as a single HTML artifact | Big-Picture Panels, Inline SVG, Non-Technical Audiences |
 | [jev-artifact-style-review]({{ '/en/skills/ops/jev-artifact-style-review/' | relative_url }}) | Japanese-first bilingual editorial style review with source-grounded feedback | 8 Style + 4 Content Axes, 7 Profiles, Revision Loop |
+| [japanese-clear-writing]({{ '/en/skills/ops/japanese-clear-writing/' | relative_url }}) | Write, rewrite, proofread, or score Japanese documents for clarity | 5 Modes, 6-Item Rubric, score.py |
+| [ste-writer]({{ '/en/skills/ops/ste-writer/' | relative_url }}) | Write or rewrite English to the main ASD-STE100 Simplified Technical English rules | 14 Core Rules, Full/Soft Strictness, [CHECK] Markers |
 
 ---
 
