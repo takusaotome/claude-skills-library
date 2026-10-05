@@ -52,13 +52,16 @@ HAND_WRITTEN = frozenset(
         "grill-me",
         "hidden-contract-investigator",
         "incident-rca-specialist",
+        "japanese-clear-writing",
         "jev-artifact-style-review",
         "markdown-to-pdf",
         "operations-manual-creator",
         "production-parity-test-designer",
         "project-plan-creator",
         "safe-by-default-architect",
+        "ste-writer",
         "strategic-planner",
+        "task-runner",
         "tdd-developer",
         "vendor-estimate-creator",
     }
@@ -67,8 +70,8 @@ HAND_WRITTEN = frozenset(
 # Max existing nav_order per category (for appending new pages after).
 MAX_NAV_ORDER = {
     "dev": 33,
-    "management": 31,
-    "ops": 16,
+    "management": 32,
+    "ops": 18,
     "finance": 15,
     "meta": 33,
 }
@@ -127,6 +130,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "strategic-planner": "management",
     "supply-chain-consultant": "management",
     "talent-acquisition-specialist": "management",
+    "task-runner": "management",
     "technical-spec-writer": "management",
     "uat-testcase-generator": "management",
     "vendor-estimate-creator": "management",
@@ -141,6 +145,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "eli5": "ops",
     "fujisoft-presentation-creator": "ops",
     "incident-rca-specialist": "ops",
+    "japanese-clear-writing": "ops",
     "jev-artifact-style-review": "ops",
     "markdown-to-pdf": "ops",
     "migration-validation-explorer": "ops",
@@ -148,6 +153,7 @@ PRIMARY_CATEGORY: dict[str, str] = {
     "presentation-reviewer": "ops",
     "production-schedule-optimizer": "ops",
     "shift-planner": "ops",
+    "ste-writer": "ops",
     # === finance (Compliance, Finance & Governance) ===
     "audit-control-designer": "finance",
     "audit-doc-checker": "finance",
