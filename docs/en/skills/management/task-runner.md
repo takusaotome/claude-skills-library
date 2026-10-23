@@ -117,7 +117,7 @@ You can also ask 「〇〇のタスクを追加して」 and Claude creates the 
 
 ## 7. How a Run Works
 
-1. **Lock check.** If a ticket in `doing/` started less than 60 minutes ago, the run logs `skip` and ends. If it is older, the run marks it as interrupted and moves it to `blocked/`. It is not re-run automatically, to avoid doing a half-finished action twice.
+1. **Lock check.** If any ticket is in `doing/`, the run logs `skip`, updates the dashboard, and stops without starting another ticket. After 60 minutes, or when the start time is missing, invalid, or in the future, it marks the ticket as *possibly stalled* but leaves it in `doing/`. A person must confirm that the previous run ended and check its external actions and output before directing Claude to move that ticket to `blocked/`.
 2. **Pick.** The first due ticket in `todo/`, by file name. If none, the run logs `idle` and ends quietly.
 3. **Plan card.** Before working, Claude writes a `## 計画カード` into the ticket: what will be produced, 3 to 7 tagged steps, what it will and will not touch outside, assumptions it made, at most 3 questions for you, and the end conditions as checkboxes.
 4. **Approval stop.** If the ticket needs plan approval and has no `計画承認:` line, the ticket goes to `blocked/` with `計画の確認待ち` as the first result line. Reply with the title and "OK", for example 「未返信メールの下書き作成 OK」, and the ticket runs on the next cycle.
@@ -135,7 +135,7 @@ Claude writes only to these parts of a ticket: the start and end times, the plan
 
 - Four columns: todo, doing, blocked, and done (last 14 days).
 - A summary row with counts and the current mode.
-- Card badges for scheduled (future date), possibly stalled (doing for more than 60 minutes), external action, waiting for plan approval, and the number of open questions.
+- Card badges for scheduled (future date), possibly stalled (doing for more than 60 minutes or with a missing, invalid, or future start time), external action, waiting for plan approval, and the number of open questions.
 - Blocked cards show the stop reason in red.
 - Clicking a card opens the plan card, with the steps drawn as a flow and external steps outlined in red.
 - A search box, and the last 8 lines of `log.md`.

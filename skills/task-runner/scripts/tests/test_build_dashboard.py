@@ -100,6 +100,41 @@ def test_collect_marks_future_stale_and_plan_wait(tmp_path):
     assert data["blocked"][0]["plan_wait"] is True
 
 
+@pytest.mark.parametrize("start", ["2026-10-04 11:30", "2026-10-04 11:00"])
+def test_doing_at_or_below_sixty_minutes_is_not_marked_stalled(tmp_path, start):
+    root = make_tasks(tmp_path)
+    write(root / "doing" / "20261001_1_active.md", f"# active\n- 開始: {start}\n")
+
+    data, _, _ = bd.collect(str(root), NOW, 14)
+
+    assert data["doing"][0]["stale"] is False
+
+
+@pytest.mark.parametrize("started", [None, "not-a-date"])
+def test_doing_without_valid_start_requires_attention(tmp_path, started):
+    root = make_tasks(tmp_path)
+    field = f"- 開始: {started}\n" if started else ""
+    write(root / "doing" / "20261001_1_unknown.md", "# unknown\n" + field)
+
+    data, _, _ = bd.collect(str(root), NOW, 14)
+    page = bd.render(str(root), NOW, 14)
+
+    assert data["doing"][0]["stale"] is True
+    assert "停止の疑い 1" in page
+    assert "開始日時を確認できません" in page
+
+
+def test_doing_with_future_start_requires_attention(tmp_path):
+    root = make_tasks(tmp_path)
+    write(root / "doing" / "20261001_1_future.md", "# future\n- 開始: 2026-10-04 13:00\n")
+
+    data, _, _ = bd.collect(str(root), NOW, 14)
+    page = bd.render(str(root), NOW, 14)
+
+    assert data["doing"][0]["stale"] is True
+    assert "開始日時が現在より未来です" in page
+
+
 def test_collect_ignores_underscore_files(tmp_path):
     root = make_tasks(tmp_path)
     write(root / "todo" / "_template.md", "# template\n")

@@ -339,7 +339,7 @@ Agents are specialized sub-agents that can be spawned by Claude Code using the T
 
 **Key Features:**
 - ステータスはフォルダ（`todo/` `doing/` `blocked/` `done/YYYY-MM/`）だけで表し、ファイル内に status 欄を持たない
-- `doing/` をロック代わりに使い、二重起動を防ぐ。60分を超えて残ったタスクは `blocked/` へ移し、自動では再実行しない
+- `doing/` をロック代わりに使い、タスクが残る間は次を始めない。60分超または開始日時が不明・未来時刻なら「停止の疑い」と表示し、終了確認後に人の指示で `blocked/` へ移す
 - `dry-run` / `live` の2モード。既定は `dry-run`
 - `scripts/build_dashboard.py` が毎回 `tasks/dashboard.html` の看板ボードを再生成する
 - `assets/` にチケットのひな形、設定ファイル、サンプルタスク3件を同梱
@@ -4828,6 +4828,9 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### task-runner: 実行中タスクの誤解放を防止 (2026-10-23)
+- `doing/` にタスクがある間は、開始から60分を超えても次のタスクを始めない。開始日時の欠落・不正・未来時刻も停止の疑いとして表示し、人が前回の終了を確認してから移す手順に変更
 
 ### codex-reviewer: GPT-6.1-Sol へ更新 (2026-10-23)
 - 全レビュータイプと両プロファイルの既定モデルを `gpt-5.5` から `gpt-6.1-sol` に変更。推論レベルは従来どおり xhigh（quick-review は medium）
