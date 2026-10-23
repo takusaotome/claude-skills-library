@@ -53,7 +53,7 @@ OpenAI Codex CLIを活用して、コードやドキュメントの専門的な�
    # デフォルトプロファイル
    [profiles.deep-review]
    model = "gpt-6.1-sol"
-   model_reasoning_effort = "high"
+   model_reasoning_effort = "xhigh"
    approval_policy = "never"
    ```
 
@@ -103,6 +103,7 @@ python3 scripts/run_codex_review.py \
   --type code \
   --target src/ \
   --output ./reviews
+```
 
 See the skill's SKILL.md for the full end-to-end workflow.
 
