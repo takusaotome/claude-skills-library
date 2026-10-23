@@ -4829,8 +4829,9 @@ Future skills planned for this library:
 
 ## Version History
 
-### task-runner: 実行中タスクの誤解放を防止 (2026-10-23)
+### task-runner: 実行中タスクの誤解放を防止、dry-run と計画承認の判定順を明確化 (2026-10-23)
 - `doing/` にタスクがある間は、開始から60分を超えても次のタスクを始めない。開始日時の欠落・不正・未来時刻も停止の疑いとして表示し、人が前回の終了を確認してから移す手順に変更
+- 手順4の判定順を dry-run → 計画承認 → 作業に固定。dry-run では計画の確認が必要なタスクも `blocked/` に送らず `todo/` に戻す。mode・外部操作・計画確認・計画承認の組み合わせ表を追加
 
 ### codex-reviewer: GPT-6.1-Sol へ更新 (2026-10-23)
 - 全レビュータイプと両プロファイルの既定モデルを `gpt-5.5` から `gpt-6.1-sol` に変更。推論レベルは従来どおり xhigh（quick-review は medium）
