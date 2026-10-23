@@ -91,7 +91,7 @@ python3 ~/.claude/plugins/marketplaces/anthropic-agent-skills/skills/skill-creat
 | business-plan-creator | 1.0 | Business Planning | 5-Phase Workflow, Financial Modeling, Industry Templates |
 | change-management-consultant | 1.0 | Change Management | ADKAR, Kotter 8-Step, Stakeholder Engagement |
 | codebase-onboarding-generator | 1.0 | Documentation | analyze_codebase.py, CLAUDE.md generation, 8+ language support |
-| codex-reviewer | 1.0 | Code Review | OpenAI Codex integration, GPT-5 high reasoning |
+| codex-reviewer | 1.0 | Code Review | OpenAI Codex integration, GPT-6.1-Sol xhigh reasoning |
 | competitive-intelligence-analyst | 1.0 | Competitive Analysis | Battlecards, Win/Loss, Market Landscape |
 | completion-quality-gate-designer | 1.0 | Quality Gate Design | 7-Phase Gate Design, DoD Framework, Evidence Catalog |
 | compliance-advisor | 1.0 | Compliance | J-SOX/SOX, RCM, COSO Framework |

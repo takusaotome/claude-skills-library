@@ -14,7 +14,7 @@ Skills for code review, testing, data science, cloud operations, and debugging. 
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
-| [codex-reviewer]({{ '/en/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codex integration for code review | GPT-5.1-Codex-Max Integration |
+| [codex-reviewer]({{ '/en/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codex integration for code review | GPT-6.1-Sol Integration |
 | [critical-code-reviewer]({{ '/en/skills/dev/critical-code-reviewer/' | relative_url }}) | Multi-persona parallel code review | 4-Persona Review (Veteran/TDD/CleanCode/BugHunter) |
 | [data-scientist]({{ '/en/skills/dev/data-scientist/' | relative_url }}) | Data analysis, ML, and time-series forecasting | Auto EDA, Model Comparison, Time Series |
 | [data-visualization-expert]({{ '/en/skills/ops/data-visualization-expert/' | relative_url }}) | Data visualization and chart design | 30+ Chart Types, Accessibility |

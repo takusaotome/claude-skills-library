@@ -115,7 +115,7 @@ Resolves ambiguities in plan files through structured questioning using the AskU
 
 | Skill Name | Description | Key Features |
 |------------|-------------|--------------|
-| codex-reviewer | OpenAI Codexによるレビュー依頼 | GPT-5.1-Codex-Max Integration |
+| codex-reviewer | OpenAI Codexによるレビュー依頼 | GPT-6.1-Sol Integration |
 | critical-code-reviewer | 多角的コードレビュー | Multi-Persona Review |
 | data-scientist | データ分析・ML・時系列予測 | Auto EDA, Model Comparison |
 | data-visualization-expert | データ可視化、チャート設計 | 30+ Chart Types, Accessibility |
@@ -2750,7 +2750,7 @@ Salesforce CLI (sf/sfdx) expert skill for Salesforce development and administrat
 
 **File:** `skill-packages/codex-reviewer.skill`
 
-Uses OpenAI Codex CLI to review documents and code with GPT-5.1-Codex-Max model.
+Uses OpenAI Codex CLI to review documents and code with GPT-6.1-Sol model (xhigh reasoning).
 
 **When to use:**
 - Code review requiring deep analysis
@@ -4828,6 +4828,10 @@ Future skills planned for this library:
 - [ ] **Salesforce Consultant** - CRM configuration, workflow automation, requirement gathering
 
 ## Version History
+
+### codex-reviewer: GPT-6.1-Sol へ更新 (2026-10-23)
+- 全レビュータイプと両プロファイルの既定モデルを `gpt-5.5` から `gpt-6.1-sol` に変更。推論レベルは従来どおり xhigh（quick-review は medium）
+- `analyze_review.py`: リストマーカー付きの指摘（`- **重要度**: ...`）も解析できるようにした
 
 ### japanese-clear-writing v1.1.0 / ste-writer v1.0 / task-runner v1.0 (2026-10-04)
 - japanese-clear-writing: 日本語文書の新規執筆・書き直し・添削・評価の4モードと統合モード。6項目ルーブリックと `scripts/score.py`

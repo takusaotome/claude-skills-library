@@ -11,7 +11,7 @@ permalink: /en/skills/dev/codex-reviewer/
 # Codex Reviewer
 {: .no_toc }
 
-OpenAI Codex CLIを使用してドキュメントやコードのレビューを依頼するスキル。GPT-5.4モデルをhigh推論モードで呼び出し、深い分析によるレビューを実行。レビュー結果を指定フォルダに出力し、その内容を確認・分析する機能を提供。コードレビュー、ドキュメントレビュー、設計書レビュー、テスト計画レビューなど、専門的なレビューが必要な場面で使用。
+OpenAI Codex CLIを使用してドキュメントやコードのレビューを依頼するスキル。GPT-6.1-Solモデルをxhigh推論モードで呼び出し、深い分析によるレビューを実行。レビュー結果を指定フォルダに出力し、その内容を確認・分析する機能を提供。コードレビュー、ドキュメントレビュー、設計書レビュー、テスト計画レビューなど、専門的なレビューが必要な場面で使用。
 {: .fs-6 .fw-300 }
 
 <span class="badge badge-free">No API Required</span>
@@ -30,7 +30,7 @@ OpenAI Codex CLIを使用してドキュメントやコードのレビューを�
 
 ## 1. Overview
 
-OpenAI Codex CLIを活用して、コードやドキュメントの専門的なレビューを実行するスキルです。全レビュータイプで **GPT-5.4** モデルを **high推論モード**で使用し、徹底的な分析を行います。
+OpenAI Codex CLIを活用して、コードやドキュメントの専門的なレビューを実行するスキルです。全レビュータイプで **GPT-6.1-Sol** モデルを **xhigh推論モード**で使用し、徹底的な分析を行います。
 
 ---
 
@@ -52,7 +52,7 @@ OpenAI Codex CLIを活用して、コードやドキュメントの専門的な�
    ```toml
    # デフォルトプロファイル
    [profiles.deep-review]
-   model = "gpt-5.4"
+   model = "gpt-6.1-sol"
    model_reasoning_effort = "high"
    approval_policy = "never"
    ```

@@ -27,7 +27,7 @@ All 119 skills organized by category. Skills with dedicated guide pages are show
 
 | Skill | Description | Key Features |
 |:------|:------------|:-------------|
-| [codex-reviewer]({{ '/en/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codex integration for code review | GPT-5 high reasoning |
+| [codex-reviewer]({{ '/en/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codex integration for code review | GPT-6.1-Sol xhigh reasoning |
 | [critical-code-reviewer]({{ '/en/skills/dev/critical-code-reviewer/' | relative_url }}) | Multi-persona parallel code review | 4-Persona review (Veteran/TDD/CleanCode/BugHunter) |
 | [data-scientist]({{ '/en/skills/dev/data-scientist/' | relative_url }}) | Data analysis, ML, time-series forecasting | Auto EDA, Model Comparison |
 | [data-visualization-expert]({{ '/en/skills/ops/data-visualization-expert/' | relative_url }}) | Data visualization and chart design | 30+ Chart Types, Accessibility |

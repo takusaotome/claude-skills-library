@@ -27,7 +27,7 @@ permalink: /ja/skill-catalog/
 
 | スキル | 説明 | 主要機能 |
 |:------|:-----|:---------|
-| [codex-reviewer]({{ '/ja/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codex によるコードレビュー | GPT-5 高推論 |
+| [codex-reviewer]({{ '/ja/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codex によるコードレビュー | GPT-6.1-Sol xhigh 推論 |
 | [critical-code-reviewer]({{ '/ja/skills/dev/critical-code-reviewer/' | relative_url }}) | 多角的並列コードレビュー | 4 ペルソナレビュー (Veteran/TDD/CleanCode/BugHunter) |
 | [data-scientist]({{ '/ja/skills/dev/data-scientist/' | relative_url }}) | データ分析・ML・時系列予測 | Auto EDA、モデル比較 |
 | [data-visualization-expert]({{ '/ja/skills/ops/data-visualization-expert/' | relative_url }}) | データ可視化・チャート設計 | 30+ チャートタイプ、アクセシビリティ |

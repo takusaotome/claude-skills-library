@@ -82,7 +82,22 @@ def extract_issues(content: str) -> List[ReviewIssue]:
     # **推奨**: 改善案（複数行可）
     #
     # 各フィールドは次のフィールド開始または空行/リストアイテムまで非貪欲にマッチ
-    structured_pattern = r"\*\*重要度\*\*:\s*(.+?)\s*\n\s*\*\*カテゴリ\*\*:\s*(.+?)\s*\n\s*\*\*場所\*\*:\s*(.+?)\s*\n\s*\*\*問題\*\*:\s*(.+?)\s*\n\s*\*\*推奨\*\*:\s*(.+?)(?=\n\n|\n-\s*\*\*重要度|\Z)"
+    # 各行は `- **重要度**: ...` のようにリストマーカーが付く場合があるため、
+    # フィールド間で任意のリストマーカー（-, *, +）を許容する
+    lm = r"(?:[-*+]\s*)?"
+    structured_pattern = (
+        r"\*\*重要度\*\*:\s*(.+?)\s*\n\s*"
+        + lm
+        + r"\*\*カテゴリ\*\*:\s*(.+?)\s*\n\s*"
+        + lm
+        + r"\*\*場所\*\*:\s*(.+?)\s*\n\s*"
+        + lm
+        + r"\*\*問題\*\*:\s*(.+?)\s*\n\s*"
+        + lm
+        + r"\*\*推奨\*\*:\s*(.+?)(?=\n\n|\n\s*"
+        + lm
+        + r"\*\*重要度|\Z)"
+    )
 
     for match in re.finditer(structured_pattern, content, re.MULTILINE | re.DOTALL):
         issues.append(
@@ -102,7 +117,19 @@ def extract_issues(content: str) -> List[ReviewIssue]:
     # **Location**: file.py:10
     # **Problem**: description (multiline supported)
     # **Recommendation**: suggestion (multiline supported)
-    english_pattern = r"\*\*Severity\*\*:\s*(.+?)\s*\n\s*\*\*Category\*\*:\s*(.+?)\s*\n\s*\*\*Location\*\*:\s*(.+?)\s*\n\s*\*\*Problem\*\*:\s*(.+?)\s*\n\s*\*\*Recommendation\*\*:\s*(.+?)(?=\n\n|\n-\s*\*\*Severity|\Z)"
+    english_pattern = (
+        r"\*\*Severity\*\*:\s*(.+?)\s*\n\s*"
+        + lm
+        + r"\*\*Category\*\*:\s*(.+?)\s*\n\s*"
+        + lm
+        + r"\*\*Location\*\*:\s*(.+?)\s*\n\s*"
+        + lm
+        + r"\*\*Problem\*\*:\s*(.+?)\s*\n\s*"
+        + lm
+        + r"\*\*Recommendation\*\*:\s*(.+?)(?=\n\n|\n\s*"
+        + lm
+        + r"\*\*Severity|\Z)"
+    )
 
     for match in re.finditer(english_pattern, content, re.MULTILINE | re.IGNORECASE | re.DOTALL):
         issues.append(
