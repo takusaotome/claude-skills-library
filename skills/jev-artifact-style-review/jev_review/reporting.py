@@ -2,9 +2,34 @@
 
 from __future__ import annotations
 
+import re
+
 
 def _cell(text):
     return str(text).replace("|", "\\|").replace("\n", " ")
+
+
+def _longest_backtick_run(text):
+    return max((len(run) for run in re.findall(r"`+", text)), default=0)
+
+
+def _code(text):
+    """Inline code span for untrusted text: one line, delimiter longer than any backtick run inside.
+
+    Markdown and HTML inside a code span render literally, so the text cannot add headings or tags.
+    """
+    text = " ".join(str(text).splitlines())
+    fence = "`" * (_longest_backtick_run(text) + 1)
+    # CommonMark strips one space on each side, so padding keeps edge backticks off the delimiter.
+    pad = " " if not text or text[0] in "` " or text[-1] in "` " else ""
+    return f"{fence}{pad}{text}{pad}{fence}"
+
+
+def _code_block(text):
+    """Fenced block that shows untrusted multi-line text verbatim."""
+    text = "\n".join(str(text).splitlines())
+    fence = "`" * max(3, _longest_backtick_run(text) + 1)
+    return f"{fence}text\n{text}\n{fence}"
 
 
 def render_report(report: dict, language="ja") -> str:
@@ -13,7 +38,7 @@ def render_report(report: dict, language="ja") -> str:
     score = s["style_index_0_to_100"]
     lines = [
         f"# {'成果物の文体レビュー' if ja else 'Artifact style review'}",
-        f"\n**{'対象' if ja else 'Artifact'}:** `{report['document']['name']}`",
+        f"\n**{'対象' if ja else 'Artifact'}:** {_code(report['document']['name'])}",
         f"**{'実行方式' if ja else 'Mode'}:** `{report['mode']}` / **{'状態' if ja else 'Status'}:** `{report['status']}`",
         f"**{'文体違和感指数' if ja else 'Style-friction index'}:** {score if score is not None else ('算出保留' if ja else 'withheld')} / 100",
         (
@@ -63,8 +88,8 @@ def render_report(report: dict, language="ja") -> str:
     for f in report["findings"]:
         lines += [
             f"\n### {f['id']} · {f['label_ja'] if ja else f['label_en']} · {f['priority']}",
-            f"`{f['source_span']['locator']}` / `{f['source_span']['segment_id']}`",
-            "\n" + "\n".join("> " + line for line in f["source_span"]["text"].splitlines()),
+            f"{'箇所' if ja else 'Location'}: {_code(f['source_span']['locator'])} / {_code(f['source_span']['segment_id'])}",
+            "\n" + _code_block(f["source_span"]["text"]),
             "\n" + (f["fix_ja"] if ja else f["fix_en"]),
             (
                 "\n根拠はJevが選んだ原文の正確な抜粋です。引用が実際に指摘を支えるかはレビューしてください。具体的な修正文は作成担当者・ホストエージェントが用意します。"
@@ -85,7 +110,7 @@ def render_report(report: dict, language="ja") -> str:
     missing = report["preservation_checks"]["missing_literals"]
     lines.append(
         ("不足する保護語句: " if ja else "Missing protected literals: ")
-        + (", ".join(missing) if missing else ("なし" if ja else "none"))
+        + (", ".join(_code(m) for m in missing) if missing else ("なし" if ja else "none"))
     )
     if report["surface_metrics"]["possible_embedded_evaluator_instruction"]:
         lines.append(

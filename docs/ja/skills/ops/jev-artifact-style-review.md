@@ -137,7 +137,7 @@ python scripts/compare.py runs/style-v1/review.json runs/style-v2/review.json \
 
 どのファイルが出るかは実行モードによります。dry run は `extracted.json`、`context.json`、`plan.json`、`request_preview.json` を書いて終了し、`run_status.json` は作りません。実際に採点する実行では `review.md`、`review.json`、`writer_handoff.json`、`run_status.json` が加わります。失敗時に `status: failed` の `run_status.json` が残るのは、出力ディレクトリを作成したあとで失敗した場合だけです。APIキー未設定や入力が読めないなど、作成前に失敗したときはファイルが1つも残りません。
 
-引用文は、Jev が選んだセグメントIDをもとに Python が原文から切り出します。Jev が引用文を書くことはありません。出力ディレクトリは新規または空である必要があり、既存の評価を上書きしません。POSIX 環境ではファイル権限 600、ディレクトリ 700 で保存します。出力には本文と引用が含まれるため、Git や共有ドライブへ不用意に登録しないでください。
+引用文は、Jev が選んだセグメントIDをもとに Python が原文から切り出します。Jev が引用文を書くことはありません。`review.md` では引用文をコードブロックに、文書名・位置・保護語句をコード表記に入れます。原文に Markdown や HTML が含まれていても文字のまま表示され、レポートの構造は変わりません。`--context` のファイルは 64,000 バイト、`compare.py` に渡す `review.json` は 8,000,000 バイトを超えると、解析する前に拒否します。出力ディレクトリは新規または空である必要があり、既存の評価を上書きしません。POSIX 環境ではファイル権限 600、ディレクトリ 700 で保存します。出力には本文と引用が含まれるため、Git や共有ドライブへ不用意に登録しないでください。
 
 ---
 

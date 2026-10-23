@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from jev_review.client import JevClient
-from jev_review.common import ReviewError, load_json, load_rubric, save_json, save_text
+from jev_review.common import CONTEXT_FILE_MAX_BYTES, ReviewError, load_json, load_rubric, save_json, save_text
 from jev_review.extract import extract
 from jev_review.pipeline import build_plan, execute
 from jev_review.questions import validate_context
@@ -55,7 +55,7 @@ def main(argv=None) -> int:
             raise ReviewError(
                 "Use --dry-run for a local preview, or explicitly authorize TypeSafe sending with --allow-remote."
             )
-        context = validate_context(load_json(args.context) if args.context else {})
+        context = validate_context(load_json(args.context, max_bytes=CONTEXT_FILE_MAX_BYTES) if args.context else {})
         document = extract(args.input, context.get("locked_sections", []))
         language = args.language if args.language != "auto" else document["detected_language"]
         if language == "unknown":

@@ -11,6 +11,11 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# Raw file caps, checked before parsing. The context cap leaves room for indentation and
+# \uXXXX escapes above the 10,000-byte canonical limit enforced in validate_context.
+CONTEXT_FILE_MAX_BYTES = 64_000
+REPORT_FILE_MAX_BYTES = 8_000_000
+
 
 class ReviewError(Exception):
     """A safe, user-facing error; never include provider response bodies or secrets."""
@@ -24,13 +29,21 @@ def digest(value: Any) -> str:
     return hashlib.sha256(canonical(value).encode("utf-8")).hexdigest()
 
 
-def load_json(path: Path) -> Any:
+def load_json(path: Path, max_bytes: int | None = None) -> Any:
+    try:
+        with path.open("rb") as handle:
+            raw = handle.read() if max_bytes is None else handle.read(max_bytes + 1)
+    except OSError as exc:
+        raise ReviewError(f"Cannot read valid UTF-8 JSON: {path.name}") from exc
+    # Read at most one byte past the cap so a huge file is never fully loaded or parsed.
+    if max_bytes is not None and len(raw) > max_bytes:
+        raise ReviewError(f"{path.name} exceeds {max_bytes:,} bytes; it was not parsed.")
     try:
         return json.loads(
-            path.read_text(encoding="utf-8"),
+            raw.decode("utf-8"),
             parse_constant=lambda s: (_ for _ in ()).throw(ValueError("Non-finite JSON number")),
         )
-    except (OSError, ValueError, UnicodeError) as exc:
+    except (ValueError, UnicodeError) as exc:
         raise ReviewError(f"Cannot read valid UTF-8 JSON: {path.name}") from exc
 
 
