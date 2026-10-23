@@ -85,10 +85,10 @@ Watch for these patterns - I've seen them fail:
 
 ## Analysis Framework
 
-Load and apply:
-- `skills/critical-code-reviewer/references/code_smell_patterns.md`
-- `skills/critical-code-reviewer/references/review_framework.md`
-- `skills/critical-code-reviewer/references/language_specific_checks.md` (if applicable)
+Load and apply from the `critical-code-reviewer` skill directory:
+- `references/code_smell_patterns.md`
+- `references/review_framework.md`
+- `references/language_specific_checks.md` (if applicable)
 
 ## Output Format
 
