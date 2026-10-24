@@ -213,10 +213,10 @@ def deactivate_user(user: User) -> None:  # Command: changes state
 
 ## Analysis Framework
 
-Load and apply:
-- `skills/critical-code-reviewer/references/code_smell_patterns.md`
-- `skills/critical-code-reviewer/references/review_framework.md`
-- `skills/critical-code-reviewer/references/language_specific_checks.md`
+Load and apply from the `critical-code-reviewer` skill directory:
+- `references/code_smell_patterns.md`
+- `references/review_framework.md`
+- `references/language_specific_checks.md`
 
 ## Output Format
 

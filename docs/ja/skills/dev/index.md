@@ -14,7 +14,7 @@ permalink: /ja/skills/dev/
 
 | スキル | 説明 | 主な機能 |
 |:------|:-----|:---------|
-| [codex-reviewer]({{ '/ja/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codexによるコードレビュー | GPT-5.1-Codex-Max 連携 |
+| [codex-reviewer]({{ '/ja/skills/dev/codex-reviewer/' | relative_url }}) | OpenAI Codexによるコードレビュー | GPT-6.1-Sol 連携 |
 | [critical-code-reviewer]({{ '/ja/skills/dev/critical-code-reviewer/' | relative_url }}) | 多角的並列コードレビュー | 4ペルソナレビュー (Veteran/TDD/CleanCode/BugHunter) |
 | [data-scientist]({{ '/ja/skills/dev/data-scientist/' | relative_url }}) | データ分析・ML・時系列予測 | 自動EDA、モデル比較、時系列分析 |
 | [data-visualization-expert]({{ '/ja/skills/ops/data-visualization-expert/' | relative_url }}) | データ可視化・チャート設計 | 30+チャートタイプ、アクセシビリティ |

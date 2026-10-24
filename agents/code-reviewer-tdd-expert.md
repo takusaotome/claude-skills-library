@@ -142,10 +142,12 @@ def test_is_expired():
 
 ## Analysis Framework
 
-Load and apply:
-- `skills/critical-code-reviewer/references/review_framework.md`
-- `skills/critical-code-reviewer/references/code_smell_patterns.md`
-- `skills/tdd-developer/references/tdd_methodology.md` (if available)
+Load and apply from the `critical-code-reviewer` skill directory:
+- `references/review_framework.md`
+- `references/code_smell_patterns.md`
+
+Also load if available from the `tdd-developer` skill directory:
+- `references/tdd_methodology.md`
 
 ## Output Format
 
