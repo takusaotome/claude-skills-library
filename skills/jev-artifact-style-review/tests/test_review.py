@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import sys
 from copy import deepcopy
 from pathlib import Path
@@ -13,7 +14,15 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from jev_review.client import JevClient, NoRedirect, validate_response
-from jev_review.common import ReviewError, digest, load_json, load_rubric
+from jev_review.common import (
+    CONTEXT_FILE_MAX_BYTES,
+    REPORT_FILE_MAX_BYTES,
+    ReviewError,
+    digest,
+    load_json,
+    load_rubric,
+    save_json,
+)
 from jev_review.compare import compare_reports
 from jev_review.extract import extract, language_of, make_chunks
 from jev_review.metrics import protected_checks, surface_metrics
@@ -638,3 +647,167 @@ def test_live_cli_with_missing_key_does_not_fake_output(monkeypatch, tmp_path):
     )
     assert proc.returncode == 2 and "TYPESAFE_API_KEY" in proc.stderr
     assert not (out / "review.json").exists()
+
+
+HOSTILE_TEXT = "# 見出しに見える行\n```\n閉じない`コード`\n<img src=x onerror=alert(1)>\n> 引用記号 | 表の区切り *強調*"
+
+
+def _hostile_report(result):
+    report = deepcopy(result)
+    assert report["findings"], "fixture must produce at least one finding"
+    report["document"]["name"] = "a`b\n# heading <img src=x>.md"
+    span = report["findings"][0]["source_span"]
+    span["locator"] = "line ``1``\n## injected <b>x</b>"
+    span["segment_id"] = "s`1<i>"
+    span["text"] = HOSTILE_TEXT
+    report["preservation_checks"]["missing_literals"] = ["<script>x</script>", "`tick`"]
+    return report
+
+
+def _outside_fences(markdown):
+    """Lines that a CommonMark renderer treats as markup, i.e. not inside a fenced block."""
+    outside, fence = [], None
+    for line in markdown.splitlines():
+        stripped = line.lstrip()
+        if fence is None:
+            if stripped.startswith("```"):
+                fence = stripped[: len(stripped) - len(stripped.lstrip("`"))]
+                continue
+            outside.append(line)
+        elif stripped.startswith(fence) and stripped.strip("`") == "":
+            fence = None
+    assert fence is None, "report leaves a fenced block open"
+    return outside
+
+
+def _fenced_blocks(markdown):
+    blocks, current, fence = [], [], None
+    for line in markdown.splitlines():
+        stripped = line.lstrip()
+        if fence is None:
+            if stripped.startswith("```"):
+                fence = stripped[: len(stripped) - len(stripped.lstrip("`"))]
+                current = []
+        elif stripped.startswith(fence) and stripped.strip("`") == "":
+            blocks.append("\n".join(current))
+            fence = None
+        else:
+            current.append(line)
+    return blocks
+
+
+def _code_spans_balanced(line):
+    """Each opening backtick run is closed by the next run of the same length (CommonMark code spans).
+
+    Shorter or longer runs in between are literal content of the span.
+    """
+    opening = None
+    for run in (len(m) for m in re.findall(r"`+", line)):
+        if opening is None:
+            opening = run
+        elif run == opening:
+            opening = None
+    return opening is None
+
+
+@pytest.mark.parametrize("language", ["ja", "en"])
+def test_report_escapes_untrusted_text(result, language):
+    benign = render_report(result, language)
+    hostile = render_report(_hostile_report(result), language)
+    outside = _outside_fences(hostile)
+    headings = [line for line in outside if line.lstrip().startswith("#")]
+    assert len(headings) == len([line for line in _outside_fences(benign) if line.lstrip().startswith("#")])
+    for line in outside:
+        assert _code_spans_balanced(line), line
+        # Text inside a code span renders literally; only markup outside spans could create elements.
+        markup = re.sub(r"(`+).*?(?<!`)\1(?!`)", "", line)
+        assert "<" not in markup and "`" not in markup, line
+
+
+def test_report_keeps_quote_readable(result):
+    hostile = render_report(_hostile_report(result), "ja")
+    assert HOSTILE_TEXT in _fenced_blocks(hostile)
+
+
+def test_context_file_size_checked_before_parse(tmp_path, monkeypatch):
+    import jev_review.common as common
+
+    p = tmp_path / "context.json"
+    p.write_text('{"purpose": "' + "x" * 200_000 + '"}', encoding="utf-8")
+
+    def fail_parse(*args, **kwargs):
+        raise AssertionError("json.loads must not run on an oversized file")
+
+    monkeypatch.setattr(common.json, "loads", fail_parse)
+    with pytest.raises(ReviewError) as exc:
+        load_json(p, max_bytes=CONTEXT_FILE_MAX_BYTES)
+    assert "xxxx" not in str(exc.value)
+
+
+def test_context_file_size_boundary(tmp_path):
+    p = tmp_path / "context.json"
+    body = '{"purpose": ""}'
+    pad = CONTEXT_FILE_MAX_BYTES - len(body.encode("utf-8"))
+    p.write_text(body + " " * pad, encoding="utf-8")
+    assert load_json(p, max_bytes=CONTEXT_FILE_MAX_BYTES) == {"purpose": ""}
+    p.write_text(body + " " * (pad + 1), encoding="utf-8")
+    with pytest.raises(ReviewError):
+        load_json(p, max_bytes=CONTEXT_FILE_MAX_BYTES)
+
+
+def test_report_file_limit_is_separate_and_fits_real_reports(tmp_path, result):
+    assert REPORT_FILE_MAX_BYTES > CONTEXT_FILE_MAX_BYTES
+    p = tmp_path / "review.json"
+    save_json(p, result)
+    assert load_json(p, max_bytes=REPORT_FILE_MAX_BYTES)["summary"] == result["summary"]
+    p.write_text(" " * (REPORT_FILE_MAX_BYTES + 1), encoding="utf-8")
+    with pytest.raises(ReviewError):
+        load_json(p, max_bytes=REPORT_FILE_MAX_BYTES)
+
+
+def test_cli_rejects_oversized_context(tmp_path):
+    import subprocess
+
+    ctx = tmp_path / "context.json"
+    ctx.write_text('{"purpose": "' + "秘密" * 40_000 + '"}', encoding="utf-8")
+    out = tmp_path / "big-context"
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/review.py"),
+            str(ROOT / "examples/email_ja_before.md"),
+            "--context",
+            str(ctx),
+            "--dry-run",
+            "--out",
+            str(out),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 2
+    assert "秘密" not in proc.stderr
+    assert not out.exists()
+
+
+def test_compare_cli_rejects_oversized_report(tmp_path, result):
+    import subprocess
+
+    before = tmp_path / "before.json"
+    save_json(before, result)
+    after = tmp_path / "after.json"
+    after.write_text(" " * (REPORT_FILE_MAX_BYTES + 1), encoding="utf-8")
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/compare.py"),
+            str(before),
+            str(after),
+            "--out",
+            str(tmp_path / "cmp.json"),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 2
+    assert "exceeds" in proc.stderr

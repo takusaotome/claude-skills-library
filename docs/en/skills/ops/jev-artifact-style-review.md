@@ -137,7 +137,7 @@ A context file (`assets/context.example.json`, schema in `schemas/context.schema
 
 Which files appear depends on the mode. A dry run writes `extracted.json`, `context.json`, `plan.json`, and `request_preview.json`, then stops — it produces no `run_status.json`. A live run adds `review.md`, `review.json`, `writer_handoff.json`, and `run_status.json`. A failure writes `run_status.json` with `status: failed` only if it happens after the output directory was created; a failure before that point (a missing API key, an unreadable input) leaves no files at all.
 
-Quotations are sliced from the source text by Python using the segment IDs Jev selected — Jev never authors a quotation. The output directory must be new or empty; an existing evaluation is never overwritten. On POSIX systems files are written 600 and the directory 700. Output contains the document body and quotations, so keep it out of Git and shared drives.
+Quotations are sliced from the source text by Python using the segment IDs Jev selected — Jev never authors a quotation. `review.md` puts each quotation in a fenced code block and the document name, locations and protected literals in code spans, so Markdown or HTML in the source shows as plain text and cannot change the report structure. A `--context` file larger than 64,000 bytes, or a `review.json` passed to `compare.py` larger than 8,000,000 bytes, is rejected before it is parsed. The output directory must be new or empty; an existing evaluation is never overwritten. On POSIX systems files are written 600 and the directory 700. Output contains the document body and quotations, so keep it out of Git and shared drives.
 
 ---
 

@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from jev_review.common import ReviewError, load_json, save_json, save_text
+from jev_review.common import REPORT_FILE_MAX_BYTES, ReviewError, load_json, save_json, save_text
 from jev_review.compare import compare_reports
 
 
@@ -21,7 +21,10 @@ def main(argv=None):
     try:
         if args.out.exists():
             raise ReviewError("Comparison output already exists; choose a new filename.")
-        result = compare_reports(load_json(args.before), load_json(args.after))
+        result = compare_reports(
+            load_json(args.before, max_bytes=REPORT_FILE_MAX_BYTES),
+            load_json(args.after, max_bytes=REPORT_FILE_MAX_BYTES),
+        )
         save_json(args.out, result)
         print(f"{result['direction']}; delta={result['delta_after_minus_before']}; release_approval=false")
         return 0
