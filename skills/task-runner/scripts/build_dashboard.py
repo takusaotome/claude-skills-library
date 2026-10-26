@@ -207,7 +207,15 @@ def collect(tasks_dir, now, done_days):
     for t in data["todo"]:
         t["future"] = bool(t["date"] and t["date"] > today)
     for t in data["doing"]:
-        t["stale"] = bool(t["started"] and now - t["started"] > timedelta(minutes=STALE_MINUTES))
+        if t["started"] is None:
+            t["start_issue"] = "missing"
+        elif t["started"] > now:
+            t["start_issue"] = "future"
+        elif now - t["started"] > timedelta(minutes=STALE_MINUTES):
+            t["start_issue"] = "old"
+        else:
+            t["start_issue"] = None
+        t["stale"] = t["start_issue"] is not None
     for t in data["blocked"]:
         t["plan_wait"] = bool(t["result"] and t["result"][0].lstrip("-* ").startswith(PLAN_WAIT_PREFIX))
 
@@ -292,9 +300,15 @@ def render_detail(t, col, col_label, idx):
             "<p>それまでは選ばれません。</p></div>"
         )
     elif col == "doing" and t.get("stale"):
+        if t["start_issue"] == "old":
+            detail = f"開始 {fmt_dt(t['started'])} から{STALE_MINUTES}分以上たっています。"
+        elif t["start_issue"] == "future":
+            detail = "開始日時が現在より未来です。"
+        else:
+            detail = "開始日時を確認できません。"
         blocks.append(
             '<div class="banner stop"><b>停止の疑いがあります</b>'
-            f"<p>開始 {fmt_dt(t['started'])} から{STALE_MINUTES}分以上たっています。</p></div>"
+            f"<p>{detail} 前回の実行が終了したことを確認するまで、次のタスクは開始しません。</p></div>"
         )
 
     goal = (plan and plan["goal"]) or t["purpose"]
